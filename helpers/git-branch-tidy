@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e
+
+function main() {
+  local branches=`get_branches`
+
+  [ -e "$branches" ] && echo 'No branches to prune' && return;
+
+  for branch in $branches;
+  do
+    print_branch_info $branch
+    read -p "Would you like to delete branch \"${branch}\"? Y/n " delete
+    if [[ "$delete" = "Y" ]]; then
+      delete_branch $branch
+    else
+      echo "Will not delete $branch."
+    fi
+  done
+}
+
+function get_branches() {
+  git branch | grep -v "\*\|master"
+}
+
+function print_branch_info() {
+  echo ""
+  echo "${1}"
+  git log $1 --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit 
+}
+
+function delete_branch() {
+  git branch -D $1
+}
+
+main
