@@ -7,7 +7,7 @@ nnoremap <S-Tab> <<_
 inoremap <S-Tab> <C-D>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-
+:set nowrap
 :set expandtab
 :set shiftwidth=2
 :set softtabstop=2
