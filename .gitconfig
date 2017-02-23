@@ -34,9 +34,11 @@
   assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
 
   pr = compare
-  sweep = "!git branch --merged | grep -v \"\\*\\|master\" | xargs -n 1 git branch -d && echo \"Merged branches pruned.\""
-  prune-gone = "!git checkout master && git branch -lvv | grep \"gone\\]\" | awk '{print $1}' | xargs -n 1 git branch -d && echo \"Gone branches pruned\""
-  tidy="!git fetch --all && git sweep && bash $DOTFILES/helpers/git-branch-tidy"
+  prune-local = "!git branch --merged | grep -v \"\\*\\|master\" | xargs -n 1 git branch -d && echo \"Merged branches pruned.\""
+  prune-remote = "!git fetch --prune"
+  prune-gone = "!git checkout master && git branch -lvv | grep \"gone\\]\" | sed -e 's/^ *//' | cut -d ' ' -f 1 | while read branch; do git branch -D $branch; done"
+
+  tidy="!bash $DOTFILES/helpers/git-branch-tidy"
   wip = "!git add . && git commit -m 'WIP'"
 
   fetch-rebase = "!f() { if [[ -z \"$1\" ]]; then echo 'No branch name given.' && exit 1; else git fetch origin $1:$1 && git rebase $1; fi }; f"

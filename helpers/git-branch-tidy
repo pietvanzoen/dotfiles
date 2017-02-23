@@ -3,18 +3,59 @@
 set -e
 
 function main() {
-  local branches=`get_branches`
+  [ ! -z "$(git status -s)" ] && echo "commit changes before running tidy" && exit 1
 
+  git checkout master
+
+  git pull
+
+  git fetch --all
+
+  git prune-local
+
+  git fetch --prune
+
+  clean-gone-branches
+
+  clean-remaining
+
+  log "done!"
+}
+
+function clean-gone-branches() {
+  local gonebranches=`git branch -lvv | grep gone\]`
+  [ -z "$gonebranches" ] && return;
+
+  echo
+  git branch -lvv | grep gone\]
+  echo
+  log "Delete all 'gone' branches? [y/n]"
+  read -p '' prunegone
+  if [ "$prunegone" == 'y' ]; then
+    git prune-gone
+  fi
+}
+
+function clean-remaining() {
+  local branches=`get_branches`
   [ -e "$branches" ] && echo 'No branches to prune' && return;
+
+  echo
+  git branch -lvv | grep -v master
+
+  log "Clean remaining branches? [y/n]"
+  read -p '' continue
+  [ "$continue" == "y" ] || return;
 
   for branch in $branches;
   do
     print_branch_info $branch
-    read -p "Would you like to delete branch \"${branch}\"? Y/n " delete
-    if [[ "$delete" = "Y" ]]; then
+    log "Would you like to delete branch \"${branch}\"? Y/n"
+    read -p "" delete
+    if [[ "$delete" == "Y" ]]; then
       delete_branch $branch
     else
-      echo "Will not delete $branch."
+      echo
     fi
   done
 }
@@ -24,13 +65,19 @@ function get_branches() {
 }
 
 function print_branch_info() {
-  echo ""
-  echo "${1}"
-  git log $1 --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit 
+  local branch=$1
+  (
+    git checkout $branch
+    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit origin/master..$branch
+  )
 }
 
 function delete_branch() {
   git branch -D $1
+}
+
+function log() {
+  echo "$(tput setaf 6)$1$(tput sgr0)"
 }
 
 main
