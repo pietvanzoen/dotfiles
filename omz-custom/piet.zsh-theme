@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 nvm_status() {
   $(type nvm >/dev/null 2>&1) || return
 
@@ -15,5 +17,5 @@ PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}$(git_prompt_info) $(nvm_st
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[black]%}(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg_bold[red]%}❊%{$fg[black]%})"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg_bold[yellow]%}❊%{$fg[black]%})"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[black]%})"
