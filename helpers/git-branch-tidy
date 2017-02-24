@@ -69,6 +69,7 @@ function print_branch_info() {
   (
     git checkout $branch
     git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit origin/master..$branch
+    git checkout master --quiet
   )
 }
 
