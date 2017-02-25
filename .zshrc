@@ -26,3 +26,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # ZSH SYNTAX HIGHLIGHTING
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# RVM
+source $HOME/.rvm/scripts/rvm
