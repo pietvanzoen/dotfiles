@@ -29,3 +29,6 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # RVM
 source $HOME/.rvm/scripts/rvm
+
+# BIN
+export PATH=$PATH:$DOTFILES/bin

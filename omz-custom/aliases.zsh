@@ -6,9 +6,6 @@ alias reshell="source ~/.zshrc"
 alias cl=clear
 alias j=z
 
-# SCRIPTS
-alias run-command-on-git-revisions=$DOTFILES/helpers/run-command-on-git-revisions
-
 # SCREEN
 alias sl="screen -ls"
 alias sr="screen -r"
