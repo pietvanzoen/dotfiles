@@ -4,7 +4,7 @@
 
 # OH-MY-ZSH
 ZSH_THEME="piet"
-plugins=(brew catimg git node nvm npm z httpie)
+plugins=(brew git node nvm npm z httpie)
 source $ZSH/oh-my-zsh.sh
 
 # ZSH
