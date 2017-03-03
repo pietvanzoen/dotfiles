@@ -27,10 +27,13 @@ filetype off                  " required
 " KEY MAPPING
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" tab (un)indent in normal and visual mode
+" alt+k and alt+j for quick jumping
+nnoremap ˚ 10k
+nnoremap ∆ 10j
+
+" tab indenting for normal and visual mode
 nnoremap <Tab> >>_
 nnoremap <S-Tab> <<_
-inoremap <S-Tab> <C-D>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
