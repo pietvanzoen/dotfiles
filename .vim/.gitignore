@@ -1,5 +1,5 @@
 .netrwhist
-bundle/command-t
 bundle/vim-fugitive
 bundle/vim-gitgutter
 bundle/vim-javascript
+bundle/ctrlp.vim
