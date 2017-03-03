@@ -11,6 +11,7 @@
   la = !git l --all
   r = !git l -12
   ra = !git r --all
+  changelog = "!git log --pretty=\"* %h %s\" --reverse origin/master..HEAD"
 
   st = status -s
   ci = commit --verbose
