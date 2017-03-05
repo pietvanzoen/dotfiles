@@ -22,3 +22,6 @@ function mktouch() {
     touch -- "$f"
   done
 }
+
+# RUBY
+alias bi="bundle check || bundle install"
