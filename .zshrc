@@ -14,6 +14,9 @@ export HISTFILESIZE=$HISTSIZE;
 export HISTCONTROL=ignoredups;
 export HISTIGNORE="cd:cd -:pwd:exit:date:* --help";
 
+# EDITOR
+export EDITOR="$(which vim)"
+
 # SSH
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
