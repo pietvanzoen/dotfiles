@@ -81,9 +81,9 @@
   prompt = false
 
 [pager]
-  log = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less -F -X
-  show = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less -F -X
-  diff = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less -F -X
+  log = $DOTFILES/bin/diff-highlight | less -F -X
+  show = $DOTFILES/bin/diff-highlight | less -F -X
+  diff = $DOTFILES/bin/diff-highlight | less -F -X
 
 [color "diff"]
   commit = green
