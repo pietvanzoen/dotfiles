@@ -21,7 +21,7 @@ export EDITOR="$(which vim)"
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 # HUB
-eval "$(hub alias -s)"
+[ -e "$(which hub)" ] && eval "$(hub alias -s)"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
