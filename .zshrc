@@ -25,7 +25,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
 # ZSH SYNTAX HIGHLIGHTING
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $DOTFILES/helpers/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # RVM
 source $HOME/.rvm/scripts/rvm
