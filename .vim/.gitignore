@@ -1,5 +1,4 @@
 .netrwhist
-bundle/vim-fugitive
-bundle/vim-gitgutter
-bundle/vim-javascript
-bundle/ctrlp.vim
+
+bundle/*
+!bundle/Vundle.vim
