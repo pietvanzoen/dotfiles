@@ -13,7 +13,7 @@ nvm_status() {
 }
 
 local ret_status="%(?:%{$fg_bold[green]%}❖:%{$fg_bold[red]%}❖)"
-PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}$(git_prompt_info) $(nvm_status)§ '
+PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}$(git_prompt_info) $(nvm_status)♯ '
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[black]%}(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
