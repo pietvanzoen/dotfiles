@@ -5,6 +5,7 @@ alias ohmyzsh="vim ~/.oh-my-zsh"
 alias reshell="source ~/.zshrc"
 alias cl=clear
 alias j=z
+alias gtop="cd $(git rev-parse --show-toplevel)"
 
 # SCREEN
 alias sl="screen -ls"
