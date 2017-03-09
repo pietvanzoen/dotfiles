@@ -120,3 +120,12 @@ let g:ctrlp_switch_buffer='Et'
 call vundle#end()
 filetype plugin indent on
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" REPO SPECIFIC VIMRC
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let git_path = system("git rev-parse --show-toplevel 2>/dev/null")
+let git_vimrc = substitute(git_path, '\n', '', '') . "/.vimrc.local"
+if !empty(glob(git_vimrc))
+  sandbox exec ":source " . git_vimrc
+endif
+

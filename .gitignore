@@ -56,3 +56,4 @@ Gemfile.console
 Gemfile.console.lock
 
 .scratch.*
+.vimrc.local
