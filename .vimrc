@@ -111,7 +111,7 @@ Plugin 'marijnh/tern_for_vim'
 " PLUGIN CONFIG
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ctrlp_show_hidden=1
-let g:ctrlp_custom_ignore='node_modules\|DS_Store\|git'
+let g:ctrlp_custom_ignore={'dir': 'node_modules\|git'}
 let g:ctrlp_switch_buffer='Et'
 
 " end vundle plugins
