@@ -13,7 +13,10 @@ set softtabstop=2
 set cursorline
 set cmdheight=1
 set showtabline=2
-set incsearch
+set incsearch " instant search
+set complete-=i
+set smarttab
+set autoread
 
 " set whitespace chars
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
@@ -22,7 +25,6 @@ set number
 highlight LineNr ctermfg=grey
 
 set nocompatible              " be iMproved, required
-filetype off                  " required
 
 execute pathogen#infect()
 filetype plugin indent on
