@@ -13,6 +13,7 @@ set softtabstop=2
 set cursorline
 set cmdheight=1
 set showtabline=2
+set incsearch
 
 " set whitespace chars
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
@@ -39,6 +40,9 @@ nnoremap <Tab> >>_
 nnoremap <S-Tab> <<_
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
+
+" default test runner command
+map ,t :w\|!yarn test<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
