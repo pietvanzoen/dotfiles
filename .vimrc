@@ -23,6 +23,9 @@ highlight LineNr ctermfg=grey
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+execute pathogen#infect()
+filetype plugin indent on
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPPING
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -92,31 +95,12 @@ set laststatus=2 " always show status line
 set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VUNDLE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'pangloss/vim-javascript'
-Plugin 'kien/ctrlp.vim'
-Plugin 'marijnh/tern_for_vim'
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGIN CONFIG
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ctrlp_show_hidden=1
 let g:ctrlp_custom_ignore={'dir': 'node_modules\|git'}
 let g:ctrlp_switch_buffer='Et'
 
-" end vundle plugins
-call vundle#end()
-filetype plugin indent on
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REPO SPECIFIC VIMRC
