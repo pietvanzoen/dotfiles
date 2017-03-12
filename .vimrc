@@ -25,9 +25,7 @@ set wildmenu
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 
 set number
-highlight LineNr ctermfg=grey
-
-set nocompatible              " be iMproved, required
+set nocompatible
 
 execute pathogen#infect()
 filetype plugin indent on
