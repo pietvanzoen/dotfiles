@@ -133,7 +133,8 @@ set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 " CTRLP
 let g:ctrlp_show_hidden=1
-let g:ctrlp_custom_ignore={'dir': 'node_modules\|git'}
+let g:ctrlp_custom_ignore={'dir': 'node_modules\|git',
+                          \ 'file': '\.swp$'}
 let g:ctrlp_switch_buffer='Et'
 
 " SYNTASTIC
