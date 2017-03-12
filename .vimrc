@@ -17,6 +17,9 @@ set incsearch " instant search
 set complete-=i
 set smarttab
 set autoread
+set hlsearch
+set wildmode=longest,list
+set wildmenu
 
 " set whitespace chars
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
@@ -45,6 +48,8 @@ vnoremap <S-Tab> <gv
 
 " default test runner command
 map ,t :w\|!yarn test<cr>
+
+nnoremap <cr> :noh<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
