@@ -38,6 +38,12 @@ filetype plugin indent on
 nnoremap ˚ 10k
 nnoremap ∆ 10j
 
+" Move around splits with <c-hjkl>
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+
 " tab indenting for normal and visual mode
 nnoremap <Tab> >>_
 nnoremap <S-Tab> <<_
