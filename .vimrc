@@ -55,6 +55,8 @@ map ,t :w\|!yarn test<cr>
 
 nmap <cr> :nohlsearch<cr>
 
+map nn :NERDTreeToggle<cr>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
