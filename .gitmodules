@@ -16,3 +16,6 @@
 [submodule ".vim/bundle/vim-javascript"]
 	path = .vim/bundle/vim-javascript
 	url = git@github.com:pangloss/vim-javascript.git
+[submodule ".vim/bundle/vim-colors-solarized"]
+	path = .vim/bundle/vim-colors-solarized
+	url = git@github.com:altercation/vim-colors-solarized.git

@@ -97,7 +97,8 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set t_Co=256 " 256 colors
 set background=dark
-colors grb256
+colorscheme solarized
+call togglebg#map("<F5>")
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
