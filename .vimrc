@@ -58,7 +58,8 @@ map ,t :w\|!yarn test<cr>
 
 nmap <cr> :nohlsearch<cr>
 
-map nn :NERDTreeToggle<cr>
+" search for currently selected text
+vnoremap // y/<C-R>"<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
