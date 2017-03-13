@@ -142,6 +142,7 @@ let g:ctrlp_show_hidden=1
 let g:ctrlp_custom_ignore={'dir': 'node_modules\|git',
                           \ 'file': '\.swp$'}
 let g:ctrlp_switch_buffer='Et'
+let g:ctrlp_dont_split = 'NERD'
 
 " SYNTASTIC
 let g:syntastic_mode_map = { 'mode': 'active',
@@ -158,6 +159,10 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_loc_list_height = 5
 let g:syntastic_check_on_wq = 0
 let g:syntastic_javascript_checkers = ['eslint']
+
+" NERDTREE
+let g:NERDTreeShowHidden = 1
+nmap <c-k><c-b> :NERDTreeToggle<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REPO SPECIFIC VIMRC
