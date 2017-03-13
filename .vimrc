@@ -20,6 +20,9 @@ set autoread
 set hlsearch
 set wildmode=longest,list
 set wildmenu
+set ignorecase
+set smartcase
+set wildignore+=**/node_modules/**
 
 " set whitespace chars
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
