@@ -42,6 +42,8 @@
   tidy="!bash $DOTFILES/helpers/git-branch-tidy"
   wip = "!git add . && git commit -m 'WIP'"
 
+  test-branch="!run-command-on-git-revisions origin/master $(git symbolic-ref --short HEAD) 'yarn test'"
+
   fetch-rebase = "!f() { if [[ -z \"$1\" ]]; then echo 'No branch name given.' && exit 1; else git fetch origin $1:$1 && git rebase $1; fi }; f"
   frm = !git fetch-rebase master
   fr = feature-rebase
