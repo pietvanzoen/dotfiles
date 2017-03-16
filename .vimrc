@@ -128,12 +128,6 @@ command! RenameFile :call RenameFile()
 map <leader>n :call RenameFile()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" STATUS LINE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set laststatus=2 " always show status line
-set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGIN CONFIG
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -149,10 +143,6 @@ let g:syntastic_mode_map = { 'mode': 'active',
                             \ 'active_filetypes': ['javascript'],
                             \ 'passive_filetypes': [] }
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 2
 let g:syntastic_check_on_open = 1
@@ -163,6 +153,13 @@ let g:syntastic_javascript_checkers = ['eslint']
 " NERDTREE
 let g:NERDTreeShowHidden = 1
 nmap <c-k><c-b> :NERDTreeToggle<cr>
+
+" AIRLINE
+set laststatus=2 " always show status line
+set noshowmode " hide default mode in command line
+let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]}'
+let g:airline_section_z = '%3l/%L:%2v'
+let g:airline_theme = 'solarized'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REPO SPECIFIC VIMRC
