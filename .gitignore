@@ -55,5 +55,5 @@ npm-debug.log
 Gemfile.console
 Gemfile.console.lock
 
-.scratch.*
+.scratch*
 .vimrc.local
