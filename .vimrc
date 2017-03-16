@@ -40,6 +40,8 @@ filetype plugin indent on
 " alt+k and alt+j for quick jumping
 nnoremap ˚ 10k
 nnoremap ∆ 10j
+vnoremap ˚ 10k
+vnoremap ∆ 10j
 
 " Move around splits with <c-hjkl>
 nnoremap <c-j> <c-w>j
