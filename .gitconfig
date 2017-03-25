@@ -19,6 +19,7 @@
   di = diff
   dc = diff --cached
   amend = commit --amend
+  pushf = push --force-with-lease
   aa = add --all
   ff = merge --ff-only
   pullff = pull --ff-only
