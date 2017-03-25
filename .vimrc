@@ -147,7 +147,7 @@ let g:syntastic_javascript_checkers = ['eslint']
 
 " NERDTREE
 let g:NERDTreeShowHidden = 1
-nmap <c-k><c-b> :NERDTreeToggle<cr>
+nmap <c-n><c-n> :NERDTreeToggle<cr>
 
 " AIRLINE
 set laststatus=2 " always show status line
