@@ -63,7 +63,7 @@ map <right> :echo "NO BAD PIET!"<cr>
 " default test runner command
 map ,t :wall\|!echo;echo;echo;echo;echo;yarn test<cr>
 
-nmap <cr> :nohlsearch<cr>
+map <leader>h :nohlsearch<cr>
 
 " search for visually hightlighted text
 vnoremap <c-f> y<ESC>/<c-r>"<CR>
