@@ -194,7 +194,8 @@ function! airline#themes#solarized#refresh()
   let g:airline#themes#solarized#palette.tabline = {}
 
   let g:airline#themes#solarized#palette.tabline.airline_tab = [
-        \ s:I2[0].g, s:I2[1].g, s:I2[0].t, s:I2[1].t, s:I2[2]]
+        \ s:I3[0].g, s:I3[1].g, s:I3[0].t, s:I3[1].t, s:I2[2]]
+        " \ s:I2[0].g, s:I2[1].g, s:I2[0].t, s:I2[1].t, s:I2[2]]
 
   let g:airline#themes#solarized#palette.tabline.airline_tabtype = [
         \ s:N2[0].g, s:N2[1].g, s:N2[0].t, s:N2[1].t, s:N2[2]]

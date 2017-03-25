@@ -147,6 +147,12 @@ set noshowmode " hide default mode in command line
 let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]}'
 let g:airline_section_z = '%3l/%L:%2v'
 let g:airline_theme = 'solarized'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#tab_nr_type = 2
+let g:airline#extensions#tabline#show_tab_nr = 1
+let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#show_buffers = 0
+
 
 " TERMINUS
 let g:TerminusMouse = 0
