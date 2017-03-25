@@ -148,6 +148,10 @@ let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]}'
 let g:airline_section_z = '%3l/%L:%2v'
 let g:airline_theme = 'solarized'
 
+" TERMINUS
+let g:TerminusMouse = 0
+
+
 " YOUCOMPLETEME
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_min_num_identifier_candidate_chars = 4
