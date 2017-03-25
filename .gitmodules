@@ -37,3 +37,6 @@
 [submodule ".vim/bundle/golden-ratio"]
 	path = .vim/bundle/golden-ratio
 	url = git@github.com:roman/golden-ratio.git
+[submodule ".vim/bundle/YouCompleteMe"]
+	path = .vim/bundle/YouCompleteMe
+	url = git@github.com:Valloric/YouCompleteMe.git

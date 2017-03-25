@@ -71,21 +71,6 @@ map <leader>e :edit %%
 map <leader>v :view %%
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" MULTIPURPOSE TAB KEY
-" Indent if we're at the beginning of a line. Else, do completion.
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! InsertTabWrapper()
-  let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-      return "\<tab>"
-    else
-      return "\<c-p>"
-    endif
-endfunction
-inoremap <expr> <tab> InsertTabWrapper()
-" inoremap <s-tab> <c-n>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM AUTOCMDS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 augroup vimrcEx
@@ -162,6 +147,10 @@ set noshowmode " hide default mode in command line
 let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]}'
 let g:airline_section_z = '%3l/%L:%2v'
 let g:airline_theme = 'solarized'
+
+" YOUCOMPLETEME
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_min_num_identifier_candidate_chars = 4
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REPO SPECIFIC VIMRC
