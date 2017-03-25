@@ -55,6 +55,11 @@ nnoremap <S-Tab> <<_
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
+map <up> :echo "NO BAD PIET!"<cr>
+map <down> :echo "NO BAD PIET!"<cr>
+map <left> :echo "NO BAD PIET!"<cr>
+map <right> :echo "NO BAD PIET!"<cr>
+
 " default test runner command
 map ,t :w\|!yarn test<cr>
 
