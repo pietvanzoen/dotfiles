@@ -65,6 +65,9 @@ map ,t :wall\|!echo;echo;echo;echo;echo;yarn test<cr>
 
 nmap <cr> :nohlsearch<cr>
 
+" search for visually hightlighted text
+vnoremap <c-f> y<ESC>/<c-r>"<CR>
+
 " search for currently selected text
 vnoremap // y/<C-R>"<CR>
 
