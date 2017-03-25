@@ -179,3 +179,14 @@ if !empty(glob(git_vimrc))
   sandbox exec ":source " . git_vimrc
 endif
 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" SCRATCH FILE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! Scratch()
+  exec ':edit $PWD/.scratch'
+  exec ':set filetype=javascript'
+endfunction
+command! Scrach :call Scratch()
+map ,r :w\|!echo;echo;echo;echo;echo; node $PWD/.scratch<cr>
+
