@@ -172,7 +172,7 @@ let g:airline#extensions#tabline#show_buffers = 0
 
 
 " TERMINUS
-let g:TerminusMouse = 0
+let g:TerminusMouse = 1
 
 
 " YOUCOMPLETEME
