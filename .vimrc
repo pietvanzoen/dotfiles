@@ -74,6 +74,8 @@ vnoremap <c-f> y<ESC>/<c-r>"<CR>
 " search for currently selected text
 vnoremap // y/<C-R>"<CR>
 
+map <leader>r :TernRename<cr>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
