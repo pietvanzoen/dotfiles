@@ -169,11 +169,11 @@ nmap <c-n><c-n> :NERDTreeToggle<cr>
 " AIRLINE
 set laststatus=2 " always show status line
 set noshowmode " hide default mode in command line
- if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-let g:airline_symbols.branch = ''
-let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]}\(%{substitute(airline#extensions#branch#get_head(), " ", "", "g")}\)'
+" if !exists('g:airline_symbols')
+"   let g:airline_symbols = {}
+" endif
+" let g:airline_symbols.branch = ''
+let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]} %{airline#extensions#branch#get_head()}'
 let g:airline_section_z = '%3l/%L:%2v'
 let g:airline_theme = 'solarized'
 let g:airline#extensions#tabline#enabled = 1
