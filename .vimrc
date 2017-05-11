@@ -122,7 +122,7 @@ set background=dark
 colorscheme solarized
 call togglebg#map("<F5>")
 
-highlight Search ctermbg=black ctermfg=NONE cterm=underline
+" highlight Search ctermbg=black ctermfg=NONE cterm=underline
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE
