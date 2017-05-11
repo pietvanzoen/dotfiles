@@ -38,7 +38,7 @@
   pr = pull-request -o
   prune-local = "!git branch --merged | grep -v \"\\*\\|master\" | xargs -n 1 git branch -d && echo \"Merged branches pruned.\""
   prune-remote = "!git fetch --prune"
-  prune-gone = "!git checkout master && git branch -lvv | grep \"gone\\]\" | sed -e 's/^ *//' | cut -d ' ' -f 1 | while read branch; do git branch -D $branch; done"
+  prune-gone = "!git checkout master --quiet && git branch -lvv | grep \"gone\\]\" | sed -e 's/^ *//' | cut -d ' ' -f 1 | while read branch; do git branch -D $branch; done; echo 'Gone branches pruned.'"
 
   tidy="!bash $DOTFILES/helpers/git-branch-tidy"
   wip = "!git add . && git commit -m 'WIP'"
