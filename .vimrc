@@ -200,6 +200,6 @@ function! Scratch()
   exec ':edit $PWD/.scratch'
   exec ':set filetype=javascript'
 endfunction
-command! Scrach :call Scratch()
+command! Scratch :call Scratch()
 map ,r :w\|!echo;echo;echo;echo;echo; node $PWD/.scratch<cr>
 
