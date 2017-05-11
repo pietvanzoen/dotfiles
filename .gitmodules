@@ -43,3 +43,6 @@
 [submodule ".vim/bundle/terminus"]
 	path = .vim/bundle/terminus
 	url = https://github.com/wincent/terminus.git
+[submodule ".vim/bundle/vim-indent-guides"]
+	path = .vim/bundle/vim-indent-guides
+	url = git@github.com:nathanaelkane/vim-indent-guides.git
