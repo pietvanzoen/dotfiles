@@ -1,0 +1,5 @@
+#!/bin/bash
+
+screen_name="${PWD##*/}-VIM"
+
+screen -SR $screen_name vim $PWD

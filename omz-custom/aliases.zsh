@@ -6,6 +6,7 @@ alias reshell="source ~/.zshrc"
 alias cl=clear
 alias j=z
 alias gtop="cd $(git rev-parse --show-toplevel)"
+alias ed=edit-dir-vim
 
 # SCREEN
 alias sl="screen -ls"
