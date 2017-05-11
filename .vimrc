@@ -65,7 +65,15 @@ map <left> :echo "NO BAD PIET!"<cr>
 map <right> :echo "NO BAD PIET!"<cr>
 
 " default test runner command
-map ,t :wall\|!echo;echo;echo;echo;echo;yarn test<cr>
+function! RunTests()
+  let l:test_command = exists('g:test_command') ? g:test_command : ':!yarn test'
+  " disable gitgutter while running external test command otherwise rendering gets messed up
+  exec ':GitGutterDisable'
+  exec ':wall'
+  exec l:test_command
+  exec ':GitGutterEnable'
+endfunction
+map ,t :call RunTests()<cr>
 
 map <leader>h :nohlsearch<cr>
 
