@@ -5,19 +5,18 @@ set -e
 function main() {
   [ ! -z "$(git status -s)" ] && echo "commit changes before running tidy" && exit 1
 
+  log "checking out master"
   git checkout master
-
   git pull
 
-  git fetch --all
+  log "fetching/pruning refs"
+  git fetch --all --prune
 
+  log "pruning merged branches"
   git prune-local
 
-  git fetch --prune
-
-  clean-gone-branches
-
-  clean-remaining
+  log "pruning 'gone' branches"
+  git prune-gone
 
   log "done!"
 }
