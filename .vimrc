@@ -23,6 +23,7 @@ set wildmenu
 set ignorecase
 set smartcase
 set wildignore+=**/node_modules/**
+set spell spelllang=en_us
 
 " set whitespace chars
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
@@ -67,6 +68,9 @@ map <right> :echo "NO BAD PIET!"<cr>
 map ,t :wall\|!echo;echo;echo;echo;echo;yarn test<cr>
 
 map <leader>h :nohlsearch<cr>
+
+" replace bad spelling with first suggestion
+map <leader>z 1z=
 
 " search for visually hightlighted text
 vnoremap <c-f> y<ESC>/<c-r>"<CR>
