@@ -34,6 +34,9 @@ set nocompatible
 " yank copies to os clipboard
 set clipboard=unnamed
 
+" backspace behaves normally
+set backspace=indent,eol,start
+
 execute pathogen#infect()
 filetype plugin indent on
 
