@@ -41,6 +41,27 @@ execute pathogen#infect()
 filetype plugin indent on
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" GUI SETTINGS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+if has("gui_running")
+  " style
+  set guifont=Inconsolata:h14
+  set linespace=4
+  let g:solarized_contrast="high"
+
+  " hide scrollbars
+  set guioptions-=r
+  set guioptions-=R
+  set guioptions-=l
+  set guioptions-=L
+
+  " hide toolbar
+  set guioptions-=T
+
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPPING
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
