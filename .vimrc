@@ -30,6 +30,9 @@ set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set number
 set nocompatible
 
+" yank copies to os clipboard
+set clipboard=unnamed
+
 execute pathogen#infect()
 filetype plugin indent on
 
