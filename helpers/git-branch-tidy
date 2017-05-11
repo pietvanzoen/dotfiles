@@ -4,21 +4,18 @@ set -e
 
 function main() {
   [ ! -z "$(git status -s)" ] && echo "commit changes before running tidy" && exit 1
+  (
+    log "fetching/pruning refs"
+    git fetch --all --prune
 
-  log "checking out master"
-  git checkout master
-  git pull
+    log "updating master"
+    git checkout master --quiet
+    git pull
 
-  log "fetching/pruning refs"
-  git fetch --all --prune
-
-  log "pruning merged branches"
-  git prune-local
-
-  log "pruning 'gone' branches"
-  git prune-gone
-
-  log "done!"
+    log "cleaning up branches"
+    git prune-local
+    git prune-gone
+  )
 }
 
 function clean-gone-branches() {
@@ -77,7 +74,8 @@ function delete_branch() {
 }
 
 function log() {
-  echo "$(tput setaf 6)$1$(tput sgr0)"
+  echo
+  echo "$(tput setaf 6)>> $1$(tput sgr0)"
 }
 
 main
