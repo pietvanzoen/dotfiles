@@ -1,20 +1,38 @@
 [include]
+  # Import environment specific config and sensitive data.
   path = ~/.gitconfig.local
 
 [core]
   excludesfile = ~/.gitignore
+
+  # Use less when output is longer than screen. Also leave result on screen after exiting less.
   pager = less -F -X
 
 [alias]
+  ###############################################
+  # LOGGING
+  ###############################################
+
+  # Pretty logging.
   l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit
-  lb = !git l origin/master..$(git symbolic-ref --short HEAD)
-  la = !git l --all
-  r = !git l -12
-  ra = !git r --all
+
+  lb = !git l origin/master..$(git symbolic-ref --short HEAD) # Log commits that diverge from origin/master.
+  la = !git l --all # Log with all refs.
+  r = !git l -12 # Log recent commits.
+  ra = !git r --all # Log recent commits from all refs.
+
+  # Create a simple change log for copy/pasting into PRs.
   changelog = "!git log --pretty=\"* %h %s\" --reverse origin/master..HEAD"
 
-  st = status -s
-  ci = commit --verbose
+
+  ###############################################
+  # COMMITING
+  ###############################################
+
+  st = status -s # Short status.
+  ci = commit --verbose # Verbose commit. Shows diff in commit message editor.
+  wip = "!git add . && git commit -m 'WIP'" # Quick commit all changes and untracked files.
+  roll-back-one = reset HEAD~1 # Roll back one commit.
   co = checkout
   di = diff
   dc = diff --cached
@@ -25,9 +43,40 @@
   pullff = pull --ff-only
   noff = merge --no-ff
   fa = fetch --all
-  b = branch -lvv
+  b = branch -lvv # Verbose branch list. Shows upstream branches.
   ds = diff --stat=160,120
   dh1 = diff HEAD~1
+
+  ###############################################
+  # BRANCH MANAGEMENT
+  ###############################################
+
+  # Create pull request and open url: https://hub.github.com/
+  pr = pull-request -o
+
+  # Fetch and update given branch name, then rebase current branch onto that branch.
+  fetch-rebase = "!f() { if [[ -z \"$1\" ]]; then echo 'No branch name given.' && exit 1; else git fetch origin $1:$1 && git rebase $1; fi }; f"
+  frm = !git fetch-rebase master
+
+  # Delete any branches already merged into master.
+  prune-local = "!git branch --merged | grep -v \"\\*\\|master\" | xargs -n 1 git branch -d && echo \"Merged branches pruned.\""
+
+  # Prune "gone" branches.
+  # Deletes any branches that have an upstream that has been deleted.
+  # Useful when squash merging branches via github.
+  # WARNING: FORCE DELETES BRANCHES (uses -D delete command)
+  prune-gone = "!git checkout master --quiet && git branch -lvv | grep \"gone\\]\" | sed -e 's/^ *//' | cut -d ' ' -f 1 | while read branch; do git branch -D $branch; done; echo 'Gone branches pruned.'"
+
+  # BIG OL' TIDY COMMAND... see ./helpers/git-branch-tidy
+  tidy="!bash $DOTFILES/helpers/git-branch-tidy"
+
+  # Run `yarn test` on each commit that diverges from master.
+  test-branch="!run-command-on-git-revisions origin/master $(git symbolic-ref --short HEAD) 'yarn test'"
+
+
+  ###############################################
+  # OTHER HELPERS
+  ###############################################
 
   assume = update-index --assume-unchanged
   unassume = update-index --no-assume-unchanged
@@ -35,35 +84,18 @@
   unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
   assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
 
-  pr = pull-request -o
-  prune-local = "!git branch --merged | grep -v \"\\*\\|master\" | xargs -n 1 git branch -d && echo \"Merged branches pruned.\""
-  prune-remote = "!git fetch --prune"
-  prune-gone = "!git checkout master --quiet && git branch -lvv | grep \"gone\\]\" | sed -e 's/^ *//' | cut -d ' ' -f 1 | while read branch; do git branch -D $branch; done; echo 'Gone branches pruned.'"
-
-  tidy="!bash $DOTFILES/helpers/git-branch-tidy"
-  wip = "!git add . && git commit -m 'WIP'"
-
-  test-branch="!run-command-on-git-revisions origin/master $(git symbolic-ref --short HEAD) 'yarn test'"
-
-  fetch-rebase = "!f() { if [[ -z \"$1\" ]]; then echo 'No branch name given.' && exit 1; else git fetch origin $1:$1 && git rebase $1; fi }; f"
-  frm = !git fetch-rebase master
-  fr = feature-rebase
-  roll-back-one = reset HEAD~1
-  amend = commit --amend
-
 [merge]
-  summary = true
+  summary = true # Always include a summary in merge commits.
 
 [push]
+  # Default push to update current branch on remote. Then you don't need to type out upstream
+  # name when creating a new upstream branch. e.g. To push a new branch to remote just do `git push -u`
   default = current
 
 [filter "media"]
   required = true
   clean = git media clean %f
   smudge = git media smudge %f
-
-[github]
-  user = pietvanzoen
 
 [difftool]
   prompt = false
@@ -77,13 +109,11 @@
 [difftool]
   prompt = false
 
-[merge]
-  summary = true
-
 [mergetool]
   prompt = false
 
 [pager]
+  # Use diff-highlight from git-core for diffing. Better diffing.
   log = $DOTFILES/bin/diff-highlight | less -F -X
   show = $DOTFILES/bin/diff-highlight | less -F -X
   diff = $DOTFILES/bin/diff-highlight | less -F -X
@@ -103,10 +133,10 @@
   newHighlight = green 22
 
 [interactive]
-  diffFilter = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight
+  diffFilter = $DOTFILES/bin/diff-highlight
 
 [fetch]
-  prune = true
+  prune = true # Always prune refs when fetching.
 
 [help]
-  autocorrect = 20 # after misspelling git command, use closest match after 2s
+  autocorrect = 20 # After misspelling git command, use closest match after 2s.
