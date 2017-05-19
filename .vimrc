@@ -136,6 +136,7 @@ augroup vimrcEx
       \   exe "normal g`\"" |
       \ endif
 
+  autocmd BufRead,BufNewFile *.raml set filetype=yaml
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
