@@ -213,7 +213,9 @@ let g:TerminusMouse = 1
 
 
 " YOUCOMPLETEME
-let g:ycm_autoclose_preview_window_after_completion = 1
+set completeopt-=preview " disable preview window
+let g:ycm_add_preview_to_completeopt = 0
+"let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_min_num_identifier_candidate_chars = 4
 
 " INDENT GUIDE
