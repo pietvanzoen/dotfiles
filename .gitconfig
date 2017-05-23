@@ -140,3 +140,5 @@
 
 [help]
   autocorrect = 20 # After misspelling git command, use closest match after 2s.
+[commit]
+	gpgsign = true
