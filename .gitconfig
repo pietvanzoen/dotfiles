@@ -141,3 +141,6 @@
 
 [help]
   autocorrect = 20 # After misspelling git command, use closest match after 2s.
+
+[commit]
+  gpgsign = true # sign all commits using gpg key in .gitconfig.local
