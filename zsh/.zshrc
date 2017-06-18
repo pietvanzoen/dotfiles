@@ -35,3 +35,6 @@ export PATH=$PATH:$DOTFILES/_bin
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+# GNU LS colors
+eval `gdircolors ~/.zsh/dircolors.ansi-dark`
