@@ -10,7 +10,7 @@ alias ed=edit-dir-vim
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
 # ls
-alias ls="gls --color --group-directories-first --ignore='.|..'"
+alias ls="gls --color=auto --group-directories-first --ignore='.DS_Store'"
 alias l='ls -lAh'
 
 # SCREEN
