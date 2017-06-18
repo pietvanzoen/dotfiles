@@ -4,7 +4,7 @@
 
 # OH-MY-ZSH
 ZSH_THEME="piet"
-plugins=(brew git node nvm npm z httpie)
+plugins=(brew git node nvm npm z httpie zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 # ZSH
@@ -26,9 +26,6 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-
-# ZSH SYNTAX HIGHLIGHTING
-source $DOTFILES/helpers/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # RVM
 source $HOME/.rvm/scripts/rvm
