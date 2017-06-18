@@ -3,7 +3,10 @@ Piet van Zoen's Dotfiles
 
 ## Install
 
-Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
+### Setup repo
+
+1. Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
+1. Install submodules: `git submodule update --depth=1 --recursive`
 
 ### Homebrew
 
