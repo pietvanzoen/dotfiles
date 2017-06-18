@@ -3,9 +3,26 @@ Piet van Zoen's Dotfiles
 
 ## Install
 
-1. clone the repository : `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
-1. setup `stow`: `stow -t ~ stow`
-1. install desired package via `stow <directory>`
+Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
+
+### Homebrew
+
+```bash
+cd ~/dotfiles/_homebrew
+brew tap homebrew/bundle
+brew bundle
+```
+
+### [Oh my zsh](https://github.com/robbyrussell/oh-my-zsh)
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+```
+
+### Dotfiles
+
+1. Setup `stow`: `stow -t ~ stow`
+1. Install desired package via `stow <directory>`
 
 ## Credits
 
@@ -14,5 +31,5 @@ Other dotfile repos that I've borrowed from or been inspired by:
 * [garybernhardt/dotfiles](https://github.com/garybernhardt/dotfiles)
 
 ## TODO
-- [ ] Brewfile
+- [x] Brewfile
 - [ ] install OMZ via submodule
