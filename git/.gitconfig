@@ -118,9 +118,9 @@
 
 [pager]
   # Use diff-highlight from git-core for diffing. Better diffing.
-  log = $DOTFILES/bin/diff-highlight | less -F -X
-  show = $DOTFILES/bin/diff-highlight | less -F -X
-  diff = $DOTFILES/bin/diff-highlight | less -F -X
+  log = diff-highlight | less -F -X
+  show = diff-highlight | less -F -X
+  diff = diff-highlight | less -F -X
 
 [color "diff"]
   commit = green
@@ -137,7 +137,7 @@
   newHighlight = green 22
 
 [interactive]
-  diffFilter = $DOTFILES/bin/diff-highlight
+  diffFilter = diff-highlight
 
 [fetch]
   prune = true # Always prune refs when fetching.
