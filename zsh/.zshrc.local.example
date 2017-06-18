@@ -1,0 +1,3 @@
+# Environment specific settings
+export DOTFILES=$HOME/path/to/dotfiles
+export ZSH=$HOME/path/to/.oh-my-zsh

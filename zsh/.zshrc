@@ -1,3 +1,4 @@
+source $HOME/.zshrc.local
 
 [ -z "$DOTFILES" ] && echo "\$DOTFILES must be defined" && exit 1;
 [ -z "$ZSH" ] && echo "\$ZSH must be defined" && exit 1;
