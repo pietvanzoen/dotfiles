@@ -30,11 +30,3 @@ alias bi="bundle check || bundle install"
 
 # FREEWIFI
 alias freewifi="sudo ifconfig en0 ether `openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'`"
-
-# USABILLA
-function start-themes-api() {
-  (screen -D -m -SR mongo mongod && \
-  cd ~/Projects/usabilla/themes-api && screen -D -m -SR api yarn start:watch && /
-  cd ~/Projects/usabilla/themes-publisher && screen -D -m -SR pub yarn start:watch && /
-  echo 'themes api started')
-}
