@@ -7,6 +7,7 @@ alias cl=clear
 alias j=z
 alias gtop="cd $(git rev-parse --show-toplevel)"
 alias ed=edit-dir-vim
+alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
 # ls
 alias ls="gls --color --group-directories-first --ignore='.|..'"
