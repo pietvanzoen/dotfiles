@@ -1,3 +1,0 @@
-This folder is symlinked to `.oh-my-zsh/custom/zsh-helpers`.
-
-Scripts added to this folder will be automatically loaded when zsh starts.
