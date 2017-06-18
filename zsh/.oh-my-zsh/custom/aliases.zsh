@@ -8,6 +8,10 @@ alias j=z
 alias gtop="cd $(git rev-parse --show-toplevel)"
 alias ed=edit-dir-vim
 
+# ls
+alias ls="gls --color --group-directories-first --ignore='.|..'"
+alias l='ls -lAh'
+
 # SCREEN
 alias sl="screen -ls"
 alias sr="screen -r"
