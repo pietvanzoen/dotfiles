@@ -67,7 +67,6 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-searchindex'
 Plug 'kien/ctrlp.vim'
-Plug 'nathanaelkane/vim-indent-guides'
 Plug 'pangloss/vim-javascript'
 Plug 'rking/ag.vim'
 Plug 'roman/golden-ratio'
@@ -78,6 +77,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
 Plug 'vim-airline/vim-airline'
 Plug 'vim-syntastic/syntastic'
 Plug 'wincent/terminus'
+Plug 'Yggdroot/indentLine'
 call plug#end()
 
 
@@ -132,9 +132,10 @@ let g:ycm_add_preview_to_completeopt = 0
 "let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_min_num_identifier_candidate_chars = 4
 
-" INDENT GUIDE
-hi IndentGuidesOdd  ctermbg=none
-hi IndentGuidesEven ctermbg=black
+" INDENTLINE
+let g:indentLine_enabled = 0       " disable indentation mark by default
+let g:indentLine_faster = 1        " enable faster setting
+let g:indentLine_color_term = 239  " set indent color
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
