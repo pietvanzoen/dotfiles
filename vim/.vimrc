@@ -67,8 +67,8 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-searchindex'
 Plug 'kien/ctrlp.vim'
+Plug 'mhinz/vim-grepper'
 Plug 'pangloss/vim-javascript'
-Plug 'rking/ag.vim'
 Plug 'roman/golden-ratio'
 Plug 'scrooloose/nerdtree'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
@@ -136,6 +136,13 @@ let g:ycm_min_num_identifier_candidate_chars = 4
 let g:indentLine_enabled = 0       " disable indentation mark by default
 let g:indentLine_faster = 1        " enable faster setting
 let g:indentLine_color_term = 239  " set indent color
+
+" VIM-GREPPER
+let g:grepper = {}
+runtime autoload/grepper.vim
+let g:grepper.jump = 1
+let g:grepper.stop = 500
+noremap <leader>gr :GrepperRg<Space>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
