@@ -66,6 +66,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'altercation/vim-colors-solarized'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-searchindex'
+Plug 'itchyny/lightline.vim'
 Plug 'kien/ctrlp.vim'
 Plug 'mhinz/vim-grepper'
 Plug 'pangloss/vim-javascript'
@@ -74,7 +75,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'tpope/vim-fugitive'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
-Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline'
 Plug 'vim-syntastic/syntastic'
 Plug 'wincent/terminus'
 Plug 'Yggdroot/indentLine'
@@ -110,18 +111,36 @@ nmap <c-n><c-n> :NERDTreeToggle<cr>
 " AIRLINE
 set laststatus=2 " always show status line
 set noshowmode " hide default mode in command line
+let g:lightline = {}
+let g:lightline.colorscheme = 'solarized'
+let g:lightline.active = {}
+let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename' ] ]
+let g:lightline.component = {}
+let g:lightline.component.cwd = '%{split(getcwd(), "/")[-1]}(%{fugitive#head()})'
+let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
+let g:lightline.component_function = {}
+let g:lightline.component_function.filename = 'LightlineFilename'
+
+function! LightlineFilename()
+  let filename = expand('%:t') !=# '' ? expand('%:f') : '[No Name]'
+  let modified = &modified ? '+' : ''
+  return filename . modified
+endfunction
+
+" OLD AIRLINE CONFIG
 " if !exists('g:airline_symbols')
 "   let g:airline_symbols = {}
 " endif
 " let g:airline_symbols.branch = ''
-let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]} %{airline#extensions#branch#get_head()}'
-let g:airline_section_z = '%3l/%L:%2v'
-let g:airline_theme = 'solarized'
-let g:airline#extensions#tabline#enabled = 0
-let g:airline#extensions#tabline#tab_nr_type = 2
-let g:airline#extensions#tabline#show_tab_nr = 1
-let g:airline#extensions#tabline#show_close_button = 0
-let g:airline#extensions#tabline#show_buffers = 0
+"let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]}'
+"let g:airline_section_z = '%3l/%L:%2v'
+"let g:airline_theme = 'solarized'
+"let g:airline_detect_spell=0
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#tab_nr_type = 2
+"let g:airline#extensions#tabline#show_tab_nr = 1
+"let g:airline#extensions#tabline#show_close_button = 0
+"let g:airline#extensions#tabline#show_buffers = 1
 
 " TERMINUS
 let g:TerminusMouse = 1
