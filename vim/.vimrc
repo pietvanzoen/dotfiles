@@ -237,6 +237,9 @@ augroup vimrcEx
   " trim trailing whitespace on save
   autocmd BufWritePre * %s/\s\+$//e
 
+  " trim EOF whitespace
+  autocmd BufWritePre * %s/\($\n\s*\)\+\%$//e
+
   " Jump to last cursor position unless it's invalid or in an event handler
   autocmd BufReadPost *
       \ if line("'\"") > 0 && line("'\"") <= line("$") |
