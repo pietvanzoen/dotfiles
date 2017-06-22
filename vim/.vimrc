@@ -69,18 +69,27 @@ Plug 'google/vim-searchindex'
 Plug 'itchyny/lightline.vim'
 Plug 'kien/ctrlp.vim'
 Plug 'mhinz/vim-grepper'
-Plug 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript', { 'for': ['javascript'] }
 Plug 'roman/golden-ratio'
-Plug 'scrooloose/nerdtree'
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle', 'for': 'netrw' }
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': ['javascript'] }
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
-"Plug 'vim-airline/vim-airline'
-Plug 'vim-syntastic/syntastic'
+Plug 'w0rp/ale'
 Plug 'wincent/terminus'
 Plug 'Yggdroot/indentLine'
 call plug#end()
 
+augroup nerd_loader
+  autocmd!
+  autocmd VimEnter * silent! autocmd! FileExplorer
+  autocmd BufEnter,BufNew *
+        \  if isdirectory(expand('<amatch>'))
+        \|   call plug#load('nerdtree')
+        \|   execute 'autocmd! nerd_loader'
+        \| endif
+augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGIN CONFIG
@@ -91,6 +100,8 @@ let g:ctrlp_custom_ignore={'dir': 'node_modules\|git',
                           \ 'file': '\.swp$'}
 let g:ctrlp_switch_buffer='Et'
 let g:ctrlp_dont_split = 'NERD'
+let g:ctrlp_use_caching = 1
+let g:ctrlp_clear_cache_on_exit = 0
 
 " SYNTASTIC
 let g:syntastic_mode_map = { 'mode': 'active',
@@ -163,6 +174,8 @@ let g:grepper.jump = 1
 let g:grepper.stop = 500
 noremap <leader>gr :GrepperRg<Space>
 
+" ALE
+let g:ale_fixers = { 'javascript': ['eslint'] }
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
@@ -225,6 +238,17 @@ vnoremap // y/<C-R>"<CR>
 
 map <leader>r :TernRename<cr>
 
+map <leader>f :ALEFix\|ALELint\|w<cr>
+
+" quit shortcut
+nmap <leader>q :qa<cr>
+
+" clear tabs and open project directory
+function! ClearTabs()
+  exec ':tabedit .'
+  exec ':tabonly'
+endfunction
+command! ClearTabs :call ClearTabs()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM AUTOCMDS
@@ -247,6 +271,10 @@ augroup vimrcEx
       \ endif
 
   autocmd BufRead,BufNewFile *.raml set filetype=yaml
+
+  " hack so vim-javascript works with lazy load
+  autocmd BufRead *.js set syntax=javascript
+
 augroup END
 
 
