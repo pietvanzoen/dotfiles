@@ -24,18 +24,21 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # HUB
 [ -e "$(which hub)" ] && eval "$(hub alias -s)"
 
+
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+# BIN
+export PATH=$PATH:$DOTFILES/_bin
+
+# GNU LS colors
+eval `gdircolors ~/.zsh/dircolors.ansi-dark`
 
 # RVM
 source $HOME/.rvm/scripts/rvm
 
-# BIN
-export PATH=$PATH:$DOTFILES/_bin
-
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
-# GNU LS colors
-eval `gdircolors ~/.zsh/dircolors.ansi-dark`
+# BitBar state
+export INTERNET_IS_DOWN=''
