@@ -14,7 +14,7 @@ alias ls="gls --color=auto --group-directories-first --ignore='.DS_Store'"
 alias l='ls -lAh'
 
 # SCREEN
-alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | column -s \" .\" -t | sort -k 2,2"
+alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | sed 's/\./ /' | column -s \" \" -t | sort -k 2,2"
 alias sr="screen -r"
 alias ss="screen -S"
 
