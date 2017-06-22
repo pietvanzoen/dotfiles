@@ -242,7 +242,8 @@ function! RunTests()
 endfunction
 map ,t :call RunTests()<cr>
 
-map <leader>h :nohlsearch<cr>
+" disable highlight shortcut
+nmap <cr> :nohlsearch<cr>
 
 " replace bad spelling with first suggestion
 map <leader>z 1z=
