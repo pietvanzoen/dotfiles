@@ -27,6 +27,9 @@
   changelog-tag = "!git changelog $(git latest-tag-version)..origin/master"
   changelog-branch = !git changelog origin/master..HEAD
 
+  # get last tag
+  latest-tag-version = "!git tag --list --sort='-*authordate' 'v*' | head -n 1"
+
 
   ###############################################
   # COMMITING
