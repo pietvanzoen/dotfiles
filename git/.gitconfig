@@ -152,3 +152,6 @@
 
 [commit]
   gpgsign = true # sign all commits using gpg key in .gitconfig.local
+
+[tag]
+  sort = -*authordate
