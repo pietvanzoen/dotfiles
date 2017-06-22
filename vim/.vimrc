@@ -119,7 +119,7 @@ let g:syntastic_javascript_checkers = ['eslint']
 let g:NERDTreeShowHidden = 1
 nmap <c-n><c-n> :NERDTreeToggle<cr>
 
-" AIRLINE
+" LIGHTLINE
 set laststatus=2 " always show status line
 set noshowmode " hide default mode in command line
 let g:lightline = {}
@@ -127,15 +127,32 @@ let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
 let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename' ] ]
 let g:lightline.component = {}
-let g:lightline.component.cwd = '%{split(getcwd(), "/")[-1]}(%{fugitive#head()})'
+let g:lightline.component.filename = '%<%f'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
 let g:lightline.component_function = {}
-let g:lightline.component_function.filename = 'LightlineFilename'
+"let g:lightline.component_function.filename = 'LightlineFilename'
+let g:lightline.component_function.cwd = 'LightlineProject'
+let g:lightline.component_function.mode = 'LightlineMode'
+
+function! LightlineProject()
+  let project = split(getcwd(), "/")[-1]
+  let branch = fugitive#head() !=# '' ? '(' . fugitive#head() . ')' : ''
+  return project . branch
+endfunction
 
 function! LightlineFilename()
   let filename = expand('%:t') !=# '' ? expand('%:f') : '[No Name]'
   let modified = &modified ? '+' : ''
   return filename . modified
+endfunction
+
+function! LightlineMode()
+  return expand('%:t') ==# '__Tagbar__' ? 'Tagbar':
+        \ expand('%:t') ==# 'ControlP' ? 'CtrlP' :
+        \ &filetype ==# 'unite' ? 'Unite' :
+        \ &filetype ==# 'vimfiler' ? 'VimFiler' :
+        \ &filetype ==# 'vimshell' ? 'VimShell' :
+        \ lightline#mode()
 endfunction
 
 " OLD AIRLINE CONFIG
