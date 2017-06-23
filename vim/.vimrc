@@ -37,6 +37,14 @@ set clipboard=unnamed
 " backspace behaves normally
 set backspace=indent,eol,start
 
+" persist undo history
+if !isdirectory($HOME . "/.vim/undo")
+  call mkdir($HOME . "/.vim/undo")
+endif
+set undodir=~/.vim/undo
+set undofile
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GUI SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
