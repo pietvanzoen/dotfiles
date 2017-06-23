@@ -124,8 +124,12 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_javascript_checkers = ['eslint']
 
 " NERDTREE
-let g:NERDTreeShowHidden = 1
 nmap <c-n><c-n> :NERDTreeToggle<cr>
+nmap <leader>g :NERDTreeFind<cr>
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeQuitOnOpen = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeDirArrows = 1
 
 " LIGHTLINE
 set laststatus=2 " always show status line
