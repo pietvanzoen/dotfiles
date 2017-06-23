@@ -137,12 +137,11 @@ set noshowmode " hide default mode in command line
 let g:lightline = {}
 let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
-let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename' ] ]
+let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename', 'modified' ] ]
 let g:lightline.component = {}
 let g:lightline.component.filename = '%<%f'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
 let g:lightline.component_function = {}
-"let g:lightline.component_function.filename = 'LightlineFilename'
 let g:lightline.component_function.cwd = 'LightlineProject'
 let g:lightline.component_function.mode = 'LightlineMode'
 
@@ -152,35 +151,15 @@ function! LightlineProject()
   return project . branch
 endfunction
 
-function! LightlineFilename()
-  let filename = expand('%:t') !=# '' ? expand('%:f') : '[No Name]'
-  let modified = &modified ? '+' : ''
-  return filename . modified
-endfunction
-
 function! LightlineMode()
   return expand('%:t') ==# '__Tagbar__' ? 'Tagbar':
         \ expand('%:t') ==# 'ControlP' ? 'CtrlP' :
+        \ expand('%:t') ==# '[Plugins]' ? 'Plugins' :
         \ &filetype ==# 'unite' ? 'Unite' :
         \ &filetype ==# 'vimfiler' ? 'VimFiler' :
         \ &filetype ==# 'vimshell' ? 'VimShell' :
         \ lightline#mode()
 endfunction
-
-" OLD AIRLINE CONFIG
-" if !exists('g:airline_symbols')
-"   let g:airline_symbols = {}
-" endif
-" let g:airline_symbols.branch = ''
-"let g:airline_section_b = '%<%{split(getcwd(), "/")[-1]}'
-"let g:airline_section_z = '%3l/%L:%2v'
-"let g:airline_theme = 'solarized'
-"let g:airline_detect_spell=0
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#tab_nr_type = 2
-"let g:airline#extensions#tabline#show_tab_nr = 1
-"let g:airline#extensions#tabline#show_close_button = 0
-"let g:airline#extensions#tabline#show_buffers = 1
 
 " TERMINUS
 let g:TerminusMouse = 1
