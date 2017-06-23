@@ -89,6 +89,8 @@ Plug 'wincent/terminus'
 Plug 'Yggdroot/indentLine'
 call plug#end()
 
+command! PlugSync PlugClean! | PlugInstall
+
 augroup nerd_loader
   autocmd!
   autocmd VimEnter * silent! autocmd! FileExplorer
