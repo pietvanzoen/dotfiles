@@ -6,7 +6,7 @@ alias reshell="source ~/.zshrc"
 alias cl=clear
 alias j=z
 alias gtop="cd $(git rev-parse --show-toplevel)"
-alias ed="vim . -S"
+alias vm="vim . -c \"OpenSession ${PWD##*/}\""
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
 # ls

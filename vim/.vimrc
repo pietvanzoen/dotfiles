@@ -82,7 +82,7 @@ Plug 'roman/golden-ratio'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle', 'for': 'netrw' }
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': ['javascript'] }
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-obsession'
+Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
 Plug 'w0rp/ale'
 Plug 'wincent/terminus'
@@ -201,6 +201,18 @@ noremap <leader>gr :GrepperRg<Space>
 
 " ALE
 let g:ale_fixers = { 'javascript': ['eslint'] }
+
+" VIM-SESSIONS
+let g:session_directory = '~/.vim/sessions/'
+let g:session_autosave = 'yes'
+
+function! EnableSession()
+  let project = split(getcwd(), '/')[-1]
+  exec ':SaveSession ' . project
+endfunction
+command! EnableSession :call EnableSession()
+
+nmap π :OpenSession<space>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
