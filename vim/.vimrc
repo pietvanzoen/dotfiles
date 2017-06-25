@@ -141,6 +141,10 @@ let g:lightline = {}
 let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
 let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename', 'modified' ] ]
+let g:lightline.active.right = [ [], [ 'lineinfo' ], [ 'filetype' ] ]
+let g:lightline.inactive = {}
+let g:lightline.inactive.left = [ [], [], [ 'filename' ] ]
+let g:lightline.inactive.right = [ [], [], [ 'filetype' ] ]
 let g:lightline.component = {}
 let g:lightline.component.filename = '%<%f'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
@@ -149,7 +153,7 @@ let g:lightline.component_function.cwd = 'LightlineProject'
 let g:lightline.component_function.mode = 'LightlineMode'
 
 function! LightlineProject()
-  let project = split(getcwd(), "/")[-1]
+  let project = CurrentWorkingDir()
   let branch = fugitive#head() !=# '' ? '(' . fugitive#head() . ')' : ''
   return project . branch
 endfunction
@@ -345,3 +349,12 @@ function! RenameFile()
 endfunction
 command! RenameFile :call RenameFile()
 map <leader>n :call RenameFile()<cr>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" UTILITY FUNCTIONS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function! CurrentWorkingDir()
+  return split(getcwd(), "/")[-1]
+endfunction
