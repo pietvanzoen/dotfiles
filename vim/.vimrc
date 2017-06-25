@@ -44,6 +44,7 @@ endif
 set undodir=~/.vim/undo
 set undofile
 
+let mapleader="\<Space>" " using space as <leader>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GUI SETTINGS
