@@ -195,14 +195,20 @@ let g:ale_fixers = { 'javascript': ['eslint'] }
 " VIM-SESSIONS
 let g:session_directory = '~/.vim/sessions/'
 let g:session_autosave = 'yes'
+let g:session_autoload = 'no'
 
 function! EnableSession()
-  let project = split(getcwd(), '/')[-1]
-  exec ':SaveSession ' . project
+  exec ':SaveSession ' . CurrentWorkingDir()
 endfunction
 command! EnableSession :call EnableSession()
 
-nmap π :OpenSession<space>
+function! OpenProjectSession()
+  exec ':OpenSession ' . CurrentWorkingDir()
+endfunction
+command! OpenProjectSession :call OpenProjectSession()
+
+nmap <leader>so :OpenSession<space>
+nmap <leader>sp :OpenProjectSession<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
