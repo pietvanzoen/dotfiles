@@ -12,8 +12,13 @@ nvm_status() {
   echo -n "%{$reset_color%} "
 }
 
+job_count() {
+  local n=$(jobs | grep 'suspended' | wc -l | xargs)
+  [[ $n -gt 0 ]] && echo -n " %{$fg[black]%}[${n}]%{$reset_color%}"
+}
+
 local ret_status="%(?:%{$fg[green]%}❖:%{$fg[red]%}❖)"
-PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}$(git_prompt_info) $(nvm_status)♯ '
+PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}$(git_prompt_info)$(job_count) $(nvm_status)♯ '
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[black]%}(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
