@@ -274,9 +274,6 @@ map <leader>r :TernRename<cr>
 
 map <leader>f :ALEFix\|ALELint\|w<cr>
 
-" quit shortcut
-nmap <leader>q :qa<cr>
-
 " clear tabs and open project directory
 function! ClearTabs()
   exec ':tabedit .'
