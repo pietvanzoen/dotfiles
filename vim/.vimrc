@@ -256,10 +256,16 @@ function! RunTests()
   exec ':!clear && ' . l:test_command
   exec ':GitGutterEnable'
 endfunction
-map ,t :call RunTests()<cr>
+map <leader>t :call RunTests()<cr>
+
+" yarn shortcuts
+nmap <leader>yi :!yarn install<cr>
+nmap <leader>yf :!yarn install --force<cr>
+nmap <leader>yt :!yarn test<cr>
+nmap <leader>ya :!yarn add<space>
 
 " disable highlight shortcut
-nmap <cr> :nohlsearch<cr>
+nmap <leader>h :nohlsearch<cr>
 
 " replace bad spelling with first suggestion
 map <leader>z 1z=
