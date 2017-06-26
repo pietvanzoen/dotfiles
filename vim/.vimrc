@@ -276,8 +276,6 @@ vnoremap <c-f> y<ESC>/<c-r>"<CR>
 " search for currently selected text
 vnoremap // y/<C-R>"<CR>
 
-map <leader>r :TernRename<cr>
-
 map <leader>f :ALEFix\|ALELint\|w<cr>
 
 " clear tabs and open project directory
@@ -341,8 +339,16 @@ function! Scratch()
   exec ':set filetype=javascript'
 endfunction
 command! Scratch :call Scratch()
-map ,r :w\|!echo;echo;echo;echo;echo; node $PWD/.scratch<cr>
 
+function! ScratchRunner()
+  let l:run_command = exists('g:run_command') ? g:run_command : 'node $PWD/.scratch'
+  " disable gitgutter while running run command otherwise rendering gets messed up
+  exec ':GitGutterDisable'
+  exec ':wall'
+  exec ':!clear && ' . l:run_command
+  exec ':GitGutterEnable'
+endfunction
+map <leader>r :call ScratchRunner()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE
