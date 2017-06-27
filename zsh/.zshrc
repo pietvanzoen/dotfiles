@@ -1,6 +1,5 @@
 source $HOME/.zshrc.local
 
-[ -z "$DOTFILES" ] && echo "\$DOTFILES must be defined" && exit 1;
 [ -z "$ZSH" ] && echo "\$ZSH must be defined" && exit 1;
 
 # OH-MY-ZSH
@@ -28,9 +27,8 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-#
+
 # BIN
-export PATH=$PATH:$DOTFILES/_bin
 export PATH=$PATH:$HOME/bin
 
 # GNU LS colors
