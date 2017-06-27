@@ -4,6 +4,7 @@ alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias reshell="source ~/.zshrc"
 alias cl=clear
+alias vm="vim . -S ~/.vim/sessions/\${PWD##*/}.vim"
 alias j=z
 alias gtop="cd $(git rev-parse --show-toplevel)"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
