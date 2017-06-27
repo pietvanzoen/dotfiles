@@ -1,0 +1,29 @@
+#!/bin/bash
+
+declare -a REPOS=(
+  "themes-editor-internal"
+  "themes-api"
+  "themes-publisher"
+)
+
+BASE_REPO_PATH="${HOME}/Projects/usabilla"
+
+function main() {
+  for i in "${REPOS[@]}"
+  do
+    report_changes_since_last_tag $i
+  done
+}
+
+function report_changes_since_last_tag() {
+  local repo=$1
+  local full_path="${BASE_REPO_PATH}/${repo}"
+  (
+    echo "*${repo}*" && \
+      cd $full_path && \
+      git changelog-tag && \
+      echo ''
+  )
+}
+
+main
