@@ -22,7 +22,6 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # HUB
 [ -e "$(which hub)" ] && eval "$(hub alias -s)"
 
-
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
