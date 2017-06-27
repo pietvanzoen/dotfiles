@@ -127,7 +127,14 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_javascript_checkers = ['eslint']
 
 " NERDTREE
-nmap <c-n><c-n> :NERDTreeToggle<cr>
+function! ToggleNERDTree()
+  if NERDTreeIsOpen() == 0
+    exec ':NERDTreeCWD'
+  else
+    exec ':NERDTreeToggle'
+  endif
+endfunction
+nmap <c-n><c-n> :call ToggleNERDTree()<cr>
 nmap <leader>g :NERDTreeFind<cr>
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeQuitOnOpen = 1
@@ -372,4 +379,13 @@ map <leader>n :call RenameFile()<cr>
 
 function! CurrentWorkingDir()
   return split(getcwd(), "/")[-1]
+endfunction
+
+function! NERDTreeIsOpen()
+  if exists('t:NERDTreeBufName')
+      let l:nerdtree_open = bufwinnr(t:NERDTreeBufName) != -1
+  else
+      let l:nerdtree_open = 0
+  endif
+  return l:nerdtree_open
 endfunction

@@ -28,8 +28,10 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+#
 # BIN
 export PATH=$PATH:$DOTFILES/_bin
+export PATH=$PATH:$HOME/bin
 
 # GNU LS colors
 eval `gdircolors ~/.zsh/dircolors.ansi-dark`
