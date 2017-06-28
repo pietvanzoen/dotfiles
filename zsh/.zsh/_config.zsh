@@ -27,7 +27,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
 # BIN
-export PATH=$PATH:$HOME/bin
+export PATH=$HOME/bin:$PATH
 
 # GNU LS colors
 eval `gdircolors ~/.zsh/dircolors.ansi-dark`
