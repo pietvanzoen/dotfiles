@@ -19,10 +19,17 @@ function report_changes_since_last_tag() {
   local repo=$1
   local full_path="${BASE_REPO_PATH}/${repo}"
   (
-    echo "*${repo}*" && \
-      cd $full_path && \
-      git changelog-tag && \
-      echo ''
+    cd $full_path
+
+    echo "*${repo}*"
+    [[ ! -z $(git status --short | xargs) ]] && echo "Repo is dirty" && exit 1
+
+    git checkout master --quiet
+    git pull --quiet
+    local change_count=$(git changelog-tag | wc -l | xargs)
+    echo "${change_count} commits since tag $(git latest-tag-version)"
+    git changelog-tag
+    echo ''
   )
 }
 
