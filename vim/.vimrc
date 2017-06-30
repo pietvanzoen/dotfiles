@@ -268,6 +268,10 @@ call togglebg#map("<F5>")
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPPING
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" up and down on wrapped lines
+nmap j gj
+nmap k gk
+
 " alt+k and alt+j for quick jumping
 nnoremap ˚ 10k
 nnoremap ∆ 10j
