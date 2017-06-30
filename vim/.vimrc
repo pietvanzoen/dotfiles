@@ -77,6 +77,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-searchindex'
 Plug 'itchyny/lightline.vim'
 Plug 'kien/ctrlp.vim'
+Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] }
 Plug 'mhinz/vim-grepper'
 Plug 'pangloss/vim-javascript', { 'for': ['javascript'] }
 Plug 'roman/golden-ratio'
