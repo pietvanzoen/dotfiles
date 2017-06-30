@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+filename=$1
+
+[[ -z $filename ]] && echo "Usage: upload <filename>" && exit 1
+
+BUCKET=img.piet.me
+AWS_PROFILE=piet-s3
+S3_FILE_PERMS=public-read
+
+bucket_location=$BUCKET/$(basename $filename)
+
+aws s3 cp \
+  --profile=$AWS_PROFILE \
+  --acl=$S3_FILE_PERMS \
+  --quiet \
+  $filename \
+  s3://$bucket_location
+
+location="http://$bucket_location"
+echo $location | pbcopy
+echo $location
