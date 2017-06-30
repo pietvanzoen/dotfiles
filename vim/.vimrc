@@ -313,7 +313,7 @@ nmap <leader>yt :!yarn test<cr>
 nmap <leader>ya :!yarn add<space>
 
 " disable highlight shortcut
-nmap <leader>h :nohlsearch<cr>
+nmap <return> :nohlsearch<cr>
 
 " replace bad spelling with first suggestion
 map <leader>z 1z=
