@@ -208,15 +208,51 @@ let g:session_autoload = 'no'
 function! EnableSession()
   exec ':SaveSession ' . CurrentWorkingDir()
 endfunction
-command! EnableSession :call EnableSession()
 
-function! OpenProjectSession()
-  exec ':OpenSession ' . CurrentWorkingDir()
+function! OpenProjectSession(bang)
+  call OpenSession(CurrentWorkingDir(), a:bang)
 endfunction
-command! OpenProjectSession :call OpenProjectSession()
 
-nmap <leader>so :OpenSession<space>
-nmap <leader>sp :OpenProjectSession<cr>
+function! OpenSession(session, bang)
+  let l:guessed_sessions = xolox#session#complete_names(a:session, 0, 0)
+
+  if len(l:guessed_sessions) == 0
+    echom "Unknown session '" . a:session . "'"
+    return
+  endif
+
+  let l:current_session = xolox#session#find_current_session()
+  let l:session = l:guessed_sessions[0]
+
+  if l:session == l:current_session
+    echom "Session '" . l:session . "' already active"
+    return
+  endif
+
+  let g:session_previous = l:current_session
+  call xolox#session#open_cmd(l:session, a:bang, 'OpenSession')
+endfunction
+
+function! OpenPreviousSession(bang)
+  let l:session = exists('g:session_previous') ? g:session_previous : ''
+  if l:session == ''
+    echom 'No previous session to restore'
+  else
+    call OpenSession(g:session_previous, a:bang)
+  endif
+endfunction
+
+command! EnableSession :call EnableSession()
+command! -bang OpenProjectSession call OpenProjectSession(<q-bang>)
+command! -bang OpenPreviousSession call OpenPreviousSession(<q-bang>)
+command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSession call OpenSession(<q-args>, <q-bang>)
+
+nmap π :OpenSession<space>
+nmap <leader>sr :OpenProjectSession<cr>
+nmap <leader>sp :OpenPreviousSession<cr>
+
+" CLOSETAGS
+let g:unaryTagsStack=''
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
