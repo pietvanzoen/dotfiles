@@ -84,10 +84,10 @@ Plug 'roman/golden-ratio'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle', 'for': 'netrw' }
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': ['javascript'] }
 Plug 'tpope/vim-fugitive'
-Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
 Plug 'w0rp/ale'
 Plug 'wincent/terminus'
+Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 Plug 'Yggdroot/indentLine'
 call plug#end()
 
