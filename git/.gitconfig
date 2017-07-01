@@ -114,6 +114,7 @@
 
 [diff]
   compactionHeuristic = 1
+  tool = vimdiff
 
 [difftool]
   prompt = false
