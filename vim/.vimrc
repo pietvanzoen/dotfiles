@@ -76,7 +76,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-searchindex'
 Plug 'itchyny/lightline.vim'
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] }
 Plug 'mhinz/vim-grepper'
 Plug 'pangloss/vim-javascript', { 'for': ['javascript'] }
@@ -100,9 +100,12 @@ let g:ctrlp_show_hidden=1
 let g:ctrlp_custom_ignore={'dir': 'node_modules\|\.git',
                           \ 'file': '\.swp$'}
 let g:ctrlp_switch_buffer='Et'
-let g:ctrlp_dont_split = 'NERD'
 let g:ctrlp_use_caching = 1
-let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+if executable('rg')
+  set grepprg=rg\ --color=never
+  let g:ctrlp_user_command = 'rg %s --hidden --files --color=never --glob "!.git/"'
+endif
 
 " SYNTASTIC
 let g:syntastic_mode_map = { 'mode': 'active',
@@ -333,6 +336,8 @@ augroup vimrcEx
       \ endif
 
   autocmd BufRead,BufNewFile *.raml set filetype=yaml
+
+  autocmd BufNewFile * silent CtrlPClearCache
 
   " hack so vim-javascript works with lazy load
   autocmd BufRead *.js set syntax=javascript
