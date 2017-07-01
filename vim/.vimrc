@@ -249,6 +249,7 @@ command! -bang OpenPreviousSession call OpenPreviousSession(<q-bang>)
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSession call OpenSession(<q-args>, <q-bang>)
 
 nmap π :OpenSession<space>
+nmap <leader>so :OpenSession<space>
 nmap <leader>sr :OpenProjectSession<cr>
 nmap <leader>sp :OpenPreviousSession<cr>
 
