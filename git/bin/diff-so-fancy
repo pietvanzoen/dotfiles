@@ -17,6 +17,7 @@ no warnings 'utf8';
 # Set the output to always be UTF8
 binmode STDOUT,':encoding(UTF-8)';
 
+my $max_ruler_cols             = 30;
 my $remove_file_add_header     = 1;
 my $remove_file_delete_header  = 1;
 my $clean_permission_changes   = 1;
@@ -429,7 +430,9 @@ sub trim {
 # Print a line of em-dash or line-drawing chars the full width of the screen
 sub horizontal_rule {
     my $color = $_[0] || "";
-    my $width = `tput cols`;
+    my $window_width = `tput cols`;
+    my $width = $max_ruler_cols if $window_width > $max_ruler_cols;
+
     my $uname = `uname -s`;
 
     if ($uname =~ /MINGW32|MSYS/) {
