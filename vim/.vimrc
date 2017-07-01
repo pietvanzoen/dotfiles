@@ -81,7 +81,6 @@ Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] }
 Plug 'mhinz/vim-grepper'
 Plug 'pangloss/vim-javascript', { 'for': ['javascript'] }
 Plug 'roman/golden-ratio'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle', 'for': 'netrw' }
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': ['javascript'] }
 Plug 'tpope/vim-fugitive'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
@@ -92,16 +91,6 @@ Plug 'Yggdroot/indentLine'
 call plug#end()
 
 command! PlugSync PlugClean! | PlugInstall
-
-augroup nerd_loader
-  autocmd!
-  autocmd VimEnter * silent! autocmd! FileExplorer
-  autocmd BufEnter,BufNew *
-        \  if isdirectory(expand('<amatch>'))
-        \|   call plug#load('nerdtree')
-        \|   execute 'autocmd! nerd_loader'
-        \| endif
-augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGIN CONFIG
@@ -126,21 +115,6 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_loc_list_height = 5
 let g:syntastic_check_on_wq = 0
 let g:syntastic_javascript_checkers = ['eslint']
-
-" NERDTREE
-function! ToggleNERDTree()
-  if NERDTreeIsOpen() == 0
-    exec ':NERDTreeCWD'
-  else
-    exec ':NERDTreeToggle'
-  endif
-endfunction
-nmap <c-n><c-n> :call ToggleNERDTree()<cr>
-nmap <leader>g :NERDTreeFind<cr>
-let g:NERDTreeShowHidden = 1
-let g:NERDTreeQuitOnOpen = 1
-let g:NERDTreeMinimalUI = 1
-let g:NERDTreeDirArrows = 1
 
 " LIGHTLINE
 set laststatus=2 " always show status line
@@ -328,6 +302,9 @@ vnoremap // y/<C-R>"<CR>
 
 map <leader>f :ALEFix\|ALELint\|w<cr>
 
+" Toggle netrw
+map <c-n><c-n> :Lexplore<CR>
+
 " clear tabs and open project directory
 function! ClearTabs()
   exec ':tabedit .'
@@ -364,6 +341,15 @@ augroup vimrcEx
 
 augroup END
 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NETRW SETTINGS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 0
+let g:netrw_winsize = 25
+let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.zip,*.git'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
@@ -424,13 +410,4 @@ map <leader>n :call RenameFile()<cr>
 
 function! CurrentWorkingDir()
   return split(getcwd(), "/")[-1]
-endfunction
-
-function! NERDTreeIsOpen()
-  if exists('t:NERDTreeBufName')
-      let l:nerdtree_open = bufwinnr(t:NERDTreeBufName) != -1
-  else
-      let l:nerdtree_open = 0
-  endif
-  return l:nerdtree_open
 endfunction
