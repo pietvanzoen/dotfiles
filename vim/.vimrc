@@ -360,6 +360,8 @@ augroup vimrcEx
   " hack so vim-javascript works with lazy load
   autocmd BufRead *.js set syntax=javascript
 
+  autocmd FileType markdown setlocal wrap linebreak nolist
+
 augroup END
 
 
