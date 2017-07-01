@@ -214,6 +214,7 @@ function! OpenProjectSession(bang)
 endfunction
 
 function! OpenSession(session, bang)
+  exec ':wall'
   let l:guessed_sessions = xolox#session#complete_names(a:session, 0, 0)
 
   if len(l:guessed_sessions) == 0
