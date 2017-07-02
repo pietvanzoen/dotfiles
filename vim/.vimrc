@@ -191,8 +191,8 @@ function! EnableSession()
   exec ':SaveSession ' . CurrentWorkingDir()
 endfunction
 
-function! OpenProjectSession(bang)
-  call OpenSession(CurrentWorkingDir(), a:bang)
+function! OpenProjectSession()
+  call OpenSession(CurrentWorkingDir(), '!')
 endfunction
 
 function! OpenSession(session, bang)
@@ -226,7 +226,7 @@ function! OpenPreviousSession(bang)
 endfunction
 
 command! EnableSession :call EnableSession()
-command! -bang OpenProjectSession call OpenProjectSession(<q-bang>)
+command! OpenProjectSession call OpenProjectSession()
 command! -bang OpenPreviousSession call OpenPreviousSession(<q-bang>)
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSession call OpenSession(<q-args>, <q-bang>)
 
