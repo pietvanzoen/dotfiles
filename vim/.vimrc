@@ -146,12 +146,9 @@ function! LightlineProject()
 endfunction
 
 function! LightlineMode()
-  return expand('%:t') ==# '__Tagbar__' ? 'Tagbar':
-        \ expand('%:t') ==# 'ControlP' ? 'CtrlP' :
+  return expand('%:t') ==# 'ControlP' ? 'CtrlP' :
         \ expand('%:t') ==# '[Plugins]' ? 'Plugins' :
-        \ &filetype ==# 'unite' ? 'Unite' :
-        \ &filetype ==# 'vimfiler' ? 'VimFiler' :
-        \ &filetype ==# 'vimshell' ? 'VimShell' :
+        \ &filetype ==# 'qf' ? 'Quickfix' :
         \ lightline#mode()
 endfunction
 
