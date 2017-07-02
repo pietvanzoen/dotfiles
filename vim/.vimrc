@@ -75,10 +75,10 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'altercation/vim-colors-solarized'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-searchindex'
 Plug 'itchyny/lightline.vim'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] }
 Plug 'mhinz/vim-grepper'
 Plug 'pangloss/vim-javascript', { 'for': ['javascript'] }
