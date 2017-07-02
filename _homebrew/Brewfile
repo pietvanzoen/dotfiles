@@ -1,5 +1,5 @@
 brew 'autojump'
-brew 'aws-shell'
+brew 'awscli'
 brew 'homebrew/php/composer'
 brew 'coreutils'
 brew 'cscope'
