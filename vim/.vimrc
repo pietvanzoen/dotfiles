@@ -22,7 +22,6 @@ set wildmode=longest,list
 set wildmenu
 set ignorecase
 set smartcase
-set wildignore+=**/node_modules/**
 set spell spelllang=en_us
 
 " set whitespace chars
@@ -45,6 +44,9 @@ set undodir=~/.vim/undo
 set undofile
 
 let mapleader="\<Space>" " using space as <leader>
+
+"ignores
+set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GUI SETTINGS
