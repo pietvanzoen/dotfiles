@@ -85,6 +85,7 @@ Plug 'pangloss/vim-javascript', { 'for': ['javascript'] }
 Plug 'roman/golden-ratio'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': ['javascript'] }
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
 Plug 'w0rp/ale'
 Plug 'wincent/terminus'
@@ -353,7 +354,7 @@ augroup END
 " NETRW SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:netrw_banner = 0
-let g:netrw_liststyle = 3
+let g:netrw_liststyle = 1
 let g:netrw_browse_split = 0
 let g:netrw_winsize = 25
 let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.zip,*.git'
