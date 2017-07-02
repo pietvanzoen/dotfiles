@@ -296,8 +296,17 @@ nmap <leader>yf :!yarn install --force<cr>
 nmap <leader>yt :!yarn test<cr>
 nmap <leader>ya :!yarn add<space>
 
+" vim plug
+nmap <leader>ps :PlugSync<cr>
+nmap <leader>pi :PlugInstall<cr>
+nmap <leader>pc :PlugClean!<cr>
+
+" grepper search
+nmap <leader>* :Grepper -tool git -open -switch -cword -noprompt<cr>
+nmap <leader>gg :Grepper<cr>
+
 " disable highlight shortcut
-nmap <return> :nohlsearch<cr>
+nmap <leader>h :nohlsearch<cr>
 
 " replace bad spelling with first suggestion
 map <leader>z 1z=
@@ -308,7 +317,7 @@ vnoremap <c-f> y<ESC>/<c-r>"<CR>
 " search for currently selected text
 vnoremap // y/<C-R>"<CR>
 
-map <leader>f :ALEFix\|ALELint\|w<cr>
+map <leader>af :ALEFix\|ALELint\|w<cr>
 
 " Toggle netrw
 map <c-n><c-n> :Lexplore<CR>
