@@ -106,7 +106,6 @@ let g:ctrlp_switch_buffer='Et'
 let g:ctrlp_use_caching = 1
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 if executable('rg')
-  set grepprg=rg\ --color=never
   let g:ctrlp_user_command = 'rg %s --hidden --files --color=never --glob "!.git/"'
 endif
 
@@ -172,10 +171,16 @@ let g:indentLine_color_term = 239  " set indent color
 
 " VIM-GREPPER
 let g:grepper = {}
-runtime autoload/grepper.vim
-let g:grepper.jump = 1
-let g:grepper.stop = 500
-noremap <leader>gr :GrepperRg<Space>
+let g:grepper.tools = ['rg', 'ag', 'ack', 'grep', 'findstr', 'pt', 'sift', 'git']
+let g:grepper.rg = {
+      \ 'grepprg':    'rg -H --no-heading --vimgrep --hidden --glob "!.git/"',
+      \ 'grepformat': '%f:%l:%c:%m',
+      \ 'escape':     '\^$.*+?()[]{}| ' }
+
+command! Todo :Grepper
+      \ -noprompt
+      \ -tool git
+      \ -grepprg git grep -nI '\(TODO\|FIXME\)'
 
 " ALE
 let g:ale_fixers = { 'javascript': ['eslint'] }
