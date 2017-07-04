@@ -38,7 +38,7 @@ source $ZSH/custom/git-prompt.zsh
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_STATESEPARATOR="%{$fg[yellow]%}"
 GIT_PS1_SHOWUNTRACKEDFILES=1
-#GIT_PS1_SHOWUPSTREAM="auto"
+GIT_PS1_SHOWUPSTREAM="auto"
 function __git_info() {
   [[ ! -z $FAST_PROMPT ]] && return;
 
