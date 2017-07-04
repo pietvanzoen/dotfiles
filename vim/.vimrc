@@ -103,10 +103,10 @@ let g:ctrlp_show_hidden=1
 let g:ctrlp_custom_ignore={'dir': 'node_modules\|\.git',
                           \ 'file': '\.swp$'}
 let g:ctrlp_switch_buffer='Et'
-let g:ctrlp_use_caching = 1
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 if executable('rg')
   let g:ctrlp_user_command = 'rg %s --hidden --files --color=never --glob "!.git/"'
+  let g:ctrlp_use_caching = 0
 endif
 
 " SYNTASTIC
