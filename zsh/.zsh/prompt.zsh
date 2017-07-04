@@ -28,3 +28,18 @@ zle -N zle-keymap-select
 
 # faster mode switching
 export KEYTIMEOUT=1
+
+# FZF
+ZSH_BIN=$(which zsh)
+FZF_INSTALL_BIN=/usr/local/opt/fzf/install
+
+if [[ ! -f ~/.fzf.zsh ]]; then
+  if [[ ! -f $FZF_INSTALL_BIN ]]; then
+    echo "fzf not installed. Run brew install fzf"
+  else
+    echo "installing fzf"
+    $FZF_INSTALL_BIN
+  fi
+fi
+
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
