@@ -149,6 +149,7 @@ function! LightlineMode()
   return expand('%:t') ==# 'ControlP' ? 'CtrlP' :
         \ expand('%:t') ==# '[Plugins]' ? 'Plugins' :
         \ &filetype ==# 'qf' ? 'Quickfix' :
+        \ &filetype ==# 'netrw' ? 'Explorer' :
         \ lightline#mode()
 endfunction
 
