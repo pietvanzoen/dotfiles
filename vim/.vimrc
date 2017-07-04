@@ -277,10 +277,10 @@ nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 
 " tab indenting for normal and visual mode
-nnoremap <Tab> >>_
-nnoremap <S-Tab> <<_
-vnoremap <Tab> >gv
-vnoremap <S-Tab> <gv
+nnoremap ¬ >>_
+nnoremap ˙ <<_
+vnoremap ¬ >gv
+vnoremap ˙ <gv
 
 map <up> :echo "NO BAD PIET!"<cr>
 map <down> :echo "NO BAD PIET!"<cr>
