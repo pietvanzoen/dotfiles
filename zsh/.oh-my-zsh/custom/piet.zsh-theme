@@ -1,6 +1,7 @@
 #!/bin/zsh
 
-PROMPT='$(__ret_status)$(__working_dir)$(__git_info)$(__job_count)$(__nvm_status)$(__exec_time) ♯ '
+PROMPT='$(__ret_status)$(__working_dir)$(__git_info)$(__job_count) ♯ '
+RPROMPT='$(__exec_time)$(__section $(__nvm_status))'
 
 ###############################################
 # UTILITY COMMANDS
@@ -127,4 +128,9 @@ function __displaytime() {
 # requires brew install coreutils for gdate
 function __get_time() {
   echo -n $(($(gdate +%s%N)/1000000))
+}
+
+function __section() {
+  if [[ -z $@ ]] && return
+  echo -n " %{$fg[black]%}|%{$reset_color%} ${@}"
 }
