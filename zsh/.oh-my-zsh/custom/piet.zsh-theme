@@ -75,8 +75,12 @@ function __job_count() {
 # EXECUTION TIME
 function __exec_time() {
   [[ ! -z $HIDE_TIME ]] && return;
+  local cmd=''
+  if [[ ! -z $EXEC_TIME_cmdname ]]; then
+    local cmd=" ${EXEC_TIME_cmdname}"
+  fi
   echo -n " %{$fg[black]%}"
-  echo -n "$(__displaytime $EXEC_TIME_duration)"
+  echo -n "⧗${cmd} $(__displaytime $EXEC_TIME_duration)"
   echo -n "%{$reset_color%}"
 }
 
@@ -86,13 +90,17 @@ function __exec_time() {
 ###############################################
 # Execution time start
 function __exec_time_preexec_hook() {
+  EXEC_TIME_cmdname="$(echo "${@}" | cut -d ' ' -f1)"
   EXEC_TIME_start=$(__get_time)
 }
 
 # Execution time end
 function __exec_time_precmd_hook() {
   [[ -n $EXEC_TIME_duration ]] && unset EXEC_TIME_duration
-  [[ -z $EXEC_TIME_start ]] && return
+  if [[ -z $EXEC_TIME_start ]]; then
+    unset EXEC_TIME_cmdname
+    return
+  fi
   local SPACESHIP_EXEC_TIME_stop=$(__get_time)
   EXEC_TIME_duration=$(( $SPACESHIP_EXEC_TIME_stop - $EXEC_TIME_start ))
   unset EXEC_TIME_start
