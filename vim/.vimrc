@@ -201,10 +201,10 @@ function! EnableSession()
 endfunction
 
 function! OpenProjectSession()
-  call OpenSession(CurrentWorkingDir(), '!')
+  call OpenSesh(CurrentWorkingDir(), '!')
 endfunction
 
-function! OpenSession(session, bang)
+function! OpenSesh(session, bang)
   exec ':wall'
   let l:guessed_sessions = xolox#session#complete_names(a:session, 0, 0)
 
@@ -230,17 +230,17 @@ function! OpenPreviousSession(bang)
   if l:session == ''
     echom 'No previous session to restore'
   else
-    call OpenSession(g:session_previous, a:bang)
+    call OpenSesh(g:session_previous, a:bang)
   endif
 endfunction
 
 command! EnableSession :call EnableSession()
 command! OpenProjectSession call OpenProjectSession()
 command! -bang OpenPreviousSession call OpenPreviousSession(<q-bang>)
-command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSession call OpenSession(<q-args>, <q-bang>)
+command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSesh call OpenSesh(<q-args>, <q-bang>)
 
-nmap π :OpenSession<space>
-nmap <leader>so :OpenSession<space>
+nmap π :OpenSesh<space>
+nmap <leader>so :OpenSesh<space>
 nmap <leader>sr :OpenProjectSession<cr>
 nmap <leader>sp :OpenPreviousSession<cr>
 
