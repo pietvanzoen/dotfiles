@@ -84,6 +84,7 @@ Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'pangloss/vim-javascript', { 'for': ['javascript'] }
 Plug 'roman/golden-ratio'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': ['javascript'] }
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
