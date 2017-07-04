@@ -22,15 +22,6 @@ function hidetime() {
 
 
 ###############################################
-# ZSH THEME CONFIG
-###############################################
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[black]%}(%{$fg[red]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[yellow]%}*%{$fg[black]%})"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[black]%})"
-
-
-###############################################
 # PROMPT FUNCTIONS
 ###############################################
 # Show red/green indicator based on last command's exit status
@@ -42,10 +33,21 @@ function __working_dir() {
   echo -n " %{$fg[cyan]%}%c%{$reset_color%}"
 }
 
-# Git branch info
+# Git branch info using __git_ps1
+source $ZSH/custom/git-prompt.zsh
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_STATESEPARATOR="%{$fg[yellow]%}"
+GIT_PS1_SHOWUNTRACKEDFILES=1
+#GIT_PS1_SHOWUPSTREAM="auto"
 function __git_info() {
   [[ ! -z $FAST_PROMPT ]] && return;
-  git_prompt_info
+
+  local info=$(__git_ps1 | sed -E 's/\(|\)//g' | xargs)
+  [[ -z $info ]] && return;
+
+  echo -n "%{$fg[black]%}(%{$fg[red]%}"
+  echo -n $info
+  echo -n "%{$fg[black]%})%{$reset_color%}"
 }
 
 # When there's an .nvmrc show current nvm version
