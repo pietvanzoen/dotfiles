@@ -83,9 +83,11 @@ Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] }
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'pangloss/vim-javascript', { 'for': ['javascript'] }
 Plug 'roman/golden-ratio'
+Plug 'svermeulen/vim-easyclip'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': ['javascript'] }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
 Plug 'w0rp/ale'
@@ -116,6 +118,10 @@ if executable('rg')
         \ --glob "!.DS_Store"'
   let g:ctrlp_use_caching = 0
 endif
+
+" EASY CLIP
+let g:EasyClipSwapPasteForwardFallback='CtrlP'   " c-p falls back to CtrlP if last command was not past
+let g:ctrlp_map = ''                             " disable CtrlP mapping so easyclip takes over
 
 " SYNTASTIC
 let g:syntastic_mode_map = { 'mode': 'active',
