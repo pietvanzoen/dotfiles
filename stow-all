@@ -2,8 +2,17 @@
 
 set -e
 
-# setup stow first
-stow --target=/Users/piet --restow --verbose stow
+if [[ -z $(which dotfilesdir) ]]; then
+  DOTFILES_DIR=.
+else
+  DOTFILES_DIR=$(dotfilesdir)
+fi
 
-# stow everything else
-ls -d */ | grep -v _ | grep -v stow | xargs -I {} stow {}
+# fork so current directory does change when calling via zsh/bin/restow
+(
+  cd $DOTFILES_DIR
+  # setup stow first
+  stow --target=/Users/piet --restow --verbose stow
+  # then stow everything else
+  ls -d */ | grep -v _ | grep -v stow | xargs -I {} stow {}
+)

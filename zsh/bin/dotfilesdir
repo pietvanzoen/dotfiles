@@ -1,0 +1,12 @@
+#!/bin/bash
+# Return the absolute directory for these dotfiles
+
+set -e
+
+# read the absolute path of this file, following any symlinks
+THIS_PATH=$(greadlink -f $0)
+
+# trim everything after /dotfiles/
+DIR=$(echo $THIS_PATH | sed -E 's/(^.*\/dotfiles)\/.*$/\1/')
+
+echo $DIR
