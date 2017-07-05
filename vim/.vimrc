@@ -94,7 +94,7 @@ Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 Plug 'Yggdroot/indentLine'
 call plug#end()
 
-command! PlugSync PlugClean! | PlugInstall
+command! PlugSync :so ~/.vimrc | PlugClean! | PlugInstall
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGIN CONFIG
