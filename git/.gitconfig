@@ -93,6 +93,9 @@
   unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
   assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
 
+  # Go to root of git repo
+  root="!f() { local gwd=$(git rev-parse --show-toplevel || echo '.'); cd $gwd && (echo $gwd | sed 's|'$HOME'|~|'); }; f"
+
 [merge]
   summary = true # Always include a summary in merge commits.
 
