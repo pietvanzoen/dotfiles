@@ -315,7 +315,7 @@ nmap <leader>* :Grepper -tool git -open -switch -cword -noprompt<cr>
 nmap <leader>gg :Grepper<cr>
 
 " disable highlight shortcut
-nmap <leader>h :nohlsearch<cr>
+nmap <leader>h :let @/ = ""<cr>
 
 " replace bad spelling with first suggestion
 map <leader>z 1z=
