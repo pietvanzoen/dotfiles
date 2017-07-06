@@ -40,3 +40,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # BitBar state
 export INTERNET_IS_DOWN=''
+
+# GNU COMMANDS
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
