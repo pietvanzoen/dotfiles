@@ -154,3 +154,4 @@ fabric.properties
 
 # scratch file names
 .scratch
+*.local
