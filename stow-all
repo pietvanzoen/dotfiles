@@ -2,10 +2,10 @@
 
 set -e
 
-if [[ -z $(which dotfilesdir) ]]; then
-  DOTFILES_DIR=.
-else
+if [[ $(which dotfilesdir) ]]; then
   DOTFILES_DIR=$(dotfilesdir)
+else
+  DOTFILES_DIR=.
 fi
 
 # fork so current directory does change when calling via zsh/bin/restow
