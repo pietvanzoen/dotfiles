@@ -9,9 +9,12 @@ alias j=z
 alias gtop="cd $(git rev-parse --show-toplevel)"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
-# ls
+# base command
 alias ls="gls --color=auto --group-directories-first --ignore='.DS_Store'"
 alias l='ls -lAh'
+alias rm='rm -v'
+alias cp='cp -v'
+alias mv='mv -v'
 
 # SCREEN
 alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | sed 's/\./ /' | column -s \" \" -t | sort -k 2,2"
