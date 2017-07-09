@@ -3,6 +3,7 @@
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias reshell="source ~/.zshrc"
+alias restow="$(dotfilesdir)/stow-all"
 alias cl=clear
 alias vm="vim . -S ~/.vim/sessions/\${PWD##*/}.vim"
 alias j=z
