@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Usage info
+show_help() {
+cat << EOF
+Usage: ${0##*/} [-h] [-p PIPE_NAME] [command]...
+Send command to a pipe for pipe-read to run commands in current directory.
+Pipe is created if it does not exist.
+
+    -h            display this help and exit
+    -p PINE_NAME  name of pipe to send command to. default is .plumber
+
+EOF
+}
+
+PIPE_NAME='.plumber'
+
+OPTIND=1
+while getopts hp: opt; do
+    case $opt in
+        h)
+            show_help
+            exit 0
+            ;;
+        p)  PIPE_NAME=$OPTARG
+            ;;
+        *)
+            show_help >&2
+            exit 1
+            ;;
+    esac
+done
+shift "$((OPTIND-1))"
+
+if [[ ! -p $PIPE_NAME ]]; then
+  echo "Pipe '${PIPE_NAME}' doesn't appear to exist. Use pipe-run to start a pipe runner."
+  exit 1
+fi
+
+echo "${@}" > $PIPE_NAME
