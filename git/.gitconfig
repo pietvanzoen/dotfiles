@@ -23,7 +23,7 @@
   ra = !git r --all # Log recent commits from all refs.
 
   # Create a simple change log for copy/pasting into PRs.
-  changelog = "!git log --pretty=\"* %h %ad %s\" --date=short"
+  changelog = "!git log --pretty=\"* %ad - %s [%h]\" --date=short"
   changelog-tag = "!git changelog $(git latest-tag-version)..origin/master"
   changelog-branch = !git changelog origin/master..HEAD
 
