@@ -376,8 +376,18 @@ augroup vimrcEx
 
 augroup END
 
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PIPE READER
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! PipeCommand(cmd)
+  if !filewritable($HOME .'/.vim_pipe')
+    echoerr 'Pipe "~/.vim_pipe" not found. Run pipe-run ~/.vim_pipe'
+    return
+  endif
+  exec 'Dispatch! pipe-send -p ~/.vim_pipe ' . a:cmd
+endfunction
+command! -nargs=? PipeCmd call PipeCommand(<q-args>)
+
 " NETRW SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:netrw_banner = 1
