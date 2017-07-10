@@ -10,6 +10,9 @@ alias j=z
 alias gtop="cd $(git rev-parse --show-toplevel)"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
+# git
+alias grt=". git-root"
+
 # base command
 alias ls="gls --color=auto --group-directories-first --ignore='.DS_Store'"
 alias l='ls -lAh'

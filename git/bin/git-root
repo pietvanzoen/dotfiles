@@ -1,0 +1,7 @@
+#!/bin/bash
+
+git_root=$(git rev-parse --show-toplevel || echo '.')
+
+echo $(echo $git_root | sed "s|"$HOME"|~|g")
+
+cd $git_root
