@@ -298,15 +298,22 @@ map <left> :echo "NO BAD PIET!"<cr>
 map <right> :echo "NO BAD PIET!"<cr>
 
 " default test runner command
-function! RunTests()
-  let l:test_command = exists('g:test_command') ? g:test_command : 'yarn test'
+function! RunTests(test_command)
+  if (a:test_command != '')
+    let l:test_command = a:test_command
+  elseif (exists('g:test_command'))
+    let l:test_command = g:test_command
+  else
+    let l:test_command = 'yarn test'
+  endif
   " disable gitgutter while running external test command otherwise rendering gets messed up
-  exec ':GitGutterDisable'
+  exec ':GitGutterDisable | ALEDisable'
   exec ':wall'
   exec ':!clear && ' . l:test_command
-  exec ':GitGutterEnable'
+  exec ':GitGutterEnable | ALEEnable'
 endfunction
-map <leader>t :call RunTests()<cr>
+command! -nargs=? RunTests call RunTests(<q-args>)
+map <leader>t :RunTests<cr>
 
 " yarn shortcuts
 nmap <leader>yi :!yarn install<cr>
