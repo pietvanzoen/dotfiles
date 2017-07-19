@@ -7,7 +7,7 @@ alias restow="$(dotfilesdir)/stow-all"
 alias cl=clear
 alias vm="vim . -S ~/.vim/sessions/\${PWD##*/}.vim"
 alias j=z
-alias gtop="cd $(git rev-parse --show-toplevel)"
+alias gtop="cd \$(git rev-parse --show-toplevel || echo '.')"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
 # git
