@@ -345,7 +345,7 @@ vnoremap // y/<C-R>"<CR>
 map <leader>af :ALEFix\|ALELint\|w<cr>
 
 " Toggle netrw
-"map <c-n><c-n> :Lexplore<CR>
+map <c-n><c-n> :Lexplore<CR>
 
 " clear tabs and open project directory
 function! ClearTabs()
