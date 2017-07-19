@@ -89,6 +89,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
 Plug 'w0rp/ale'
