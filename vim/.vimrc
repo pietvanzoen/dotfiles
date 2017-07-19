@@ -231,6 +231,7 @@ function! OpenSesh(session, bang)
 
   let g:session_previous = l:current_session
   call xolox#session#open_cmd(l:session, a:bang, 'OpenSession')
+  call LoadLocalVimrc()
 endfunction
 
 function! OpenPreviousSession(bang)
@@ -408,11 +409,14 @@ map <leader>v :view %%
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REPO SPECIFIC VIMRC
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let git_path = system("git rev-parse --show-toplevel 2>/dev/null")
-let git_vimrc = substitute(git_path, '\n', '', '') . "/.vimrc.local"
-if !empty(glob(git_vimrc))
-  sandbox exec ":source " . git_vimrc
-endif
+function! LoadLocalVimrc()
+  let git_path = system("git rev-parse --show-toplevel 2>/dev/null")
+  let git_vimrc = substitute(git_path, '\n', '', '') . "/.vimrc.local"
+  if !empty(glob(git_vimrc))
+    sandbox exec ":source " . git_vimrc
+  endif
+endfunction
+call LoadLocalVimrc()
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
