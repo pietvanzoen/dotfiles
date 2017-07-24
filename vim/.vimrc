@@ -121,18 +121,6 @@ if executable('rg')
   let g:ctrlp_use_caching = 0
 endif
 
-" SYNTASTIC
-let g:syntastic_mode_map = { 'mode': 'active',
-                            \ 'active_filetypes': ['javascript'],
-                            \ 'passive_filetypes': [] }
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 2
-let g:syntastic_check_on_open = 1
-let g:syntastic_loc_list_height = 5
-let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['eslint']
-
 " LIGHTLINE
 set laststatus=2 " always show status line
 set noshowmode " hide default mode in command line
