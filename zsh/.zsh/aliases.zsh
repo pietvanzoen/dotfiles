@@ -25,6 +25,9 @@ alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | sed 
 alias sr="screen -r"
 alias ss="screen -S"
 
+# TMUX
+alias ta="tmux a"
+
 function mktouch() {
   if [ $# -lt 1 ]; then
     echo "Missing argument";
