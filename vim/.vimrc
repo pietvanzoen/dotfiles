@@ -95,6 +95,7 @@ Plug 'w0rp/ale'
 Plug 'wincent/terminus'
 Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 Plug 'Yggdroot/indentLine'
+Plug 'yssl/QFEnter'
 call plug#end()
 
 command! PlugSync :so ~/.vimrc | PlugClean! | PlugInstall
@@ -250,6 +251,12 @@ nmap <leader>sp :OpenPreviousSession<cr>
 
 " CLOSETAGS
 let g:unaryTagsStack=''
+
+" QLEnter
+let g:qfenter_keymap = {}
+let g:qfenter_keymap.vopen = ['<C-v>']
+let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
+let g:qfenter_keymap.topen = ['<C-t>']
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
