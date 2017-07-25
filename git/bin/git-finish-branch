@@ -3,22 +3,24 @@
 set -e
 
 function main() {
-  local branch=$(git symbolic-ref --short HEAD)
+  local branch
 
-  assert_not_master $branch
+  branch=$(git symbolic-ref --short HEAD)
+
+  assert_not_master
 
   update_master
 
-  assert_feature_up_to_date $branch
+  assert_feature_up_to_date
 
-  merge_feature $branch
+  merge_feature
 
-  cleanup $branch
+  cleanup
 
 }
 
 function assert_not_master() {
-  if [[ $1 == 'master' ]]; then
+  if [[ $branch == 'master' ]]; then
     error "Current branch is master. Exiting."
     exit 1
   fi
@@ -31,28 +33,28 @@ function update_master() {
 }
 
 function assert_feature_up_to_date() {
-  local branch=$1
-  local missing_commits=$(git log master --pretty="* %h - %s [%an]" --not $branch)
+  local missing_commits
+  missing_commits="$(git log master --pretty="* %h - %s [%an]" --not "$branch")"
 
   if [[ $missing_commits ]]; then
-    error "Branch ${branch} is missing the following commits from master. Rebase and try again."
-    echo "${missing_commits}"
-    git checkout $branch --quiet
+    error "Branch $branch is missing the following commits from master. Rebase and try again."
+    echo "$missing_commits"
+    git checkout "$branch" --quiet
     exit 1
   fi
 
 }
 
 function merge_feature() {
-  info "merging ${1}"
-  git merge --ff-only $1
+  info "merging $branch"
+  git merge --ff-only "$branch"
   git push
 }
 
 function cleanup() {
   info "cleaning up"
-  git branch -d $1
-  git push origin --delete $1
+  git branch -d "$branch"
+  git push origin --delete "$branch"
 }
 
 function info() {
