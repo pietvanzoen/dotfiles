@@ -1,0 +1,68 @@
+#!/bin/bash
+
+set -e
+
+function main() {
+  local branch=$(git symbolic-ref --short HEAD)
+
+  assert_not_master $branch
+
+  update_master
+
+  assert_feature_up_to_date $branch
+
+  merge_feature $branch
+
+  cleanup $branch
+
+}
+
+function assert_not_master() {
+  if [[ $1 == 'master' ]]; then
+    error "Current branch is master. Exiting."
+    exit 1
+  fi
+}
+
+function update_master() {
+  info "updating master"
+  git checkout master --quiet
+  git pull
+}
+
+function assert_feature_up_to_date() {
+  local branch=$1
+  local missing_commits=$(git log master --pretty="* %h - %s [%an]" --not $branch)
+
+  if [[ $missing_commits ]]; then
+    error "Branch ${branch} is missing the following commits from master. Rebase and try again."
+    echo "${missing_commits}"
+    git checkout $branch --quiet
+    exit 1
+  fi
+
+}
+
+function merge_feature() {
+  info "merging ${1}"
+  git merge --ff-only $1
+  git push
+}
+
+function cleanup() {
+  info "cleaning up"
+  git branch -d $1
+  git push origin --delete $1
+}
+
+function info() {
+  echo
+  echo "$(tput setaf 6)>> $1$(tput sgr0)"
+}
+
+function error() {
+  echo
+  echo "$(tput setaf 1)>> $1$(tput sgr0)"
+}
+
+main
