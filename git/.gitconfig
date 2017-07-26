@@ -63,6 +63,7 @@
   # Fetch and update given branch name, then rebase current branch onto that branch.
   fetch-rebase = "!f() { if [[ -z \"$1\" ]]; then echo 'No branch name given.' && exit 1; else git fetch origin $1:$1 && git rebase $1; fi }; f"
   frm = !git fetch-rebase master
+  diff-commits = "!git fetch origin master:master && git l master --not $(git symbolic-ref --short HEAD)"
 
   # Delete any branches already merged into master.
   prune-local = "!git branch --merged | grep -v \"\\*\\|master\" | xargs -n 1 git branch -d && echo \"Merged branches pruned.\""
