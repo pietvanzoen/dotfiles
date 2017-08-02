@@ -19,6 +19,7 @@ alias l='ls -lAh'
 alias rm='rm -v'
 alias cp='cp -v'
 alias mv='mv -v'
+alias rsync="rsync -azrv --progress"
 
 # SCREEN
 alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | sed 's/\./ /' | column -s \" \" -t | sort -k 2,2"
