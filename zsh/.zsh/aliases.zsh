@@ -28,6 +28,7 @@ alias ss="screen -S"
 
 # TMUX
 alias ta="tmux a"
+alias tdev="tmux new-session -A -s dev"
 
 function mktouch() {
   if [ $# -lt 1 ]; then
