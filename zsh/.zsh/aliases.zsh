@@ -16,8 +16,8 @@ alias grt=". git-root"
 alias ls="gls --color=auto --group-directories-first --ignore='.DS_Store'"
 alias l='ls -lAh'
 alias rm='rm -v'
-alias cp='cp -v'
-alias mv='mv -v'
+alias cp='cp -vi'
+alias mv='mv -vi'
 alias rsync="rsync -azrv --progress"
 
 # SCREEN
