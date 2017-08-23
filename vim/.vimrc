@@ -335,6 +335,20 @@ nmap <leader>gg :Grepper<cr>
 " disable highlight shortcut
 nmap <leader>h :let @/ = ""<cr>
 
+" replace buffer instances of word under cursor
+function! RenameCursorWord()
+  let old_name = CursorWord()
+  let new_name = input('Replace "' . old_name . '" with: ')
+  if new_name != '' && new_name != old_name
+    exec 'normal m`'
+    exec '%s/' . old_name . '/' . new_name . '/gc'
+    exec 'normal ``'
+    redraw!
+  endif
+endfunction
+command! RenameCursorWord :call RenameCursorWord()
+map <leader>r :call RenameCursorWord()<cr>
+
 " replace bad spelling with first suggestion
 map <leader>z 1z=
 
@@ -447,7 +461,6 @@ function! ScratchRunner()
   exec ':!clear && ' . l:run_command
   exec ':GitGutterEnable'
 endfunction
-map <leader>r :call ScratchRunner()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE
@@ -471,4 +484,10 @@ map <leader>n :call RenameFile()<cr>
 
 function! CurrentWorkingDir()
   return split(getcwd(), "/")[-1]
+endfunction
+
+function! CursorWord()
+  let i = (a:0 ? a:1 : mode() ==# 'i' || mode() ==# 'R') && col('.') > 1
+  let line = getline('.')
+  return matchstr(line[:(col('.')-i-1)], '\k*$') . matchstr(line[(col('.')-i-1):], '^\k*')[1:]
 endfunction
