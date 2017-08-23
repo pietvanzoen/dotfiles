@@ -3,39 +3,38 @@
 " BASIC SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax on
-set ruler
-set scrolloff=5
-set autoindent
-set nowrap
-set expandtab
-set shiftwidth=2
-set softtabstop=2
-set tabstop=4
-set cursorline
-set cmdheight=1
-set showtabline=2
-set incsearch " instant search
-set complete-=i
-set smarttab
-set autoread
-set hlsearch
+set ruler " show cursor position in standard vim statusbar
+set scrolloff=5 " keep 5 lines of space to top/bottom from current line
+set autoindent " copy indent from current line when starting a new line
+set nowrap " don't wrap lines by default
+set expandtab " use spaces instead for tabs
+set shiftwidth=2 " number of spaces to use for autoindent
+set softtabstop=2 " number of spaces to use for "soft tabs"
+set tabstop=4 " number of spaces to use for "hard tabs"
+set cursorline " highlight current cursor line
+set cmdheight=1 " height of the vim command line
+set showtabline=2 " always show the tabline
+set incsearch " immediately start searching with search command
+"set complete-=i
+set smarttab " see :h 'smarttab'
+set autoread " auto update a file when it changes
+set hlsearch " highlight all search matches
+set ignorecase " ignore case in search and stuff
+set smartcase " use case if search includes uppercase characters
+set spell " enable spell checker
+set spelllang=en_us " default dictionary
+set number " show line numbers
+set nocompatible " disable Vi compatibility settings
+set clipboard=unnamed " use system clipboard
+set backspace=indent,eol,start " backspace behaves normally
+
+"ignores
+set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
 set wildmode=longest,list
 set wildmenu
-set ignorecase
-set smartcase
-set spell spelllang=en_us
 
 " set whitespace chars
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
-
-set number
-set nocompatible
-
-" yank copies to os clipboard
-set clipboard=unnamed
-
-" backspace behaves normally
-set backspace=indent,eol,start
 
 " persist undo history
 if !isdirectory($HOME . "/.vim/undo")
@@ -46,8 +45,6 @@ set undofile
 
 let mapleader="\<Space>" " using space as <leader>
 
-"ignores
-set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GUI SETTINGS
