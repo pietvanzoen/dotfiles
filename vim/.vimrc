@@ -10,6 +10,7 @@ set nowrap
 set expandtab
 set shiftwidth=2
 set softtabstop=2
+set tabstop=4
 set cursorline
 set cmdheight=1
 set showtabline=2
@@ -78,6 +79,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] }
+Plug 'fatih/vim-go'
 Plug 'google/vim-searchindex'
 Plug 'itchyny/lightline.vim'
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] }
@@ -382,6 +384,8 @@ augroup vimrcEx
   autocmd BufRead *.js set syntax=javascript
 
   autocmd FileType markdown setlocal wrap linebreak nolist
+
+  autocmd Filetype go setlocal noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
 
 augroup END
 
