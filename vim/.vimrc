@@ -468,11 +468,21 @@ endfunction
 function! RenameFile()
     let old_name = expand('%')
     let new_name = input('New file name: ', expand('%'), 'file')
-    if new_name != '' && new_name != old_name
-        exec ':saveas ' . new_name
-        exec ':silent !rm ' . old_name
-        redraw!
+    redraw
+
+    if new_name == '' || new_name == old_name
+      return
     endif
+
+    if filereadable(new_name)
+      call ErrorMessage('File "' . new_name . '" already exists')
+      return
+    endif
+
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+    echo "'" . old_name . "' -> '" . new_name . "'"
 endfunction
 command! RenameFile :call RenameFile()
 map <leader>n :call RenameFile()<cr>
@@ -490,4 +500,8 @@ function! CursorWord()
   let i = (a:0 ? a:1 : mode() ==# 'i' || mode() ==# 'R') && col('.') > 1
   let line = getline('.')
   return matchstr(line[:(col('.')-i-1)], '\k*$') . matchstr(line[(col('.')-i-1):], '^\k*')[1:]
+endfunction
+
+function! ErrorMessage(msg)
+  echohl WarningMsg | echo a:msg | echohl None
 endfunction
