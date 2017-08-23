@@ -1,12 +1,13 @@
 #!/bin/zsh
 
 PROMPT='$(__ret_status)$(__working_dir)$(__git_info)$(__job_count) ♯ '
-RPROMPT='$(__exec_time)$(__section $(__nvm_status))'
+RPROMPT='$(__right_prompt)'
 
 ###############################################
 # UTILITY COMMANDS
 ###############################################
 function resetprompt() {
+  unset SHOW_RIGHT
   unset HIDE_TIME
   unset FAST_PROMPT
 }
@@ -21,10 +22,20 @@ function hidetime() {
   export HIDE_TIME=true
 }
 
+function verbose_prompt() {
+  export SHOW_RIGHT=true
+}
+
 
 ###############################################
 # PROMPT FUNCTIONS
 ###############################################
+
+function __right_prompt() {
+  [[ -z $SHOW_RIGHT ]] && return
+  echo "$(__exec_time)$(__section $(__nvm_status))"
+}
+
 # Show red/green indicator based on last command's exit status
 function __ret_status() {
   echo -n "%(?:%{$fg[green]%}❖:%{$fg[red]%}❖)"
