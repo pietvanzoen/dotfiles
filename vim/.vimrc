@@ -154,12 +154,6 @@ endfunction
 " TERMINUS
 let g:TerminusMouse = 1
 
-" YOUCOMPLETEME
-set completeopt-=preview " disable preview window
-let g:ycm_add_preview_to_completeopt = 0
-"let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_min_num_identifier_candidate_chars = 4
-
 " INDENTLINE
 let g:indentLine_enabled = 0       " disable indentation mark by default
 let g:indentLine_faster = 1        " enable faster setting
@@ -395,6 +389,12 @@ augroup vimrcEx
   autocmd FileType markdown setlocal wrap linebreak nolist
 
   autocmd Filetype go setlocal noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
+
+  " Set vim cwd to current file directory when in INSERT mode.
+  " Enables file completion relative to current file, but maintains project
+  " dir as cwd for NORMAL mode operations.
+  autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
+  autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
 
 augroup END
 
