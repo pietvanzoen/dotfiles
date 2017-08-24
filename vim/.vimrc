@@ -73,6 +73,7 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter' " gutter notations for git status
 Plug 'altercation/vim-colors-solarized' " solarized color scheme
+Plug 'ajh17/VimCompletesMe' " smarter tab completion
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " generate tmux statusline matching vim statusline
@@ -83,14 +84,12 @@ Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] } " fancy html/
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
 Plug 'pangloss/vim-javascript', { 'for': ['javascript'] } " better js highlighting
 Plug 'roman/golden-ratio' " perfect split resizing
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install', 'for': ['javascript'] }
 Plug 'tpope/vim-commentary' " language aware commenting command
 Plug 'tpope/vim-fugitive' " git commands
 Plug 'tpope/vim-repeat' " more things to repeat
 Plug 'tpope/vim-rhubarb' " github extention for fugitive
 Plug 'tpope/vim-surround' " surround char manipulation
 Plug 'tpope/vim-vinegar' " netrw helper commands
-Plug 'Valloric/YouCompleteMe', { 'do': 'python install.py --tern-completer' }
 Plug 'w0rp/ale' " gutter linting
 Plug 'wincent/terminus' " vim iterm ui impovements
 Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
