@@ -72,8 +72,8 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter' " gutter notations for git status
-Plug 'altercation/vim-colors-solarized' " solarized color scheme
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
+Plug 'altercation/vim-colors-solarized' " solarized color scheme
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " generate tmux statusline matching vim statusline
