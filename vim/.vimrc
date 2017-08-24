@@ -82,8 +82,8 @@ Plug 'google/vim-searchindex' " show total and index of current search
 Plug 'itchyny/lightline.vim' " better statusline
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] } " fancy html/css/scss generator commands
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
-Plug 'pangloss/vim-javascript', { 'for': ['javascript'] } " better js highlighting
 Plug 'roman/golden-ratio' " perfect split resizing
+Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
 Plug 'tpope/vim-commentary' " language aware commenting command
 Plug 'tpope/vim-fugitive' " git commands
 Plug 'tpope/vim-repeat' " more things to repeat
