@@ -78,7 +78,7 @@ Plug 'altercation/vim-colors-solarized' " solarized color scheme
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " generate tmux statusline matching vim statusline
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' } " golang stuff
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': ['go'] } " golang stuff
 Plug 'google/vim-searchindex' " show total and index of current search
 Plug 'itchyny/lightline.vim' " better statusline
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] } " fancy html/css/scss generator commands
