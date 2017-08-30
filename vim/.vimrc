@@ -248,6 +248,9 @@ let g:tmuxline_separators = {
     \ 'right_alt' : '•',
     \ 'space' : ' '}
 
+" VIMCOMPLETESME
+set completeopt-=preview " disable preview window
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
