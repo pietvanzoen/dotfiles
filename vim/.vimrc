@@ -27,6 +27,7 @@ set number " show line numbers
 set nocompatible " disable Vi compatibility settings
 set clipboard=unnamed " use system clipboard
 set backspace=indent,eol,start " backspace behaves normally
+set timeoutlen=500 " how long leader commands wait before executing
 
 "ignores
 set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
