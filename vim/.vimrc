@@ -332,18 +332,42 @@ nmap <leader>gg :Grepper<cr>
 nmap <leader>h :let @/ = ""<cr>
 
 " replace buffer instances of word under cursor
-function! RenameCursorWord()
-  let old_name = CursorWord()
-  let new_name = input('Replace "' . old_name . '" with: ')
-  if new_name != '' && new_name != old_name
+let s:rename_old_name = ''
+let s:rename_new_name = ''
+function! RenameCursorWord(old_name, new_name)
+  if a:old_name !=# '' && a:new_name !=# ''
+    let l:old_name = a:old_name
+  else
+    let l:old_name = CursorWord()
+  endif
+
+  if l:old_name ==# ''
+    call ErrorMessage('RenameCursorWord: can not replace an empty string')
+    return
+  endif
+
+  let l:new_name = input('Replace "' . l:old_name . '" with: ', a:new_name)
+  if l:new_name != '' && l:new_name != l:old_name
     exec 'normal m`'
-    exec '%s/' . old_name . '/' . new_name . '/gc'
+    exec '%s/' . l:old_name . '/' . l:new_name . '/gc'
     exec 'normal ``'
     redraw!
   endif
+  let s:rename_old_name = l:old_name
+  let s:rename_new_name = l:new_name
 endfunction
-command! RenameCursorWord :call RenameCursorWord()
-map <leader>r :call RenameCursorWord()<cr>
+
+function! RepeatRenameCursorWord()
+  if s:rename_old_name ==# '' || s:rename_new_name ==# ''
+    echo 'Previous rename not found'
+    return
+  endif
+  call RenameCursorWord(s:rename_old_name, s:rename_new_name)
+endfunction
+
+map <leader>r :call RenameCursorWord('', '')<cr>
+
+map <leader>rr :call RepeatRenameCursorWord()<cr>
 
 " replace bad spelling with first suggestion
 map <leader>z 1z=
