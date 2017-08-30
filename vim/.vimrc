@@ -316,6 +316,9 @@ nmap <leader>yf :!yarn install --force<cr>
 nmap <leader>yt :!yarn test<cr>
 nmap <leader>ya :!yarn add<space>
 
+" go shortcuts
+nmap <leader>gi :GoImports<cr>
+
 " vim plug
 nmap <leader>ps :PlugSync<cr>
 nmap <leader>pi :PlugInstall<cr>
