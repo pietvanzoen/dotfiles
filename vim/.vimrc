@@ -466,14 +466,19 @@ map <leader>v :view %%
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REPO SPECIFIC VIMRC
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! LoadLocalVimrc()
+function! ReloadLocalVimrc(warn)
   let git_path = system("git rev-parse --show-toplevel 2>/dev/null")
   let git_vimrc = substitute(git_path, '\n', '', '') . "/.vimrc.local"
   if !empty(glob(git_vimrc))
     sandbox exec ":source " . git_vimrc
+  else
+    if a:warn
+      call ErrorMessage(".vimrc.local not found in this repo")
+    endif
   endif
 endfunction
-call LoadLocalVimrc()
+call ReloadLocalVimrc(0)
+command! ReloadLocalVimrc call LoadLocalVimrc(1)
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
