@@ -399,11 +399,8 @@ augroup vimrcEx
   " Clear all autocmds in the group
   autocmd!
 
-  " trim trailing whitespace on save
-  autocmd BufWritePre * %s/\s\+$//e
-
-  " trim EOF whitespace
-  autocmd BufWritePre * %s/\($\n\s*\)\+\%$//e
+  " clean trailing whitespace on save
+  autocmd BufWritePre * CleanTrailingWhitespace
 
   " Jump to last cursor position unless it's invalid or in an event handler
   autocmd BufReadPost *
@@ -516,6 +513,20 @@ function! RenameFile()
 endfunction
 command! RenameFile :call RenameFile()
 map <leader>n :call RenameFile()<cr>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" CLEAN WHITESPACE
+" cleans trailing whitespace at end of line and end of file
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! CleanTrailingWhitespace()
+  let l = line('.')
+  let c = col('.')
+  exec '%s/\s\+$//e'
+  exec '%s/\($\n\s*\)\+\%$//e'
+  call cursor(l, c)
+endfunction
+command! CleanTrailingWhitespace call CleanTrailingWhitespace()
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
