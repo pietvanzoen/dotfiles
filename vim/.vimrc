@@ -548,9 +548,8 @@ function! CurrentWorkingDir()
 endfunction
 
 function! CursorWord()
-  let i = (a:0 ? a:1 : mode() ==# 'i' || mode() ==# 'R') && col('.') > 1
   let line = getline('.')
-  return matchstr(line[:(col('.')-i-1)], '\k*$') . matchstr(line[(col('.')-i-1):], '^\k*')[1:]
+  return matchstr(line[:(col('.')-1)], '\k*$') . matchstr(line[(col('.')-1):], '^\k*')[1:]
 endfunction
 
 function! ErrorMessage(msg)
