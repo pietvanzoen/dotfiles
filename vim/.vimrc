@@ -336,6 +336,9 @@ nmap <leader>h :let @/ = ""<cr>
 let s:rename_old_name = ''
 let s:rename_new_name = ''
 function! RenameCursorWord(old_name, new_name)
+  let l:original_line = line('.')
+  let l:original_column = col('.')
+
   if a:old_name !=# '' && a:new_name !=# ''
     let l:old_name = a:old_name
   else
@@ -348,12 +351,14 @@ function! RenameCursorWord(old_name, new_name)
   endif
 
   let l:new_name = input('Replace "' . l:old_name . '" with: ', a:new_name)
+
+  redraw
   if l:new_name != '' && l:new_name != l:old_name
-    exec 'normal m`'
     exec '%s/' . l:old_name . '/' . l:new_name . '/gc'
-    exec 'normal ``'
+    call cursor(l:original_line, l:original_column)
     redraw!
   endif
+
   let s:rename_old_name = l:old_name
   let s:rename_new_name = l:new_name
 endfunction
