@@ -428,6 +428,9 @@ augroup vimrcEx
   autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
   autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
 
+  " prepopulate new files
+  autocmd BufNewFile *.spec.js,*.test.js 0read ~/.vim/templates/spec.template.js
+
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
