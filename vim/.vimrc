@@ -478,7 +478,7 @@ function! ReloadLocalVimrc(warn)
   endif
 endfunction
 call ReloadLocalVimrc(0)
-command! ReloadLocalVimrc call LoadLocalVimrc(1)
+command! ReloadLocalVimrc call ReloadLocalVimrc(1)
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
