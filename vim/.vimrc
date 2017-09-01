@@ -378,9 +378,6 @@ map <leader>rr :call RepeatRenameCursorWord()<cr>
 " replace bad spelling with first suggestion
 map <leader>z 1z=
 
-" search for visually hightlighted text
-vnoremap <c-f> y<ESC>/<c-r>"<CR>
-
 " search for currently selected text
 vnoremap // y/<C-R>"<CR>
 
