@@ -28,6 +28,9 @@ set nocompatible " disable Vi compatibility settings
 set clipboard=unnamed " use system clipboard
 set backspace=indent,eol,start " backspace behaves normally
 set timeoutlen=500 " how long leader commands wait before executing
+set laststatus=2 " always show status line
+set noshowmode " hide mode in command line, shown in statusline instead
+set completeopt-=preview " disable preview window
 
 "ignores
 set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
@@ -121,8 +124,6 @@ if executable('rg')
 endif
 
 " LIGHTLINE
-set laststatus=2 " always show status line
-set noshowmode " hide default mode in command line
 let g:lightline = {}
 let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
@@ -249,7 +250,6 @@ let g:tmuxline_separators = {
     \ 'space' : ' '}
 
 " VIMCOMPLETESME
-set completeopt-=preview " disable preview window
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
