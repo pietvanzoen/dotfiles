@@ -402,6 +402,7 @@ augroup vimrcEx
   autocmd!
 
   " clean trailing whitespace on save
+  autocmd BufWritePre *.go let b:do_not_clean_whitespace=1
   autocmd BufWritePre * CleanTrailingWhitespace
 
   " Jump to last cursor position unless it's invalid or in an event handler
@@ -527,6 +528,9 @@ map <leader>n :call RenameFile()<cr>
 " cleans trailing whitespace at end of line and end of file
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! CleanTrailingWhitespace()
+  if exists('b:do_not_clean_whitespace')
+    return
+  endif
   let l = line('.')
   let c = col('.')
   exec '%s/\s\+$//e'
