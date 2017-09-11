@@ -209,7 +209,7 @@ function! OpenSesh(session, bang)
 
   let g:session_previous = l:current_session
   call xolox#session#open_cmd(l:session, a:bang, 'OpenSession')
-  call LoadLocalVimrc()
+  call ReloadLocalVimrc(0)
 endfunction
 
 function! OpenPreviousSession(bang)
