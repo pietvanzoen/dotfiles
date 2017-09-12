@@ -354,7 +354,7 @@ function! RenameCursorWord(old_name, new_name)
 
   redraw
   if l:new_name != '' && l:new_name != l:old_name
-    exec '%s/' . l:old_name . '/' . l:new_name . '/gc'
+    exec '%s/' . l:old_name . '\C/' . l:new_name . '/gc'
     call cursor(l:original_line, l:original_column)
     redraw!
   endif
