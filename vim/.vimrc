@@ -249,7 +249,8 @@ let g:tmuxline_separators = {
     \ 'right_alt' : '•',
     \ 'space' : ' '}
 
-" VIMCOMPLETESME
+" GIT GUTTER
+let g:gitgutter_eager = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLOR
