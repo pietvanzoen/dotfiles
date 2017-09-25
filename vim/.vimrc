@@ -320,6 +320,7 @@ nmap <leader>ya :!yarn add<space>
 " go shortcuts
 nmap <leader>gi :GoImports<cr>
 nmap <leader>gr :!clear && go run %<cr>
+nmap <leader>gt :GoTest<cr>
 
 " vim plug
 nmap <leader>ps :PlugSync<cr>
