@@ -46,7 +46,7 @@ function __working_dir() {
 }
 
 # Git branch info using __git_ps1
-source $ZSH/custom/git-prompt.zsh
+source $HOME/.shell/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_STATESEPARATOR="%{$fg[yellow]%}"
 GIT_PS1_SHOWUNTRACKEDFILES=1
