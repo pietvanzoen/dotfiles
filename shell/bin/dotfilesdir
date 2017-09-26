@@ -4,7 +4,7 @@
 set -e
 
 # read the absolute path of this file, following any symlinks
-THIS_PATH=$(greadlink -f $0)
+THIS_PATH=$(readlink -f $0)
 
 # trim everything after /dotfiles/
 DIR=$(echo $THIS_PATH | sed -E 's/(^.*\/dotfiles)\/.*$/\1/')
