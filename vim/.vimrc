@@ -266,6 +266,9 @@ call togglebg#map("<F5>")
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPPING
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" quick redraw
+nmap <leader>re :redraw!<cr>
+
 " up and down on wrapped lines
 nmap j gj
 nmap k gk
