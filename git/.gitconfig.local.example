@@ -6,3 +6,6 @@
 
 [github]
   user = pietvanzoen
+
+[url "https://<github access token>:x-oauth-basic@github.com/"]
+  insteadOf = https://github.com/
