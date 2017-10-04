@@ -20,6 +20,10 @@ alias rsync="rsync -azrv --progress"
 alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | sed 's/\./ /' | column -s \" \" -t | sort -k 2,2"
 alias sr="screen -r"
 alias ss="screen -S"
+sc() {
+  local name="$(basename $PWD): $*"
+  screen -S "$name" $@
+}
 
 # TMUX
 alias ta="tmux a"

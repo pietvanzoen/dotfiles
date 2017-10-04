@@ -8,7 +8,12 @@
 [ -d $HOME/.rvm/bin ] && export PATH="$PATH:$HOME/.rvm/bin"
 
 # GNU LS colors
-[ -e $HOME/.shell/dircolors.ansi-dark ] && eval "$(dircolors ~/.shell/dircolors.ansi-dark)"
+if [[ "$(which gdircolors)" ]]; then
+  DIRCOLORS_BIN="$(which gdircolors)"
+elif [[ "$(which dircolors)" ]]; then
+  DIRCOLORS_BIN="$(which dircolors)"
+fi
+[ -e $HOME/.shell/dircolors.ansi-dark ] && eval "$($DIRCOLORS_BIN ~/.shell/dircolors.ansi-dark)"
 
 # BIN
 export PATH=$HOME/bin:$PATH
