@@ -1,4 +1,5 @@
-export UB_PROJ=$HOME/Projects/usabilla
+
+[ -e "$HOME/.usabillarc" ] && source $HOME/.usabillarc
 
 function start-themes-api() {
   (screen -D -m -SR mongo mongod && \
