@@ -32,7 +32,3 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 Other dotfile repos that I've borrowed from or been inspired by:
 * [Kraymer/F-dotfiles](https://github.com/Kraymer/F-dotfiles)
 * [garybernhardt/dotfiles](https://github.com/garybernhardt/dotfiles)
-
-## TODO
-- [x] Brewfile
-- [ ] install OMZ via submodule
