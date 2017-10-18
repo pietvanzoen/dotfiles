@@ -18,7 +18,7 @@ for pid in `ps -ef | grep ssh | grep -v grep | awk '{print $2}'`; do
 done
 
 echo "restart gpg-agent"
-eval $(gpg-agent --daemon)
+eval $(gpg-agent --daemon --enable-ssh-support)
 
 echo
 echo "All done. Now unplug / replug the NEO token."
