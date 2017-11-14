@@ -49,6 +49,11 @@ set undofile
 
 let mapleader="\<Space>" " using space as <leader>
 
+" colors
+set t_Co=256 " 256 colors
+set background=dark
+colorscheme solarized
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GUI SETTINGS
@@ -77,7 +82,6 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter' " gutter notations for git status
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
-Plug 'altercation/vim-colors-solarized' " solarized color scheme
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " generate tmux statusline matching vim statusline
@@ -259,16 +263,6 @@ let g:hardtime_showmsg = 1
 let g:hardtime_ignore_quickfix = 1
 let g:hardtime_allow_different_key = 1
 let g:hardtime_maxcount = 2
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" COLOR
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set t_Co=256 " 256 colors
-set background=dark
-colorscheme solarized
-call togglebg#map("<F5>")
-
-" highlight Search ctermbg=black ctermfg=NONE cterm=underline
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
