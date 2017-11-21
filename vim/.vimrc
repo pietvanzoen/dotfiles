@@ -563,7 +563,7 @@ map <leader>n :call RenameFile()<cr>
 " CLEAN WHITESPACE
 " cleans trailing whitespace at end of line and end of file
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! CleanTrailingWhitespace()
+function! CleanTrailingWhitespace() abort
   if exists('b:do_not_clean_whitespace')
     return
   endif
