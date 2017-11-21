@@ -107,10 +107,11 @@ call plug#end()
 
 command! PlugSync :so ~/.vimrc | PlugClean! | PlugInstall
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" PLUGIN CONFIG
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " CTRLP
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd! BufNewFile * silent CtrlPClearCache " clear cache when a new file is created
+
 let g:ctrlp_show_hidden=1
 let g:ctrlp_custom_ignore={'dir': 'node_modules\|\.git',
                           \ 'file': '\.swp$'}
@@ -128,7 +129,9 @@ if executable('rg')
   let g:ctrlp_use_caching = 0
 endif
 
+
 " LIGHTLINE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:lightline = {}
 let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
@@ -158,15 +161,21 @@ function! LightlineMode()
         \ lightline#mode()
 endfunction
 
+
 " TERMINUS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:TerminusMouse = 1
 
+
 " INDENTLINE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:indentLine_enabled = 0       " disable indentation mark by default
 let g:indentLine_faster = 1        " enable faster setting
 let g:indentLine_color_term = 239  " set indent color
 
+
 " VIM-GREPPER
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:grepper = {}
 let g:grepper.tools = ['rg', 'ag', 'ack', 'grep', 'findstr', 'pt', 'sift', 'git']
 let g:grepper.rg = {
@@ -179,10 +188,16 @@ command! Todo :Grepper
       \ -tool git
       \ -grepprg git grep -nI '\(TODO\|FIXME\)'
 
+
 " ALE
-let g:ale_fixers = { 'javascript': ['eslint'] }
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ale_fixers = {
+      \ 'javascript': ['eslint'],
+      \ 'javascript.jsx': ['eslint'] }
+
 
 " VIM-SESSIONS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:session_directory = '~/.vim/sessions/'
 let g:session_autosave = 'yes'
 let g:session_autoload = 'no'
@@ -236,16 +251,22 @@ nmap <leader>so :OpenSesh<space>
 nmap <leader>sr :OpenProjectSession<cr>
 nmap <leader>sp :OpenPreviousSession<cr>
 
+
 " CLOSETAGS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:unaryTagsStack=''
 
+
 " QLEnter
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:qfenter_keymap = {}
 let g:qfenter_keymap.vopen = ['<C-v>']
 let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
 let g:qfenter_keymap.topen = ['<C-t>']
 
+
 " TMUXLINE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tmuxline_powerline_separators = 0
 let g:tmuxline_separators = {
     \ 'left' : '',
@@ -254,10 +275,14 @@ let g:tmuxline_separators = {
     \ 'right_alt' : '•',
     \ 'space' : ' '}
 
+
 " GIT GUTTER
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gitgutter_eager = 1
 
+
 " VIM-HARDTIME
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:hardtime_default_on = 1
 let g:hardtime_showmsg = 1
 let g:hardtime_ignore_quickfix = 1
@@ -420,13 +445,10 @@ augroup vimrcEx
 
   autocmd BufRead,BufNewFile *.raml set filetype=yaml
 
-  autocmd BufNewFile * silent CtrlPClearCache
-
-  " hack so vim-javascript works with lazy load
-  autocmd BufRead *.js set syntax=javascript
-
+  " special formatting for markdown files
   autocmd FileType markdown setlocal wrap linebreak nolist
 
+  " go formatting
   autocmd Filetype go setlocal noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
 
   " Set vim cwd to current file directory when in INSERT mode.
