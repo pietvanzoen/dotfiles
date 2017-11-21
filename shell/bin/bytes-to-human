@@ -1,0 +1,19 @@
+#!/bin/bash
+# Takes an integer from stdin and converts it to humanized file size.
+
+set -e
+
+human_print(){
+while read B dummy; do
+  [ $B -lt 1024 ] && echo ${B}b && break
+  KB=$(((B+512)/1024))
+  [ $KB -lt 1024 ] && echo ${KB}Kb && break
+  MB=$(((KB+512)/1024))
+  [ $MB -lt 1024 ] && echo ${MB}Mb && break
+  GB=$(((MB+512)/1024))
+  [ $GB -lt 1024 ] && echo ${GB}Gb && break
+  echo $(((GB+512)/1024))Tb
+done
+}
+
+human_print /dev/stdin
