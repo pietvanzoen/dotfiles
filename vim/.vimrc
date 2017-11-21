@@ -88,7 +88,6 @@ Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " genera
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': ['go'] } " golang stuff
 Plug 'google/vim-searchindex' " show total and index of current search
 Plug 'itchyny/lightline.vim' " better statusline
-Plug 'takac/vim-hardtime' " learn you better vim practices
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] } " fancy html/css/scss generator commands
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
 Plug 'roman/golden-ratio' " perfect split resizing
@@ -286,15 +285,6 @@ let g:tmuxline_separators = {
 " GIT GUTTER
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gitgutter_eager = 1
-
-
-" VIM-HARDTIME
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:hardtime_default_on = 1
-let g:hardtime_showmsg = 1
-let g:hardtime_ignore_quickfix = 1
-let g:hardtime_allow_different_key = 1
-let g:hardtime_maxcount = 2
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
