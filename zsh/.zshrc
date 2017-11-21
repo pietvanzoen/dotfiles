@@ -1,14 +1,15 @@
 [ -e $HOME/.zshrc.local ] && source $HOME/.zshrc.local
+
+# OH-MY-ZSH
+ZSH_THEME="piet"
+plugins=(zsh-syntax-highlighting)
+source $ZSH/oh-my-zsh.sh # must be loaded before aliases so custom aliases take precedence
+
 source $HOME/.shell/config.sh
 source $HOME/.shell/aliases.sh
 source $HOME/.zsh/aliases.zsh
 
 [ -z "$ZSH" ] && echo "\$ZSH must be defined" && exit 1;
-
-# OH-MY-ZSH
-ZSH_THEME="piet"
-plugins=(zsh-syntax-highlighting)
-source $ZSH/oh-my-zsh.sh
 
 # ZSH
 COMPLETION_WAITING_DOTS="true"
