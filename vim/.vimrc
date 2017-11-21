@@ -342,7 +342,7 @@ function! RunTests(test_command)
   " disable gitgutter while running external test command otherwise rendering gets messed up
   exec ':GitGutterDisable | ALEDisable'
   exec ':wall'
-  exec ':!clear && echo "Running ' . l:test_command . '" && ' . l:test_command
+  exec ':!clear && echo "Running ' . l:test_command . '" && time ' . l:test_command
   exec ':GitGutterEnable | ALEEnable'
 endfunction
 command! -nargs=? RunTests call RunTests(<q-args>)
