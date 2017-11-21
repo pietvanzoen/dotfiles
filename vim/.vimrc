@@ -3,6 +3,7 @@
 " BASIC SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax on
+set nocompatible " disable Vi compatibility settings
 set ruler " show cursor position in standard vim statusbar
 set scrolloff=5 " keep 5 lines of space to top/bottom from current line
 set autoindent " copy indent from current line when starting a new line
@@ -24,7 +25,6 @@ set smartcase " use case if search includes uppercase characters
 set spell " enable spell checker
 set spelllang=en_us " default dictionary
 set number " show line numbers
-set nocompatible " disable Vi compatibility settings
 set clipboard=unnamed " use system clipboard
 set backspace=indent,eol,start " backspace behaves normally
 set timeoutlen=500 " how long leader commands wait before executing
