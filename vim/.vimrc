@@ -206,6 +206,12 @@ function! EnableSession()
   exec ':SaveSession ' . CurrentWorkingDir()
 endfunction
 
+function! NewSession()
+  exec ':tabedit .'
+  exec ':tabonly'
+  call EnableSession()
+endfunction
+
 function! OpenProjectSession()
   call OpenSesh(CurrentWorkingDir(), '!')
 endfunction
@@ -242,6 +248,7 @@ function! OpenPreviousSession(bang)
 endfunction
 
 command! EnableSession :call EnableSession()
+command! NewSession :call NewSession()
 command! OpenProjectSession call OpenProjectSession()
 command! -bang OpenPreviousSession call OpenPreviousSession(<q-bang>)
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSesh call OpenSesh(<q-args>, <q-bang>)
