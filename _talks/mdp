@@ -1,0 +1,8 @@
+#!/bin/bash
+MDP_LIST_OPEN1='   ' \
+MDP_LIST_OPEN2='   ' \
+MDP_LIST_OPEN3='   ' \
+MDP_LIST_HEAD1=' • ' \
+MDP_LIST_HEAD2=' • ' \
+MDP_LIST_HEAD3=' • ' \
+mdp $1
