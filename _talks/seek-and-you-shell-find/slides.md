@@ -8,6 +8,28 @@
 
 -> ᕕ( ᐛ )ᕗ
 
+---
+
+-> What we'll cover
+===
+
+^
+* a little history
+^
+* why?
+^
+* how to learn
+^
+* general tips
+
+---
+
+-> Not covered :(
+===
+
+* shell scripting
+* vim
+* git
 
 ---
 
@@ -18,15 +40,6 @@
 * Morse code, and *teletype*, and the Datapoint 3300, oh my! ✇__✇
 ^
 * Bell labs, *Unix*, and communal computing. 🔔
-^
-
-> What we wanted to preserve was not just a good environment
-> in which to do programming, but a system around which a fellowship
-> could form. We knew from experience that the essence of communal
-> computing, [...] is not just to type programs into a terminal
-> instead of a  keypunch, but to encourage close communication.
-~ 1969, Dennis Ritchie
-
 ^
 * The kernel, the *shell*, and the utilities. 🐚
 ^
@@ -42,9 +55,9 @@
 ^
   * File management
   * Text processing
-  * Process management
-  * System level control
-  * Downloading files
+  > * Process management
+  > * System level control
+  > * Downloading files
   * Automation of all of the above
   * and much much more.
 ^
@@ -55,6 +68,23 @@
 * It's fun!
   * A piece of history.
   * Magical 🔮
+
+<!--
+* speed of tasks
+  * list of tasks
+* the assumption is that you know what you're doing
+* if the task can be accomplished in shell
+-->
+
+---
+
+-> With great power comes great responsibility
+===
+
+^
+* The assumption is that you know what you're doing
+^
+* e.g. `rm -rf /` (do not try this at home)
 
 ---
 
@@ -71,7 +101,30 @@ man <any command>
 ```
 
 ^
-... well, almost any.
+* `man man`
+
+^
+*another tip*
+  * bash builtins https://www.gnu.org/software/bash/manual/bash.html
+
+---
+
+-> Navigation `man` using `less`
+---
+
+* arrow keys, j, k
+* `/` to search
+* G or g to navigate to the top/bottom
+
+^
+*tip*
+   MANPAGER="less -FXi"
+
+
+<!--
+* how to navigate man pages
+  * modify less
+-->
 
 ---
 
@@ -85,52 +138,103 @@ Install
 ```
 brew install tldr
 ```
-
-Example
-```
-|  $ tldr tar
-|
-|  ls
-|
-|  List directory contents.
-|
-|  - List files one per line:
-|     ls -1
-|
-|  - List all files, including hidden files:
-|     ls -a
-|
-|  - Long format list (permissions, ownership, size and modification date) of all files:
-|     ls -la
-```
-
-* website resources?
+^
+Example...
 
 ---
 
-# The Basics
+# Aliases & Functions
+^
 * aliases
-  * Using aliases to set defaults
-* bash_profile
-  * sourcing other files
-* writing a script
-  * shebang (why is it called that?)
-  * chmod +x
-  * home `bin` directory
+  ^
+  * `alias` to list all aliases
+  ^
+  * setting default options
+
+```
+alias ls="ls --color=auto --group-directories-first --ignore='.DS_Store'"
+```
+
+^
+* functions
+  * aliases that take an argument
+^
+But where do you put these?...
 
 ---
 
-# Piping
-* small programs that do one thing well, combined do a lot
+# Bash profile
+
+^
+`.bash_profile`
+
+^
+```
+| # ls aliases
+| alias ll='ls -alF'
+| alias la='ls -A'
+| alias l='ls -CF'
+|
+| mktouch() {
+|   if [ $# -lt 1 ]; then
+|     echo "Missing argument";
+|     return 1;
+|   fi
+|
+|   for f in "$@"; do
+|     mkdir -p -- "$(dirname -- "$f")"
+|     touch -- "$f"
+|   done
+| }
+```
+
+---
+
+-> Piping
+===
+
+Pass text from one command to the next.
+
+```
+ls | grep '^_' | xargs -I {} mv {} __{}
+```
+
+---
+
+-> Exit codes
+===
+
+^
+* 0 success
+^
+* non-0 failure
+^
+* how do you evaluate the last exit code?
+  ^
+  * `echo $?`
+^
+* logical operators
+  * &&
+  * ||
 
 ---
 
 # Tips
+
+^
 * setup your terminal
   * quick command for access to terminal
-* Setup editor command
+
+^
+* Setup editor command: `subl`, `code`
+^
 * dotfiles
-* with great power comes great responsibility
+
+---
+
+-> ┏━╸╻┏┓╻
+-> ┣╸ ┃┃┗┫
+-> ╹  ╹╹ ╹
 
 ---
 
@@ -186,12 +290,6 @@ Example
 
 ---
 
-## debug
-    * time - show how long it takes to run a command
-    * strace -
-
----
-
 ## network
     * ping - ping a server
     * ssh - securely access the shell of a remote server
@@ -209,6 +307,7 @@ Example
 ---
 
 ## other
+    * time - show how long it takes to run a command
     * sudo - run a command as the super user (Super User DO)
     * date - get the current date
     * clear - clear your terminal window
@@ -221,3 +320,46 @@ Example
 ## fun
     * yes - just say y alot, or something else
     * telnet towel.blinkenlights.nl
+
+---
+
+<!--
+
+---
+
+# Exit codes
+* exit statuses
+  * 0 success
+  * non-0 failure
+  * how to evaluate `echo $?`
+  * logical operators
+    * &&
+    * ||
+^
+* expansion/word splitting
+  * wildcard expansion
+^
+* variables
+  * scope
+  * construction
+
+> Profile vs RC
+  > profile gets loaded once (login shell)
+    > ENV variables
+  > RC loaded for each new shell
+    > aliases
+
+> * writing a script
+>   * shebang (why is it called that?)
+>   * chmod +x
+>   * home `bin` directory
+
+---
+
+# Piping
+* small programs that do one thing well, combined do a lot
+* exit status
+  * by default get the exit status of the last command run
+
+---
+--->

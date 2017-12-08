@@ -7,28 +7,79 @@ Getting to know the shell can be intimidating. In this talk I'll give you some t
 
 ### A little history
 * How did it start? tty machines
+  * morse code, teletype, Datapoint 3300
 * how did modern shell come about?
+  * Unix
+  * Kernel, shell, utilities
+  * terminal
 
 ### Why bother learning it now?
-* ?
+* MOAR CONTROL. One interface to rule them all. 💍
+  * File management
+  * Text processing
+  > * Process management
+  > * System level control
+  > * Downloading files
+  * Automation of all of the above
+  * and much much more.
+* Becuase NPM
+  * Super useful with `npm run/yarn run` scripts.
+  * A small shell script > npm install <something-shell-already-does>
+* It's fun!
+  * A piece of history.
+  * Magical 🔮
+
+<!--
+* speed of tasks
+  * list of tasks
+* the assumption is that you know what you're doing
+* if the task can be accomplished in shell
+-->
+
 
 ### How to learn
 * man command
+  * how to use man?
+    * -k search
+  * less
+    * / search
+    * leave content behind `MANPAGER="less -XFis"`
+  * man sections
+    * 1 commandline
+    * 5 format
+  * bash builtins https://www.gnu.org/software/bash/manual/bash.html
 * tldr command
-* website resources?
 
 ### The Basics
-* aliases
+* aliases & functions
   * Using aliases to set defaults
-* bash_profile
+  * `alias` to list all aliases
+  * backslash command
+* .bash_profile/.bashrc/.profile
   * sourcing other files
-* writing a script
-  * shebang (why is it called that?)
-  * chmod +x
-  * home `bin` directory
+  * sourcing vs executing
+* exit statuses
+  * 0 success
+  * non-0 failure
+  * how to evaluate `echo $?`
+  * logical operators
+    * &&
+    * ||
+* expansion/word splitting
+  * wildcard expansion
+* variables
+  * scope
+  * construction
 
-### Piping
+> * writing a script
+>   * shebang (why is it called that?)
+>   * chmod +x
+>   * home `bin` directory
+
+# Piping
 * small programs that do one thing well, combined do a lot
+* exit status
+  * by default get the exit status of the last command run
 
 ### Tips
 * setup your terminal
