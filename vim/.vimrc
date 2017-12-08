@@ -260,6 +260,7 @@ nmap π :OpenSesh<space>
 nmap <leader>so :OpenSesh<space>
 nmap <leader>sr :OpenProjectSession<cr>
 nmap <leader>sp :OpenPreviousSession<cr>
+nmap <leader>sn :NewSession<cr>
 
 
 " CLOSETAGS
