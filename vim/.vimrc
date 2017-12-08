@@ -93,6 +93,7 @@ Plug 'itchyny/lightline.vim' " better statusline
 Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] } " fancy html/css/scss generator commands
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
+Plug 'rhysd/devdocs.vim' " devdocs lookup
 Plug 'roman/golden-ratio' " perfect split resizing
 Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
 Plug 'tpope/vim-commentary' " language aware commenting command
@@ -289,6 +290,15 @@ let g:tmuxline_separators = {
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gitgutter_eager = 1
 
+" DEVDOCS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <buffer>K <Plug>(devdocs-under-cursor)
+vmap <buffer>K <Plug>(devdocs-under-cursor)
+
+" augroup plugin-devdocs
+"   autocmd!
+"   autocmd FileType c,cpp,rust,haskell,python nmap <buffer>K <Plug>(devdocs-under-cursor)
+" augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPPING
