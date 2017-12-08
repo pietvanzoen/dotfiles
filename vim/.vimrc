@@ -31,6 +31,7 @@ set timeoutlen=500 " how long leader commands wait before executing
 set laststatus=2 " always show status line
 set noshowmode " hide mode in command line, shown in statusline instead
 set completeopt-=preview " disable preview window
+set colorcolumn=72,120
 
 "ignores
 set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
