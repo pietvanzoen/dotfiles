@@ -14,7 +14,6 @@ alias l='ls -lAh'
 alias rm='rm -v'
 alias cp='cp -vi'
 alias mv='mv -vi'
-alias rsync="rsync -azrv --progress"
 alias mkdir="mkdir -v"
 
 # SCREEN
