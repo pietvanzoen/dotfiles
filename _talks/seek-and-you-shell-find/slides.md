@@ -55,9 +55,6 @@
 ^
   * File management
   * Text processing
-  > * Process management
-  > * System level control
-  > * Downloading files
   * Automation of all of the above
   * and much much more.
 ^
@@ -68,13 +65,6 @@
 * It's fun!
   * A piece of history.
   * Magical 🔮
-
-<!--
-* speed of tasks
-  * list of tasks
-* the assumption is that you know what you're doing
-* if the task can be accomplished in shell
--->
 
 ---
 
@@ -113,8 +103,9 @@ man <any command>
 ---
 
 * arrow keys, j, k
-* `/` to search
-* G or g to navigate to the top/bottom
+* `/` to search, then `n` and `p` to navigate results
+* `G` or `g` to navigate to the top/bottom
+* `q` to quit
 
 ^
 *tip*
