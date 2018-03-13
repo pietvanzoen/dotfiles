@@ -50,11 +50,6 @@ set undofile
 
 let mapleader="\<Space>" " using space as <leader>
 
-" colors
-set t_Co=256 " 256 colors
-set background=dark
-colorscheme solarized
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GUI SETTINGS
@@ -596,3 +591,8 @@ endfunction
 function! ErrorMessage(msg)
   echohl WarningMsg | echo a:msg | echohl None
 endfunction
+
+" colors
+"set t_Co=256 " 256 colors
+set background=dark
+colorscheme solarized
