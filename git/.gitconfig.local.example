@@ -4,6 +4,9 @@
   username = pietvanzoen
   signingkey = [REDACTED]
 
+[commit]
+  gpgsign = true
+
 [github]
   user = pietvanzoen
 
