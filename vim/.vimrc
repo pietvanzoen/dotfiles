@@ -39,7 +39,7 @@ set wildmode=longest,list
 set wildmenu
 
 " set whitespace chars
-set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
+" set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 
 " persist undo history
 if !isdirectory($HOME . "/.vim/undo")
