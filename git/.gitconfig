@@ -126,9 +126,9 @@
 
 [pager]
   # Use diff-highlight from git-core for diffing. Better diffing. hello!
-  log = diff-so-fancy | less --tabs=4 -FX
-  show = diff-so-fancy | less --tabs=4 -FX
-  diff = diff-so-fancy | less --tabs=4 -FX
+  log = less --tabs=4 -FX
+  show = less --tabs=4 -FX
+  diff = less --tabs=4 -FX
 
 [color "diff"]
   commit = green
@@ -143,9 +143,6 @@
   oldHighlight = red 52
   newNormal = green
   newHighlight = green 22
-
-[interactive]
-  diffFilter = diff-so-fancy
 
 [fetch]
   prune = true # Always prune refs when fetching.
