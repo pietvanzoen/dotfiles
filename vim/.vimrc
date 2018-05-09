@@ -252,6 +252,7 @@ command! -bang OpenPreviousSession call OpenPreviousSession(<q-bang>)
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSesh call OpenSesh(<q-args>, <q-bang>)
 
 nmap π :OpenSesh<space>
+nmap <leader>ss :EnableSession<cr>
 nmap <leader>so :OpenSesh<space>
 nmap <leader>sr :OpenProjectSession<cr>
 nmap <leader>sp :OpenPreviousSession<cr>
