@@ -52,3 +52,6 @@ export FZF_DEFAULT_OPTS='--height 40% --reverse'
 # GNU COMMANDS
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+
+# GIT-GET
+export GIT_GET_DIR="$HOME/proj"

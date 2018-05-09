@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+# Like go get but without the need for go.
+
+import re
+import sys
+import os
+import subprocess
+
+cmd, *git_urls = sys.argv
+base_dir = os.getenv('GIT_GET_DIR')
+git_url_regex = re.compile("^(git@|http[s]?:\/\/)([\w-]+\.[a-zA-Z]*)[:/]([\w-]+)\/([\.\w-]+)\.(git)$")
+
+USAGE = f"""Usage: {cmd} URL...
+Like `go get` without the go. Clone the repository URL(s) into directories using the host, user, and project name.
+Set $GIT_GET_DIR as the base directory to clone repositories into.
+"""
+
+if not git_urls:
+	print(USAGE)
+	sys.exit(1)
+
+if git_urls[0] == '-h':
+	print(USAGE)
+	sys.exit(0)
+
+
+if not base_dir:
+	print('$GIT_GET_DIR must be set')
+	sys.exit(1)
+
+if not os.path.exists(base_dir):
+	print('$GIT_GET_DIR is set to %s, which does not exist.' % base_dir)
+	sys.exit(1)
+
+for url in git_urls:
+	try:
+		[(protocol, host, user, project, git)] = re.findall(git_url_regex, url)
+	except ValueError:
+		print('%s is not a valid git url. Skipping.' % url)
+		continue
+
+	path = os.path.join(base_dir, host, user, project)
+	if os.path.exists(path):
+		print('Path %s already exists.' % path)
+		continue
+
+	os.makedirs(path)
+
+	subprocess.call(['git', 'clone', url, path])
