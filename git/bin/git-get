@@ -10,10 +10,9 @@ cmd, *git_urls = sys.argv
 base_dir = os.getenv('GIT_GET_DIR')
 git_url_regex = re.compile("^(git@|http[s]?:\/\/)([\w-]+\.[a-zA-Z]*)[:/]([\w-]+)\/([\.\w-]+)\.(git)$")
 
-USAGE = f"""Usage: {cmd} URL...
-Like `go get` without the go. Clone the repository URL(s) into directories using the host, user, and project name.
-Set $GIT_GET_DIR as the base directory to clone repositories into.
-"""
+USAGE = """Usage: %s URL...
+Like 'go get' without the go. Clone the repository URL(s) into directories using the host, user, and project name.
+Set $GIT_GET_DIR as the base directory to clone repositories into.""" % cmd
 
 if not git_urls:
 	print(USAGE)
