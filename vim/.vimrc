@@ -594,6 +594,6 @@ function! ErrorMessage(msg)
 endfunction
 
 " colors
-"set t_Co=256 " 256 colors
+set t_Co=256 " 256 colors
 set background=dark
 colorscheme solarized
