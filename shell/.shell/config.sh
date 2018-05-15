@@ -4,7 +4,8 @@
 export TERM=xterm-256color
 
 # AUTOJUMP
-[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+[[ -f /usr/local/etc/profile.d/autojump.sh ]] && . /usr/local/etc/profile.d/autojump.sh
+[[ -f $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
 # RVM
 [ -e $HOME/.rvm/scripts/rvm ] && source $HOME/.rvm/scripts/rvm
