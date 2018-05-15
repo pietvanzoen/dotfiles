@@ -2,10 +2,10 @@
   name = pietvanzoen
   email = [REDACTED]
   username = pietvanzoen
-  signingkey = [REDACTED]
+#  signingkey = [REDACTED]
 
-[commit]
-  gpgsign = true
+# [commit]
+#   gpgsign = true
 
 [github]
   user = pietvanzoen
