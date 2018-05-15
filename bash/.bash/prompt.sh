@@ -20,7 +20,7 @@ __cwd() {
 }
 
 __user_host() {
-  echo -n "$__black\u@\h$__reset_color"
+  echo -n "$__dark\u@\h$__reset_color"
 }
 
 source $HOME/.shell/git-prompt.sh
@@ -34,24 +34,24 @@ __git_info() {
   local branch="$(echo $info | cut -d '|' -f 1)"
   local status="$(echo $info | cut -d '|' -f 2)"
 
-  echo -n "$__black("
+  echo -n "$__dark("
   echo -n "$__red$branch"
   echo -n "$__yellow$status"
-  echo -n "$__black)$__reset_color"
+  echo -n "$__dark)$__reset_color"
 }
 
 __job_info() {
   local count="$(jobs | grep -v autojump | wc -l)"
   [[ "$count" == "0" ]] && return
-  echo -n " $__black[$count]$__reset_color"
+  echo -n " $__dark[$count]$__reset_color"
 }
 
 export __black="\[\e[0;30m\]"
+export __dark="\[\e[2;36m\]"
 export __red="\[\e[0;31m\]"
 export __green="\[\e[0;32m\]"
 export __yellow="\[\e[0;33m\]"
 export __blue="\[\e[0;34m\]"
 export __purple="\[\e[0;35m\]"
 export __cyan="\[\e[0;36m\]"
-export __purple="\[\e[0;37m\]"
 export __reset_color="\[\e[m\]"
