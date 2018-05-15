@@ -1,4 +1,4 @@
-[ -e $HOME/.shellrc.local ] && source $HOME/.shellrc.local
+[[ -e $HOME/.shellrc.local ]] && source $HOME/.shellrc.local
 
 # COLORS
 export TERM=xterm-256color
