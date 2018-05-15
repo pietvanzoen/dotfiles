@@ -7,12 +7,12 @@ import os
 import subprocess
 
 cmd, *git_urls = sys.argv
-base_dir = os.getenv('GIT_GET_DIR')
+base_dir = os.getenv('GIT_PATH')
 git_url_regex = re.compile("^(git@|http[s]?:\/\/)([\w-]+\.[a-zA-Z]*)[:/]([\w-]+)\/([\.\w-]+)\.(git)$")
 
 USAGE = """Usage: %s URL...
 Like 'go get' without the go. Clone the repository URL(s) into directories using the host, user, and project name.
-Set $GIT_GET_DIR as the base directory to clone repositories into.""" % cmd
+Set $GIT_PATH as the base directory to clone repositories into.""" % cmd
 
 if not git_urls:
 	print(USAGE)
@@ -24,11 +24,11 @@ if git_urls[0] == '-h':
 
 
 if not base_dir:
-	print('$GIT_GET_DIR must be set')
+	print('$GIT_PATH must be set')
 	sys.exit(1)
 
 if not os.path.exists(base_dir):
-	print('$GIT_GET_DIR is set to %s, which does not exist.' % base_dir)
+	print('$GIT_PATH is set to %s, which does not exist.' % base_dir)
 	sys.exit(1)
 
 for url in git_urls:
