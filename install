@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [[ ! "$(basename $(pwd))" == "dotfiles" ]]; then
+  echo "Run install from dotfiles directory"
+  exit 1
+fi
+
+stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
+
+echo
+echo ">> Initializing .stowrc"
+cp -vi ./stow/.stowrc.example ./stow/.stowrc
+sed -i "s|\$HOME|$HOME|" ./stow/.stowrc
+cat ./stow/.stowrc
+
+echo
+echo ">> Installing stow"
+stow --verbose --target $HOME --ignore=.*.example stow
+
+for package in $stowable; do
+  echo
+  read -r -p ">> Install $package? [y/n]" install
+  if [ "$install" == 'y' ]; then
+    echo ">> Installing $package"
+    (
+    cd $package
+    examples="$(ls -a | grep .example)"
+    for example in $examples; do
+      cp -vn "$example" "$(echo $example | sed 's/.example//')"
+    done
+    )
+    stow $package
+  fi
+done

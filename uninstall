@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [[ ! "$(basename $(pwd))" == "dotfiles" ]]; then
+  echo "Run uninstall from dotfiles directory"
+  exit 1
+fi
+
+stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
+
+echo "$stowable" |
+while read package; do
+  echo
+  echo ">> Uninstalling $package"
+  stow --verbose --target $HOME --delete $package
+done
+
+echo
+echo ">> Uninstalling stow"
+stow --verbose --target $HOME --delete stow

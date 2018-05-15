@@ -3,10 +3,7 @@ Piet van Zoen's Dotfiles
 
 ## Install
 
-### Setup repo
-
-1. Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
-1. Install submodules: `git submodule update --depth=1 --recursive`
+Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
 
 ### Homebrew
 
@@ -24,8 +21,11 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 
 ### Dotfiles
 
-1. Setup `stow`: `stow -t ~ stow`
-1. Install desired package via `stow <directory>`
+From the cloned dotfiles directory run `./install`. Any `*.example` files will be initialized. Be sure to go through and update them with the relevant information.
+
+## Uninstall
+
+Run `./uninstall` from the cloned dotfiles directory to uninstall.
 
 ## Credits
 
