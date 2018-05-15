@@ -1,5 +1,8 @@
 [ -e $HOME/.shellrc.local ] && source $HOME/.shellrc.local
 
+# COLORS
+export TERM=xterm-256color
+
 # AUTOJUMP
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 
