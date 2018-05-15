@@ -58,4 +58,5 @@ export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 # GIT-GET
-export GIT_GET_DIR="$HOME/proj"
+export PROJ="$HOME/repos/"
+export GIT_PATH="$PROJ"
