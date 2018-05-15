@@ -19,3 +19,5 @@ preexec() {
   # persists when starting vim.
   echo -ne "\e[2 q"
 }
+
+[[ -e $HOME/.bash/bash-preexec.sh ]] && source "$HOME/.bash/bash-preexec.sh"
