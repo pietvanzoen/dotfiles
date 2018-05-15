@@ -12,7 +12,7 @@ fi
 (
   cd $DOTFILES_DIR
   # setup stow first
-  stow --target=/Users/piet --restow --verbose stow
+  stow --target=$HOME --restow --verbose stow
   # then stow everything else
   ls -d */ | grep -v _ | grep -v stow | xargs -I {} stow {}
 )
