@@ -47,7 +47,7 @@ __job_info() {
 }
 
 export __black="\[\e[0;30m\]"
-export __dark="\[\e[2;36m\]"
+export __dark="\[\e[1;32m\]"
 export __red="\[\e[0;31m\]"
 export __green="\[\e[0;32m\]"
 export __yellow="\[\e[0;33m\]"
