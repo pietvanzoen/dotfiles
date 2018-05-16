@@ -9,9 +9,9 @@ export PROMPT_COMMAND="__ps1_main; history -a; autojump_add_to_database"
 __exit_caret() {
   local exit_code=$1
   if [ $EXIT != 0 ]; then
-    echo -n "$__red\\]❖$__reset_color"
+    echo -n "$__red%$__reset_color"
   else
-    echo -n "$__green\\]❖$__reset_color"
+    echo -n "$__green%$__reset_color"
   fi
 }
 
