@@ -86,7 +86,6 @@ Plug 'google/vim-searchindex' " show total and index of current search
 Plug 'heavenshell/vim-jsdoc', { 'on': ['JsDoc'] } " jsdoc generator
 Plug 'itchyny/lightline.vim' " better statusline
 Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
-Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'scss', 'less'] } " fancy html/css/scss generator commands
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
 Plug 'rhysd/devdocs.vim' " devdocs lookup
 Plug 'roman/golden-ratio' " perfect split resizing
@@ -94,7 +93,7 @@ Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
 Plug 'tpope/vim-commentary' " language aware commenting command
 Plug 'tpope/vim-fugitive' " git commands
 Plug 'tpope/vim-repeat' " more things to repeat
-Plug 'tpope/vim-rhubarb' " github extention for fugitive
+Plug 'tpope/vim-rhubarb', { 'on': ['Gbrowse'] } " github extention for fugitive
 Plug 'tpope/vim-surround' " surround char manipulation
 Plug 'tpope/vim-vinegar' " netrw helper commands
 Plug 'w0rp/ale' " gutter linting
