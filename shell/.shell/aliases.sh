@@ -11,7 +11,7 @@ alias grt=". git-root"
 # base command
 alias ls="ls --color=auto --group-directories-first --ignore='.DS_Store'"
 alias l='ls -lAh'
-alias rm='rm -v'
+alias rm='rm -I'
 alias cp='cp -vi'
 alias mv='mv -vi'
 alias mkdir="mkdir -v"
