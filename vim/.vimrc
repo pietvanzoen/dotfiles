@@ -77,6 +77,7 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter' " gutter notations for git status
+Plug 'christoomey/vim-tmux-navigator' " seamless navigation between tmux/vim
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
@@ -313,10 +314,10 @@ vnoremap ˚ 10k
 vnoremap ∆ 10j
 
 " Move around splits with <c-hjkl>
-" nnoremap <c-j> <c-w>j
-" nnoremap <c-k> <c-w>k
-" nnoremap <c-h> <c-w>h
-" nnoremap <c-l> <c-w>l
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
 
 " tab indenting for normal and visual mode
 nnoremap ¬ >>_
