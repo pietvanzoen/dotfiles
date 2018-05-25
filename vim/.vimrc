@@ -481,7 +481,7 @@ command! -nargs=? PipeCmd call PipeCommand(<q-args>)
 
 " NETRW SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:netrw_banner = 1
+let g:netrw_banner = 0
 let g:netrw_liststyle = 1
 let g:netrw_browse_split = 0
 let g:netrw_winsize = 25
