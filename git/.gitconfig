@@ -26,7 +26,7 @@
   ###############################################
 
   # Pretty logging.
-  l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset %C(black)✍ %G?%Creset' --abbrev-commit
+  l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset %C(cyan)$%G?%Creset' --abbrev-commit
 
   lb = !git l origin/master..$(git symbolic-ref --short HEAD) # Log commits that diverge from origin/master.
   lt = !git l $(git latest-tag-version)..HEAD
