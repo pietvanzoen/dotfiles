@@ -2,6 +2,18 @@
   # Import environment specific config and sensitive data.
   path = ~/.gitconfig.local
 
+[user]
+  name = pietvanzoen
+  email = hi@pietvanzoen.com
+  username = pietvanzoen
+  signingkey = 119BA45BFDF0E612
+
+[commit]
+  gpgsign = true
+
+[github]
+  user = pietvanzoen
+
 [core]
   excludesfile = ~/.gitignore_global
 
