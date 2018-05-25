@@ -84,11 +84,9 @@ Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " generate tmux statusline matching vim statusline
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': ['go'] } " golang stuff
 Plug 'google/vim-searchindex' " show total and index of current search
-Plug 'heavenshell/vim-jsdoc', { 'on': ['JsDoc'] } " jsdoc generator
 Plug 'itchyny/lightline.vim' " better statusline
 Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
-Plug 'rhysd/devdocs.vim' " devdocs lookup
 Plug 'roman/golden-ratio' " perfect split resizing
 Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
 Plug 'tpope/vim-commentary' " language aware commenting command
