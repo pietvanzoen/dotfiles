@@ -11,6 +11,9 @@
 [commit]
   gpgsign = true
 
+[gpg]
+  program = gpg2
+
 [github]
   user = pietvanzoen
 
@@ -160,9 +163,6 @@
 
 [help]
   autocorrect = 20 # After misspelling git command, use closest match after 2s.
-
-[gpg]
-  program = gpg
 
 [tag]
   sort = -*authordate

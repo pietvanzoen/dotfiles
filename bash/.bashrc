@@ -7,3 +7,5 @@ source $HOME/.bash/aliases.sh
 source $HOME/.bash/prompt.sh
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+[[ -z "$(pgrep gpg-agent)" ]] && eval $(gpg-agent --daemon)
