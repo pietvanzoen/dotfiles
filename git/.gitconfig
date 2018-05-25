@@ -1,6 +1,6 @@
-[include]
-  # Import environment specific config and sensitive data.
-  path = ~/.gitconfig.local
+# [include]
+#   # Import environment specific config and sensitive data.
+#   path = ~/.gitconfig.local
 
 [user]
   name = pietvanzoen
