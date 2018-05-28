@@ -187,7 +187,7 @@ command! Todo :Grepper
 " ALE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ale_fixers = {
-      \ 'javascript': ['eslint'],
+      \ 'javascript': ['eslint', 'prettier'],
       \ 'javascript.jsx': ['eslint'] }
 
 
