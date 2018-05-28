@@ -113,7 +113,6 @@ let g:ctrlp_custom_ignore={'dir': 'node_modules\|\.git',
                           \ 'file': '\.swp$'}
 let g:ctrlp_switch_buffer='Et'
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-let g:ctrlp_user_command = 'find %s -type f'
 if executable('rg')
   let g:ctrlp_user_command = 'rg %s
         \ --hidden
