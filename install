@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [[ ! "$(basename $(pwd))" == "dotfiles" ]]; then
   echo "Run install from dotfiles directory"
   exit 1
@@ -24,7 +26,7 @@ for package in $stowable; do
     echo ">> Installing $package"
     (
     cd $package
-    examples="$(ls -a | grep .example)"
+    examples="$((ls -a | grep example) || echo)"
     for example in $examples; do
       cp -vn "$example" "$(echo $example | sed 's/.example//')"
     done
