@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+INSTALLED_INDEX=./.installed_packages
+
+if [[ ! -f "$INSTALLED_INDEX" ]]; then
+  echo "No packages have been installed. Did you run ./install?"
+  exit 1
+fi
+
+echo "Restowing the following packages:"
+cat $INSTALLED_INDEX
+
+echo
+
+cat $INSTALLED_INDEX | xargs stow

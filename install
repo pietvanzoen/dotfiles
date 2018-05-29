@@ -7,6 +7,9 @@ if [[ ! "$(basename $(pwd))" == "dotfiles" ]]; then
   exit 1
 fi
 
+INSTALLED_INDEX_TMP="$(mktemp)"
+INSTALLED_INDEX="./.installed_packages"
+
 stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
 
 echo
@@ -14,6 +17,7 @@ echo ">> Initializing .stowrc"
 cp -vi ./stow/.stowrc.example ./stow/.stowrc
 sed -i "s|\$HOME|$HOME|" ./stow/.stowrc
 cat ./stow/.stowrc
+echo "stow" >> "$INSTALLED_INDEX_TMP"
 
 echo
 echo ">> Installing stow"
@@ -24,6 +28,7 @@ for package in $stowable; do
   read -r -p ">> Install $package? [y/n]" install
   if [ "$install" == 'y' ]; then
     echo ">> Installing $package"
+    echo "$package" >> "$INSTALLED_INDEX_TMP"
     (
     cd $package
     examples="$((ls -a | grep example) || echo)"
@@ -34,3 +39,9 @@ for package in $stowable; do
     stow $package
   fi
 done
+
+mv -f "$INSTALLED_INDEX_TMP" "$INSTALLED_INDEX"
+
+echo
+echo ">> Installed these packages:"
+cat "$INSTALLED_INDEX"
