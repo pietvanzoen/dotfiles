@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ "$(which gpg)" ]] && [[ "$(gpg --version | head -1)" = "gpg (GnuPG) 2"* ]]; then
+  GPG_BIN="$(which gpg)"
+elif [[ -n "$(which gpg2)" ]]; then
+  GPG_BIN="$(which gpg2)"
+else
+  echo "Could not find GPG v2. Is it installed?"
+  exit 1
+fi
+
+$GPG_BIN $@
