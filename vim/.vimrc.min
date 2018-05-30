@@ -1,0 +1,87 @@
+" BASIC SETTINGS
+syntax on
+set nocompatible " disable Vi compatibility settings
+set scrolloff=5 " keep 5 lines of space to top/bottom from current line
+set autoindent " copy indent from current line when starting a new line
+filetype plugin indent on
+set nowrap " don't wrap lines by default
+set expandtab " use spaces instead for tabs
+set shiftwidth=2 " number of spaces to use for autoindent
+set softtabstop=2 " number of spaces to use for "soft tabs"
+set tabstop=4 " number of spaces to use for "hard tabs"
+set cursorline " highlight current cursor line
+set showtabline=2 " always show the tabline
+set incsearch " immediately start searching with search command
+set smarttab " see :h 'smarttab'
+set autoread " auto update a file when it changes
+set hlsearch " highlight all search matches
+set ignorecase " ignore case in search and stuff
+set smartcase " use case if search includes uppercase characters
+set number " show line numbers
+set background=dark
+
+if filereadable($HOME . '/.vim/colors/solarized.vim')
+  colorscheme solarized
+else
+  colorscheme torte
+endif
+
+" enable undo across sessions
+if !isdirectory($HOME . "/.vim/undo")
+  call mkdir($HOME . "/.vim/undo")
+endif
+set undodir=~/.vim/undo
+set undofile
+
+" KEY MAPPINGS
+let mapleader="\<Space>" " using space as <leader>
+
+" jump to directory containing current file
+nnoremap - :edit %:h<cr>
+
+" expand %% in cmd mode to current file directory
+cnoremap <expr> %% expand('%:h').'/'
+
+" better line wrap navigation
+nmap j gj
+nmap k gk
+
+" friendly window nav
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+
+" better than nohl
+nnoremap <leader>h :let @/ = ""<cr>
+
+" search visually selected text
+vnoremap // y/<C-R>"<CR>
+
+" AUTOCOMMANDS
+augroup vimrcEx
+  autocmd!
+
+  " clean trailing whitespace on save
+  autocmd BufWritePre *.go let b:do_not_clean_whitespace=1
+  autocmd BufWritePre * CleanTrailingWhitespace
+
+  " Jump to last cursor position unless it's invalid or in an event handler
+  autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exe "normal g`\"" |
+      \ endif
+augroup END
+
+
+function! CleanTrailingWhitespace() abort
+  if exists('b:do_not_clean_whitespace')
+    return
+  endif
+  let l = line('.')
+  let c = col('.')
+  exec '%s/\s\+$//e'
+  exec '%s/\($\n\s*\)\+\%$//e'
+  call cursor(l, c)
+endfunction
+command! CleanTrailingWhitespace call CleanTrailingWhitespace()

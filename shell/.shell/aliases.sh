@@ -2,6 +2,7 @@
 # SHELL
 alias restow="\$(dotfilesdir)/stow-all"
 alias vm="vim . -S ~/.vim/sessions/\${PWD##*/}.vim"
+alias vimm="vim -u ~/.vimrc.min"
 alias gtop="cd \$(git rev-parse --show-toplevel || echo '.')"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
