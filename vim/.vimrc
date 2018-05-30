@@ -4,7 +4,6 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax on
 set nocompatible " disable Vi compatibility settings
-set ruler " show cursor position in standard vim statusbar
 set scrolloff=5 " keep 5 lines of space to top/bottom from current line
 set autoindent " copy indent from current line when starting a new line
 set nowrap " don't wrap lines by default
@@ -49,28 +48,6 @@ set undodir=~/.vim/undo
 set undofile
 
 let mapleader="\<Space>" " using space as <leader>
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" GUI SETTINGS
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has("gui_running")
-  " style
-  set guifont=Inconsolata:h14
-  set linespace=4
-  let g:solarized_contrast="high"
-
-  " hide scrollbars
-  set guioptions-=r
-  set guioptions-=R
-  set guioptions-=l
-  set guioptions-=L
-
-  " hide toolbar
-  set guioptions-=T
-
-endif
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGINS
@@ -161,14 +138,6 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:TerminusMouse = 1
 
-
-" INDENTLINE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:indentLine_enabled = 0       " disable indentation mark by default
-let g:indentLine_faster = 1        " enable faster setting
-let g:indentLine_color_term = 239  " set indent color
-
-
 " VIM-GREPPER
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:grepper = {}
@@ -256,11 +225,6 @@ nmap <leader>sp :OpenPreviousSession<cr>
 nmap <leader>sn :NewSession<cr>
 
 
-" CLOSETAGS
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:unaryTagsStack=''
-
-
 " QLEnter
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:qfenter_keymap = {}
@@ -284,15 +248,6 @@ let g:tmuxline_separators = {
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gitgutter_eager = 1
 
-" DEVDOCS
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <buffer>K <Plug>(devdocs-under-cursor)
-vmap <buffer>K <Plug>(devdocs-under-cursor)
-
-" augroup plugin-devdocs
-"   autocmd!
-"   autocmd FileType c,cpp,rust,haskell,python nmap <buffer>K <Plug>(devdocs-under-cursor)
-" augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPPING
@@ -344,17 +299,6 @@ function! RunTests(test_command)
 endfunction
 command! -nargs=? RunTests call RunTests(<q-args>)
 map <leader>t :RunTests<cr>
-
-" yarn shortcuts
-nmap <leader>yi :!yarn install<cr>
-nmap <leader>yf :!yarn install --force<cr>
-nmap <leader>yt :!yarn test<cr>
-nmap <leader>ya :!yarn add<space>
-
-" go shortcuts
-nmap <leader>gi :GoImports<cr>
-nmap <leader>gr :!clear && go run %<cr>
-nmap <leader>gt :GoTest<cr>
 
 " vim plug
 nmap <leader>ps :PlugSync<cr>
@@ -419,15 +363,6 @@ vnoremap // y/<C-R>"<CR>
 
 map <leader>af :ALEFix\|ALELint\|w<cr>
 
-" Toggle netrw
-map <c-n><c-n> :Lexplore<CR>
-
-" clear tabs and open project directory
-function! ClearTabs()
-  exec ':tabedit .'
-  exec ':tabonly'
-endfunction
-command! ClearTabs :call ClearTabs()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM AUTOCMDS
@@ -510,50 +445,6 @@ function! ReloadLocalVimrc(warn)
 endfunction
 call ReloadLocalVimrc(0)
 command! ReloadLocalVimrc call ReloadLocalVimrc(1)
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" SCRATCH FILE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! Scratch()
-  exec ':edit $PWD/.scratch'
-  exec ':set filetype=javascript'
-endfunction
-command! Scratch :call Scratch()
-
-function! ScratchRunner()
-  let l:run_command = exists('g:run_command') ? g:run_command : 'node $PWD/.scratch'
-  " disable gitgutter while running run command otherwise rendering gets messed up
-  exec ':GitGutterDisable'
-  exec ':wall'
-  exec ':!clear && ' . l:run_command
-  exec ':GitGutterEnable'
-endfunction
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" RENAME CURRENT FILE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! RenameFile()
-    let old_name = expand('%')
-    let new_name = input('New file name: ', expand('%'), 'file')
-    redraw
-
-    if new_name == '' || new_name == old_name
-      return
-    endif
-
-    if filereadable(new_name)
-      call ErrorMessage('File "' . new_name . '" already exists')
-      return
-    endif
-
-    exec ':saveas ' . new_name
-    exec ':silent !rm ' . old_name
-    redraw!
-    echo "'" . old_name . "' -> '" . new_name . "'"
-endfunction
-command! RenameFile :call RenameFile()
-map <leader>n :call RenameFile()<cr>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
