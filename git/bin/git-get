@@ -8,7 +8,7 @@ import subprocess
 
 cmd, *git_urls = sys.argv
 base_dir = os.getenv('GIT_PATH')
-git_url_regex = re.compile("^(git@|http[s]?:\/\/)([\w-]+\.[a-zA-Z]*)[:/]([\w-]+\.[a-zA-Z]*)\/([\.\w-]+)\.(git)$")
+git_url_regex = re.compile("^(git@|http[s]?:\/\/)([\w-]+\.[a-zA-Z]*)[:/]([\w-]+)\/([\.\w-]+)\.(git)$")
 
 USAGE = """Usage: %s URL...
 Like 'go get' without the go. Clone the repository URL(s) into directories using the host, user, and project name.
