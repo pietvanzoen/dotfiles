@@ -54,6 +54,7 @@ cask 'dropbox'
 cask 'caffeine'
 cask 'alfred'
 cask 'magicprefs'
+cask 'homebrew/cask-fonts/font-inconsolata'
 
 mas 'YubiKey Personalization Tool', id: 638161122
 mas 'NordVPN IKE', id: 1116599239
