@@ -1,0 +1,33 @@
+brew 'python'
+brew 'bash'
+brew 'curl'
+brew 'fzf'
+brew 'git'
+brew 'hub'
+brew 'tree'
+brew 'grep'
+brew 'rsync'
+brew 'mosh'
+brew 'htop'
+brew 'tmux'
+brew 'reattach-to-user-namespace'
+brew 'vim'
+brew 'stow'
+brew 'ripgrep'
+brew 'gnupg'
+brew 'gpg-agent'
+brew 'httpie'
+brew 'httpstat'
+brew 'jq'
+brew 'pstree'
+brew 'lnav'
+
+brew 'coreutils', args: ['with-default-names']
+brew 'findutils', args: ['with-default-names']
+brew 'gnu-tar', args: ['with-default-names']
+brew 'gnu-time', args: ['with-default-names']
+brew 'gnu-sed', args: ['with-default-names']
+brew 'gawk', args: ['with-default-names']
+brew 'gnutls', args: ['with-default-names']
+brew 'gnu-indent', args: ['with-default-names']
+brew 'gnu-getopt', args: ['with-default-names']

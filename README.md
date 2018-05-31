@@ -5,12 +5,10 @@ Piet van Zoen's Dotfiles
 
 Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
 
-### Homebrew
+### MacOS
 
 ```bash
-cd ~/dotfiles/_homebrew
-brew tap homebrew/bundle
-brew bundle
+_macos/install
 ```
 
 ### [Oh my zsh](https://github.com/robbyrussell/oh-my-zsh)
