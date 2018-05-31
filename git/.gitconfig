@@ -73,7 +73,7 @@
   ###############################################
 
   # Create pull request and open url: https://hub.github.com/
-  pr = pull-request -o
+  review = "!git push -u && hub pull-request -o"
 
   # Fetch and update given branch name, then rebase current branch onto that branch.
   fetch-rebase = "!f() { if [[ -z \"$1\" ]]; then echo 'No branch name given.' && exit 1; else git fetch origin $1:$1 && git rebase $1; fi }; f"
