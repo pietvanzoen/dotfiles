@@ -11,12 +11,6 @@ Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
 _macos/install
 ```
 
-### [Oh my zsh](https://github.com/robbyrussell/oh-my-zsh)
-
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-```
-
 ### Dotfiles
 
 From the cloned dotfiles directory run `./install`. Any `*.example` files will be initialized. Be sure to go through and update them with the relevant information.

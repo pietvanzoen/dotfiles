@@ -1,5 +1,3 @@
-[[ -e $HOME/.shellrc.local ]] && source $HOME/.shellrc.local
-
 # COLORS
 export TERM=xterm-256color
 
@@ -17,7 +15,7 @@ if [[ "$(which gdircolors)" ]]; then
 elif [[ "$(which dircolors)" ]]; then
   DIRCOLORS_BIN="$(which dircolors)"
 fi
-[ -e $HOME/.shell/dircolors.ansi-dark ] && eval "$($DIRCOLORS_BIN ~/.shell/dircolors.ansi-dark)"
+[ -e $HOME/.bash/dircolors.ansi-dark ] && eval "$($DIRCOLORS_BIN ~/.bash/dircolors.ansi-dark)"
 
 # BIN
 export PATH=$HOME/bin:$PATH
@@ -26,13 +24,11 @@ export PATH=$HOME/bin:$PATH
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
-# HUB
-[ -e "$(which hub)" ] && eval "$(hub alias -s)"
-
 # SSH
 [ -e $HOME/.ssh/rsa_id ] && export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 
 # GO BINARIES
+export GO_PATH="$HOME/go"
 [ -d "$GOPATH/bin" ] && export PATH="$PATH:$GOPATH/bin"
 
 # EDITOR
@@ -46,20 +42,16 @@ export HISTIGNORE="cd:cd -:pwd:exit:date:* --help";
 
 # FZF
 # Setting rg as the default source for fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_COMMAND='rg --no-ignore --hidden --files --color=never --glob "!.git/" --glob "!.DS_Store"'
 
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
 export FZF_DEFAULT_OPTS='--height 40% --reverse'
 
 # GNU COMMANDS
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-
-# GIT-GET
-export PROJ="$HOME/repos/"
-export GIT_PATH="$PROJ"
 
 # HOMEBREW
 export HOMEBREW_CASK_OPTS="--appdir=/Applications --fontdir=/Library/Fonts"

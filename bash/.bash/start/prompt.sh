@@ -23,7 +23,7 @@ __user_host() {
   echo -n "$__dark\u@\h$__reset_color"
 }
 
-source $HOME/.shell/git-prompt.sh
+source $HOME/.bash/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_STATESEPARATOR="|"
