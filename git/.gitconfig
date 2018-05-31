@@ -21,7 +21,7 @@
   excludesfile = ~/.gitignore_global
 
   # Use less when output is longer than screen. Also leave result on screen after exiting less.
-  pager = less -F -X
+  pager = diff-highlight | less -F -X
 
 [alias]
   ###############################################
@@ -140,9 +140,9 @@
 
 [pager]
   # Use diff-highlight from git-core for diffing. Better diffing. hello!
-  log = less --tabs=4 -FX
-  show = less --tabs=4 -FX
-  diff = less --tabs=4 -FX
+  log =  diff-highlight | less --tabs=4 -FX
+  show = diff-highlight | less --tabs=4 -FX
+  diff = diff-highlight | less --tabs=4 -FX
 
 [color "diff"]
   commit = green
@@ -157,6 +157,9 @@
   oldHighlight = red 52
   newNormal = green
   newHighlight = green 22
+
+[interactive]
+	diffFilter = diff-highlight | less --tabs=4 -FX
 
 [fetch]
   prune = true # Always prune refs when fetching.
