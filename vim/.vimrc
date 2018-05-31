@@ -1,9 +1,9 @@
+scriptencoding utf-8
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " BASIC SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax on
-set nocompatible " disable Vi compatibility settings
 set scrolloff=5 " keep 5 lines of space to top/bottom from current line
 set autoindent " copy indent from current line when starting a new line
 set nowrap " don't wrap lines by default
@@ -41,13 +41,13 @@ set wildmenu
 " set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 
 " persist undo history
-if !isdirectory($HOME . "/.vim/undo")
-  call mkdir($HOME . "/.vim/undo")
+if !isdirectory($HOME . '/.vim/undo')
+  call mkdir($HOME . '/.vim/undo')
 endif
 set undodir=~/.vim/undo
 set undofile
 
-let mapleader="\<Space>" " using space as <leader>
+let g:mapleader="\<Space>" " using space as <leader>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGINS
@@ -83,7 +83,10 @@ command! PlugSync :so ~/.vimrc | PlugClean! | PlugInstall
 
 " CTRLP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd! BufNewFile * silent CtrlPClearCache " clear cache when a new file is created
+augroup CtrlP
+  autocmd!
+  autocmd BufNewFile * silent CtrlPClearCache " clear cache when a new file is created
+augroup END
 
 let g:ctrlp_show_hidden=1
 let g:ctrlp_custom_ignore={'dir': 'node_modules\|\.git',
@@ -120,9 +123,9 @@ let g:lightline.component_function.cwd = 'LightlineProject'
 let g:lightline.component_function.mode = 'LightlineMode'
 
 function! LightlineProject()
-  let project = CurrentWorkingDir()
-  let branch = fugitive#head() !=# '' ? '(' . fugitive#head() . ')' : ''
-  return project . branch
+  let l:project = CurrentWorkingDir()
+  let l:branch = fugitive#head() !=# '' ? '(' . fugitive#head() . ')' : ''
+  return l:project . l:branch
 endfunction
 
 function! LightlineMode()
@@ -155,9 +158,13 @@ command! Todo :Grepper
 
 " ALE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_fixers = {
-      \ 'javascript': ['eslint', 'prettier'],
-      \ 'javascript.jsx': ['eslint'] }
+" let g:ale_fixers = {
+"       \ 'javascript': ['eslint', 'prettier'],
+"       \ 'javascript.jsx': ['eslint'],
+"       \ 'vim': ['vint'] }
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
 
 " VIM-SESSIONS
@@ -204,7 +211,7 @@ endfunction
 
 function! OpenPreviousSession(bang)
   let l:session = exists('g:session_previous') ? g:session_previous : ''
-  if l:session == ''
+  if l:session ==# ''
     echom 'No previous session to restore'
   else
     call OpenSesh(g:session_previous, a:bang)
@@ -217,12 +224,12 @@ command! OpenProjectSession call OpenProjectSession()
 command! -bang OpenPreviousSession call OpenPreviousSession(<q-bang>)
 command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSesh call OpenSesh(<q-args>, <q-bang>)
 
-nmap π :OpenSesh<space>
-nmap <leader>ss :EnableSession<cr>
-nmap <leader>so :OpenSesh<space>
-nmap <leader>sr :OpenProjectSession<cr>
-nmap <leader>sp :OpenPreviousSession<cr>
-nmap <leader>sn :NewSession<cr>
+nnoremap π :OpenSesh<space>
+nnoremap <leader>ss :EnableSession<cr>
+nnoremap <leader>so :OpenSesh<space>
+nnoremap <leader>sr :OpenProjectSession<cr>
+nnoremap <leader>sp :OpenPreviousSession<cr>
+nnoremap <leader>sn :NewSession<cr>
 
 
 " QLEnter
@@ -284,7 +291,7 @@ map <right> :echo "NO BAD PIET!"<cr>
 
 " default test runner command
 function! RunTests(test_command)
-  if (a:test_command != '')
+  if (a:test_command !=# '')
     let l:test_command = a:test_command
   elseif (exists('g:test_command'))
     let l:test_command = g:test_command
@@ -318,7 +325,10 @@ map <leader>z 1z=
 " search for currently selected text
 vnoremap // y/<C-R>"<CR>
 
-map <leader>af :ALEFix\|ALELint\|w<cr>
+nnoremap <leader>af :ALEFix\|ALELint\|w<cr>
+nnoremap <leader>an :ALENext<cr>
+nnoremap <leader>ap :ALEPrevious<cr>
+
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -378,14 +388,14 @@ map <leader>v :view %%
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " REPO SPECIFIC VIMRC
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! ReloadLocalVimrc(warn)
-  let git_path = system("git rev-parse --show-toplevel 2>/dev/null")
-  let git_vimrc = substitute(git_path, '\n', '', '') . "/.vimrc.local"
-  if !empty(glob(git_vimrc))
-    sandbox exec ":source " . git_vimrc
+function! ReloadLocalVimrc(warn) abort
+  let l:git_path = system('git rev-parse --show-toplevel 2>/dev/null')
+  let l:git_vimrc = substitute(l:git_path, '\n', '', '') . '/.vimrc.local'
+  if !empty(glob(l:git_vimrc))
+    sandbox exec ':source ' . l:git_vimrc
   else
     if a:warn
-      call ErrorMessage(".vimrc.local not found in this repo")
+      call ErrorMessage('.vimrc.local not found in this repo')
     endif
   endif
 endfunction
@@ -401,11 +411,11 @@ function! CleanTrailingWhitespace() abort
   if exists('b:do_not_clean_whitespace')
     return
   endif
-  let l = line('.')
-  let c = col('.')
+  let l:line = line('.')
+  let l:col = col('.')
   exec '%s/\s\+$//e'
   exec '%s/\($\n\s*\)\+\%$//e'
-  call cursor(l, c)
+  call cursor(l:line, l:col)
 endfunction
 command! CleanTrailingWhitespace call CleanTrailingWhitespace()
 
@@ -415,12 +425,12 @@ command! CleanTrailingWhitespace call CleanTrailingWhitespace()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! CurrentWorkingDir()
-  return split(getcwd(), "/")[-1]
+  return split(getcwd(), '/')[-1]
 endfunction
 
 function! CursorWord()
-  let line = getline('.')
-  return matchstr(line[:(col('.')-1)], '\k*$') . matchstr(line[(col('.')-1):], '^\k*')[1:]
+  let l:line = getline('.')
+  return matchstr(l:line[:(col('.')-1)], '\k*$') . matchstr(l:line[(col('.')-1):], '^\k*')[1:]
 endfunction
 
 function! ErrorMessage(msg)
