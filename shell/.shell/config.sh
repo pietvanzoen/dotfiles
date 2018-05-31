@@ -60,3 +60,6 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 # GIT-GET
 export PROJ="$HOME/repos/"
 export GIT_PATH="$PROJ"
+
+# HOMEBREW
+export HOMEBREW_CASK_OPTS="--appdir=/Applications --fontdir=/Library/Fonts"

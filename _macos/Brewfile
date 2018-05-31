@@ -1,3 +1,4 @@
+# vim: set filetype=ruby
 brew 'python'
 brew 'bash'
 brew 'curl'
@@ -31,3 +32,33 @@ brew 'gawk', args: ['with-default-names']
 brew 'gnutls', args: ['with-default-names']
 brew 'gnu-indent', args: ['with-default-names']
 brew 'gnu-getopt', args: ['with-default-names']
+
+cask_args appdir: "/Applications"
+cask '1password'
+cask 'google-chrome'
+cask 'firefox'
+cask 'iterm2'
+cask 'fantastical'
+cask 'slack'
+cask 'whatsapp'
+cask 'signal'
+cask 'tunnelblick'
+cask 'bartender'
+cask 'istat-menus'
+cask 'docker'
+cask 'keybase'
+cask 'bitbar'
+cask 'tripmode'
+cask 'flux'
+cask 'dropbox'
+cask 'caffeine'
+cask 'alfred'
+cask 'magicprefs'
+
+mas 'YubiKey Personalization Tool', id: 638161122
+mas 'NordVPN IKE', id: 1116599239
+mas 'Moom', id: 419330170
+mas 'Monosnap', id: 540348655
+mas 'Wunderlist', id: 410628904
+mas 'Xcode', id: 497799835
+mas 'Wallcat', id: 1000397973
