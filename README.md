@@ -25,6 +25,10 @@ From the cloned dotfiles directory run `./install`. Any `*.example` files will b
 
 Run `./uninstall` from the cloned dotfiles directory to uninstall.
 
+## Update
+
+Run `./update` from the cloned dotfiles directory to re-stow already installed packages.
+
 ## Credits
 
 Other dotfile repos that I've borrowed from or been inspired by:
