@@ -55,8 +55,8 @@ let g:mapleader="\<Space>" " using space as <leader>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter' " gutter notations for git status
-Plug 'christoomey/vim-tmux-navigator' " seamless navigation between tmux/vim
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
+Plug 'christoomey/vim-tmux-navigator' " seamless navigation between tmux/vim
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " generate tmux statusline matching vim statusline
