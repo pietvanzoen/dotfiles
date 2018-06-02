@@ -6,6 +6,7 @@ scriptencoding utf-8
 syntax on
 set scrolloff=5 " keep 5 lines of space to top/bottom from current line
 set autoindent " copy indent from current line when starting a new line
+filetype plugin indent on
 set nowrap " don't wrap lines by default
 set expandtab " use spaces instead for tabs
 set shiftwidth=2 " number of spaces to use for autoindent
