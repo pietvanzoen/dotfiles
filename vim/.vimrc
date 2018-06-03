@@ -65,7 +65,7 @@ Plug 'google/vim-searchindex' " show total and index of current search
 Plug 'itchyny/lightline.vim' " better statusline
 Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
-Plug 'plasticboy/vim-markdown' " nice markdown handling
+Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] } " nice markdown handling
 Plug 'Quramy/tsuquyomi', { 'for': ['typescript'] } " typescript tooling
 Plug 'roman/golden-ratio' " perfect split resizing
 Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
@@ -259,9 +259,12 @@ let g:tmuxline_separators = {
 let g:gitgutter_eager = 1
 
 
-" VIM MARKDOWN
+" VIM MARKDOWN & GOYO
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_folding_disabled = 0
+nnoremap <leader>gy :Goyo<cr>
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPPING
