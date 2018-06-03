@@ -1,65 +1,65 @@
 # vim: set filetype=ruby
-brew 'python'
 brew 'bash'
 brew 'curl'
 brew 'fzf'
 brew 'git'
-brew 'hub'
-brew 'tree'
-brew 'grep'
-brew 'rsync'
-brew 'mosh'
-brew 'htop'
-brew 'tmux'
-brew 'reattach-to-user-namespace'
-brew 'vim'
-brew 'stow'
-brew 'ripgrep'
 brew 'gnupg'
 brew 'gpg-agent'
+brew 'grep'
+brew 'htop'
 brew 'httpie'
 brew 'httpstat'
+brew 'hub'
 brew 'jq'
-brew 'pstree'
 brew 'lnav'
+brew 'mosh'
+brew 'pstree'
+brew 'reattach-to-user-namespace'
+brew 'rename'
+brew 'ripgrep'
+brew 'rsync'
+brew 'stow'
+brew 'tmux'
+brew 'tree'
+brew 'vim', args: ['with-python']
 
 brew 'coreutils', args: ['with-default-names']
 brew 'findutils', args: ['with-default-names']
+brew 'gawk', args: ['with-default-names']
+brew 'gnu-getopt', args: ['with-default-names']
+brew 'gnu-indent', args: ['with-default-names']
+brew 'gnu-sed', args: ['with-default-names']
 brew 'gnu-tar', args: ['with-default-names']
 brew 'gnu-time', args: ['with-default-names']
-brew 'gnu-sed', args: ['with-default-names']
-brew 'gawk', args: ['with-default-names']
 brew 'gnutls', args: ['with-default-names']
-brew 'gnu-indent', args: ['with-default-names']
-brew 'gnu-getopt', args: ['with-default-names']
 
 cask_args appdir: "/Applications"
 cask '1password'
-cask 'google-chrome'
-cask 'firefox'
-cask 'iterm2'
-cask 'fantastical'
-cask 'slack'
-cask 'whatsapp'
-cask 'signal'
-cask 'tunnelblick'
-cask 'bartender'
-cask 'istat-menus'
-cask 'docker'
-cask 'keybase'
-cask 'bitbar'
-cask 'tripmode'
-cask 'flux'
-cask 'dropbox'
-cask 'caffeine'
 cask 'alfred'
-cask 'magicprefs'
+cask 'bartender'
+cask 'bitbar'
+cask 'caffeine'
+cask 'docker'
+cask 'dropbox'
+cask 'fantastical'
+cask 'firefox'
+cask 'flux'
+cask 'google-chrome'
 cask 'homebrew/cask-fonts/font-inconsolata'
+cask 'istat-menus'
+cask 'iterm2'
+cask 'keybase'
+cask 'magicprefs'
+cask 'signal'
+cask 'slack'
+cask 'tripmode'
+cask 'tunnelblick'
+cask 'whatsapp'
 
-mas 'YubiKey Personalization Tool', id: 638161122
-mas 'NordVPN IKE', id: 1116599239
-mas 'Moom', id: 419330170
 mas 'Monosnap', id: 540348655
+mas 'Moom', id: 419330170
+mas 'NordVPN IKE', id: 1116599239
+mas 'Wallcat', id: 1000397973
 mas 'Wunderlist', id: 410628904
 mas 'Xcode', id: 497799835
-mas 'Wallcat', id: 1000397973
+mas 'YubiKey Personalization Tool', id: 638161122
