@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Like go get but without the need for go.
 
 import re
@@ -6,7 +6,7 @@ import sys
 import os
 import subprocess
 
-cmd, *git_urls = sys.argv
+cmd, git_urls = sys.argv[0], sys.argv[1:]
 base_dir = os.getenv('GIT_PATH')
 git_url_regex = re.compile("^(git@|http[s]?:\/\/)([\w-]+\.[a-zA-Z]*)[:/]([\w-]+)\/([\.\w-]+)\.(git)$")
 
