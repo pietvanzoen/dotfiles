@@ -260,7 +260,7 @@ nmap <leader>* :Grepper -tool git -open -switch -cword -noprompt<cr>
 nmap <leader>gg :Grepper<cr>
 
 " disable highlight shortcut
-nnoremap <C-L> :let @/ = ""<cr>
+nnoremap <leader>h :let @/ = ""<cr>
 
 " replace bad spelling with first suggestion
 map <leader>z 1z=
