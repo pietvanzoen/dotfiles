@@ -255,17 +255,12 @@ endfunction
 command! -nargs=? RunTests call RunTests(<q-args>)
 map <leader>t :RunTests<cr>
 
-" vim plug
-nmap <leader>ps :PlugSync<cr>
-nmap <leader>pi :PlugInstall<cr>
-nmap <leader>pc :PlugClean!<cr>
-
 " grepper search
 nmap <leader>* :Grepper -tool git -open -switch -cword -noprompt<cr>
 nmap <leader>gg :Grepper<cr>
 
 " disable highlight shortcut
-nmap <leader>h :let @/ = ""<cr>
+nnoremap <C-L> :let @/ = ""<cr>
 
 " replace bad spelling with first suggestion
 map <leader>z 1z=
