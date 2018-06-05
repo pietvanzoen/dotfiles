@@ -76,7 +76,6 @@ Plug 'tpope/vim-rhubarb', { 'on': ['Gbrowse'] } " github extention for fugitive
 Plug 'tpope/vim-surround' " surround char manipulation
 Plug 'w0rp/ale' " gutter linting
 Plug 'wincent/terminus' " vim iterm ui impovements
-Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
 Plug 'yssl/QFEnter' " better quicklist keyboard shortcuts
 call plug#end()
 
@@ -167,71 +166,6 @@ command! Todo :Grepper
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-
-
-" VIM-SESSIONS
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:session_directory = '~/.vim/sessions/'
-let g:session_autosave = 'yes'
-let g:session_autoload = 'no'
-
-function! EnableSession()
-  exec ':SaveSession ' . CurrentWorkingDir()
-endfunction
-
-function! NewSession()
-  exec ':tabedit .'
-  exec ':tabonly'
-  call EnableSession()
-endfunction
-
-function! OpenProjectSession()
-  call OpenSesh(CurrentWorkingDir(), '!')
-endfunction
-
-function! OpenSesh(session, bang)
-  exec ':wall'
-  let l:guessed_sessions = xolox#session#complete_names(a:session, 0, 0)
-
-  if len(l:guessed_sessions) == 0
-    echom "Unknown session '" . a:session . "'"
-    return
-  endif
-
-  let l:current_session = xolox#session#find_current_session()
-  let l:session = l:guessed_sessions[0]
-
-  if l:session == l:current_session
-    echom "Session '" . l:session . "' already active"
-    return
-  endif
-
-  let g:session_previous = l:current_session
-  call xolox#session#open_cmd(l:session, a:bang, 'OpenSession')
-  call ReloadLocalVimrc(0)
-endfunction
-
-function! OpenPreviousSession(bang)
-  let l:session = exists('g:session_previous') ? g:session_previous : ''
-  if l:session ==# ''
-    echom 'No previous session to restore'
-  else
-    call OpenSesh(g:session_previous, a:bang)
-  endif
-endfunction
-
-command! EnableSession :call EnableSession()
-command! NewSession :call NewSession()
-command! OpenProjectSession call OpenProjectSession()
-command! -bang OpenPreviousSession call OpenPreviousSession(<q-bang>)
-command! -bar -bang -nargs=? -complete=customlist,xolox#session#complete_names OpenSesh call OpenSesh(<q-args>, <q-bang>)
-
-nnoremap π :OpenSesh<space>
-nnoremap <leader>ss :EnableSession<cr>
-nnoremap <leader>so :OpenSesh<space>
-nnoremap <leader>sr :OpenProjectSession<cr>
-nnoremap <leader>sp :OpenPreviousSession<cr>
-nnoremap <leader>sn :NewSession<cr>
 
 
 " QLEnter
@@ -378,6 +312,55 @@ augroup vimrcEx
 augroup END
 
 
+" VIM-SESSIONS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:session_directory = $HOME . '/.vim/sessions/'
+if !isdirectory(g:session_directory)
+  call mkdir(g:session_directory)
+endif
+
+function! GetSessionFilepath() abort
+  let l:project = GetCurrentGitProject()
+  if empty(l:project)
+    let l:project = getcwd()
+  endif
+  let l:project = tolower(substitute(l:project, $HOME . '/', '', ''))
+  let l:session_file = g:session_directory . substitute(l:project, '[./ ]', '_', 'g') . '.vim'
+  return l:session_file
+endfunction
+
+function! SessionSave() abort
+  execute 'mksession! ' . GetSessionFilepath()
+endfunction
+
+function! SessionRestore() abort
+  let l:session = GetSessionFilepath()
+  if filereadable(l:session)
+    execute 'source ' . l:session
+  else
+    call ErrorMessage('Session for ' . getcwd() . ' not found')
+  endif
+endfunction
+
+function! SessionNew() abort
+  exec ':tabedit . | tabonly'
+  call SessionSave()
+endfunction
+
+augroup Sessions
+  autocmd!
+  autocmd VimLeave * call SessionSave()
+augroup END
+
+command! SessionSave call SessionSave()
+command! SessionRestore call SessionRestore()
+command! SessionNew call SessionNew()
+
+nnoremap <leader>ss :SessionSave<cr>
+nnoremap <leader>sr :SessionRestore<cr>
+nnoremap <leader>sn :SessionNew<cr>
+
+
 " NETRW SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:netrw_banner = 0
@@ -403,7 +386,7 @@ nnoremap - :call JumpUp()<cr>
 " REPO SPECIFIC VIMRC
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! ReloadLocalVimrc(warn) abort
-  let l:git_path = system('git rev-parse --show-toplevel 2>/dev/null')
+  let l:git_path = GetCurrentGitProject()
   let l:git_vimrc = substitute(l:git_path, '\n', '', '') . '/.vimrc.local'
   if !empty(glob(l:git_vimrc))
     sandbox exec ':source ' . l:git_vimrc
@@ -413,7 +396,6 @@ function! ReloadLocalVimrc(warn) abort
     endif
   endif
 endfunction
-call ReloadLocalVimrc(0)
 command! ReloadLocalVimrc call ReloadLocalVimrc(1)
 
 
@@ -447,6 +429,10 @@ function! CursorWord()
   return matchstr(l:line[:(col('.')-1)], '\k*$') . matchstr(l:line[(col('.')-1):], '^\k*')[1:]
 endfunction
 
+function! GetCurrentGitProject() abort
+  return substitute(system('git rev-parse --show-toplevel 2>/dev/null'), '\n$', '', '')
+endfunction
+
 function! ErrorMessage(msg)
   echohl WarningMsg | echo a:msg | echohl None
 endfunction
@@ -455,3 +441,8 @@ endfunction
 "set t_Co=16 " 16 colors
 set background=dark
 colorscheme solarized
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" FINAL
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call ReloadLocalVimrc(0)
