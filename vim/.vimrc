@@ -74,7 +74,6 @@ Plug 'tpope/vim-fugitive' " git commands
 Plug 'tpope/vim-repeat' " more things to repeat
 Plug 'tpope/vim-rhubarb', { 'on': ['Gbrowse'] } " github extention for fugitive
 Plug 'tpope/vim-surround' " surround char manipulation
-Plug 'tpope/vim-vinegar' " netrw helper commands
 Plug 'w0rp/ale' " gutter linting
 Plug 'wincent/terminus' " vim iterm ui impovements
 Plug 'xolox/vim-misc' | Plug 'xolox/vim-session'
@@ -391,8 +390,13 @@ let g:netrw_list_hide= '.*\.swp$,.DS_Store,*/tmp/*,*.so,*.swp,*.zip,*.git'
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 cnoremap <expr> %% expand('%:h').'/'
-map <leader>e :edit %%
-map <leader>v :view %%
+" jump to directory containing current file
+function! JumpUp() abort
+  let l:current_file = expand('%:t')
+  exec ':edit %:h'
+  call search(escape(l:current_file, '.*[]~\'), 'wc')
+endfunction
+nnoremap - :call JumpUp()<cr>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
