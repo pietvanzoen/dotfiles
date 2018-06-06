@@ -57,7 +57,7 @@ let g:mapleader="\<Space>" " using space as <leader>
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter' " gutter notations for git status
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
-Plug 'christoomey/vim-tmux-navigator' " seamless navigation between tmux/vim
+Plug 'christoomey/vim-tmux-navigator', { 'on': [] } " seamless navigation between tmux/vim. loaded on $TMUX env var
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " generate tmux statusline matching vim statusline
@@ -65,7 +65,7 @@ Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': ['go'] } " golang stuf
 Plug 'google/vim-searchindex' " show total and index of current search
 Plug 'itchyny/lightline.vim' " better statusline
 Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
-Plug 'junegunn/vim-easy-align' " magical aligning
+Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)'] } " magical aligning
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
 Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] } " nice markdown handling
 Plug 'Quramy/tsuquyomi', { 'for': ['typescript'] } " typescript tooling
@@ -74,13 +74,21 @@ Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
 Plug 'tpope/vim-commentary' " language aware commenting command
 Plug 'tpope/vim-fugitive' " git commands
 Plug 'tpope/vim-repeat' " more things to repeat
-Plug 'tpope/vim-rhubarb', { 'on': ['Gbrowse'] } " github extention for fugitive
+Plug 'tpope/vim-rhubarb' " github extention for fugitive
 Plug 'tpope/vim-surround' " surround char manipulation
 Plug 'w0rp/ale' " gutter linting
 Plug 'wincent/terminus' " vim iterm ui impovements
-Plug 'yssl/QFEnter' " better quicklist keyboard shortcuts
+Plug 'yssl/QFEnter', { 'for': 'qf' } " better quicklist keyboard shortcuts
 call plug#end()
 
+" MANUAL LAZY LOAD
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if !empty($TMUX)
+  exec plug#load('vim-tmux-navigator')
+endif
+
+" PLUG COMMAND
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command! PlugSync :so ~/.vimrc | PlugClean! | PlugInstall
 
 
