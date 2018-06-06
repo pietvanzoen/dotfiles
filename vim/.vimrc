@@ -135,7 +135,8 @@ let g:lightline.component_function.mode = 'LightlineMode'
 
 function! LightlineProject()
   let l:project = CurrentWorkingDir()
-  let l:branch = fugitive#head() !=# '' ? '(' . fugitive#head() . ')' : ''
+  let l:git_branch = substitute(system('git symbolic-ref --short HEAD'), '\n', '', 'g')
+  let l:branch = l:git_branch !=# '' ? '(' . l:git_branch . ')' : ''
   return l:project . l:branch
 endfunction
 
