@@ -76,7 +76,7 @@ Plug 'tpope/vim-fugitive' " git commands
 Plug 'tpope/vim-repeat' " more things to repeat
 Plug 'tpope/vim-rhubarb' " github extention for fugitive
 Plug 'tpope/vim-surround' " surround char manipulation
-Plug 'w0rp/ale' " gutter linting
+Plug 'w0rp/ale', { 'on': [] } " gutter linting
 Plug 'wincent/terminus' " vim iterm ui impovements
 Plug 'yssl/QFEnter', { 'for': 'qf' } " better quicklist keyboard shortcuts
 call plug#end()
@@ -86,6 +86,17 @@ call plug#end()
 if !empty($TMUX)
   exec plug#load('vim-tmux-navigator')
 endif
+
+function! LoadALE() abort
+  if IsFile()
+    call plug#load('ale')
+  endif
+endfunction
+
+augroup Plugs
+  autocmd!
+  autocmd FileType * call LoadALE()
+augroup END
 
 " PLUG COMMAND
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -455,6 +466,17 @@ endfunction
 
 function! ErrorMessage(msg)
   echohl WarningMsg | echo a:msg | echohl None
+endfunction
+
+function! IsFile() abort
+  if expand('%:t') ==# 'ControlP' ||
+   \ expand('%:t') ==# '[Plugins]' ||
+   \ &filetype ==# 'qf' ||
+   \ &filetype ==# 'netrw' ||
+   \ &filetype ==# ''
+    return 0
+  endif
+  return 1
 endfunction
 
 " colors
