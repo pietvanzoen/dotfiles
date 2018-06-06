@@ -53,6 +53,7 @@ let g:mapleader="\<Space>" " using space as <leader>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter' " gutter notations for git status
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
@@ -64,6 +65,7 @@ Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': ['go'] } " golang stuf
 Plug 'google/vim-searchindex' " show total and index of current search
 Plug 'itchyny/lightline.vim' " better statusline
 Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
+Plug 'junegunn/vim-easy-align' " magical aligning
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
 Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] } " nice markdown handling
 Plug 'Quramy/tsuquyomi', { 'for': ['typescript'] } " typescript tooling
@@ -202,6 +204,15 @@ nnoremap <leader>gy :Goyo<cr>
 " TSUQUYOMI
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tsuquyomi_disable_quickfix = 1
+
+
+" EASY-ALIGN
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
