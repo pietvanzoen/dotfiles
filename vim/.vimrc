@@ -356,7 +356,6 @@ function! GetSessionFilepath() abort
   if empty(l:project)
     let l:project = getcwd()
   endif
-  let l:project = tolower(substitute(l:project, $HOME . '/', '', ''))
   let l:session_file = g:session_directory . substitute(l:project, '[./ ]', '_', 'g') . '.vim'
   return l:session_file
 endfunction
