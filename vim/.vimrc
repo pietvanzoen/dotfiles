@@ -217,7 +217,7 @@ let g:gitgutter_eager = 1
 " VIM MARKDOWN & GOYO
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:vim_markdown_new_list_item_indent = 0
-let g:vim_markdown_folding_disabled = 0
+let g:vim_markdown_folding_disabled = 1
 nnoremap <leader>gy :Goyo<cr>
 
 
