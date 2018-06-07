@@ -139,7 +139,6 @@ let g:lightline.inactive.left = [ [], [], [ 'filename' ] ]
 let g:lightline.inactive.right = [ [], [], [ 'filetype' ] ]
 let g:lightline.component = {}
 let g:lightline.component.filename = '%<%f'
-let g:lightline.component.lineinfo = "%{line('.') . '/' . line('$')}"
 let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
 let g:lightline.component_function = {}
 let g:lightline.component_function.cwd = 'LightlineProject'
