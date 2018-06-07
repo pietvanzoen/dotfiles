@@ -4,14 +4,18 @@ set -e
 
 function main() {
   local branch
+  local merge_branch
 
   branch=$(git symbolic-ref --short HEAD)
+  target_branch="${1:-master}"
 
-  assert_not_master
+  assert_not_current
 
-  update_master
+  update_target
 
   assert_feature_up_to_date
+
+  confirm_merge
 
   merge_feature
 
@@ -19,25 +23,36 @@ function main() {
 
 }
 
-function assert_not_master() {
-  if [[ $branch == 'master' ]]; then
-    error "Current branch is master. Exiting."
+function assert_not_current() {
+  if [[ $branch == $target_branch ]]; then
+    error "Current branch is $target_branch. Exiting."
     exit 1
   fi
 }
 
-function update_master() {
-  info "updating master"
-  git checkout master --quiet
+function update_target() {
+  info "updating $target_branch"
+  git checkout $target_branch --quiet
   git pull
+}
+
+function confirm_merge() {
+  info "Are you sure you want to merge '$branch' into '$target_branch'? (y/n)"
+  read confirm
+  if [ "$confirm" = "y" ]; then
+    return
+  else
+    info "Canceling merge"
+    exit
+  fi
 }
 
 function assert_feature_up_to_date() {
   local missing_commits
-  missing_commits="$(git log master --pretty="* %h - %s [%an]" --not "$branch")"
+  missing_commits="$(git log $target_branch --pretty="* %h - %s [%an]" --not "$branch")"
 
   if [[ $missing_commits ]]; then
-    error "Branch $branch is missing the following commits from master. Rebase and try again."
+    error "Branch $branch is missing the following commits from $target_branch. Rebase and try again."
     echo "$missing_commits"
     git checkout "$branch" --quiet
     exit 1
@@ -67,4 +82,4 @@ function error() {
   echo "$(tput setaf 1)>> $1$(tput sgr0)"
 }
 
-main
+main $1

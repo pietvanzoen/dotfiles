@@ -96,7 +96,7 @@
   test-branch="!run-command-on-git-revisions origin/master $(git symbolic-ref --short HEAD) 'yarn test'"
 
   # Fast-forward merge commits of current branch into master and push. Tidy after.
-  finish-branch="!git-finish-branch"
+  finish-branch="!git-finish-branch $1"
 
 
   ###############################################
