@@ -68,6 +68,7 @@ Plug 'tpope/vim-repeat' " more things to repeat
 Plug 'tpope/vim-rhubarb' " github extention for fugitive
 Plug 'tpope/vim-surround' " surround char manipulation
 Plug 'w0rp/ale', { 'on': [] } " gutter linting
+Plug 'machakann/vim-highlightedyank' " briefly highlight yanked text
 Plug 'wincent/terminus' " vim iterm ui impovements
 Plug 'yssl/QFEnter', { 'for': 'qf' } " better quicklist keyboard shortcuts
 call plug#end()
