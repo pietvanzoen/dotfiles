@@ -1,6 +1,7 @@
 # vim: set filetype=ruby
 brew 'bash'
 brew 'curl'
+brew 'fd'
 brew 'fzf'
 brew 'git'
 brew 'gnupg'

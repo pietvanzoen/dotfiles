@@ -11,14 +11,11 @@ set nowrap " don't wrap lines by default
 set expandtab " use spaces instead for tabs
 set shiftwidth=2 " number of spaces to use for autoindent
 set softtabstop=2 " number of spaces to use for "soft tabs"
-set tabstop=4 " number of spaces to use for "hard tabs"
 set cursorline " highlight current cursor line
-set cmdheight=1 " height of the vim command line
-set showtabline=2 " always show the tabline
 set incsearch " immediately start searching with search command
-"set complete-=i
 set smarttab " see :h 'smarttab'
 set autoread " auto update a file when it changes
+set autowriteall " auto write buffer on commands
 set hlsearch " highlight all search matches
 set ignorecase " ignore case in search and stuff
 set smartcase " use case if search includes uppercase characters
@@ -31,15 +28,10 @@ set timeoutlen=500 " how long leader commands wait before executing
 set laststatus=2 " always show status line
 set noshowmode " hide mode in command line, shown in statusline instead
 set completeopt-=preview " disable preview window
-set colorcolumn=72,120
-
-"ignores
+set colorcolumn=72,120 " vertical lines at 71 and 120 chars
 set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
 set wildmode=longest,list
 set wildmenu
-
-" set whitespace chars
-" set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 
 " persist undo history
 if !isdirectory($HOME . '/.vim/undo')
@@ -105,25 +97,20 @@ command! PlugSync :so ~/.vimrc | PlugClean! | PlugInstall
 
 " CTRLP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-augroup CtrlP
-  autocmd!
-  autocmd BufNewFile * silent CtrlPClearCache " clear cache when a new file is created
-augroup END
-
-let g:ctrlp_show_hidden=1
-let g:ctrlp_custom_ignore={'dir': 'node_modules\|\.git',
-                          \ 'file': '\.swp$'}
-let g:ctrlp_switch_buffer='Et'
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-if executable('rg')
-  let g:ctrlp_user_command = 'rg %s
-        \ --hidden
-        \ --files
-        \ --color=never
-        \ --glob "!.git/"
-        \ --glob "!node_modules/"
-        \ --glob "!.DS_Store"'
+if executable('fd')
+  let g:ctrlp_user_command = 'fd -H -E .git --type f --color=never "" %s'
   let g:ctrlp_use_caching = 0
+elseif executable('git')
+  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard', 'find %s -type f']
+  let g:ctrlp_use_caching = 0
+else
+  augroup CtrlP
+    autocmd!
+    autocmd BufNewFile * silent CtrlPClearCache " clear cache when a new file is created
+  augroup END
+  let g:ctrlp_show_hidden=1
+  let g:ctrlp_switch_buffer='Et'
+  let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 endif
 
 
