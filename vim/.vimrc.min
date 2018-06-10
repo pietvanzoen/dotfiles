@@ -1,9 +1,8 @@
 " BASIC SETTINGS
-syntax on
-set nocompatible " disable Vi compatibility settings
-set scrolloff=5 " keep 5 lines of space to top/bottom from current line
+unlet! skip_defaults_vim
+source $VIMRUNTIME/defaults.vim
+
 set autoindent " copy indent from current line when starting a new line
-filetype plugin indent on
 set nowrap " don't wrap lines by default
 set expandtab " use spaces instead for tabs
 set shiftwidth=2 " number of spaces to use for autoindent
@@ -17,7 +16,7 @@ set autoread " auto update a file when it changes
 set hlsearch " highlight all search matches
 set ignorecase " ignore case in search and stuff
 set smartcase " use case if search includes uppercase characters
-set number " show line numbers
+set relativenumber " show relative line numbers
 set background=dark
 
 if filereadable($HOME . '/.vim/colors/solarized.vim')
@@ -66,11 +65,6 @@ augroup vimrcEx
   autocmd BufWritePre *.go let b:do_not_clean_whitespace=1
   autocmd BufWritePre * CleanTrailingWhitespace
 
-  " Jump to last cursor position unless it's invalid or in an event handler
-  autocmd BufReadPost *
-      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-      \   exe "normal g`\"" |
-      \ endif
 augroup END
 
 
