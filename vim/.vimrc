@@ -39,60 +39,67 @@ endif
 set undodir=~/.vim/undo
 set undofile
 
+if has('nvim')
+  set inccommand=nosplit
+endif
 let g:mapleader="\<Space>" " using space as <leader>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" PLUGINS
+" PACKAGES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set packpath^=~/.vim
 
-call plug#begin('~/.vim/plugged')
-Plug 'airblade/vim-gitgutter' " gutter notations for git status
-Plug 'ajh17/VimCompletesMe' " smarter tab completion
-Plug 'christoomey/vim-tmux-navigator', { 'on': [] } " seamless navigation between tmux/vim. loaded on $TMUX env var
-Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
-Plug 'editorconfig/editorconfig-vim' " editorconfig.org
-Plug 'edkolev/tmuxline.vim', { 'on': ['Tmuxline', 'TmuxlineSnapshot'] } " generate tmux statusline matching vim statusline
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': ['go'] } " golang stuff
-Plug 'google/vim-searchindex' " show total and index of current search
-Plug 'itchyny/lightline.vim' " better statusline
-Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
-Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)'] } " magical aligning
-Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
-Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] } " nice markdown handling
-Plug 'Quramy/tsuquyomi', { 'for': ['typescript'] } " typescript tooling
-Plug 'roman/golden-ratio' " perfect split resizing
-Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
-Plug 'tpope/vim-commentary' " language aware commenting command
-Plug 'tpope/vim-fugitive' " git commands
-Plug 'tpope/vim-repeat' " more things to repeat
-Plug 'tpope/vim-rhubarb' " github extention for fugitive
-Plug 'tpope/vim-surround' " surround char manipulation
-Plug 'w0rp/ale', { 'on': [] } " gutter linting
-Plug 'machakann/vim-highlightedyank' " briefly highlight yanked text
-Plug 'wincent/terminus' " vim iterm ui impovements
-Plug 'yssl/QFEnter', { 'for': 'qf' } " better quicklist keyboard shortcuts
-call plug#end()
-
-" MANUAL LAZY LOAD
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if !empty($TMUX)
-  exec plug#load('vim-tmux-navigator')
+" install minpac if it's not available
+if !isdirectory($HOME . '/.vim/pack/minpac/opt/minpac')
+  exec '!git clone https://github.com/k-takata/minpac.git ~/.vim/pack/minpac/opt/minpac'
 endif
 
-function! LoadALE() abort
-  if IsFile()
-    call plug#load('ale')
-  endif
-endfunction
+if exists('*minpac#init')
+  call minpac#init()
+  call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
+  call minpac#add('ajh17/VimCompletesMe') " smarter tab completion
+  call minpac#add('christoomey/vim-tmux-navigator', { 'type': 'opt' }) " seamless navigation between tmux/vim. loaded on $TMUX env var
+  call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
+  call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
+  call minpac#add('fatih/vim-go', { 'type': 'opt', 'do': 'GoInstallBinaries' }) " golang stuff
+  call minpac#add('google/vim-searchindex') " show total and index of current search
+  call minpac#add('itchyny/lightline.vim') " better statusline
+  call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
+  call minpac#add('junegunn/vim-easy-align') " magical aligning
+  call minpac#add('k-takata/minpac', {'type': 'opt' }) " minimal package manager
+  call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
+  call minpac#add('mhinz/vim-grepper') " better find command
+  call minpac#add('plasticboy/vim-markdown', { 'type': 'opt' }) " nice markdown handling
+  call minpac#add('Quramy/tsuquyomi', { 'type': 'opt' }) " typescript tooling
+  call minpac#add('roman/golden-ratio') " perfect split resizing
+  call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
+  call minpac#add('tpope/vim-commentary') " language aware commenting command
+  call minpac#add('tpope/vim-fugitive') " git commands
+  call minpac#add('tpope/vim-repeat') " more things to repeat
+  call minpac#add('tpope/vim-rhubarb') " github extention for fugitive
+  call minpac#add('tpope/vim-surround') " surround char manipulation
+  call minpac#add('w0rp/ale', { 'type': 'opt' }) " gutter linting
+  call minpac#add('wincent/terminus') " vim iterm ui impovements
+  call minpac#add('yssl/QFEnter') " better quicklist keyboard shortcuts
+endif
 
-augroup Plugs
-  autocmd!
-  autocmd FileType * call LoadALE()
-augroup END
+command! PackUpdate packadd minpac | source $MYVIMRC | redraw | call minpac#update()
+command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
-" PLUG COMMAND
+" LAZY LOAD PACKAGES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-command! PlugSync :so ~/.vimrc | PlugClean! | PlugInstall
+if !empty($TMUX)
+  packadd vim-tmux-navigator
+endif
+
+augroup Packages
+  autocmd!
+  autocmd FileType * if IsFile() | packadd ale | endif
+  autocmd FileType markdown packadd vim-markdown
+  autocmd FileType markdown packadd goyo.vim
+  autocmd FileType typescript packadd tsuquyomi
+  autocmd FileType go packadd vim-go
+augroup END
 
 
 " CTRLP
@@ -156,9 +163,9 @@ let g:TerminusMouse = 1
 let g:grepper = {}
 let g:grepper.tools = ['rg', 'ag', 'ack', 'grep', 'findstr', 'pt', 'sift', 'git']
 let g:grepper.rg = {
-      \ 'grepprg':    'rg -H --no-heading --vimgrep --hidden --glob "!.git/"',
+      \ 'grepprg':    "rg -H --no-heading --vimgrep --hidden --glob \'!.git/\' \'$*\'",
       \ 'grepformat': '%f:%l:%c:%m',
-      \ 'escape':     '\^$.*+?()[]{}| ' }
+      \ 'escape':     "'" }
 
 command! Todo :Grepper
       \ -noprompt
@@ -168,10 +175,6 @@ command! Todo :Grepper
 
 " ALE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:ale_fixers = {
-"       \ 'javascript': ['eslint', 'prettier'],
-"       \ 'javascript.jsx': ['eslint'],
-"       \ 'vim': ['vint'] }
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
@@ -183,22 +186,6 @@ let g:qfenter_keymap = {}
 let g:qfenter_keymap.vopen = ['<C-v>']
 let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
 let g:qfenter_keymap.topen = ['<C-t>']
-
-
-" TMUXLINE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:tmuxline_powerline_separators = 0
-let g:tmuxline_separators = {
-    \ 'left' : '',
-    \ 'left_alt': '',
-    \ 'right' : '',
-    \ 'right_alt' : '•',
-    \ 'space' : ' '}
-
-
-" GIT GUTTER
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:gitgutter_eager = 1
 
 
 " VIM MARKDOWN & GOYO
@@ -295,22 +282,12 @@ nnoremap <leader>ap :ALEPrevious<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM AUTOCMDS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-augroup vimrcEx
-
-  " Clear all autocmds in the group
+augroup MyAutoCmds
   autocmd!
 
   " clean trailing whitespace on save
   autocmd BufWritePre *.go let b:do_not_clean_whitespace=1
   autocmd BufWritePre * CleanTrailingWhitespace
-
-  autocmd BufRead,BufNewFile *.raml set filetype=yaml
-
-  " special formatting for markdown files
-  autocmd FileType markdown setlocal wrap linebreak nolist
-
-  " go formatting
-  autocmd Filetype go setlocal noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
 
   " Set vim cwd to current file directory when in INSERT mode.
   " Enables file completion relative to current file, but maintains project
@@ -318,13 +295,22 @@ augroup vimrcEx
   autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
   autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
 
-  " prepopulate new files
-  autocmd BufNewFile *.spec.js,*.test.js 0read ~/.vim/templates/spec.template.js
+augroup END
 
+augroup FileTypes
+  autocmd!
+  autocmd BufRead,BufNewFile *.raml set filetype=yaml
+  autocmd FileType markdown setlocal wrap linebreak nolist " special formatting for markdown files
+  autocmd Filetype go setlocal noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
+augroup END
+
+augroup Templates
+  autocmd!
+  autocmd BufNewFile *.spec.js,*.test.js 0read ~/.vim/templates/spec.template.js
 augroup END
 
 
-" VIM-SESSIONS
+" SESSIONS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:session_directory = $HOME . '/.vim/sessions/'
 if !isdirectory(g:session_directory)
