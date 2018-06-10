@@ -1,19 +1,18 @@
 scriptencoding utf-8
 
-if !has('nvim')
-  unlet! skip_defaults_vim
-  source $VIMRUNTIME/defaults.vim
-endif
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " BASIC SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+syntax on
+set scrolloff=5 " keep 5 lines of space to top/bottom from current line
 set autoindent " copy indent from current line when starting a new line
+filetype plugin indent on
 set nowrap " don't wrap lines by default
 set expandtab " use spaces instead for tabs
 set shiftwidth=2 " number of spaces to use for autoindent
 set softtabstop=2 " number of spaces to use for "soft tabs"
 set cursorline " highlight current cursor line
+set incsearch " immediately start searching with search command
 set smarttab " see :h 'smarttab'
 set autoread " auto update a file when it changes
 set autowriteall " auto write buffer on commands
@@ -24,6 +23,7 @@ set spell " enable spell checker
 set spelllang=en_us " default dictionary
 set relativenumber " show relative line numbers
 set clipboard=unnamed " use system clipboard
+set backspace=indent,eol,start " backspace behaves normally
 set timeoutlen=500 " how long leader commands wait before executing
 set laststatus=2 " always show status line
 set noshowmode " hide mode in command line, shown in statusline instead
@@ -31,6 +31,7 @@ set completeopt-=preview " disable preview window
 set colorcolumn=72,120 " vertical lines at 71 and 120 chars
 set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
 set wildmode=longest,list
+set wildmenu
 
 " persist undo history
 if !isdirectory($HOME . '/.vim/undo')
@@ -289,12 +290,17 @@ augroup MyAutoCmds
   autocmd BufWritePre *.go let b:do_not_clean_whitespace=1
   autocmd BufWritePre * CleanTrailingWhitespace
 
+  " Jump to last cursor position unless it's invalid or in an event handler
+  autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exe "normal g`\"" |
+      \ endif
+
   " Set vim cwd to current file directory when in INSERT mode.
   " Enables file completion relative to current file, but maintains project
   " dir as cwd for NORMAL mode operations.
   autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
   autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
-
 augroup END
 
 augroup FileTypes
