@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo
+echo ">> $(date)"
+sh -c "$*"
+echo ">> Done"
+echo

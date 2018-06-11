@@ -17,6 +17,11 @@ alias cp='cp -vi'
 alias mv='mv -vi'
 alias rsync="rsync -azrv --progress"
 
+# jobs
+alias nh="nohup group-task"
+alias nf="tail -f nohup.out"
+
+
 function mktouch() {
   if [ $# -lt 1 ]; then
     echo "Missing argument";
