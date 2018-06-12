@@ -62,7 +62,7 @@ if exists('*minpac#init')
   call minpac#add('christoomey/vim-tmux-navigator', { 'type': 'opt' }) " seamless navigation between tmux/vim. loaded on $TMUX env var
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
-  call minpac#add('fatih/vim-go', { 'type': 'opt', 'do': 'exec "packadd vim-go | GoInstallBinaries"' }) " golang stuff
+  call minpac#add('fatih/vim-go', { 'type': 'opt' }) " golang stuff
   call minpac#add('google/vim-searchindex') " show total and index of current search
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
