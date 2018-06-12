@@ -4,6 +4,8 @@ alias reshell="source ~/.bashrc"
 alias restow="$(dotfilesdir)/stow-all"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
+[[ "$(which nvim > /dev/null 2>&1)" ]] && alias vim=nvim
+
 # navigation
 alias ~="cd ~"
 alias ..="cd .."
