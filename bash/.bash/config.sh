@@ -10,12 +10,7 @@ export TERM=xterm-256color
 [ -d $HOME/.rvm/bin ] && export PATH="$PATH:$HOME/.rvm/bin"
 
 # GNU LS colors
-if [[ "$(which gdircolors > /dev/null 2>&1)" ]]; then
-  DIRCOLORS_BIN="$(which gdircolors)"
-elif [[ "$(which dircolors > /dev/null 2>&1)" ]]; then
-  DIRCOLORS_BIN="$(which dircolors)"
-fi
-[ -e $HOME/.bash/dircolors.ansi-dark ] && eval "$($DIRCOLORS_BIN ~/.bash/dircolors.ansi-dark)"
+[ -e $HOME/.dir_colors ] && eval "$(dircolors ~/.dir_colors)"
 
 # BIN
 export PATH=$HOME/bin:$PATH
