@@ -1,7 +1,7 @@
 #!/bin/bash
 
 AUTOJUMP=autojump_add_to_database
-if [[ "$(type $AUTOJUMP > /dev/null 2>&1)" ]]; then
+if [[ ! "$(type $AUTOJUMP > /dev/null 2>&1)" ]]; then
   AUTOJUMP=:
 fi
 
