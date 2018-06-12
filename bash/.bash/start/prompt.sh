@@ -1,10 +1,15 @@
-#/bin/bash
+#!/bin/bash
+
+AUTOJUMP=autojump_add_to_database
+if [[ "$(type $AUTOJUMP > /dev/null 2>&1)" ]]; then
+  AUTOJUMP=:
+fi
 
 __ps1_main() {
   local EXIT="$?"
   export PS1="$(__exit_caret $EXIT) $(__user_host) $(__cwd)$(__git_info)$(__job_info) "
 }
-export PROMPT_COMMAND="__ps1_main; history -a; autojump_add_to_database"
+export PROMPT_COMMAND="__ps1_main; history -a; $AUTOJUMP"
 
 __exit_caret() {
   local exit_code=$1
