@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -ex
+
+TEMP_DIR="$(mktemp -d)"
+
+git clone --depth=1 https://github.com/wting/autojump.git $TEMP_DIR
+
+cd $TEMP_DIR
+
+./install.py
