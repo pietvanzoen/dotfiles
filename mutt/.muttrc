@@ -1,0 +1,48 @@
+###############################################################################
+## Authentication
+###############################################################################
+
+set imap_user=`get-secret mailbox-user`
+set imap_pass=`get-secret mailbox-password`
+
+set smtp_url = "smtps://$imap_user@smtp.mailbox.org"
+set smtp_pass = `get-secret mailbox-password`
+set from = `get-secret mailbox-user`
+set realname = "Piet van Zoen"
+
+###############################################################################
+## Folders
+###############################################################################
+
+# Folder names
+set my_inbox="Inbox"
+set my_archive="Archive"
+set my_drafts="Drafts"
+set my_sent="Sent"
+set my_spam="Jumk"
+
+# Default location of mailboxes
+set folder = "imaps://imap.mailbox.org/"
+# Spool (inbox)
+set spoolfile = "+INBOX"
+# Draft folder
+set postponed="+Drafts"
+# Where to move read emails to
+set mbox = "+Archive"
+# Save sent mails to the Sent folder
+set record="+Sent"
+# Move deleted messages to trash
+set trash = "+Trash"
+
+# Move read emails to archive when leaving a folder
+#set move = ask-yes
+# Save a copy of sent mails
+set copy=yes
+# Actually delete things when leaving a folder, but confirm first
+#set delete=ask-yes
+
+set ssl_force_tls = yes
+set ssl_starttls = yes
+set header_cache=~/.mutt/cache/headers
+set message_cachedir=~/.mutt/cache/bodies
+set certificate_file=~/.mutt/certificates
