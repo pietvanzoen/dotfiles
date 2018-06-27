@@ -19,6 +19,15 @@ alias cp='cp -vi'
 alias mv='mv -vi'
 alias rsync="rsync -azrv --progress"
 
+sandbox() {
+  local name=$1
+  if [[ ! -d "$SANDBOX_PATH" ]]; then
+    export SANDBOX_PATH="$(mktemp -d)"
+  fi
+  mkdir -p "$SANDBOX_PATH/$name"
+  cd "$SANDBOX_PATH/$name"
+}
+
 # jobs
 alias nh="nohup group-task"
 alias nf="tail -f nohup.out"
