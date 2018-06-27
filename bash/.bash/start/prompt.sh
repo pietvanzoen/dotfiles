@@ -1,5 +1,8 @@
 #!/bin/bash
 
+BASE_USER="piet"
+BASE_HOST="finn"
+
 __ps1_main() {
   local EXIT="$?"
   export PS1="$(__exit_caret $EXIT) $(__user_host) $(__cwd)$(__git_info)$(__job_info) "
@@ -20,7 +23,11 @@ __cwd() {
 }
 
 __user_host() {
-  echo -n "$__dark\u@\h$__reset_color"
+  local color=$__dark
+  if [[ "$(whoami)" != "$BASE_USER" ]] || [[ "$(hostname)" != "$BASE_HOST" ]]; then
+    color=$__blue
+  fi
+  echo -n "$color\u@\h$__reset_color"
 }
 
 source $HOME/.bash/git-prompt.sh
