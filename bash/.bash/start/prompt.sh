@@ -24,10 +24,14 @@ __cwd() {
 
 __user_host() {
   local color=$__dark
+  local ssh=""
   if [[ "$(whoami)" != "$BASE_USER" ]] || [[ "$(hostname)" != "$BASE_HOST" ]]; then
     color=$__blue
   fi
-  echo -n "$color\u@\h$__reset_color"
+  if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+    ssh="ssh:"
+  fi
+  echo -n "$color$ssh\u@\h$__reset_color"
 }
 
 source $HOME/.bash/git-prompt.sh
