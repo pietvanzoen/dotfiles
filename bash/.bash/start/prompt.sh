@@ -4,7 +4,7 @@ __ps1_main() {
   local EXIT="$?"
   export PS1="$(__exit_caret $EXIT) $(__user_host) $(__cwd)$(__git_info)$(__job_info) "
 }
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} __ps1_main; history -a"
+export PROMPT_COMMAND="__ps1_main; ${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
 
 __exit_caret() {
   local exit_code=$1
