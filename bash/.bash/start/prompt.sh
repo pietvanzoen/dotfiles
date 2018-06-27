@@ -5,7 +5,7 @@ BASE_HOST="finn"
 
 __ps1_main() {
   local EXIT="$?"
-  export PS1="$(__exit_caret $EXIT) $(__user_host) $(__cwd)$(__git_info)$(__job_info) "
+  export PS1="$(__exit_caret $EXIT) $(__remote)$(__user_host) $(__cwd)$(__git_info)$(__job_info) "
 }
 export PROMPT_COMMAND="__ps1_main; ${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
 
@@ -22,14 +22,19 @@ __cwd() {
   echo -n "$__cyan$(basename "$PWD")$__reset_color"
 }
 
+__remote() {
+  if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+    echo -n "$__dark"
+    echo -n "ssh "
+    echo -n "$__reset_color"
+  fi
+}
+
 __user_host() {
   local color=$__dark
   local ssh=""
   if [[ "$(whoami)" != "$BASE_USER" ]] || [[ "$(hostname)" != "$BASE_HOST" ]]; then
     color=$__blue
-  fi
-  if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-    ssh="ssh:"
   fi
   echo -n "$color$ssh\u@\h$__reset_color"
 }
