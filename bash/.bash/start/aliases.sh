@@ -18,6 +18,7 @@ alias rm='rm -I'
 alias cp='cp -vi'
 alias mv='mv -vi'
 alias rsync="rsync -azrv --progress"
+alias t="tree -a -I 'node_modules|.git'"
 
 sandbox() {
   local name=$1
