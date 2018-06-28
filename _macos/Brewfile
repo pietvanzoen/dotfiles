@@ -56,6 +56,7 @@ cask 'signal'
 cask 'slack'
 cask 'tripmode'
 cask 'tunnelblick'
+cask 'veracrypt'
 cask 'whatsapp'
 
 mas 'Monosnap', id: 540348655
