@@ -83,7 +83,7 @@ if !empty($TMUX)
   exec plug#load('vim-tmux-navigator')
 endif
 
-function LoadAle()
+function! LoadAle()
   if IsModernVim() && IsFile()
     exec plug#load('ale')
   endif
