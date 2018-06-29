@@ -2,10 +2,17 @@
 
 BASE_USER="piet"
 BASE_HOST="finn"
+CONNECTION_TYPE=""
+if [[ -n "$(pstree -ps $$ | grep mosh-server)" ]]; then
+  CONNECTION_TYPE="mosh"
+elif [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+  CONNECTION_TYPE="ssh"
+fi
+
 
 __ps1_main() {
   local EXIT="$?"
-  export PS1="$(__exit_caret $EXIT) $(__remote)$(__user_host) $(__cwd)$(__git_info)$(__job_info) "
+  export PS1="$(__exit_caret $EXIT) $(__connection)$(__host) $(__cwd)$(__git_info)$(__job_info) "
 }
 export PROMPT_COMMAND="__ps1_main; ${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
 
@@ -28,21 +35,16 @@ __cwd() {
   echo -n "$__cyan$dir$__reset_color"
 }
 
-__remote() {
-  if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-    echo -n "$__dark"
-    echo -n "ssh "
-    echo -n "$__reset_color"
+__connection() {
+  local connection=""
+  if [[ -n "$CONNECTION_TYPE" ]]; then
+    connection="$__blue$CONNECTION_TYPE$__reset_color "
   fi
+  echo -n "$connection"
 }
 
-__user_host() {
-  local color=$__dark
-  local ssh=""
-  if [[ "$(whoami)" != "$BASE_USER" ]] || [[ "$(hostname)" != "$BASE_HOST" ]]; then
-    color=$__blue
-  fi
-  echo -n "$color$ssh\u@\h$__reset_color"
+__host() {
+  echo -n "$__dark\u@\h$__reset_color"
 }
 
 source $HOME/.bash/git-prompt.sh
