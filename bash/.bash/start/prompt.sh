@@ -57,7 +57,7 @@ __screen() {
   if [[ -z "$STY" ]]; then
     return
   fi
-  echo -n "$__dark|$__purple$STY$__reset_color"
+  echo -n "$__dark|$STY$__reset_color"
 }
 
 source $HOME/.bash/git-prompt.sh
