@@ -1,7 +1,6 @@
 # hardstatus on
 # hardstatus alwayslastline
 # hardstatus string '%{= Kd} %-= %{= Kd}%-w%{= Kr}[%{= Kd}%n %t%{= Kr}]%{= Kd}%+w'
-# startup_message off
+startup_message off
 
 termcapinfo xterm* ti@:te@ # mouse support
-
