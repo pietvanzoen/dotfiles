@@ -12,7 +12,7 @@ fi
 
 __ps1_main() {
   local EXIT="$?"
-  export PS1="$(__exit_caret $EXIT)$(__connection)$(__host)$(__screen)$(__cwd)$(__git_info)$(__job_info) "
+  export PS1="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__job_info) "
 }
 if [[ "$PROMPT_COMMAND" != *'__ps1_main'* ]]; then
   export PROMPT_COMMAND="__ps1_main; ${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
@@ -21,9 +21,9 @@ fi
 __exit_caret() {
   local exit_code=$1
   if [ $EXIT != 0 ]; then
-    echo -n "$__red>>$__reset_color "
+    echo -n "$__red>>$__reset_color"
   else
-    echo -n "$__green>>$__reset_color "
+    echo -n "$__green>>$__reset_color"
   fi
 }
 
@@ -37,23 +37,27 @@ __cwd() {
   echo -n "$__cyan$dir$__reset_color"
 }
 
+__context() {
+  echo -n "$(__connection)$(__host)$(__screen)"
+}
+
 __connection() {
   local connection=""
   if [[ -n "$CONNECTION_TYPE" ]]; then
-    connection="$__blue$CONNECTION_TYPE$__reset_color "
+    connection="$__blue$CONNECTION_TYPE$__reset_color$__dark|$__reset_color"
   fi
   echo -n "$connection"
 }
 
 __host() {
-  echo -n "$__dark\u@\h$__reset_color "
+  echo -n "$__dark\u@\h$__reset_color"
 }
 
 __screen() {
   if [[ -z "$STY" ]]; then
     return
   fi
-  echo -n "${__purple}$STY$__reset_color "
+  echo -n "$__dark|$__purple$STY$__reset_color"
 }
 
 source $HOME/.bash/git-prompt.sh
