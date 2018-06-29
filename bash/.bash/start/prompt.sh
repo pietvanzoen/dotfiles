@@ -19,7 +19,13 @@ __exit_caret() {
 }
 
 __cwd() {
-  echo -n "$__cyan$(basename "$PWD")$__reset_color"
+  local dir=""
+  if [[ "$(pwd)" == "$HOME" ]]; then
+    dir="~"
+  else
+    dir="$(basename "$PWD")"
+  fi
+  echo -n "$__cyan$dir$__reset_color"
 }
 
 __remote() {
