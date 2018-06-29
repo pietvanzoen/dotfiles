@@ -83,9 +83,15 @@ if !empty($TMUX)
   exec plug#load('vim-tmux-navigator')
 endif
 
+function LoadAle()
+  if IsModernVim() && IsFile()
+    exec plug#load('ale')
+  endif
+endfunction
+
 augroup Plugs
   autocmd!
-  autocmd FileType * if IsFile() | exec plug#load('ale') | endif
+  autocmd FileType * call LoadAle()
 augroup END
 
 " PLUG COMMAND
@@ -439,6 +445,10 @@ function! IsFile() abort
     return 0
   endif
   return 1
+endfunction
+
+function! IsModernVim()
+  return !empty(matchstr(v:version, '^8'))
 endfunction
 
 " colors
