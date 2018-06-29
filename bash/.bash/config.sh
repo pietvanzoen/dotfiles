@@ -51,3 +51,6 @@ export FZF_DEFAULT_OPTS='--height 40% --reverse'
 
 # HOMEBREW
 export HOMEBREW_CASK_OPTS="--appdir=/Applications --fontdir=/Library/Fonts"
+
+# RIPGREP
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
