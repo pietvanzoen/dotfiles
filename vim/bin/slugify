@@ -1,0 +1,11 @@
+#!/bin/bash
+# Convert a string to a slug
+
+readonly SPACE_CHAR="-"
+
+echo "$*" |
+  iconv -t ascii//TRANSLIT |
+  sed -r s/[~\^]+//g |
+  sed -r s/[^a-zA-Z0-9]+/$SPACE_CHAR/g |
+  sed -r s/^-+\|-+$//g |
+  tr A-Z a-z
