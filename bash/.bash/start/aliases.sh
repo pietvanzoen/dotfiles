@@ -61,3 +61,6 @@ if [[ "$(pwd)" =~ "com.termux" ]]; then
   alias c=termux-clipboard-set
   alias v=termux-clipboard-get
 fi
+
+# SIMPLE HTTP SERVER
+alias serve="python3 -m http.server 4567 || python -m SimpleHTTPServer 4567"
