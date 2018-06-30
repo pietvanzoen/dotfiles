@@ -63,4 +63,7 @@ if [[ "$(pwd)" =~ "com.termux" ]]; then
 fi
 
 # SIMPLE HTTP SERVER
-alias serve="python3 -m http.server 4567 || python -m SimpleHTTPServer 4567"
+serve() {
+  local port="${1:-4567}"
+  python3 -m http.server $port || python -m SimpleHTTPServer $port
+}
