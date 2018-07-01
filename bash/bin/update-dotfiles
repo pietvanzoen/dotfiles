@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Update and resource dotfiles
-set -e
+set -ex
 
 cd $(dotfilesdir)
 git pull --rebase
 
 ./update
+
+exec $SHELL
