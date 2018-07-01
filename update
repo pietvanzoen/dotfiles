@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 INSTALLED_INDEX=./.installed_packages
 
 if [[ ! -f "$INSTALLED_INDEX" ]]; then
@@ -7,9 +9,20 @@ if [[ ! -f "$INSTALLED_INDEX" ]]; then
   exit 1
 fi
 
-echo "Restowing the following packages:"
-cat $INSTALLED_INDEX
+HAS_ERROR=""
+while read package; do
+  echo -n "Restowing package $package..."
+  if stow --verbose=0 $package >/dev/null 2>&1; then
+    echo -n " done"
+  else
+    HAS_ERROR=1
+    echo -n " $(tput setaf 1)error$(tput sgr0)"
+  fi
+  echo
+done < $INSTALLED_INDEX
 
-echo
-
-cat $INSTALLED_INDEX | xargs stow
+if [[ $HAS_ERROR ]] ; then
+  echo
+  echo "$(tput setaf 1)One or more packages could not be stowed. Manually run stow and fix.$(tput sgr0)"
+  exit 1
+fi
