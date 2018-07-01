@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Update and resource dotfiles
+set -e
+
+cd $(dotfilesdir)
+git pull --rebase
