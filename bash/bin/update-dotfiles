@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 # Update and resource dotfiles
-set -ex
+set -e
 
+echo ">> Pulling latest dotfiles"
 cd $(dotfilesdir)
 git pull --rebase
 
+echo
+echo ">> Restowing packages"
 ./update
+
+echo
+echo ">> Done. Run 'exec bash' to re-initialize bash process"
