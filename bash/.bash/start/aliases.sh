@@ -1,7 +1,6 @@
 # GENERAL
 alias gtop="cd \$(git rev-parse --show-toplevel || echo '.')"
-alias reshell="source ~/.bashrc"
-alias restow="$(dotfilesdir)/stow-all"
+alias reshell="exec bash"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 
 # navigation
