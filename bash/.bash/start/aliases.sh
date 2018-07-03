@@ -30,19 +30,6 @@ sandbox() {
 alias nh="nohup group-task"
 alias nf="tail -f nohup.out"
 
-
-function mktouch() {
-  if [ $# -lt 1 ]; then
-    echo "Missing argument";
-    return 1;
-  fi
-
-  for f in "$@"; do
-    mkdir -p -- "$(dirname -- "$f")"
-    touch -- "$f"
-  done
-}
-
 # SCREEN
 alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | sed 's/\./ /' | column -s \" \" -t | sort -k 2,2"
 alias sr="screen -r"
@@ -60,9 +47,3 @@ if [[ "$(pwd)" =~ "com.termux" ]]; then
   alias c=termux-clipboard-set
   alias v=termux-clipboard-get
 fi
-
-# SIMPLE HTTP SERVER
-serve() {
-  local port="${1:-4567}"
-  python3 -m http.server $port || python -m SimpleHTTPServer $port
-}

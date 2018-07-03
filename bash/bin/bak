@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e
+USAGE="Usage: $(basename $0) [filename...]
+Backup or restore files by adding or removing ~ from the end of the filename."
+
+if [ $# -lt 1 ]; then
+  echo "$USAGE"
+  exit 1
+fi
+
+for filename in "$@"; do
+  if [[ "$filename" == *~ ]]; then
+    new_filename="$(echo "$filename" | sed -E 's/~$//')"
+  else
+    new_filename="$filename~"
+  fi
+
+  mv -vi "$filename" "$new_filename"
+done
