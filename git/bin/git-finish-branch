@@ -74,12 +74,12 @@ function cleanup() {
 
 function info() {
   echo
-  echo "$(tput setaf 6)>> $1$(tput sgr0)"
+  echo "$(tput setaf 6)==> $1$(tput sgr0)"
 }
 
 function error() {
   echo
-  echo "$(tput setaf 1)>> $1$(tput sgr0)"
+  echo "$(tput setaf 1)==> $1$(tput sgr0)"
 }
 
 main $1

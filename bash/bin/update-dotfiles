@@ -2,13 +2,13 @@
 # Update and resource dotfiles
 set -e
 
-echo ">> Pulling latest dotfiles"
+echo "==> Pulling latest dotfiles"
 cd $(dotfilesdir)
 git pull --rebase
 
 echo
-echo ">> Restowing packages"
+echo "==> Restowing packages"
 ./update
 
 echo
-echo ">> Done. Run 'exec bash' to re-initialize bash process"
+echo "==> Done. Run 'exec bash' to re-initialize bash process"

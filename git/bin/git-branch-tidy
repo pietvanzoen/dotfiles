@@ -75,7 +75,7 @@ function delete_branch() {
 
 function log() {
   echo
-  echo "$(tput setaf 6)>> $1$(tput sgr0)"
+  echo "$(tput setaf 6)==> $1$(tput sgr0)"
 }
 
 main
