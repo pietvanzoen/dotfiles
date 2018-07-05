@@ -9,7 +9,7 @@ export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 # GO BINARIES
-export GO_PATH="$HOME/go"
+export GOPATH="$HOME/go"
 [ -d "$GOPATH/bin" ] && export PATH="$PATH:$GOPATH/bin"
 
 # RVM
@@ -22,17 +22,24 @@ export GO_PATH="$HOME/go"
 [[ -f $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
 # GNU LS colors
-[ -e $HOME/.dir_colors ] && eval "$(dircolors ~/.dir_colors)"
+[[ -e "$(which dircolors)" ]] && eval "$(dircolors ~/.dir_colors)"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
 # SSH
-[ -e $HOME/.ssh/rsa_id ] && export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
+[ -e $HOME/.ssh/id_rsa ] && export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 
 # EDITOR
-export EDITOR="$(which vim)"
+if [[ -e "$(which nvim)" ]]; then
+  export EDITOR="$(which nvim)"
+elif [[ -e "$(which vim)" ]]; then
+  export EDITOR="$(which vim)"
+elif [[ -e "$(which vi)" ]]; then
+  export EDITOR="$(which vi)"
+fi
+
 
 # HISTORY
 export HISTSIZE=32768;
