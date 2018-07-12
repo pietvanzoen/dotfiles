@@ -23,7 +23,7 @@ brew 'rsync'
 brew 'stow'
 brew 'tmux'
 brew 'tree'
-brew 'vim', args: ['with-python']
+brew 'vim'
 
 brew 'coreutils', args: ['with-default-names']
 brew 'findutils', args: ['with-default-names']
