@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -e
+SCRIPTS_DIR="$(dirname $0)"
+
+source $SCRIPTS_DIR/_helpers.sh
+
+if [[ -n "$(which apt-get)" ]]; then
+  if _confirm "Run linux install scripts?"; then
+    $SCRIPTS_DIR/install-linux || _error "linux install failed"
+  fi
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  if _confirm "Run MacOS install scripts?"; then
+    $SCRIPTS_DIR/install-macos || _error "macos install failed"
+  fi
+fi
+
+if ! _executable autojump; then
+  $SCRIPTS_DIR/install-autojump || _error "autojump install failed"
+fi
+
+if _confirm "Install dotfiles dev dependencies?"; then
+  $SCRIPTS_DIR/install-dev || _error "Dotfiles dev deps install failed"
+fi
