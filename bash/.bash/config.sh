@@ -1,3 +1,12 @@
+# HELPERS
+_executable() {
+  if hash $1 >/dev/null 2>&1; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 # COLORS
 export TERM=xterm-256color
 
@@ -22,7 +31,7 @@ export GOPATH="$HOME/go"
 [[ -f $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
 # GNU LS colors
-[[ -e "$(which dircolors)" ]] && eval "$(dircolors ~/.dir_colors)"
+_executable dircolors && eval "$(dircolors ~/.dir_colors)"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
@@ -32,11 +41,11 @@ export NVM_DIR="$HOME/.nvm"
 [ -e $HOME/.ssh/id_rsa ] && export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 
 # EDITOR
-if [[ -e "$(which nvim)" ]]; then
+if _executable nvim; then
   export EDITOR="$(which nvim)"
-elif [[ -e "$(which vim)" ]]; then
+elif _executable vim; then
   export EDITOR="$(which vim)"
-elif [[ -e "$(which vi)" ]]; then
+elif _executable vi; then
   export EDITOR="$(which vi)"
 fi
 

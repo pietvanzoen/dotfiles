@@ -12,7 +12,7 @@ nn() {
   vim +2 "$(note $title)"
 }
 
-[[ -e "$(which nvim)" ]] && alias vim=nvim
+_executable nvim && alias vim=nvim
 
 alias vm="vim . -S ~/.vim/sessions/\${PWD##*/}.vim"
 alias vimm="vim -u ~/.vimrc.min"
