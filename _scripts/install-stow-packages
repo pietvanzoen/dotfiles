@@ -14,7 +14,7 @@ cd "$DOTFILES_DIR"
 _info "Installing dotfile packages"
 
 _info "Initializing .stowrc"
-cp -vi ./stow/.stowrc.example ./stow/.stowrc
+cp ./stow/.stowrc.example ./stow/.stowrc
 sed -i "s|\$HOME|$HOME|" ./stow/.stowrc
 cat ./stow/.stowrc
 echo "stow" >> "$INSTALLED_INDEX_TMP"
