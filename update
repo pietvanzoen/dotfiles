@@ -13,9 +13,9 @@ fi
 
 HAS_ERROR=""
 while read package; do
-  echo -en "$__cyan==>$__color_off Restowing package $package..."
+  echo -n "==> Restowing package $package..."
   if stow --verbose=0 $package >/dev/null 2>&1; then
-    echo -en " ${__green}done$__color_off"
+    echo -n " done"
   else
     HAS_ERROR=1
     echo -en " ${__red}error$__color_off"
