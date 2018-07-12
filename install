@@ -1,47 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
+source _scripts/_helpers.sh
 
-if [[ ! "$(basename $(pwd))" == "dotfiles" ]]; then
-  echo "Run install from dotfiles directory"
-  exit 1
+_header "Installing dotfiles"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  if _confirm "Run MacOS install scripts?"; then
+    _scripts/install-macos || _error "macos install failed"
+  fi
 fi
 
-INSTALLED_INDEX_TMP="$(mktemp)"
-INSTALLED_INDEX="./.installed_packages"
+if _confirm "Install stow packages?"; then
+  _scripts/install-stow-packages || _error "stow packages failed"
+fi
 
-stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
+if _confirm "Install autojump?"; then
+  _scripts/install-autojump || _error "autojump install failed"
+fi
 
-echo
-echo "==> Initializing .stowrc"
-cp -vi ./stow/.stowrc.example ./stow/.stowrc
-sed -i "s|\$HOME|$HOME|" ./stow/.stowrc
-cat ./stow/.stowrc
-echo "stow" >> "$INSTALLED_INDEX_TMP"
-
-echo
-echo "==> Installing stow"
-stow --verbose --target $HOME --ignore=.*.example stow
-
-for package in $stowable; do
-  echo
-  read -r -p "==> Install $package? [y/n]" install
-  if [ "$install" == 'y' ]; then
-    echo "==> Installing $package"
-    echo "$package" >> "$INSTALLED_INDEX_TMP"
-    (
-    cd $package
-    examples="$((ls -a | grep example) || echo)"
-    for example in $examples; do
-      cp -vn "$example" "$(echo $example | sed 's/.example//')"
-    done
-    )
-    stow $package
-  fi
-done
-
-mv -f "$INSTALLED_INDEX_TMP" "$INSTALLED_INDEX"
-
-echo
-echo "==> Installed these packages:"
-cat "$INSTALLED_INDEX"
+if _confirm "Install dotfiles dev dependencies?"; then
+  _scripts/install-dev || _error "Dotfiles dev deps install failed"
+fi

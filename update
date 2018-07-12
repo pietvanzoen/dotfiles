@@ -1,28 +1,30 @@
 #!/usr/bin/env bash
 
 set -e
+source "$(dirname $0)/_scripts/_helpers.sh"
 
 INSTALLED_INDEX=./.installed_packages
+_header "Updating stow packages"
 
 if [[ ! -f "$INSTALLED_INDEX" ]]; then
-  echo "No packages have been installed. Did you run ./install?"
+  _error "No packages have been installed. Did you run ./install?"
   exit 1
 fi
 
 HAS_ERROR=""
 while read package; do
-  echo -n "Restowing package $package..."
+  echo -en "$__cyan==>$__color_off Restowing package $package..."
   if stow --verbose=0 $package >/dev/null 2>&1; then
-    echo -n " done"
+    echo -en " ${__green}done$__color_off"
   else
     HAS_ERROR=1
-    echo -n " $(tput setaf 1)error$(tput sgr0)"
+    echo -en " ${__red}error$__color_off"
   fi
   echo
 done < $INSTALLED_INDEX
 
 if [[ $HAS_ERROR ]] ; then
   echo
-  echo "$(tput setaf 1)One or more packages could not be stowed. Manually run stow and fix.$(tput sgr0)"
+  _error "One or more packages could not be stowed. Manually run stow and fix."
   exit 1
 fi
