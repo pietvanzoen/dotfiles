@@ -17,7 +17,7 @@ if _confirm "Install stow packages?"; then
   _scripts/install-stow-packages || _error "stow packages failed"
 fi
 
-if _confirm "Install autojump?"; then
+if ! _executable autojump; then
   _scripts/install-autojump || _error "autojump install failed"
 fi
 

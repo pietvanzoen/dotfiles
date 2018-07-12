@@ -31,3 +31,11 @@ __blue='\033[0;34m'         # Blue
 __purple='\033[0;35m'       # Purple
 __cyan='\033[0;36m'         # Cyan
 __white='\033[0;37m'        # White
+
+_executable() {
+  if hash $1 >/dev/null 2>&1; then
+    return 0
+  else
+    return 1
+  fi
+}
