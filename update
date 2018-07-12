@@ -4,7 +4,7 @@ set -e
 source "$(dirname $0)/_scripts/_helpers.sh"
 
 INSTALLED_INDEX=./.installed_packages
-_header "Updating stow packages"
+_info "Updating stow packages"
 
 if [[ ! -f "$INSTALLED_INDEX" ]]; then
   _error "No packages have been installed. Did you run ./install?"

@@ -1,7 +1,7 @@
 # a set of helper functions for bash scripts
 
 _confirm() {
-  echo -en "$__purple==> $__color_off$1 [y/n] "
+  echo -en "==> $1 [y/n] "
   read answer
   if [ "$answer" == 'y' ]; then
     return 0
@@ -10,12 +10,8 @@ _confirm() {
   fi
 }
 
-_header() {
-  echo -e "$__cyan==> $__white$1$__color_off"
-}
-
 _info() {
-  echo -e "$__cyan==> $__color_off$1"
+  echo -e "==> $1"
 }
 
 _error() {

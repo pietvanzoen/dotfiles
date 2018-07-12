@@ -3,7 +3,7 @@
 set -e
 source "$(dirname $0)/_helpers.sh"
 
-_header "Installing autojump"
+_info "Installing autojump"
 TEMP_DIR="$(mktemp -d)"
 
 git clone --depth=1 https://github.com/wting/autojump.git $TEMP_DIR

@@ -11,7 +11,7 @@ stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
 
 cd "$DOTFILES_DIR"
 
-_header "Installing dotfile packages"
+_info "Installing dotfile packages"
 
 _info "Initializing .stowrc"
 cp -vi ./stow/.stowrc.example ./stow/.stowrc

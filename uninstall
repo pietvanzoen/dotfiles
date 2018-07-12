@@ -4,7 +4,7 @@ source "$(dirname $0)/_scripts/_helpers.sh"
 
 cd "$(dirname $0)"
 
-_header "Uninstalling stow packages"
+_info "Uninstalling stow packages"
 stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
 
 echo "$stowable" |

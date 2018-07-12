@@ -3,9 +3,11 @@
 set -e
 source _scripts/_helpers.sh
 
-_header "Installing dotfiles"
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ -n "$(which apt-get)" ]]; then
+  if _confirm "Run linux install scripts?"; then
+    _scripts/install-linux || _error "linux install failed"
+  fi
+elif [[ "$OSTYPE" == "darwin"* ]]; then
   if _confirm "Run MacOS install scripts?"; then
     _scripts/install-macos || _error "macos install failed"
   fi

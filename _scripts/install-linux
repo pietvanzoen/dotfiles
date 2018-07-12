@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+source "$(dirname $0)/_helpers.sh"
+
+_info "Installing linux deps"
+
+apt-get update
+apt-get upgrade -y
+apt-get install -y \
+  stow \
+  screen \
+  vim \
+  psmisc
