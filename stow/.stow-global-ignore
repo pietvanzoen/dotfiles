@@ -8,3 +8,4 @@ README.*
 .*\.swp
 .*\.swo
 .*\~
+.vim/undo
