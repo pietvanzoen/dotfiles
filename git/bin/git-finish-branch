@@ -25,7 +25,7 @@ function main() {
 
 function assert_not_current() {
   if [[ $branch == $target_branch ]]; then
-    _error "Current branch is $target_branch. Exiting."
+    _error "Current branch is $target_branch."
     exit 1
   fi
 }
