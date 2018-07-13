@@ -25,24 +25,24 @@ function main() {
 
 function assert_not_current() {
   if [[ $branch == $target_branch ]]; then
-    error "Current branch is $target_branch. Exiting."
+    _error "Current branch is $target_branch. Exiting."
     exit 1
   fi
 }
 
 function update_target() {
-  info "updating $target_branch"
+  _info "updating $target_branch"
   git checkout $target_branch --quiet
   git pull
 }
 
 function confirm_merge() {
-  info "Are you sure you want to merge '$branch' into '$target_branch'? (y/n)"
+  _info "Are you sure you want to merge '$branch' into '$target_branch'? (y/n)"
   read confirm
   if [ "$confirm" = "y" ]; then
     return
   else
-    info "Canceling merge"
+    _info "Canceling merge"
     exit
   fi
 }
@@ -52,7 +52,7 @@ function assert_feature_up_to_date() {
   missing_commits="$(git log $target_branch --pretty="* %h - %s [%an]" --not "$branch")"
 
   if [[ $missing_commits ]]; then
-    error "Branch $branch is missing the following commits from $target_branch. Rebase and try again."
+    _error "Branch $branch is missing the following commits from $target_branch. Rebase and try again."
     echo "$missing_commits"
     git checkout "$branch" --quiet
     exit 1
@@ -61,25 +61,23 @@ function assert_feature_up_to_date() {
 }
 
 function merge_feature() {
-  info "merging $branch"
+  _info "merging $branch"
   git merge --ff-only "$branch"
   git push
 }
 
 function cleanup() {
-  info "cleaning up"
+  _info "cleaning up"
   git branch -d "$branch"
   git push origin --delete "$branch"
 }
 
-function info() {
-  echo
-  echo "$(tput setaf 6)==> $1$(tput sgr0)"
+function _info() {
+  echo "==> $1"
 }
 
-function error() {
-  echo
-  echo "$(tput setaf 1)==> $1$(tput sgr0)"
+function _error() {
+  echo "Error: $1"
 }
 
 main $1
