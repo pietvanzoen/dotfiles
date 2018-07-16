@@ -59,6 +59,7 @@ cask 'tunnelblick'
 cask 'veracrypt'
 cask 'whatsapp'
 
+mas 'Amphetamine', id: 937984704
 mas 'Monosnap', id: 540348655
 mas 'Moom', id: 419330170
 mas 'NordVPN IKE', id: 1116599239
