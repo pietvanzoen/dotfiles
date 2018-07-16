@@ -15,7 +15,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   fi
 fi
 
-if ! _executable autojump; then
+if ! is_executable autojump; then
   $SCRIPTS_DIR/install-autojump || _error "autojump install failed"
 fi
 

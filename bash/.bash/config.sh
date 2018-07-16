@@ -1,5 +1,5 @@
 # HELPERS
-_executable() {
+is_executable() {
   if hash $1 >/dev/null 2>&1; then
     return 0
   else
@@ -31,7 +31,7 @@ export GOPATH="$HOME/go"
 [[ -f $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
 # GNU LS colors
-_executable dircolors && eval "$(dircolors ~/.dir_colors)"
+is_executable dircolors && eval "$(dircolors ~/.dir_colors)"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
@@ -41,11 +41,11 @@ export NVM_DIR="$HOME/.nvm"
 [ -e $HOME/.ssh/id_rsa ] && export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 
 # EDITOR
-if _executable nvim; then
+if is_executable nvim; then
   export EDITOR="$(which nvim)"
-elif _executable vim; then
+elif is_executable vim; then
   export EDITOR="$(which vim)"
-elif _executable vi; then
+elif is_executable vi; then
   export EDITOR="$(which vi)"
 fi
 

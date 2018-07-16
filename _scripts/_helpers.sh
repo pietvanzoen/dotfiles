@@ -32,7 +32,7 @@ __purple='\033[0;35m'       # Purple
 __cyan='\033[0;36m'         # Cyan
 __white='\033[0;37m'        # White
 
-_executable() {
+is_executable() {
   if hash $1 >/dev/null 2>&1; then
     return 0
   else

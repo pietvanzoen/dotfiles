@@ -5,4 +5,4 @@ export PROJ="$HOME/repos/"
 export GIT_PATH="$PROJ"
 
 # HUB
-[ -e "$(which hub > /dev/null 2>&1)" ] && eval "$(hub alias -s)"
+is_executable hub && eval "$(hub alias -s)"
