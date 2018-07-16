@@ -153,7 +153,7 @@ fabric.properties
 ###############################################
 
 # scratch file names
-.scratch
+.scratch*
 *.local
 screenlog.*
 
