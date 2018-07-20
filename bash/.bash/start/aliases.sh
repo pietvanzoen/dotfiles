@@ -15,7 +15,8 @@ alias rm='rm -I'
 alias cp='cp -vi'
 alias mv='mv -vi'
 alias rsync="rsync -azrv --progress"
-alias t="tree -a -I 'node_modules|.git'"
+alias tree="tree --dirsfirst"
+alias t="tree -a -I 'node_modules|.git' --dirsfirst"
 
 # jobs
 alias nh="nohup group-task"
