@@ -11,6 +11,15 @@ if ! is_executable keybase; then
   exit 1
 fi
 
+if is_executable gpg2; then
+  GPG_BIN=gpg2
+elif [[ "$(gpg --version | head -1)" = "gpg (GnuPG) 2"* ]]; then
+  GPG_BIN=gpg
+else
+  _error "GPG v2 command not found."
+  exit 1
+fi
+
 _info "Installing public key"
 keybase pgp export --query $KEYID | gpg --import
 
