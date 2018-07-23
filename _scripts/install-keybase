@@ -18,7 +18,7 @@ fi
 if ! is_executable gpg; then
   _info "Installing gpg"
   sudo apt-get update
-  sudo apt-get install -y gpg
+  sudo apt-get install -y gnupg2
 fi
 
 _info "Downloading keybase package"
