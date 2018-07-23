@@ -11,4 +11,5 @@ sudo apt-get install -y \
   screen \
   vim \
   mosh \
+  python \
   psmisc
