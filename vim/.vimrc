@@ -61,6 +61,7 @@ Plug 'itchyny/lightline.vim' " better statusline
 Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
 Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)'] } " magical aligning
 Plug 'machakann/vim-highlightedyank' " briefly highlight yanked text
+Plug 'mattn/emmet-vim', { 'for': ['html', 'css'] } " css/html abbreviations
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
 Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] } " nice markdown handling
 Plug 'Quramy/tsuquyomi', { 'for': ['typescript'] } " typescript tooling
