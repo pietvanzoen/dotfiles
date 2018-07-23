@@ -9,7 +9,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 
 # base command
-alias ls="ls --color=auto --group-directories-first --ignore='.DS_Store'"
+alias ls="ls --color=auto --group-directories-first --ignore='.DS_Store' -H"
 alias l='ls -lAh'
 alias rm='rm -I'
 alias cp='cp -vi'
