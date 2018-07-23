@@ -21,8 +21,8 @@ else
 fi
 
 _info "Installing public key"
-keybase pgp export --query $KEYID | gpg --import
+keybase pgp export --query $KEYID | $GPG_BIN --import
 
 _info "Installing private key"
 keybase pgp export --query $KEYID --secret |
-  gpg --allow-secret-key-import --import
+  $GPG_BIN --allow-secret-key-import --import
