@@ -30,7 +30,7 @@ get_32() {
   curl https://prerelease.keybase.io/keybase_i386.deb -o keybase.deb
 }
 
-ARCH="lscpu | grep Architecture"
+ARCH="$(lscpu | grep 'Architecture')"
 case "$ARCH" in
   *armv8*)
     get_64
