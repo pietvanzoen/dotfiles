@@ -6,7 +6,7 @@ set -e
 source "$(dirname $0)/_helpers.sh"
 
 if ! is_executable apt-get; then
-  _error "install-keybase not compatible with this environment."
+  _error "$0 not compatible with this environment."
   exit 1
 fi
 
@@ -22,27 +22,13 @@ if ! is_executable gpg; then
 fi
 
 _info "Downloading keybase package"
-cd "$(mktemp -d)"
-get_64() {
-  curl https://prerelease.keybase.io/keybase_amd64.deb -o keybase.deb
-}
-get_32() {
-  curl https://prerelease.keybase.io/keybase_i386.deb -o keybase.deb
-}
-
-ARCH="$(lscpu | grep 'Architecture')"
-case "$ARCH" in
-  *armv8*)
-    get_64
-    ;;
+TEMP_DIR="$(mktemp -d)"
+case "$(lscpu | grep 'Architecture')" in
   *64*)
-    get_64
+    curl https://prerelease.keybase.io/keybase_amd64.deb -o $TEMP_DIR/keybase.deb
     ;;
   *32*)
-    get_32
-    ;;
-  *armv7*)
-    get_32
+    curl https://prerelease.keybase.io/keybase_i386.deb -o $TEMP_DIR/keybase.deb
     ;;
   *)
     _error "Could not detect architecture."
@@ -51,6 +37,6 @@ case "$ARCH" in
 esac
 
 _info "Installing keybase"
-sudo dpkg -i keybase.deb
+sudo dpkg -i $TEMP_DIR/keybase.deb
 sudo apt-get install -f
 run_keybase
