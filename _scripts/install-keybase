@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Install keybase cli for Ubuntu, Debian, etc env.
+# For macOS use `brew cask install keybase`.
+# For others see https://keybase.io/docs/the_app/install_linux
+set -e
+source "$(dirname $0)/_helpers.sh"
+
+if ! is_executable apt-get; then
+  _error "install-keybase not compatible with this environment."
+  exit 1
+fi
+
+_info "Installing gpg"
+sudo apt-get update
+sudo apt-get install -y gpg
+
+_info "Downloading keybase package"
+cd "$(mktemp -d)"
+get_64() {
+  curl https://prerelease.keybase.io/keybase_amd64.deb -o keybase.deb
+}
+get_32() {
+  curl https://prerelease.keybase.io/keybase_i386.deb -o keybase.deb
+}
+
+ARCH="lscpu | grep Architecture"
+case "$ARCH" in
+  *arm8*)
+    get_64
+    ;;
+  *64*)
+    get_64
+    ;;
+  *32*)
+    get_32
+    ;;
+  *arm7*)
+    get_32
+    ;;
+  *)
+    _error "Could not detect architecture."
+    exit 1
+    ;;
+esac
+
+_info "Installing keybase"
+sudo dpkg -i keybase.deb
+sudo apt-get install -f
+run_keybase

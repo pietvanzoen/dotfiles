@@ -5,9 +5,12 @@ SCRIPTS_DIR="$(dirname $0)"
 
 source $SCRIPTS_DIR/_helpers.sh
 
-if [[ -n "$(which apt-get)" ]]; then
+if is_executable apt-get; then
   if _confirm "Run linux install scripts?"; then
     $SCRIPTS_DIR/install-linux || _error "linux install failed"
+  fi
+  if _confirm "Install keybase?"; then
+    $SCRIPTS_DIR/install-keybase || _error "keybase install failed"
   fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if _confirm "Run MacOS install scripts?"; then
@@ -17,6 +20,10 @@ fi
 
 if ! is_executable autojump; then
   $SCRIPTS_DIR/install-autojump || _error "autojump install failed"
+fi
+
+if _confirm "Install PGP signing key?"; then
+  $SCRIPTS_DIR/install-pgp-key || _error "PGP key install failed"
 fi
 
 if _confirm "Install dotfiles dev dependencies?"; then
