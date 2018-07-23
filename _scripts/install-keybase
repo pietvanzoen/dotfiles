@@ -10,9 +10,16 @@ if ! is_executable apt-get; then
   exit 1
 fi
 
-_info "Installing gpg"
-sudo apt-get update
-sudo apt-get install -y gpg
+if is_executable keybase; then
+  _info "Keybase already installed"
+  exit 0
+fi
+
+if ! is_executable gpg; then
+  _info "Installing gpg"
+  sudo apt-get update
+  sudo apt-get install -y gpg
+fi
 
 _info "Downloading keybase package"
 cd "$(mktemp -d)"
