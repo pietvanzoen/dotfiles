@@ -160,7 +160,7 @@ let g:TerminusMouse = 1
 " VIM-GREPPER
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:grepper = {}
-let g:grepper.tools = ['rg', 'ag', 'ack', 'grep', 'findstr', 'pt', 'sift', 'git']
+let g:grepper.tools = ['rg', 'ag', 'ack', 'git', 'grep', 'findstr', 'pt', 'sift']
 let g:grepper.rg = {
       \ 'grepprg':    "rg -H --no-heading --vimgrep --hidden --glob \'!.git/\' \'$*\'",
       \ 'grepformat': '%f:%l:%c:%m',
