@@ -59,9 +59,9 @@ export HISTIGNORE="cd:cd -:pwd:exit:date:* --help";
 # FZF
 # Setting rg as the default source for fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=always'
-
-#export FZF_DEFAULT_COMMAND='fd --no-ignore --hidden --files --color=never --glob "!.git/" --glob "!.DS_Store"'
+if is_executable fd; then
+  export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=always'
+fi
 
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
