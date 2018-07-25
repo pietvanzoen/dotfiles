@@ -7,6 +7,10 @@ is_executable() {
   fi
 }
 
+# XDG SETUP
+[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME="$HOME/.config"
+[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
+
 # COLORS
 export TERM=xterm-256color
 

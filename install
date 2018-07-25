@@ -11,7 +11,11 @@ stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
 
 cd "$DOTFILES_DIR"
 
-_info "Installing dotfile packages"
+_info "Setting up XDG directories"
+[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME="$HOME/.config"
+[[ ! -d "$XDG_CONFIG_HOME" ]] && mkdir -vp "$XDG_CONFIG_HOME"
+[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
+[[ ! -d "$XDG_CACHE_HOME" ]] && mkdir -vp "$XDG_CACHE_HOME"
 
 _info "Initializing .stowrc"
 cp ./stow/.stowrc.example ./stow/.stowrc
