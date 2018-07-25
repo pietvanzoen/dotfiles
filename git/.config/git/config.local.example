@@ -1,0 +1,5 @@
+[url "https://<github-token>:x-oauth-basic@github.com/"]
+	insteadOf = https://github.com/
+
+[url "https://<github-token>:x-oauth-basic@gist.github.com/"]
+	insteadOf = https://gist.github.com/
