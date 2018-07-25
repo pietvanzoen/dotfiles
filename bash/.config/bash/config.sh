@@ -7,10 +7,6 @@ is_executable() {
   fi
 }
 
-# XDG SETUP
-[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME="$HOME/.config"
-[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
-
 # COLORS
 export TERM=xterm-256color
 
@@ -35,11 +31,7 @@ export GOPATH="$HOME/go"
 [[ -f $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
 # GNU LS colors
-is_executable dircolors && eval "$(dircolors ~/.dir_colors)"
-
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+is_executable dircolors && eval "$(dircolors $XDG_CONFIG_HOME/bash/.dir_colors)"
 
 # SSH
 [ -e $HOME/.ssh/id_rsa ] && export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
@@ -75,4 +67,4 @@ export FZF_DEFAULT_OPTS='--height 40% --reverse --ansi'
 export HOMEBREW_CASK_OPTS="--appdir=/Applications --fontdir=/Library/Fonts"
 
 # RIPGREP
-export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/bash/.ripgreprc"
