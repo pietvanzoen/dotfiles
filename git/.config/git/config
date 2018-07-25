@@ -18,7 +18,7 @@
   user = pietvanzoen
 
 [core]
-  excludesfile = $XDG_CONFIG_HOME/git/gitignore_global
+  excludesfile = ~/.config/git/gitignore_global
 
   # Use less when output is longer than screen. Also leave result on screen after exiting less.
   pager = diff-highlight | less -F -X
