@@ -33,6 +33,7 @@ set colorcolumn=72,120 " vertical lines at 71 and 120 chars
 set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
 set wildmode=longest,list
 set wildmenu
+set updatetime=500
 
 " persist undo history
 if !isdirectory($HOME . '/.vim/undo')
@@ -66,6 +67,7 @@ Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " bet
 Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] } " nice markdown handling
 Plug 'Quramy/tsuquyomi', { 'for': ['typescript'] } " typescript tooling
 Plug 'roman/golden-ratio' " perfect split resizing
+Plug 'RRethy/vim-illuminate' " current word subtle highlight
 Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
 Plug 'tpope/vim-commentary' " language aware commenting command
 Plug 'tpope/vim-eunuch' " unix helpers
