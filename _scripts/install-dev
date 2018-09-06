@@ -15,5 +15,6 @@ else
 fi
 
 pip install flake8
+pip install yapf
 pip install vim-vint
 $INSTALLER_CMD shellcheck

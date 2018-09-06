@@ -176,7 +176,10 @@ command! Todo :Grepper
 
 " ALE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_fixers = {'javascript': ['eslint']}
+let g:ale_fixers = {
+  \ 'javascript': ['eslint'],
+  \ 'python': ['yapf']
+  \ }
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
