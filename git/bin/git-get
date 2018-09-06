@@ -1,48 +1,67 @@
 #!/usr/bin/env python
 # Like go get but without the need for go.
 
-import re
 import sys
 import os
 import subprocess
+import urlparse
+import tempfile
+import string
 
 cmd, git_urls = sys.argv[0], sys.argv[1:]
 base_dir = os.getenv('GIT_PATH')
-git_url_regex = re.compile("^(git@|http[s]?:\/\/)([\w-]+\.[a-zA-Z]*)[:/]([\.\w-]+)\/([\.\w-]+)\.(git)$")
 
 USAGE = """Usage: %s URL...
 Like 'go get' without the go. Clone the repository URL(s) into directories using the host, user, and project name.
 Set $GIT_PATH as the base directory to clone repositories into.""" % cmd
 
 if not git_urls:
-	print(USAGE)
-	sys.exit(1)
+    print(USAGE)
+    sys.exit(1)
 
 if git_urls[0] == '-h':
-	print(USAGE)
-	sys.exit(0)
-
+    print(USAGE)
+    sys.exit(0)
 
 if not base_dir:
-	print('$GIT_PATH must be set')
-	sys.exit(1)
+    print('$GIT_PATH must be set')
+    sys.exit(1)
 
 if not os.path.exists(base_dir):
-	print('$GIT_PATH is set to %s, which does not exist.' % base_dir)
-	sys.exit(1)
+    print('$GIT_PATH is set to %s, which does not exist.' % base_dir)
+    sys.exit(1)
 
 for url in git_urls:
-	try:
-		[(protocol, host, user, project, git)] = re.findall(git_url_regex, url)
-	except ValueError:
-		print('%s is not a valid git url. Skipping.' % url)
-		continue
 
-	path = os.path.join(base_dir, host, user, project)
-	if os.path.exists(path):
-		print('Path %s already exists.' % path)
-		continue
+    if url.startswith('git@'):
+        url = 'https://' + url.replace(':', '/')
 
-	os.makedirs(path)
+    parsed_url = urlparse.urlparse(url)
 
-	subprocess.call(['git', 'clone', url, path])
+    if not parsed_url.scheme:
+        print('%s is not a valid git url. Skipping.' % url)
+        continue
+
+    if not parsed_url.path.endswith('.git'):
+        print('%s is not a valid git url. Skipping.' % url)
+        continue
+
+    pathend = string.strip(os.path.splitext(parsed_url.path)[0], '/')
+    path = os.path.join(base_dir, parsed_url.hostname, pathend)
+    human_friendly_path = path.replace(os.getenv('HOME'), '~')
+
+    if os.path.exists(path):
+        print('Path %s already exists.' % human_friendly_path)
+        continue
+
+    temp_dir = tempfile.mkdtemp()
+
+    subprocess.call(['git', 'clone', url, temp_dir])
+
+    parent_dir = os.path.dirname(path)
+    if not os.path.exists(parent_dir):
+        os.makedirs(parent_dir)
+
+    os.rename(temp_dir, path)
+
+    print(human_friendly_path)
