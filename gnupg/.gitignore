@@ -1,0 +1,4 @@
+*.d/
+S.gpg-agent*
+*.kbx
+*.gpg
