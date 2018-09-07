@@ -68,6 +68,7 @@ export FZF_DEFAULT_OPTS='--height 40% --reverse --ansi'
 
 # HOMEBREW
 export HOMEBREW_CASK_OPTS="--appdir=/Applications --fontdir=/Library/Fonts"
+export HOMEBREW_NO_ANALYTICS=1 # disable homebrew analytics
 
 # RIPGREP
 export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/bash/.ripgreprc"
