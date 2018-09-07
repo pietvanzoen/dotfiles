@@ -13,9 +13,12 @@ export TERM=xterm-256color
 # BIN
 export PATH=$HOME/bin:$PATH
 
-# GNU COMMANDS
+# HOMEBREW PATHS
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+export PATH="/usr/local/opt/curl/bin:$PATH"
+export MANPATH="/usr/local/opt/curl/share/man:$MANPATH"
+export PATH="/usr/local/opt/openssl/bin:$PATH"
 
 # GO BINARIES
 export GOPATH="$HOME/go"
