@@ -55,6 +55,7 @@ Plug 'airblade/vim-gitgutter' " gutter notations for git status
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
 Plug 'christoomey/vim-tmux-navigator', { 'on': [] } " seamless navigation between tmux/vim. loaded on $TMUX env var
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
+Plug 'easymotion/vim-easymotion' " speedy motions
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': ['go'] } " golang stuff
 Plug 'google/vim-searchindex' " show total and index of current search
@@ -314,13 +315,9 @@ augroup MyAutoCmds
   " dir as cwd for NORMAL mode operations.
   autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
   autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
-augroup END
 
-augroup FileTypes
-  autocmd!
+  " use yaml filetype for raml files
   autocmd BufRead,BufNewFile *.raml set filetype=yaml
-  autocmd FileType markdown setlocal wrap linebreak nolist " special formatting for markdown files
-  autocmd Filetype go setlocal noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
 augroup END
 
 augroup Templates
