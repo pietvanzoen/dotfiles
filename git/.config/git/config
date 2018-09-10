@@ -80,9 +80,6 @@
   frm = !git fetch-rebase master
   diff-commits = "!git fetch origin master:master && git l master --not $(git symbolic-ref --short HEAD)"
 
-  # Delete any branches already merged into master.
-  prune-local = "!git branch --merged | grep -v \"\\*\\|master\" | xargs -n 1 git branch -d && echo \"Merged branches pruned.\""
-
   # Prune "gone" branches.
   # Deletes any branches that have an upstream that has been deleted.
   # Useful when squash merging branches via github.
