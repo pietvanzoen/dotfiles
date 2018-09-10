@@ -13,7 +13,7 @@ function main() {
     git pull
 
     log "cleaning up branches"
-    git prune-local
+    git prune-merged && echo "Merged branches pruned."
     git prune-gone
   )
 }
@@ -74,8 +74,7 @@ function delete_branch() {
 }
 
 function log() {
-  echo
-  echo "$(tput setaf 6)==> $1$(tput sgr0)"
+  echo "==> $1"
 }
 
 main

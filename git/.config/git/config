@@ -86,9 +86,6 @@
   # WARNING: FORCE DELETES BRANCHES (uses -D delete command)
   prune-gone = "!git checkout master --quiet && git branch -lvv | grep \"gone\\]\" | sed -e 's/^ *//' | cut -d ' ' -f 1 | while read branch; do git branch -D $branch; done; echo 'Gone branches pruned.'"
 
-  # BIG OL' TIDY COMMAND... see ./bin/git-branch-tidy
-  tidy="!git-branch-tidy"
-
   # Run `yarn test` on each commit that diverges from master.
   test-branch="!run-command-on-git-revisions origin/master $(git symbolic-ref --short HEAD) 'yarn test'"
 
