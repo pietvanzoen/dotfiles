@@ -19,6 +19,7 @@ if [[ "$PROMPT_COMMAND" != *'__ps1_main'* ]]; then
 fi
 
 __exit_caret() {
+  [[ -n "$ITERM_PROFILE" ]] && return
   local exit_code=$1
   if [ $EXIT != 0 ]; then
     echo -n "$__red>>$__reset_color"
