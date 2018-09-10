@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -e
+
+TASKFLOW_DIR="$HOME/repos/bitbucket.wolterskluwer.io/scm/taskflow/wkapp-taskflow"
+cd "$TASKFLOW_DIR"
+
+CMD=$1
+shift
+
+exe() { echo "==> $@" ; $@ ; }
+
+case $CMD in
+  update)
+    exe "git tidy"
+    exe "yarn install"
+    exe "yarn build"
+    ;;
+
+
+  start)
+    exe "yarn start:dev"
+    ;;
+
+
+  *)
+    if [[ -z "$CMD" ]]; then
+      echo "USAGE: taskflow (update|start)"
+      exit 0
+    fi
+    ;;
+esac
