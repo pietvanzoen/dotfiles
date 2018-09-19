@@ -53,7 +53,7 @@ fi
 export HISTSIZE=32768;
 export HISTFILESIZE=$HISTSIZE;
 export HISTCONTROL=ignoredups;
-export HISTIGNORE="cd:cd -:pwd:exit:date:* --help";
+export HISTIGNORE="cd:cd -:pwd:exit:date";
 
 # FZF
 # Setting rg as the default source for fzf
