@@ -23,6 +23,9 @@
   # Use less when output is longer than screen. Also leave result on screen after exiting less.
   pager = diff-highlight | less -F -X
 
+[init]
+  templatedir = ~/.config/git/template
+
 [alias]
   ###############################################
   # LOGGING
