@@ -1,5 +1,6 @@
 # vim: set filetype=ruby
 brew 'bash'
+brew 'ctags'
 brew 'curl'
 brew 'fd'
 brew 'fzf'
