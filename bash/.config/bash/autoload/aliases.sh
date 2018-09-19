@@ -40,3 +40,6 @@ if [[ "$(pwd)" =~ "com.termux" ]]; then
   alias c=termux-clipboard-set
   alias v=termux-clipboard-get
 fi
+
+# NPM
+alias show-scripts="jq .scripts package.json"
