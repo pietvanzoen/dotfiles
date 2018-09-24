@@ -120,7 +120,8 @@ else
   let g:ctrlp_show_hidden=1
   let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 endif
-
+nnoremap π :CtrlPTag<cr>
+nnoremap <c-p> :CtrlP<cr>
 
 " LIGHTLINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -206,6 +207,24 @@ nnoremap <leader>gy :Goyo<cr>
 " TSUQUYOMI
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tsuquyomi_disable_quickfix = 1
+nnoremap <leader>ti :TsuImport<cr>
+
+" TAGSBAR
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:tagbar_type_typescript = {
+  \ 'ctagstype': 'typescript',
+  \ 'kinds': [
+    \ 'c:classes',
+    \ 'n:modules',
+    \ 'f:functions',
+    \ 'v:variables',
+    \ 'v:varlambdas',
+    \ 'm:members',
+    \ 'i:interfaces',
+    \ 'e:enums',
+  \ ]
+  \ }
+
 
 
 " EASY-ALIGN
