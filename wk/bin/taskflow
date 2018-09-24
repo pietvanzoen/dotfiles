@@ -18,6 +18,7 @@ case $CMD in
 
 
   start)
+    exe "yarn gateway"
     exe "yarn start:dev"
     ;;
 
