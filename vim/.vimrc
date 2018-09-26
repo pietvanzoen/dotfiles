@@ -494,6 +494,10 @@ endfunction
 set background=dark
 colorscheme solarized
 
+function! EnableWriteAndRun() abort
+  nmap <cr> :wa \|!%:p<cr>
+endfunction!
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FINAL
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
