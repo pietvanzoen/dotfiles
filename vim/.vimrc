@@ -339,6 +339,9 @@ augroup MyAutoCmds
 
   " use yaml filetype for raml files
   autocmd BufRead,BufNewFile *.raml set filetype=yaml
+
+  " set dockerfile filetype
+  autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
 augroup END
 
 augroup Templates
