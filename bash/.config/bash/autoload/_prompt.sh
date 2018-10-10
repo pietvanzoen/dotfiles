@@ -75,7 +75,7 @@ __git_info() {
   local info=$(__git_ps1 | sed -E 's/\(|\)//g' | xargs)
   [[ -z $info ]] && return;
   local branch="$(echo $info | cut -d '|' -f 1)"
-  local status="$(echo $info | cut -d '|' -f 2)"
+  local status="$(echo $info | cut -d '|' -f 2,3)"
 
   echo -n "$__dark("
   echo -n "$__red$(truncate-string 30 "$branch")"
