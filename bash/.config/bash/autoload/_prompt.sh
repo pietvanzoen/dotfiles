@@ -22,9 +22,9 @@ __exit_caret() {
   [[ -z "$TMUX" ]] && [[ -n "$ITERM_PROFILE" ]] && return
   local exit_code=$1
   if [ $EXIT != 0 ]; then
-    echo -n "$__red>>$__reset_color"
+    echo -n "${__red}λ$__reset_color"
   else
-    echo -n "$__green>>$__reset_color"
+    echo -n "${__green}λ$__reset_color"
   fi
 }
 
