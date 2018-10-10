@@ -12,7 +12,7 @@ fi
 
 __ps1_main() {
   local EXIT="$?"
-  export PS1="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__job_info) "
+  export PS1="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__node)$(__job_info) "
 }
 if [[ "$PROMPT_COMMAND" != *'__ps1_main'* ]]; then
   export PROMPT_COMMAND="__ps1_main; ${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
@@ -59,6 +59,11 @@ __screen() {
     return
   fi
   echo -n "$__dark|$STY$__reset_color"
+}
+
+__node() {
+  [[ ! -d "$(git-root)/node_modules" ]] && return
+  echo -n " ${__dark}⬢ $(node -v)$__reset_color"
 }
 
 source $XDG_CONFIG_HOME/bash/git-prompt.sh
