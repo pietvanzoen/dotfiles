@@ -78,7 +78,7 @@ __git_info() {
   local status="$(echo $info | cut -d '|' -f 2)"
 
   echo -n "$__dark("
-  echo -n "$__red$branch"
+  echo -n "$__red$(truncate-string 30 "$branch")"
   echo -n "$__yellow$status"
   echo -n "$__dark)$__reset_color"
 }
