@@ -10,8 +10,12 @@ shift
 exe() { echo "==> $@" ; $@ ; }
 
 case $CMD in
-  update)
+  pull)
     exe "git tidy"
+    ;;
+
+
+  update)
     exe "yarn install"
     exe "yarn build"
     ;;
