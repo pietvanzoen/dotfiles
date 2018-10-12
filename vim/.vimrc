@@ -66,7 +66,7 @@ Plug 'machakann/vim-highlightedyank' " briefly highlight yanked text
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css'] } " css/html abbreviations
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
 Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] } " nice markdown handling
-Plug 'Quramy/tsuquyomi', { 'for': ['typescript'] } " typescript tooling
+Plug 'Quramy/tsuquyomi' " , { 'for': ['typescript'] }  typescript tooling
 Plug 'roman/golden-ratio' " perfect split resizing
 Plug 'RRethy/vim-illuminate' " current word subtle highlight
 Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
