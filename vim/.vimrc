@@ -55,7 +55,7 @@ Plug 'airblade/vim-gitgutter' " gutter notations for git status
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
 Plug 'christoomey/vim-tmux-navigator', { 'on': [] } " seamless navigation between tmux/vim. loaded on $TMUX env var
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
-Plug 'easymotion/vim-easymotion' " speedy motions
+Plug 'easymotion/vim-easymotion' " speedy motions. <leader><leader>s for quick search
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': ['go'] } " golang stuff
 Plug 'google/vim-searchindex' " show total and index of current search
@@ -227,6 +227,11 @@ xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+
+" EASY MOTION
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:EasyMotion_smartcase = 1
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
