@@ -363,6 +363,13 @@ function! SessionSave() abort
   execute 'mksession! ' . GetSessionFilepath()
 endfunction
 
+function! SessionSaveOnExit() abort
+  if &filetype ==# 'gitcommit'
+    return 0
+  endif
+  execute 'mksession! ' . GetSessionFilepath()
+endfunction
+
 function! SessionRestore() abort
   let l:session = GetSessionFilepath()
   if filereadable(l:session)
@@ -379,7 +386,7 @@ endfunction
 
 augroup Sessions
   autocmd!
-  autocmd VimLeave * call SessionSave()
+  autocmd VimLeave * call SessionSaveOnExit()
 augroup END
 
 command! SessionSave call SessionSave()
