@@ -1,7 +1,11 @@
 # vim: set filetype=ruby
 brew 'bash'
+brew 'bash-completion@2'
 brew 'ctags'
 brew 'curl'
+brew 'docker-completion'
+brew 'docker-compose-completion'
+brew 'docker-machine-completion'
 brew 'fd'
 brew 'fzf'
 brew 'git'
@@ -24,6 +28,7 @@ brew 'stow'
 brew 'tmux'
 brew 'tree'
 brew 'vim'
+brew 'yarn-completion'
 
 brew 'coreutils', args: ['with-default-names']
 brew 'findutils', args: ['with-default-names']

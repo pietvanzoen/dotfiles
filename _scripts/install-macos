@@ -12,3 +12,7 @@ fi
 _info "Brew bundling"
 brew tap homebrew/bundle
 brew bundle -v
+
+if [[ "$SHELL" == "/bin/bash" ]]; then
+  _warn "Default shell is old bash. Be sure to change bash shell to modern version"
+fi
