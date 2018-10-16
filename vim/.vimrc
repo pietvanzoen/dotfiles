@@ -21,7 +21,7 @@ set ignorecase " ignore case in search and stuff
 set smartcase " use case if search includes uppercase characters
 set spell " enable spell checker
 set spelllang=en_us " default dictionary
-set relativenumber " show relative line numbers
+set relativenumber number " hybrid line numbers. show relative line numbers and current line number
 set clipboard=unnamed " use system clipboard
 set backspace=indent,eol,start " backspace behaves normally
 set timeoutlen=500 " how long leader commands wait before executing
