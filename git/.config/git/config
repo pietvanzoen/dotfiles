@@ -57,7 +57,7 @@
 
   st = status -s # Short status.
   ci = commit --verbose # Verbose commit. Shows diff in commit message editor.
-  wip = "!git add . && git commit -m 'WIP'" # Quick commit all changes and untracked files.
+  wip = "!git add . && git commit --no-verify -m 'WIP'" # Quick commit all changes and untracked files.
   roll-back-one = reset HEAD~1 # Roll back one commit.
   co = checkout
   di = diff
