@@ -30,6 +30,9 @@ brew 'tree'
 brew 'vim'
 brew 'yarn-completion'
 
+tap 'dnote/dnote'
+brew 'dnote'
+
 brew 'coreutils', args: ['with-default-names']
 brew 'findutils', args: ['with-default-names']
 brew 'gawk', args: ['with-default-names']
