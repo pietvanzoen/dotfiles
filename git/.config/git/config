@@ -156,6 +156,9 @@
 [fetch]
   prune = true # Always prune refs when fetching.
 
+[pull]
+  rebase = true # Always rebase when pulling
+
 [help]
   autocorrect = 20 # After misspelling git command, use closest match after 2s.
 
