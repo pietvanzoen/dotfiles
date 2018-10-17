@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 set -e
 
+if [[ -n "$TMUX" ]]; then
+  tmux rename-window -t${TMUX_PANE} "taskflow"
+  cleanup() {
+    tmux set-window-option automatic-rename "on"
+  }
+  trap cleanup EXIT
+fi
+
 TASKFLOW_DIR="$HOME/repos/bitbucket.wolterskluwer.io/scm/taskflow/wkapp-taskflow"
 cd "$TASKFLOW_DIR"
+
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
 CMD=$1
 shift
@@ -11,7 +21,12 @@ exe() { echo "==> $@" ; $@ ; }
 
 case $CMD in
   pull)
-    exe "git tidy"
+    if [[ $CURRENT_BRANCH != "master" ]]; then
+      exe "git wip"
+      exe "git fetch-rebase master"
+    else
+      exe "git tidy"
+    fi
     ;;
 
 
@@ -22,7 +37,9 @@ case $CMD in
 
 
   start)
-    exe "yarn gateway"
+    if [[ -z "$(docker ps | grep wk_app_taskflow_gateway)" ]]; then
+      exe "yarn gateway"
+    fi
     exe "yarn start:dev"
     ;;
 
