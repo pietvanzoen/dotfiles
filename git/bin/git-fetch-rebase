@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Fetch and rebase from given branch.
+set -e
+
+branchname="$1"
+
+USAGE="USAGE: $(basename $0) <branchname>"
+
+if [[ -z "$branchname" ]]; then
+  echo "$USAGE"
+  exit 1
+fi
+
+git fetch origin $branchname:$branchname
+git rebase $branchname
