@@ -4,8 +4,15 @@ set -e
 
 git fetch --quiet
 
-branches="$(git branch --merged | grep -vE '^\*' | grep -vE ' master$' || echo)"
+merged_branches="$(git branch --merged | grep -vE '^\*' | grep -vE ' master$' || echo)"
 
-for branch in $branches; do
+if [[ -z "$merged_branches" ]]; then
+  echo "No merged branches to delete."
+  exit
+fi
+
+for branch in $merged_branches; do
   git branch -d "$branch"
 done
+
+echo "Merged branches deleted."
