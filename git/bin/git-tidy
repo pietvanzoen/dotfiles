@@ -1,80 +1,17 @@
 #!/bin/bash
+# Update master and prune any merged/gone branches
 
 set -e
 
-function main() {
-  [ ! -z "$(git status -s)" ] && echo "commit changes before running tidy" && exit 1
-  (
-    log "fetching/pruning refs"
-    git fetch --all --prune
+exe() { echo "==> $@" ; $@ ; }
 
-    log "updating master"
-    git checkout master --quiet
-    git pull
+if [[ ! -z "$(git status -s)" ]]; then
+  echo "commit changes before running tidy"
+  exit 1
+fi
 
-    log "cleaning up branches"
-    git prune-merged && echo "Merged branches pruned."
-    git prune-gone
-  )
-}
-
-function clean-gone-branches() {
-  local gonebranches=`git branch -lvv | grep gone\]`
-  [ -z "$gonebranches" ] && return;
-
-  echo
-  git branch -lvv | grep gone\]
-  echo
-  log "Delete all 'gone' branches? [y/n]"
-  read -p '' prunegone
-  if [ "$prunegone" == 'y' ]; then
-    git prune-gone
-  fi
-}
-
-function clean-remaining() {
-  local branches=`get_branches`
-  [ -e "$branches" ] && echo 'No branches to prune' && return;
-
-  echo
-  git branch -lvv | grep -v master
-
-  log "Clean remaining branches? [y/n]"
-  read -p '' continue
-  [ "$continue" == "y" ] || return;
-
-  for branch in $branches;
-  do
-    print_branch_info $branch
-    log "Would you like to delete branch \"${branch}\"? Y/n"
-    read -p "" delete
-    if [[ "$delete" == "Y" ]]; then
-      delete_branch $branch
-    else
-      echo
-    fi
-  done
-}
-
-function get_branches() {
-  git branch | grep -v "\*\|master"
-}
-
-function print_branch_info() {
-  local branch=$1
-  (
-    git checkout $branch
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit origin/master..$branch
-    git checkout master --quiet
-  )
-}
-
-function delete_branch() {
-  git branch -D $1
-}
-
-function log() {
-  echo "==> $1"
-}
-
-main
+exe "git checkout master"
+exe "git fetch --all --prune"
+exe "git pull --rebase"
+exe "git prune-merged"
+exe "git prune-gone"
