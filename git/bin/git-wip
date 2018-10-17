@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Commit all changes with a WIP commit. Bypasses hooks and signing.
+set -e
+
+git add .
+git commit --no-verify --no-gpg-sign -m 'WIP' || true
