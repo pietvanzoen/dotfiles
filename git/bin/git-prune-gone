@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Prune "gone" branches.
+# Deletes any branches that have an upstream that has been deleted.
+# Useful when squash merging branches via github.
+# WARNING: FORCE DELETES BRANCHES (uses -D delete command)
+set -e
+git checkout master --quiet
+
+gone_branches="$(git branch -lvv | grep \"gone\\]\" | sed -e 's/^ *//' | cut -d ' ' -f 1)"
+
+if [[ -z "$gone_branches" ]]; then
+  echo "No gone branches to delete."
+  exit
+fi
+
+for branch in $gone_branches; do
+  git branch -D $branch;
+done
+
+echo "Gone branches deleted."
