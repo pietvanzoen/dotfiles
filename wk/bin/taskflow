@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-if [[ -n "$TMUX" ]]; then
-  tmux rename-window -t${TMUX_PANE} "taskflow"
-  cleanup() {
-    tmux set-window-option automatic-rename "on"
-  }
-  trap cleanup EXIT
-fi
+[[ -n "$TMUX" ]] && tmux rename-window -t${TMUX_PANE} "taskflow"
+
+cleanup() {
+  [[ -n "$TMUX" ]] && tmux set-window-option automatic-rename "on"
+}
+trap cleanup EXIT
 
 TASKFLOW_DIR="$HOME/repos/bitbucket.wolterskluwer.io/scm/taskflow/wkapp-taskflow"
 cd "$TASKFLOW_DIR"
@@ -43,6 +42,9 @@ case $CMD in
     exe "yarn start:dev"
     ;;
 
+  test)
+    exe "yarn test"
+  ;;
 
   *)
     if [[ -z "$CMD" ]]; then
@@ -51,3 +53,5 @@ case $CMD in
     fi
     ;;
 esac
+
+cleanup
