@@ -64,13 +64,8 @@
   amend = commit --amend
   pushf = push --force-with-lease
   aa = add --all
-  ff = merge --ff-only
-  pullff = pull --ff-only
-  noff = merge --no-ff
-  fa = fetch --all
-  b = branch -lvv # Verbose branch list. Shows upstream branches.
+  b = branch -vv # Verbose branch list. Shows upstream branches.
   ds = diff --stat=160,120
-  dh1 = diff HEAD~1
 
   ###############################################
   # BRANCH MANAGEMENT
@@ -81,7 +76,7 @@
 
   fr = fetch-rebase
   frm = !git fetch-rebase master
-  diff-commits = "!git fetch origin master:master && git l master --not $(git symbolic-ref --short HEAD)"
+  diff-commits = "!git l master --not $(git symbolic-ref --short HEAD)"
 
   # Run `yarn test` on each commit that diverges from master.
   test-branch="!run-command-on-git-revisions origin/master $(git symbolic-ref --short HEAD) 'yarn test'"
