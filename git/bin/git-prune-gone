@@ -6,7 +6,7 @@
 set -e
 git checkout master --quiet
 
-gone_branches="$(git branch -lvv | grep \"gone\\]\" | sed -e 's/^ *//' | cut -d ' ' -f 1)"
+gone_branches="$(git branch -lvv | grep ": gone]" | sed -e 's/^ *//' | cut -d ' ' -f 1)"
 
 if [[ -z "$gone_branches" ]]; then
   echo "No gone branches to delete."
