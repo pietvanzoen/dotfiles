@@ -14,5 +14,3 @@ fi
 for branch in $merged_branches; do
   git branch -d "$branch"
 done
-
-echo "Merged branches deleted."

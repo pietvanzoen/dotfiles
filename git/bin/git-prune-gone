@@ -16,5 +16,3 @@ fi
 for branch in $gone_branches; do
   git branch -D $branch;
 done
-
-echo "Gone branches deleted."
