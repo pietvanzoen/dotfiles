@@ -31,7 +31,7 @@ case $CMD in
 
   update)
     exe "yarn install"
-    exe "yarn build"
+    exe "yarn build:dev"
     ;;
 
 
@@ -42,8 +42,20 @@ case $CMD in
     exe "yarn start:dev"
     ;;
 
-  test)
+  test:unit)
+    exe "yarn build:dev"
     exe "yarn test"
+  ;;
+
+  test:e2e)
+    (
+      cd tf-aura-ui
+      exe "yarn cypress:run:local"
+    )
+    (
+      cd tf-aura-edge
+      exe "yarn test:ci"
+    )
   ;;
 
   *)
