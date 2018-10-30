@@ -16,7 +16,7 @@ CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 CMD=$1
 shift
 
-exe() { echo "==> $@" ; $@ ; }
+exe() { echo "==> $@" ; ($@) ; }
 
 case $CMD in
   pull)
