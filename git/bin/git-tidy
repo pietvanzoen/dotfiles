@@ -10,7 +10,9 @@ if [[ ! -z "$(git status -s)" ]]; then
   exit 1
 fi
 
-exe "git checkout master"
+if [[ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]; then
+  exe "git checkout master"
+fi
 exe "git fetch --all --prune"
 exe "git pull --rebase"
 exe "git prune-merged"
