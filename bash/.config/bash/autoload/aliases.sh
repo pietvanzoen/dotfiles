@@ -11,7 +11,7 @@ alias ...="cd ../.."
 
 # base command
 alias ls="ls --color=auto --group-directories-first --ignore='.DS_Store' -H"
-alias l='ls -lAh'
+alias ll='ls -lAh'
 alias rm='rm -I'
 alias cp='cp -vi'
 alias mv='mv -vi'
