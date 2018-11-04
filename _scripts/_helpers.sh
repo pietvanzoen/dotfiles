@@ -1,6 +1,8 @@
 # a set of helper functions for bash scripts
 
 _confirm() {
+  [[ -n "$CONFIRM_ALL" ]] && return 0;
+
   echo -en "==> $1 [y/n] "
   read answer
   if [ "$answer" == 'y' ]; then
