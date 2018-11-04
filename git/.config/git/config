@@ -68,6 +68,7 @@
   aa = add --all
   b = branch -vv # Verbose branch list. Shows upstream branches.
   ds = diff --stat=160,120
+  unmerged = diff --name-only --diff-filter=U
 
   ###############################################
   # BRANCH MANAGEMENT
