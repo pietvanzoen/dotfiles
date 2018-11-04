@@ -32,7 +32,8 @@
   ###############################################
 
   # Pretty logging.
-  l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset %C(cyan)$%G?%Creset' --abbrev-commit
+  ll = log --graph --topo-order --pretty=format:'%C(green)%h%Creset%C(red)%d%Creset %s %C(cyan)(%cr) %C(blue)<%an>%Creset %C(black)%G?%Creset' --abbrev-commit
+  l = log --graph --oneline --topo-order
   ln = l --no-merges
 
   lb = !git l origin/master..$(git symbolic-ref --short HEAD) # Log commits that diverge from origin/master.
@@ -41,6 +42,7 @@
   r = !git l -12 # Log recent commits.
   ra = !git r --all # Log recent commits from all refs.
   rn = r --no-merges
+  rl = !git ll -12
 
   # Create a simple change log for copy/pasting into PRs.
   changelog = "!git log --pretty=\"* %ad - %s [%h]\" --date=short"
