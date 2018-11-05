@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Generate a .gitinore
+set -e
+
+DEFAULT="git
+macos
+windows
+linux
+jetbrains+all
+sublimetext"
+
+list="$(curl -L -s https://www.gitignore.io/api/list | sed 's/,/\n/g')"
+
+echo "==> Generating gitignore with defaults: $(echo $DEFAULT)"
+echo "Select additional ignore options. Esc to continue"
+selected="$DEFAULT\n$(echo -e "$list" | fzf -m --preview='curl -L -s https://www.gitignore.io/api/{}' || (>&2 echo 'Nothing selected'))"
+
+query="https://www.gitignore.io/api/$(echo -ne "$selected" | sort -u | tr '\n' ',' | sed 's/,$//')"
+echo "==> Using query: $query"
+gitignore="$(curl -L -s "$query")"
+
+ignorefile='.gitignore'
+if [[ -e "$ignorefile" ]]; then
+  echo -n "$ignorefile already exists. Overwrite? [y/n] "
+  read -r answer
+  if [[ "$answer" != "y" ]]; then
+    ignorefile="$(mktemp -d)/$ignorefile"
+  fi
+fi
+
+echo "$gitignore" > $ignorefile
+echo "Saved $ignorefile"
