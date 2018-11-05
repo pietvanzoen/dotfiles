@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 set -e
-source "$(dirname $0)/_helpers.sh"
 
-_info "Installing linux deps"
+exe() { echo "==> $@"; $@; }
 
-apt-get update
-apt-get upgrade -y
-apt-get install -y \
+exe "apt-get update"
+exe "apt-get upgrade -y"
+exe "apt-get install -y \
+  git \
   mosh \
   psmisc \
   python \
+  python-pip \
   screen \
   stow \
+  tmux \
   tree \
-  vim
+  vim"
+exe "apt-get clean"

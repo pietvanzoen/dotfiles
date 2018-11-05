@@ -9,9 +9,6 @@ if is_executable apt-get; then
   if _confirm "Run linux install scripts?"; then
     $SCRIPTS_DIR/install-linux || _error "linux install failed"
   fi
-  if _confirm "Install keybase?"; then
-    $SCRIPTS_DIR/install-keybase || _error "keybase install failed"
-  fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if _confirm "Run MacOS install scripts?"; then
     $SCRIPTS_DIR/install-macos || _error "macos install failed"
@@ -22,10 +19,8 @@ if ! is_executable autojump; then
   $SCRIPTS_DIR/install-autojump || _error "autojump install failed"
 fi
 
-if _confirm "Install PGP signing key?"; then
-  $SCRIPTS_DIR/install-pgp-key || _error "PGP key install failed"
-fi
-
 if _confirm "Install dotfiles dev dependencies?"; then
   $SCRIPTS_DIR/install-dev || _error "Dotfiles dev deps install failed"
 fi
+
+mkdir -f $HOME/repos

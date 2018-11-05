@@ -1,0 +1,8 @@
+*.local
+.installed_packages
+iterm2/
+gnupg/
+wk/
+mutt/
+termux/
+_talks/

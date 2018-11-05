@@ -1,20 +1,17 @@
 #!/bin/bash
 
 set -e
-source "$(dirname $0)/_helpers.sh"
 
-_info "Installing dev dependencies"
+exe() { echo "==> $@"; $@; }
 
 if [[ "$(which brew)" ]]; then
   INSTALLER_CMD="brew install"
 elif [[ "$(which apt)" ]]; then
   INSTALLER_CMD="apt install"
 else
-  _error "Could not find brew or apt."
+  echo "Error: Could not find brew or apt."
   exit 1
 fi
 
-pip install flake8
-pip install yapf
-pip install vim-vint
-$INSTALLER_CMD shellcheck
+exe "pip install flake8 yapf vim-vint"
+exe "$INSTALLER_CMD shellcheck"
