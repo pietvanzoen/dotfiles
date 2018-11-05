@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Use fzf to clean up docker images
+set -e
+
+images=$(docker images -a --format '{{.ID}} {{.Repository}}:{{.Tag}}')
+selected_images=$(echo "$images" | fzf +s -m -e | cut -d' ' -f1)
+echo $selected_images
