@@ -1,3 +1,6 @@
+# Creates a temp directory and symlinks it to ~/sandbox. Useful for
+# experimenting or other ephemeral files you don't want cluttering up
+# other directories.
 
 SANDBOXRC=$HOME/.sandboxrc
 SANDBOX_LINK=$HOME/sandbox
@@ -12,10 +15,3 @@ if [[ ! -d "$SANDBOX_TEMP_DIR" ]]; then
   rm -f $SANDBOX_LINK
   ln -s $SANDBOX_TEMP_DIR $SANDBOX_LINK
 fi
-
-
-sandbox() {
-  local name=$1
-  mkdir -p "$SANDBOX_LINK/$name"
-  cd "$SANDBOX_LINK/$name"
-}
