@@ -3,6 +3,7 @@ alias gtop="cd \$(git rev-parse --show-toplevel || echo '.')"
 alias reshell="exec bash"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 alias xn="exe-notify"
+alias date-iso="date -u +'%Y-%m-%dT%H:%M:%SZ'"
 
 # navigation
 alias ~="cd ~"
