@@ -6,9 +6,12 @@ set -e
 cleanup() {
   [[ -n "$TMUX" ]] && tmux set-window-option automatic-rename "on"
 }
-trap cleanup EXIT
 
-TASKFLOW_DIR="$HOME/repos/bitbucket.wolterskluwer.io/scm/taskflow/wkapp-taskflow"
+trap cleanup EXIT
+if [[ -z "$TASKFLOW_DIR" ]]; then
+  (>&2 echo "Error: TASKFLOW_DIR not set")
+  exit 1
+fi
 cd "$TASKFLOW_DIR"
 
 CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
@@ -42,12 +45,12 @@ case $CMD in
     exe "yarn start:dev"
     ;;
 
-  test:unit)
-    exe "yarn build:dev"
+  validate)
+    exe "yarn build:all"
     exe "yarn test"
   ;;
 
-  test:e2e)
+  e2e)
     (
       cd tf-aura-ui
       exe "yarn cypress:run:local"
