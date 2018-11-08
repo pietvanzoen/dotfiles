@@ -7,6 +7,8 @@ is_executable() {
   fi
 }
 
+source "$HOME/.env"
+
 # COLORS
 export TERM=xterm-256color
 
