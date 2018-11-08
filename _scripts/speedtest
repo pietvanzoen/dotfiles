@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+SPEEDTEST_CLI="$(which speedtest-cli)"
+LOGFILE="$HOME/.logs/speedlog-$(date +%Y-%m-%d).csv"
+
+if [[ ! -f $LOGFILE ]]; then
+  $SPEEDTEST_CLI --csv-header > $LOGFILE
+fi
+
+REPORT="$($SPEEDTEST_CLI --server 12066 --csv)"
+
+if [[ "$REPORT" == "Cannot retrieve speedtest configuration" ]]; then
+    exit 0
+fi
+
+echo "$REPORT" >> $LOGFILE
