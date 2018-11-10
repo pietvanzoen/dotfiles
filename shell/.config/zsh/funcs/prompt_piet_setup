@@ -21,8 +21,8 @@ __reset_color="%{$reset_color%}"
 
 prompt_piet_setup() {
   local EXIT="$?"
-  PROMPT="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__job_info) $(__caret)"
-  RPROMPT="$(__node)"
+  PROMPT="$(__exit_caret $EXIT) $(__cwd)$(__git_info)$(__job_info) $(__caret)"
+  RPROMPT="$(__node) $(__context)"
   export PROMPT RPROMPT
 }
 
@@ -67,7 +67,7 @@ __git_root() {
 }
 __node() {
   [[ ! -d "$(__git_root)/node_modules" ]] && return
-  echo -n " ${__dark}⬢ $(node -v)$__reset_color"
+  echo -n "${__dark}⬢ $(node -v)$__reset_color"
 }
 
 source $HOME/.config/shared/git-prompt.sh
