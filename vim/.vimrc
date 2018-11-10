@@ -4,6 +4,7 @@ scriptencoding utf-8
 " BASIC SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax on
+set shell=bash " vim is slow with zsh
 set scrolloff=5 " keep 5 lines of space to top/bottom from current line
 set autoindent " copy indent from current line when starting a new line
 filetype plugin indent on

@@ -7,7 +7,7 @@ source "$DOTFILES_DIR/_scripts/_helpers.sh"
 INSTALLED_INDEX_TMP="$(mktemp)"
 INSTALLED_INDEX="$DOTFILES_DIR/.installed_packages"
 
-stowable="$(ls -d */ | grep -v _ | grep -v stow | grep -v shared | tr -d /)"
+stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
 
 cd "$DOTFILES_DIR"
 
@@ -23,19 +23,12 @@ install_package() {
   stow $package
 }
 
-_info "Setting up directories"
-[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME="$HOME/.config"
-[[ ! -d "$XDG_CONFIG_HOME" ]] && mkdir -vp "$XDG_CONFIG_HOME"
-[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
-[[ ! -d "$XDG_CACHE_HOME" ]] && mkdir -vp "$XDG_CACHE_HOME"
-
 _info "Initializing stow"
 cp ./stow/.stowrc.example ./stow/.stowrc
 sed -i "s|\$HOME|$HOME|" ./stow/.stowrc
 cat ./stow/.stowrc
 echo "stow" >> "$INSTALLED_INDEX_TMP"
 stow --target $HOME --ignore=.*.example stow
-install_package 'shared'
 
 for package in $stowable; do
   if _confirm "Install $package?"; then

@@ -1,2 +1,0 @@
-# Environment specific settings
-export ZSH=$HOME/path/to/.oh-my-zsh

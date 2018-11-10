@@ -7,13 +7,31 @@ is_executable() {
   fi
 }
 
-source "$HOME/.env"
+is_bash() {
+  if [[ -n "$IS_BASH" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+is_zsh() {
+  if [[ -n "$IS_ZSH" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# LOCAL ENV
+[[ -e $HOME/.env ]] && source $HOME/.env
 
 # COLORS
 export TERM=xterm-256color
 
 # BIN
 export PATH=$HOME/bin:$PATH
+export PATH=/usr/local/bin:$PATH
 
 # HOMEBREW PATHS
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
@@ -35,11 +53,11 @@ export GOPATH="$HOME/go"
 [[ -f /usr/local/etc/profile.d/autojump.sh ]] && . /usr/local/etc/profile.d/autojump.sh
 [[ -f $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
-# GNU LS colors
-is_executable dircolors && eval "$(dircolors $XDG_CONFIG_HOME/bash/.dir_colors)"
-
 # SSH
 [ -e $HOME/.ssh/id_rsa ] && export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
+
+# GNU LS colors
+is_executable dircolors && eval "$(dircolors $HOME/.config/shared/.dir_colors)"
 
 # EDITOR
 if is_executable nvim; then
@@ -59,7 +77,8 @@ export HISTIGNORE="cd:cd -:pwd:exit:date";
 
 # FZF
 # Setting rg as the default source for fzf
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+is_zsh && [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+is_bash && [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 if is_executable fd; then
   export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=always'
 fi
@@ -73,17 +92,12 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications --fontdir=/Library/Fonts"
 export HOMEBREW_NO_ANALYTICS=1 # disable homebrew analytics
 
 # RIPGREP
-export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/bash/.ripgreprc"
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+is_bash && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# YARN
-#export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-# BASH COMPLETION
-if [ -f /usr/local/share/bash-completion/bash_completion ]; then
-  . /usr/local/share/bash-completion/bash_completion
-fi
+# SYNTAX HIGHLIGHTING
+is_zsh && source $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

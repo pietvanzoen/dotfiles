@@ -66,7 +66,7 @@ __node() {
   echo -n " ${__dark}⬢ $(node -v)$__reset_color"
 }
 
-source $XDG_CONFIG_HOME/bash/git-prompt.sh
+source $HOME/.config/shared/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_STATESEPARATOR="|"

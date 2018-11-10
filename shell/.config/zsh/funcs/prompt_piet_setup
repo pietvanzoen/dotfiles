@@ -1,0 +1,97 @@
+autoload -U colors
+colors
+setopt PROMPT_SUBST
+
+CONNECTION_TYPE=""
+if [[ -n "$(pstree -ps $$ | grep mosh-server)" ]]; then
+  CONNECTION_TYPE="mosh"
+elif [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+  CONNECTION_TYPE="ssh"
+fi
+
+__black="%{$fg[black]%}"
+__dark="%{$fg_bold[green]%}"
+__red="%{$fg[red]%}"
+__green="%{$fg[green]%}"
+__yellow="%{$fg[yellow]%}"
+__blue="%{$fg[blue]%}"
+__purple="%{$fg[purple]%}"
+__cyan="%{$fg[cyan]%}"
+__reset_color="%{$reset_color%}"
+
+prompt_piet_setup() {
+  local EXIT="$?"
+  PROMPT="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__job_info) $(__caret)"
+  RPROMPT="$(__node)"
+  export PROMPT RPROMPT
+}
+
+__caret() {
+  echo -n "%(!.# .)"
+}
+
+__exit_caret() {
+  [[ -z "$TMUX" ]] && [[ -n "$ITERM_PROFILE" ]] && return
+  echo -n "%(0?.$__green.$__red)λ$__reset_color"
+}
+
+__cwd() {
+  echo -n "$__cyan%1~$__reset_color"
+}
+
+__context() {
+  echo -n "$(__connection)$(__host)$(__screen)"
+}
+
+__connection() {
+  local connection=""
+  if [[ -n "$CONNECTION_TYPE" ]]; then
+    connection="$__blue$CONNECTION_TYPE$__reset_color$__dark|$__reset_color"
+  fi
+  echo -n "$connection"
+}
+
+__host() {
+  echo -n "$__dark%n@%m$__reset_color"
+}
+
+__screen() {
+  if [[ -z "$STY" ]]; then
+    return
+  fi
+  echo -n "$__dark|$STY$__reset_color"
+}
+
+__git_root() {
+  echo "$(git rev-parse --show-toplevel 2> /dev/null || echo '.')"
+}
+__node() {
+  [[ ! -d "$(__git_root)/node_modules" ]] && return
+  echo -n " ${__dark}⬢ $(node -v)$__reset_color"
+}
+
+source $HOME/.config/shared/git-prompt.sh
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWUNTRACKEDFILES=1
+GIT_PS1_STATESEPARATOR="|"
+GIT_PS1_SHOWUPSTREAM="auto"
+__git_info() {
+  local info=$(__git_ps1 | sed -E 's/\(|\)//g' | xargs)
+  [[ -z $info ]] && return;
+  local branch="$(echo $info | cut -d '|' -f 1)"
+  local gitstatus="$(echo $info | cut -d '|' -f 2,3)"
+
+  echo -n "$__dark($__reset_color"
+  echo -n "$__red%30<…<$branch$__reset_color"
+  echo -n "$__yellow$gitstatus$__reset_color"
+  echo -n "$__dark)$__reset_color"
+}
+
+__job_info() {
+  echo -n "$__dark%(1j. [%j].)$__reset_color"
+}
+
+
+prompt_piet_setup $@
+precmd_functions+='prompt_piet_setup'
+# vim:set ft=zsh:
