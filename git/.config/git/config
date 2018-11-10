@@ -148,7 +148,7 @@
   newHighlight = green 22
 
 [interactive]
-	diffFilter = diff-highlight | less --tabs=4 -FX
+  diffFilter = diff-highlight | less --tabs=4 -FX
 
 [fetch]
   prune = true # Always prune refs when fetching.
