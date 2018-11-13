@@ -10,6 +10,7 @@ Plug 'google/vim-searchindex' " show total and index of current search
 Plug 'itchyny/lightline.vim' " better statusline
 Plug 'junegunn/goyo.vim', { 'on': ['Goyo'] } " Nice markdown editing
 Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)'] } " magical aligning
+Plug 'kana/vim-smartinput' " smart brace matching
 Plug 'machakann/vim-highlightedyank' " briefly highlight yanked text
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css'] } " css/html abbreviations
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
