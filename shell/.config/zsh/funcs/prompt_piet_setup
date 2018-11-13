@@ -62,11 +62,9 @@ __screen() {
   echo -n "$__dark|$STY$__reset_color"
 }
 
-__git_root() {
-  echo "$(git rev-parse --show-toplevel 2> /dev/null || echo '.')"
-}
 __node() {
-  [[ ! -d "$(__git_root)/node_modules" ]] && return
+  local gitroot="$(git rev-parse --show-toplevel 2> /dev/null || echo '.')"
+  [[ ! -d "$gitroot/node_modules" ]] && return
   echo -n "${__dark}⬢ $(node -v)$__reset_color"
 }
 
