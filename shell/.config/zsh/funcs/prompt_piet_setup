@@ -21,8 +21,8 @@ __reset_color="%{$reset_color%}"
 
 prompt_piet_setup() {
   local EXIT="$?"
-  PROMPT="$(__exit_caret $EXIT) $(__cwd)$(__git_info)$(__job_info) $(__caret)"
-  RPROMPT="$(__node) $(__context)"
+  PROMPT="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__job_info) $(__caret)"
+  RPROMPT="$(__node)"
   export PROMPT RPROMPT
 }
 
@@ -52,7 +52,7 @@ __connection() {
 }
 
 __host() {
-  echo -n "$__dark%n@%m$__reset_color"
+  echo -n "$__dark%m$__reset_color"
 }
 
 __screen() {
