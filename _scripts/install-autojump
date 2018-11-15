@@ -1,10 +1,6 @@
 #!/bin/bash
-set -e
-
-exe() { echo "==> $@"; sh -c "$*"; }
+set -ex
 
 TEMP_DIR="$(mktemp -d)"
-
-exe "git clone --depth=1 https://github.com/wting/autojump.git $TEMP_DIR"
-
-exe "cd $TEMP_DIR && ./install.py"
+git clone --depth=1 https://github.com/wting/autojump.git $TEMP_DIR
+cd $TEMP_DIR && ./install.py
