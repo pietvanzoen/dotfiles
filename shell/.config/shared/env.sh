@@ -32,6 +32,7 @@ export TERM=xterm-256color
 # BIN
 export PATH=$HOME/bin:$PATH
 export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/sbin:$PATH
 
 # HOMEBREW PATHS
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
