@@ -64,7 +64,3 @@ autoload -Uz run-help-svn
 autoload -Uz run-help-svk
 unalias run-help
 alias help=run-help
-
-
-# SYNTAX HIGHLIGHTING
-source $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

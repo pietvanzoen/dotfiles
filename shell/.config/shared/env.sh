@@ -97,6 +97,3 @@ export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 is_bash && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# SYNTAX HIGHLIGHTING
-is_zsh && source $HOME/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

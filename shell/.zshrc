@@ -3,6 +3,7 @@
 PATH="$MY_PATH"
 
 # MAIN CONFIG
+source $HOME/.config/zsh/plugins.zsh
 source $HOME/.config/zsh/config.zsh
 source $HOME/.config/shared/env.sh
 
