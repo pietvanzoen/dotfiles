@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Stop and remove all containers.
+set -e
+
+exe() { echo "==> $@"; $@; }
+
+containers="$(docker ps -a -q)"
+if [[ -z "$containers" ]]; then
+  (>&2 echo "No containers to clean.")
+  exit 0
+fi
+
+exe "docker stop $containers"
+exe "docker rm $containers"

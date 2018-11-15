@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Docker helper commands
+set -e
+
+main() {
+  cmd="$1"
+  [[ -n "$cmd" ]] && shift
+  if [[ -z "$cmd" ]]; then
+    cmd="$(list_commands | fzf --header "Available commands:" | cut -d' ' -f1)"
+  fi
+  cmd_bin="$(command -v dk-$cmd || true)"
+  if [[ -z "$cmd_bin" ]]; then
+    (>&2 echo "Command '$cmd' not found.")
+    exit 1
+  fi
+
+  $cmd_bin $*
+}
+
+list_commands() {
+  available_commands="$(compgen -c dk- | sort -u)"
+  for cmd in $available_commands; do
+    short_name="$(echo $cmd | sed 's/^dk-//')"
+    description="$(cat $(which $cmd) | sed -n 2p | sed 's/^# //')"
+    echo "$short_name - $description"
+  done
+}
+
+main $*

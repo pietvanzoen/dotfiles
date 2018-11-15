@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-exe() { echo "==> $@"; sh -c "$*"; }
-
-exe "docker stop \$(docker ps -a -q)"
-exe "docker rm \$(docker ps -a -q)"
-exe "docker rmi \$(docker images -f "dangling=true" -q)"

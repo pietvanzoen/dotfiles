@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Remove all dangling images.
+set -e
+dangling_images="$(docker images -f "dangling=true" -q)"
+if [[ -z "$dangling_images" ]]; then
+  (>&2 echo "No dangling images to remove.")
+  exit 0
+fi
+docker rmi $(docker images -f "dangling=true" -q)
