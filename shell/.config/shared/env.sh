@@ -112,3 +112,6 @@ is_zsh && [[ -f $HOME/lib/iterm2_shell_integration.zsh ]] && source $HOME/lib/it
 
 # SANDBOX
 [[ -f $HOME/lib/sandbox.sh ]] && source $HOME/lib/sandbox.sh
+
+# GNUPG
+[[ -z "$(pgrep gpg-agent)" ]] && eval $(gpg-agent --daemon)
