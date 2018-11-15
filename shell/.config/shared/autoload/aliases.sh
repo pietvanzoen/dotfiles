@@ -45,3 +45,6 @@ fi
 
 # NPM
 alias show-scripts="jq .scripts package.json"
+
+# GIT
+alias grt=". git-root"
