@@ -36,7 +36,7 @@ __exit_caret() {
 }
 
 __cwd() {
-  echo -n "$__cyan%1~$__reset_color"
+  echo -n "$__cyan%2~$__reset_color"
 }
 
 __context() {
