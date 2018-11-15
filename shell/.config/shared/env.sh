@@ -59,7 +59,7 @@ export GOPATH="$HOME/go"
 [ -e $HOME/.ssh/id_rsa ] && export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 
 # GNU LS colors
-is_executable dircolors && eval "$(dircolors $HOME/.config/shared/.dir_colors)"
+is_executable dircolors && eval "$(dircolors $HOME/.dir_colors)"
 
 # EDITOR
 if is_executable nvim; then
