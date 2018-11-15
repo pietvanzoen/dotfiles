@@ -5,11 +5,8 @@ Piet van Zoen's Dotfiles
 
 Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
 
-### MacOS
-
-```bash
-_macos/install
-```
+### Dependencies
+Run `./_scripts/bootstrap` to install environment dependencies.
 
 ### Dotfiles
 

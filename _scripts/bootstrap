@@ -19,6 +19,10 @@ if ! is_executable autojump; then
   $SCRIPTS_DIR/install-autojump || _error "autojump install failed"
 fi
 
+if [[ ! -d $HOME/.zplug ]]; then
+  $SCRIPTS_DIR/install-zplug || _error "zplug install failed"
+fi
+
 if _confirm "Install dotfiles dev dependencies?"; then
   $SCRIPTS_DIR/install-dev || _error "Dotfiles dev deps install failed"
 fi
