@@ -48,3 +48,7 @@ alias show-scripts="jq .scripts package.json"
 
 # GIT
 alias grt=". git-root"
+
+# TMUX
+alias ta="tmux a"
+alias tdev="tmux new-session -A -s dev"
