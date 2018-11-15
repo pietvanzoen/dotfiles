@@ -106,3 +106,6 @@ is_bash && [[ -f $HOME/lib/git-completion.bash ]] && source $HOME/lib/git-comple
 # ITERM
 is_bash && [[ -f $HOME/lib/iterm2_shell_integration.bash ]] && source $HOME/lib/iterm2_shell_integration.bash
 is_zsh && [[ -f $HOME/lib/iterm2_shell_integration.zsh ]] && source $HOME/lib/iterm2_shell_integration.zsh
+
+# SANDBOX
+[[ -f $HOME/lib/sandbox.sh ]] && source $HOME/lib/sandbox.sh
