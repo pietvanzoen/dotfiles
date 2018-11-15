@@ -1,6 +1,6 @@
 [include]
   # Import environment specific config and sensitive data.
-  path = ~/.config/git/config.local
+  path = ~/.gitconfig.local
 
 [user]
   name = pietvanzoen
@@ -18,13 +18,13 @@
   user = pietvanzoen
 
 [core]
-  excludesfile = ~/.config/git/ignore_global
+  excludesfile = ~/.gitignore_global
 
   # Use less when output is longer than screen. Also leave result on screen after exiting less.
   pager = diff-highlight | less -F -X
 
 [init]
-  templatedir = ~/.config/git/template
+  templatedir = ~/.gittemplate
 
 [alias]
   ###############################################
