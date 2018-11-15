@@ -1,9 +1,6 @@
 source $HOME/lib/load_plugins.zsh
-source $HOME/.config/shared/env.sh
+source $HOME/lib/setup_env.sh
 source $HOME/lib/aliases.zsh
-
-# ZSH messes up PATH order after zshenv has loaded
-PATH="$MY_PATH"
 
 # Set up the prompt
 autoload -Uz promptinit

@@ -1,7 +1,7 @@
 export IS_BASH=true
 export IS_ZSH=
 
-source $HOME/.config/shared/env.sh
+source $HOME/lib/setup_env.sh
 source $HOME/lib/prompt_piet.bash
 
 # HISTORY
