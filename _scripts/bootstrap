@@ -27,4 +27,10 @@ if _confirm "Install dotfiles dev dependencies?"; then
   $SCRIPTS_DIR/install-dev || _error "Dotfiles dev deps install failed"
 fi
 
-mkdir -f $HOME/repos
+if [[ "$(hostname)" == "finn" ]]; then
+  $SCRIPTS_DIR/install-pgp-key || _error "PGP key install failed"
+fi
+
+mkdir -p $HOME/repos
+
+echo "==> Bootstrapping finished"

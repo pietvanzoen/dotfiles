@@ -11,7 +11,9 @@ prompt piet
 bindkey -v
 bindkey "^P" up-line-or-search
 bindkey "^N" down-line-or-search
-bindkey '^r' history-incremental-search-backward
+if [[ -z "$(bindkey | grep fzf)" ]]; then
+  bindkey '^R' history-incremental-search-backward
+fi
 
 # Use slim cursor when in insert mode. Block cursor when in normal mode.
 function zle-keymap-select zle-line-init {
