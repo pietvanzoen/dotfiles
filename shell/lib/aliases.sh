@@ -3,7 +3,9 @@ alias gtop="cd \$(git rev-parse --show-toplevel || echo '.')"
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 alias xn="exe-notify"
 alias date-iso="date -u +'%Y-%m-%dT%H:%M:%SZ'"
-alias field="sed -E 's/\s+/ /g' | cut -d' ' -f"
+field() {
+  awk "{ print \$${1} }"
+}
 
 # navigation
 alias ~="cd ~"
