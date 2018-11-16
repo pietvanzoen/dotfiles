@@ -4,7 +4,8 @@ _confirm() {
   [[ -n "$CONFIRM_ALL" ]] && return 0;
 
   echo -en "==> $1 [y/n] "
-  read answer
+  read -n 1 answer
+  echo
   if [ "$answer" == 'y' ]; then
     return 0
   else
