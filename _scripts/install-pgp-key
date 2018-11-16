@@ -20,6 +20,11 @@ else
   exit 1
 fi
 
+if $GPG_BIN --list-keys $KEYID; then
+  echo "Keys already installed"
+  exit 0
+fi
+
 _info "Installing public key"
 keybase pgp export --query $KEYID | $GPG_BIN --import
 
