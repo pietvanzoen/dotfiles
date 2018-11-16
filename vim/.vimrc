@@ -311,6 +311,9 @@ augroup MyAutoCmds
   " use yaml filetype for raml files
   autocmd BufRead,BufNewFile *.raml set filetype=yaml
 
+  " use hard tabs for make
+  autocmd FileType make setlocal noexpandtab tabstop=4 shiftwidth=4
+
   " set dockerfile filetype
   autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
 augroup END
