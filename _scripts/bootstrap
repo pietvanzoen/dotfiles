@@ -24,7 +24,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   fi
 fi
 
-if ! is_executable autojump; then
+if [[ ! -d $HOME/.autojump ]]; then
   attempt_script "install-autojump"
 fi
 
