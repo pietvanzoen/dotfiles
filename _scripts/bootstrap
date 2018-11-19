@@ -3,34 +3,54 @@
 set -e
 SCRIPTS_DIR="$(dirname $0)"
 
+FAILED=()
+attempt_script() {
+  _info "$1"
+  if ! $SCRIPTS_DIR/$1; then
+    _error "$1 failed"
+    FAILED+=($1)
+  fi
+}
+
 source $SCRIPTS_DIR/_helpers.sh
 
 if is_executable apt-get; then
   if _confirm "Run linux install scripts?"; then
-    $SCRIPTS_DIR/install-linux || _error "linux install failed"
+    attept_script "install-linux"
   fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if _confirm "Run MacOS install scripts?"; then
-    $SCRIPTS_DIR/install-macos || _error "macos install failed"
+    attempt_script "install-macos"
   fi
 fi
 
 if ! is_executable autojump; then
-  $SCRIPTS_DIR/install-autojump || _error "autojump install failed"
+  attempt_script "install-autojump"
 fi
 
 if [[ ! -d $HOME/.zplug ]]; then
-  $SCRIPTS_DIR/install-zplug || _error "zplug install failed"
+  attempt_script "install-zplug"
+fi
+
+if [[ ! -d $HOME/.fzf ]]; then
+  attempt_script "install-fzf"
 fi
 
 if _confirm "Install dotfiles dev dependencies?"; then
-  $SCRIPTS_DIR/install-dev || _error "Dotfiles dev deps install failed"
+  attempt_script "install-dev"
 fi
 
 if [[ "$(hostname)" == "finn" ]]; then
-  $SCRIPTS_DIR/install-pgp-key || _error "PGP key install failed"
+  attempt_script "install-pgp-key"
 fi
 
 mkdir -p $HOME/repos
 
 echo "==> Bootstrapping finished"
+
+if [[ -n "$FAILED" ]]; then
+  _error "The following install scripts failed to complete:"
+  for fail in ${FAILED[*]}; do
+    _error "- $fail"
+  done
+fi
