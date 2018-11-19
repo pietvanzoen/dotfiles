@@ -15,5 +15,6 @@ exe "apt-get install -y \
   stow \
   tmux \
   tree \
-  vim"
+  vim \
+  zsh"
 exe "apt-get clean"
