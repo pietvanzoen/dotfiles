@@ -3,7 +3,7 @@ set -e
 LOCALE=en_US
 ENCODING=UTF-8
 
-if ! grep "^$LOCALE.$ENCODING-8" /etc/locale.gen; then
+if ! grep "^$LOCALE.$ENCODING" /etc/locale.gen; then
   echo "==> Generating missing locale"
   echo "$LOCALE.$ENCODING $ENCODING" >> /etc/locale.gen
   locale-gen
