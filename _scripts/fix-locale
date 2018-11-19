@@ -14,8 +14,8 @@ fi
 ENV_FILE=/etc/environment
 if ! grep -q "LC_ALL" $ENV_FILE; then
   echo "==> Fixing $ENV_FILE"
-  echo "LC_ALL=$LOCALE.$ENCODING
-  LANG=$LOCALE.$ENCODING" > $ENV_FILE
+  echo "LC_ALL=$LOCALE.$ENCODING" >> $ENV_FILE
+  echo "LANG=$LOCALE.$ENCODING" >> $ENV_FILE
   FIXED=true
 fi
 
