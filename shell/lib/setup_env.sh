@@ -107,4 +107,4 @@ is_zsh && [[ -f $HOME/.iterm2_shell_integration.zsh ]] && source $HOME/.iterm2_s
 [[ -f $HOME/lib/sandbox.sh ]] && source $HOME/lib/sandbox.sh
 
 # GNUPG
-is_executable gpg-agent && pgrep -q gpg-agent || eval $(gpg-agent --daemon)
+is_executable gpg-agent && [[ -z "$(pgrep gpg-agent)" ]] && eval $(gpg-agent --daemon)
