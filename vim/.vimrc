@@ -314,6 +314,9 @@ augroup MyAutoCmds
   " use hard tabs for make
   autocmd FileType make setlocal noexpandtab tabstop=4 shiftwidth=4
 
+  " .env files as sh
+  autocmd BufRead,BufNewFile .env.* set filetype=sh
+
   " set dockerfile filetype
   autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
 augroup END
