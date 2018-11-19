@@ -15,7 +15,7 @@ __ps1_main() {
   export PS1="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__node)$(__job_info) "
 }
 if [[ "$PROMPT_COMMAND" != *'__ps1_main'* ]]; then
-  export PROMPT_COMMAND="__ps1_main; ${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
+  export PROMPT_COMMAND="__ps1_main; history -a"
 fi
 
 __exit_caret() {
