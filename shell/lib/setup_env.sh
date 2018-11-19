@@ -70,13 +70,6 @@ elif is_executable vi; then
   export EDITOR="$(which vi)"
 fi
 
-
-# HISTORY
-export HISTSIZE=32768;
-export HISTFILESIZE=$HISTSIZE;
-export HISTCONTROL=ignoredups;
-export HISTIGNORE="cd:cd -:pwd:exit:date";
-
 # FZF
 # Setting rg as the default source for fzf
 is_zsh && [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
