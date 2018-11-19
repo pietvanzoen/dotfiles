@@ -71,9 +71,9 @@ elif is_executable vi; then
 fi
 
 # FZF
-# Setting rg as the default source for fzf
 is_zsh && [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 is_bash && [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Setting fd as the default source for fzf
 if is_executable fd; then
   export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=always'
 fi
