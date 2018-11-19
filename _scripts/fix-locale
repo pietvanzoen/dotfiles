@@ -2,18 +2,25 @@
 set -e
 LOCALE=en_US
 ENCODING=UTF-8
+FIXED=
 
-if ! grep "^$LOCALE.$ENCODING" /etc/locale.gen; then
+if ! grep -q "^$LOCALE.$ENCODING" /etc/locale.gen; then
   echo "==> Generating missing locale"
   echo "$LOCALE.$ENCODING $ENCODING" >> /etc/locale.gen
   locale-gen
+  FIXED=true
 fi
 
 ENV_FILE=/etc/environment
-if ! grep "LC_ALL" $ENV_FILE; then
+if ! grep -q "LC_ALL" $ENV_FILE; then
   echo "==> Fixing $ENV_FILE"
   echo "LC_ALL=$LOCALE.$ENCODING
   LANG=$LOCALE.$ENCODING" > $ENV_FILE
+  FIXED=true
 fi
 
-echo "Locale fixed. Logout and login for fix to take effect."
+if [[ -n $FIXED ]]; then
+  echo "Locale fixed. Logout and login for fix to take effect."
+else
+  echo "No fixes applied. Required files and environment variables appear to be present."
+fi
