@@ -47,7 +47,7 @@ case $CMD in
 
   validate)
     exe "yarn build:all"
-    exe "yarn test"
+    exe "npx lerna run test:ci --stream"
   ;;
 
   e2e)
