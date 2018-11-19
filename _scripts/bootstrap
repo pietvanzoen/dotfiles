@@ -46,6 +46,12 @@ fi
 
 mkdir -p $HOME/repos
 
+if [[ "$SHELL" != "$(which zsh)" ]]; then
+  if _confirm "Set $(which zsh) as login shell?"; then
+    chsh -s $(which zsh) $USER
+  fi
+fi
+
 echo "==> Bootstrapping finished"
 
 if [[ -n "$FAILED" ]]; then
