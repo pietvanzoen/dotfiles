@@ -9,10 +9,11 @@ if ! grep "^$LOCALE.$ENCODING" /etc/locale.gen; then
   locale-gen
 fi
 
-if ! grep "LC_ALL" /etc/environtment; then
-  echo "==> Fixing /etc/environment"
+ENV_FILE=/etc/environment
+if ! grep "LC_ALL" $ENV_FILE; then
+  echo "==> Fixing $ENV_FILE"
   echo "LC_ALL=$LOCALE.$ENCODING
-  LANG=$LOCALE.$ENCODING" > /etc/environment
+  LANG=$LOCALE.$ENCODING" > $ENV_FILE
 fi
 
 echo "Locale fixed. Logout and login for fix to take effect."
