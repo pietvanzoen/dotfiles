@@ -25,13 +25,13 @@ function main() {
 
 function assert_not_current() {
   if [[ $branch == $target_branch ]]; then
-    _error "Current branch is $target_branch."
+    echo "Error: Current branch is $target_branch."
     exit 1
   fi
 }
 
 function update_target() {
-  _info "updating $target_branch"
+  echo "==> updating $target_branch"
   git checkout $target_branch --quiet
   git pull
 }
@@ -42,7 +42,7 @@ function confirm_merge() {
   if [ "$confirm" = "y" ]; then
     return
   else
-    _info "Canceling merge"
+    echo "==> Canceling merge"
     exit
   fi
 }
@@ -52,7 +52,7 @@ function assert_feature_up_to_date() {
   missing_commits="$(git log $target_branch --pretty="* %h - %s [%an]" --not "$branch")"
 
   if [[ $missing_commits ]]; then
-    _error "Branch $branch is missing the following commits from $target_branch. Rebase and try again."
+    echo "Error: Branch $branch is missing the following commits from $target_branch. Rebase and try again."
     echo "$missing_commits"
     git checkout "$branch" --quiet
     exit 1
@@ -61,23 +61,15 @@ function assert_feature_up_to_date() {
 }
 
 function merge_feature() {
-  _info "merging $branch"
+  echo "==> merging $branch"
   git merge --ff-only "$branch"
   git push
 }
 
 function cleanup() {
-  _info "cleaning up"
+  echo "==> cleaning up"
   git branch -d "$branch"
   git push origin --delete "$branch"
-}
-
-function _info() {
-  echo "==> $1"
-}
-
-function _error() {
-  echo "Error: $1"
 }
 
 main $1
