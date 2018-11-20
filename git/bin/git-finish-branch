@@ -37,8 +37,8 @@ function update_target() {
 }
 
 function confirm_merge() {
-  _info "Are you sure you want to merge '$branch' into '$target_branch'? (y/n)"
-  read confirm
+  echo -n "==> Are you sure you want to merge '$branch' into '$target_branch'? (y/n) "
+  read -n 1 confirm
   if [ "$confirm" = "y" ]; then
     return
   else
