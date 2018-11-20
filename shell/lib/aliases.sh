@@ -6,6 +6,7 @@ alias date-iso="date -u +'%Y-%m-%dT%H:%M:%SZ'"
 field() {
   awk "{ print \$${1} }"
 }
+alias todo="rg --hidden --iglob '!{node_modules,.git}' 'TODO|FIXME'"
 
 # navigation
 alias ~="cd ~"
