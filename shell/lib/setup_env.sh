@@ -111,3 +111,6 @@ is_executable gpg-agent && [[ -z "$(pgrep gpg-agent)" ]] && eval $(gpg-agent --d
 
 # TRAVIS GEM
 [[ -f $HOME/.travis/travis.sh ]] && source $HOME/.travis/travis.sh
+
+# RUST
+[[ -f $HOME/.cargo/env ]] && source $HOME/.cargo/env
