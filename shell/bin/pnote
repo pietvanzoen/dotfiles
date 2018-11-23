@@ -1,0 +1,197 @@
+#!/usr/bin/env ruby
+require "#{Dir.home}/lib/pnote_lib"
+require 'yaml'
+require 'fileutils'
+require 'securerandom'
+require 'date'
+
+def main()
+  pnote = PNote.new()
+  cmd=ARGV[0]
+  case cmd
+  when 'view', 'v'
+    pnote.view_cmd
+  when 'add', 'a'
+    pnote.add_cmd
+  when 'edit', 'e'
+    pnote.edit_cmd
+  when 'remove'
+    pnote.remove_cmd
+  when 'help', 'h'
+    pnote.help_cmd
+  else
+    pnote.help_cmd
+    exit(1)
+  end
+end
+
+
+class PNote
+  PNOTE_DIR="#{Dir.home}/.pnote"
+  TEMP_CONTENT_FILE="#{PNOTE_DIR}/PNOTE_TEMPCONENT"
+  PNOTE_DB="#{PNOTE_DIR}/pnote.yml"
+
+  def initialize
+    Dir.mkdir_p(PNOTE_DIR) unless Dir.exists?(PNOTE_DIR)
+
+    @repo = NotesRepo.new(PNOTE_DB)
+  end
+
+  def view_cmd
+    book = ARGV[1]
+    note_index = ARGV[2]
+    if not note_index.nil? then
+      Printer.print_note(@repo.find({'book' => book, 'note_index' => note_index.to_i}))
+    elsif not book.nil? then
+      Printer.print_notes(@repo.find_all({'book' => book}))
+    else
+      Printer.print_books(@repo.find_all)
+    end
+  end
+
+  def add_cmd
+    book = ARGV[1]
+    assert(book, 'book name is required')
+    content = ARGV[2] ||= get_content
+    if content.strip.empty? then
+      puts "no note added"
+      exit(0)
+    end
+    n = @repo.create!({'book' => book, 'content' => content})
+    puts "Saved new note:"
+    puts n.content
+  end
+
+  def edit_cmd
+    note = get_note_from_args
+    content = get_content note.content
+    @repo.update!(note.id, { 'content' => content })
+    puts "edited note '#{note_index}' in '#{book}': "
+    puts content
+  end
+
+  def remove_cmd
+    note = get_note_from_args
+    Printer.print_note(note)
+    print "==> Confirm delete the above note: [yn] "
+    ans = STDIN.gets.strip
+    exit(0) unless ans == 'y'
+    @repo.archive!(note.id)
+  end
+
+  def get_note_from_args
+    book = ARGV[1]
+    note_index = ARGV[2]
+    assert(book, 'book name is required')
+    assert(note_index, 'note index is required')
+    @repo.find({'book' => book, 'note_index' => note_index.to_i})
+  end
+
+  def get_content(populate='')
+    File.write(TEMP_CONTENT_FILE, populate)
+    system("#{ENV['EDITOR']}", TEMP_CONTENT_FILE)
+    return File.read(TEMP_CONTENT_FILE).strip
+  end
+
+  def help_cmd
+    case ARGV[1]
+    when 'a', 'add', 'n', 'new'
+      msg = "USAGE: dnote add <book> [<content>]
+
+Aliases:
+  add, a, n, new
+
+Examples:
+
+ * Open an editor to write content
+ dnote add git
+
+ * Skip the editor by providing content directly
+ dnote add git \"time is a part of the commit hash\""
+    else
+      msg="USAGE: dnote [command]
+
+Available Commands:
+  add         Add a note
+  edit        Edit a note or a book
+  help        Help about any command
+  remove      Remove a note or a book
+  view        List books, notes or view a content"
+      end
+
+    puts msg.strip
+  end
+
+end
+
+module Printer
+  def self.print_books(notes)
+    bullet = '•'.blue
+    notes.sort_by{|n| n.book }.group_by{|n| n.book }.each do |key, notes|
+      count = "(#{notes.count})".yellow
+      puts "#{bullet} #{key} #{count}"
+    end
+  end
+
+  def self.print_notes(notes)
+    puts "#{notes.count} notes:"
+    notes.each_with_index do |note, index|
+      id = "(#{index})".yellow
+      puts " #{id} #{truncate("#{note.content}", 100)}"
+    end
+  end
+
+  def self.print_note(note)
+    assert(note, 'Could not find note.')
+    bullet = '•'.blue
+    puts "#{bullet} id: #{note.id}"
+    puts "#{bullet} created at: #{note.created_at}"
+    puts "#{bullet} updated at: #{note.updated_at}"
+    puts
+    puts "------ content -------"
+    puts note.content
+    puts "----------------------"
+  end
+
+  def self.truncate(str, length)
+    return str unless str.length > length
+    str = str.lines.first.strip
+    more = "[---more---]".yellow
+    return "#{str[0, length]} #{more}"
+  end
+
+end
+
+def assert(val, msg)
+  return unless !val
+  STDERR.puts msg.red
+  exit(1)
+end
+
+class String
+  def colorize(color_code)
+    "\e[#{color_code}m#{self}\e[0m"
+  end
+  def red
+    colorize(31)
+  end
+  def green
+    colorize(32)
+  end
+  def yellow
+    colorize(33)
+  end
+  def blue
+    colorize(34)
+  end
+  def pink
+    colorize(35)
+  end
+  def light_blue
+    colorize(36)
+  end
+end
+
+if __FILE__ == $0 then
+  main
+end
