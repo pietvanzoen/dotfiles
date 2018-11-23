@@ -1,13 +1,9 @@
 #!/usr/bin/env ruby
 require "#{Dir.home}/lib/pnote_lib"
-require 'yaml'
-require 'fileutils'
-require 'securerandom'
-require 'date'
 
 def main()
   pnote = PNote.new()
-  cmd=ARGV[0]
+  cmd = ARGV[0]
   case cmd
   when 'view', 'v'
     pnote.view_cmd
@@ -17,22 +13,23 @@ def main()
     pnote.edit_cmd
   when 'remove'
     pnote.remove_cmd
-  when 'help', 'h'
-    pnote.help_cmd
+  when 'help', 'h', nil
+    Print.help(ARGV[1])
   else
-    pnote.help_cmd
+    puts "Unknown command '#{cmd}'"
+    puts "See 'pnote help' for available commands"
     exit(1)
   end
 end
 
 
 class PNote
-  PNOTE_DIR="#{Dir.home}/.pnote"
-  TEMP_CONTENT_FILE="#{PNOTE_DIR}/PNOTE_TEMPCONENT"
-  PNOTE_DB="#{PNOTE_DIR}/pnote.yml"
+  PNOTE_DIR = ENV['PNOTE_DIR'] || "#{Dir.home}/.pnote"
+  TEMP_CONTENT_FILE = "#{PNOTE_DIR}/PNOTE_TEMPCONENT"
+  PNOTE_DB = "#{PNOTE_DIR}/pnote.yml"
 
   def initialize
-    Dir.mkdir_p(PNOTE_DIR) unless Dir.exists?(PNOTE_DIR)
+    FileUtils.mkdir_p(PNOTE_DIR) unless Dir.exists?(PNOTE_DIR)
 
     @repo = NotesRepo.new(PNOTE_DB)
   end
@@ -41,30 +38,31 @@ class PNote
     book = ARGV[1]
     note_index = ARGV[2]
     if not note_index.nil? then
-      Printer.print_note(@repo.find({'book' => book, 'note_index' => note_index.to_i}))
+      Print.note(@repo.find({'book' => book, 'note_index' => note_index.to_i}))
     elsif not book.nil? then
-      Printer.print_notes(@repo.find_all({'book' => book}))
+      Print.notes(@repo.find_all({'book' => book}))
     else
-      Printer.print_books(@repo.find_all)
+      Print.books(@repo.find_all)
     end
   end
 
   def add_cmd
+    cmd = ARGV[0]
     book = ARGV[1]
-    assert(book, 'book name is required')
-    content = ARGV[2] ||= get_content
-    if content.strip.empty? then
-      puts "no note added"
-      exit(0)
+    Util.assert(book, "Book name is required. See 'pnote help #{cmd}'.")
+    content = (ARGV[2] || get_content_from_editor).strip
+    if content.empty? then
+      puts "Content empty. No note added."
+      exit(1)
     end
-    n = @repo.create!({'book' => book, 'content' => content})
+    n = @repo.create!({'book' => book, 'content' => content })
     puts "Saved new note:"
     puts n.content
   end
 
   def edit_cmd
     note = get_note_from_args
-    content = get_content note.content
+    content = get_content_from_editor note.content
     @repo.update!(note.id, { 'content' => content })
     puts "edited note '#{note_index}' in '#{book}': "
     puts content
@@ -72,7 +70,7 @@ class PNote
 
   def remove_cmd
     note = get_note_from_args
-    Printer.print_note(note)
+    Print.note(note)
     print "==> Confirm delete the above note: [yn] "
     ans = STDIN.gets.strip
     exit(0) unless ans == 'y'
@@ -80,52 +78,23 @@ class PNote
   end
 
   def get_note_from_args
+    cmd = ARGV[0]
     book = ARGV[1]
     note_index = ARGV[2]
-    assert(book, 'book name is required')
-    assert(note_index, 'note index is required')
+    Util.assert(book, "Book name is required. See 'pnote help #{cmd}'.")
+    Util.assert(note_index, "Note index is required. See 'pnote help #{cmd}'.")
     @repo.find({'book' => book, 'note_index' => note_index.to_i})
   end
 
-  def get_content(populate='')
+  def get_content_from_editor(populate='')
     File.write(TEMP_CONTENT_FILE, populate)
     system("#{ENV['EDITOR']}", TEMP_CONTENT_FILE)
     return File.read(TEMP_CONTENT_FILE).strip
   end
-
-  def help_cmd
-    case ARGV[1]
-    when 'a', 'add', 'n', 'new'
-      msg = "USAGE: dnote add <book> [<content>]
-
-Aliases:
-  add, a, n, new
-
-Examples:
-
- * Open an editor to write content
- dnote add git
-
- * Skip the editor by providing content directly
- dnote add git \"time is a part of the commit hash\""
-    else
-      msg="USAGE: dnote [command]
-
-Available Commands:
-  add         Add a note
-  edit        Edit a note or a book
-  help        Help about any command
-  remove      Remove a note or a book
-  view        List books, notes or view a content"
-      end
-
-    puts msg.strip
-  end
-
 end
 
-module Printer
-  def self.print_books(notes)
+module Print
+  def self.books(notes)
     bullet = '•'.blue
     notes.sort_by{|n| n.book }.group_by{|n| n.book }.each do |key, notes|
       count = "(#{notes.count})".yellow
@@ -133,16 +102,16 @@ module Printer
     end
   end
 
-  def self.print_notes(notes)
+  def self.notes(notes)
     puts "#{notes.count} notes:"
     notes.each_with_index do |note, index|
       id = "(#{index})".yellow
-      puts " #{id} #{truncate("#{note.content}", 100)}"
+      puts " #{id} #{Util.truncate("#{note.content}", 100)}"
     end
   end
 
-  def self.print_note(note)
-    assert(note, 'Could not find note.')
+  def self.note(note)
+    Util.assert(note, 'Could not find note.')
     bullet = '•'.blue
     puts "#{bullet} id: #{note.id}"
     puts "#{bullet} created at: #{note.created_at}"
@@ -153,6 +122,38 @@ module Printer
     puts "----------------------"
   end
 
+  def self.help(cmd=nil)
+    case cmd
+    when 'a', 'add'
+      msg = "usage: dnote add <book> [<content>]
+add a new note. if no content is given your $editor will open for input."
+    when 'e', 'edit'
+      msg = "usage: dnote edit <book> <note index>
+edit a note."
+    when 'remove'
+      msg = "usage: dnote remove <book> <note index>
+remove a note."
+    when 'view', 'v'
+      msg = "usage: dnote view [<book>] [<note index>]
+list books, notes, or view a single note."
+    else
+      msg="usage: dnote [command]
+
+available commands:
+  add, a      add a note
+  edit, e     edit a note
+  help        help about any command
+  remove      remove a note or a book
+  view, v     list books, notes or view a content
+
+data is stored in ~/.pnote/ by default. you can override this by setting $pnote_dir in your environment."
+      end
+
+    puts msg.strip
+  end
+end
+
+module Util
   def self.truncate(str, length)
     return str unless str.length > length
     str = str.lines.first.strip
@@ -160,12 +161,11 @@ module Printer
     return "#{str[0, length]} #{more}"
   end
 
-end
-
-def assert(val, msg)
+  def self.assert(val, msg)
   return unless !val
-  STDERR.puts msg.red
+  STDERR.puts msg
   exit(1)
+  end
 end
 
 class String
