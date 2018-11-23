@@ -19,7 +19,7 @@ class NotesRepo
     notes.sort { |a, b| a.created_at <=> b.created_at }
   end
 
-  def find(params = {})
+  def find(params)
     if params['book'] then
       notes = find_all({'book' => params['book']})
     else

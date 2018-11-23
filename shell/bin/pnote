@@ -74,7 +74,7 @@ class PNote
     print "==> Confirm delete the above note: [yn] "
     ans = STDIN.gets.strip
     exit(0) unless ans == 'y'
-    @repo.archive!(note.id)
+    @repo.archive!({ 'id' => note.id })
   end
 
   def get_note_from_args
@@ -106,7 +106,7 @@ module Print
     puts "#{notes.count} notes:"
     notes.each_with_index do |note, index|
       id = "(#{index})".yellow
-      puts " #{id} #{Util.truncate("#{note.content}", 100)}"
+      puts " #{id} #{Util.truncate("#{note.content}", 160)}"
     end
   end
 
