@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -e
+
+exe() { echo "==> $@"; $@; }
+
+if [[ ! -d "$HOME/.cargo" ]]; then
+  exe "curl https://sh.rustup.rs -sSf | sh"
+fi
+
+if ! command -v ccache; then
+  exe "brew install ccache"
+fi
+
+if [[ ! -d "$HOME/repos/github.com/pietvanzoen/deno" ]]; then
+  exe "git get https://github.com/pietvanzoen/deno.git"
+fi
+
+exe "cd $HOME/repos/github.com/pietvanzoen/deno"
+
+exe "git submodule update --init --recursive"
+
+exe "./tools/setup.py"
