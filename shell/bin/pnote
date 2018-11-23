@@ -25,7 +25,7 @@ end
 
 class PNote
   PNOTE_DIR = ENV['PNOTE_DIR'] || "#{Dir.home}/.pnote"
-  TEMP_CONTENT_FILE = "#{PNOTE_DIR}/PNOTE_TEMPCONENT"
+  TEMP_CONTENT_FILE = "#{PNOTE_DIR}/PNOTE_TEMPCONENT.md"
   PNOTE_DB = "#{PNOTE_DIR}/pnote.yml"
 
   def initialize
@@ -35,40 +35,45 @@ class PNote
   end
 
   def view_cmd
-    book = ARGV[1]
-    note_index = ARGV[2]
-    if not note_index.nil? then
-      Print.note(@repo.find({'book' => book, 'note_index' => note_index.to_i}))
-    elsif not book.nil? then
-      Print.notes(@repo.find_all({'book' => book}))
-    else
+    assert_max_arg_count 2
+    find = ARGV[1]
+    if find.nil? then
       Print.books(@repo.find_all)
+      return
     end
+
+    notes = @repo.find_all({'book' => find})
+    return Print.notes(notes) unless notes.empty?
+
+    note = @repo.find({'id' => find})
+    return Print.note(note) unless note.nil?
+
+    puts "Could not find book or note with id '#{find}'."
+    exit(1)
   end
 
   def add_cmd
+    assert_max_arg_count 2
     cmd = ARGV[0]
     book = ARGV[1]
     Util.assert(book, "Book name is required. See 'pnote help #{cmd}'.")
-    content = (ARGV[2] || get_content_from_editor).strip
-    if content.empty? then
-      puts "Content empty. No note added."
-      exit(1)
-    end
-    n = @repo.create!({'book' => book, 'content' => content })
+    note_data = edit_note({'book' => book})
+    n = @repo.create!({'book' => note_data['book'], 'content' => note_data['content'] })
     puts "Saved new note:"
-    puts n.content
+    Print.note(n)
   end
 
   def edit_cmd
+    assert_max_arg_count 2
     note = get_note_from_args
-    content = get_content_from_editor note.content
-    @repo.update!(note.id, { 'content' => content })
-    puts "edited note '#{note_index}' in '#{book}': "
-    puts content
+    note_data = edit_note({'book' => note.book, 'content' => note.content})
+    @repo.update!(note.id, note_data)
+    puts "Edited note: "
+    Print.note(note)
   end
 
   def remove_cmd
+    assert_max_arg_count 2
     note = get_note_from_args
     Print.note(note)
     print "==> Confirm delete the above note: [yn] "
@@ -79,23 +84,45 @@ class PNote
 
   def get_note_from_args
     cmd = ARGV[0]
-    book = ARGV[1]
-    note_index = ARGV[2]
-    Util.assert(book, "Book name is required. See 'pnote help #{cmd}'.")
-    Util.assert(note_index, "Note index is required. See 'pnote help #{cmd}'.")
-    @repo.find({'book' => book, 'note_index' => note_index.to_i})
+    id = ARGV[1]
+    Util.assert(id, "Note id is required. See 'pnote help #{cmd}'.")
+    note = @repo.find({'id' => id})
+    if note.nil? then
+      puts "Could not find note with id #{id}."
+      exit(1)
+    end
+    note
   end
 
-  def get_content_from_editor(populate='')
-    File.write(TEMP_CONTENT_FILE, populate)
+  def edit_note(params)
+    front_matter = {
+      'book' => params.fetch('book')
+    }
+    content = params.fetch('content', '')
+    template="#{front_matter.to_yaml}\n---\n#{content}"
+    File.write(TEMP_CONTENT_FILE, template)
     system("#{ENV['EDITOR']}", TEMP_CONTENT_FILE)
-    return File.read(TEMP_CONTENT_FILE).strip
+    md = File.read(TEMP_CONTENT_FILE)
+    data = {
+      'book' => YAML.load(md).fetch('book', '').strip || front_matter['book'],
+      'content' => md.split('---').last.strip
+    }
+    if data['content'].empty? then
+      puts "Note content is required."
+      exit(1)
+    end
+    data
+  end
+
+  def assert_max_arg_count(n)
+    Util.assert(ARGV.count <= n, "Too many arguments. See 'pnote help #{ARGV[0]}' for help.")
   end
 end
 
 module Print
   def self.books(notes)
     bullet = '•'.blue
+    puts "#{notes.count} notes:"
     notes.sort_by{|n| n.book }.group_by{|n| n.book }.each do |key, notes|
       count = "(#{notes.count})".yellow
       puts "#{bullet} #{key} #{count}"
@@ -105,7 +132,7 @@ module Print
   def self.notes(notes)
     puts "#{notes.count} notes:"
     notes.each_with_index do |note, index|
-      id = "(#{index})".yellow
+      id = ('%-5.4s' % "(#{note.id})").yellow
       puts " #{id} #{Util.truncate("#{note.content}", 160)}"
     end
   end
@@ -113,7 +140,8 @@ module Print
   def self.note(note)
     Util.assert(note, 'Could not find note.')
     bullet = '•'.blue
-    puts "#{bullet} id: #{note.id}"
+    puts "#{bullet} id:         #{note.id}"
+    puts "#{bullet} book:       #{note.book}"
     puts "#{bullet} created at: #{note.created_at}"
     puts "#{bullet} updated at: #{note.updated_at}"
     puts
@@ -125,28 +153,28 @@ module Print
   def self.help(cmd=nil)
     case cmd
     when 'a', 'add'
-      msg = "usage: dnote add <book> [<content>]
-add a new note. if no content is given your $editor will open for input."
+      msg = "USAGE: dnote add <book>
+Add a new note. $EDITOR will open for input."
     when 'e', 'edit'
-      msg = "usage: dnote edit <book> <note index>
-edit a note."
+      msg = "USAGE: dnote edit <note id>
+Edit a note."
     when 'remove'
-      msg = "usage: dnote remove <book> <note index>
-remove a note."
+      msg = "USAGE: dnote remove <note id>
+Remove a note."
     when 'view', 'v'
-      msg = "usage: dnote view [<book>] [<note index>]
-list books, notes, or view a single note."
+      msg = "USAGE: dnote view [<book|note id>]
+List books, notes, or view a single note."
     else
-      msg="usage: dnote [command]
+      msg="USAGE: dnote [command]
 
-available commands:
-  add, a      add a note
-  edit, e     edit a note
-  help        help about any command
-  remove      remove a note or a book
-  view, v     list books, notes or view a content
+Available commands:
+  add, a      Add a note
+  edit, e     Edit a note
+  help        Help about any command
+  remove      Remove a note or a book
+  view, v     List books, notes or view a content
 
-data is stored in ~/.pnote/ by default. you can override this by setting $pnote_dir in your environment."
+Data is stored in ~/.pnote/ by default. You can override this by setting $pnote_dir in your environment."
       end
 
     puts msg.strip
