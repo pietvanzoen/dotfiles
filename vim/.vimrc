@@ -273,8 +273,8 @@ map <leader>z 1z=
 vnoremap // y/<C-R>"<CR>
 
 nnoremap <leader>af :ALEFix\|ALELint\|w<cr>
-nnoremap <leader>an :ALENext<cr>
-nnoremap <leader>ap :ALEPrevious<cr>
+nnoremap ]a :ALENext<cr>
+nnoremap [a :ALEPrevious<cr>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
