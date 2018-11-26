@@ -114,3 +114,7 @@ is_executable gpg-agent && [[ -z "$(pgrep gpg-agent)" ]] && eval $(gpg-agent --d
 
 # RUST
 [[ -f $HOME/.cargo/env ]] && source $HOME/.cargo/env
+
+# HINT
+[ -f "$HOME/Dropbox/hint/hint_db.yml" ] && export HINT_DB="$HOME/Dropbox/hint/hint_db.yml"
+[ -d "$HOME/.hint/bin" ] && export PATH="$PATH:$HOME/.hint/bin"
