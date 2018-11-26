@@ -147,7 +147,8 @@ command! Todo :Grepper
 let g:ale_fixers = {
   \ 'typescript': ['prettier'],
   \ 'javascript': ['eslint'],
-  \ 'python': ['yapf']
+  \ 'python': ['yapf'],
+  \ 'ruby': ['rufo']
   \ }
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
