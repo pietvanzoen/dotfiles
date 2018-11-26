@@ -69,3 +69,14 @@ autoload -Uz run-help-git
 autoload -Uz run-help-svn
 autoload -Uz run-help-svk
 alias help=run-help
+
+# auto suggestion
+my-autosuggest-accept() {
+    zle autosuggest-accept
+    zle redisplay
+    zle redisplay
+}
+zle -N my-autosuggest-accept
+bindkey '^ ' my-autosuggest-accept
+ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=my-autosuggest-accept
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=23"
