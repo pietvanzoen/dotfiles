@@ -320,6 +320,9 @@ augroup MyAutoCmds
 
   " set dockerfile filetype
   autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
+
+  " dirrc filetypes
+  autocmd BufRead,BufNewFile .dirrc set filetype=sh
 augroup END
 
 augroup Templates

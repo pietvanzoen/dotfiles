@@ -121,3 +121,6 @@ is_executable gpg-agent && [[ -z "$(pgrep gpg-agent)" ]] && eval $(gpg-agent --d
 
 # MAN COLORS
 source $HOME/lib/man_colors.sh
+
+# DIRRC
+source $HOME/lib/dirrc.sh

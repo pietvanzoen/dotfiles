@@ -157,6 +157,7 @@ fabric.properties
 *.local
 screenlog.*
 
+.dirrc
 nohup.out
 
 # project specific .ctags
