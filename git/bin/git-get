@@ -37,10 +37,11 @@ if not os.path.exists(base_dir):
     eprint('$GIT_PATH is set to %s, which does not exist.' % base_dir)
     sys.exit(1)
 
+url_for_path_parsing = git_url
 if git_url.startswith('git@'):
-    git_url = 'https://' + git_url.replace(':', '/')
+    url_for_path_parsing = 'https://' + git_url.replace(':', '/')
 
-parsed_url = urlparse.urlparse(git_url)
+parsed_url = urlparse.urlparse(url_for_path_parsing)
 
 if not parsed_url.scheme:
     eprint('%s is not a valid git url. Skipping.' % git_url)
