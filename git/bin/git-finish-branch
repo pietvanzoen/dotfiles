@@ -70,7 +70,7 @@ function merge_feature() {
 function cleanup() {
   echo "==> cleaning up"
   git branch -d "$branch"
-  git push origin --delete "$branch"
+  git push origin --delete "$branch" --no-verify
 }
 
 main $1
