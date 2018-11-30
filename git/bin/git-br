@@ -4,5 +4,5 @@ set -e
 
 prefilter=$1
 branches=$(git branch)
-branch=$(echo "$branches" | fzf --filter "$prefilter" | fzf +s +m -0)
+branch=$(echo "$branches" | fzf --filter "$prefilter" | fzf +s +m -1 -0)
 git checkout $(echo "$branch" | sed "s:.* remotes/origin/::" | sed "s:.* ::")
