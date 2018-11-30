@@ -8,9 +8,6 @@
   username = pietvanzoen
   signingkey = 119BA45BFDF0E612
 
-[commit]
-  gpgsign = true
-
 [gpg]
   program = gpgx
 
