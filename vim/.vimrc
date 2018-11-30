@@ -308,21 +308,17 @@ augroup MyAutoCmds
   " dir as cwd for NORMAL mode operations.
   autocmd InsertEnter * let save_cwd = getcwd() | set autochdir
   autocmd InsertLeave * set noautochdir | execute 'cd' fnameescape(save_cwd)
+augroup END
 
-  " use yaml filetype for raml files
+augroup FileTypes
+  autocmd!
+
   autocmd BufRead,BufNewFile *.raml set filetype=yaml
-
-  " use hard tabs for make
   autocmd FileType make setlocal noexpandtab tabstop=4 shiftwidth=4
-
-  " .env files as sh
   autocmd BufRead,BufNewFile .env.* set filetype=sh
-
-  " set dockerfile filetype
   autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
-
-  " dirrc filetypes
   autocmd BufRead,BufNewFile .dirrc set filetype=sh
+  autocmd BufRead,BufNewFile .gitconfig* set filetype=gitconfig
 augroup END
 
 augroup Templates
