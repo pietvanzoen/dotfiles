@@ -420,6 +420,13 @@ endfunction
 command! ReloadLocalVimrc call ReloadLocalVimrc(1)
 
 
+
+function! CleanSwp() abort
+  exec '!find . -regex ".*\.sw[p|o]$" | xargs rm -v'
+endfunction
+command! CleanSwp call CleanSwp()
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CLEAN WHITESPACE
 " cleans trailing whitespace at end of line and end of file
