@@ -7,6 +7,9 @@ field() {
   awk "{ print \$${1} }"
 }
 alias todo="rg --hidden --iglob '!{node_modules,.git}' 'TODO|FIXME'"
+gg() {
+  cd `git get $1`
+}
 
 # navigation
 alias ~="cd ~"
