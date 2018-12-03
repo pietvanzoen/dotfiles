@@ -44,6 +44,7 @@ brew 'gnu-sed', args: ['with-default-names']
 brew 'gnu-tar', args: ['with-default-names']
 brew 'gnu-time', args: ['with-default-names']
 brew 'gnutls', args: ['with-default-names']
+brew 'diffutils', args: ['with-default-names']
 brew 'grep', args: ['with-default-names']
 
 cask_args appdir: "/Applications"
