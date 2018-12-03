@@ -6,8 +6,10 @@ exe() { echo "==> $@"; $@; }
 exe "apt-get update"
 exe "apt-get upgrade -y"
 exe "apt-get install -y \
+  curl \
   git \
   mosh \
+  pgrep \
   psmisc \
   python \
   python-pip \
