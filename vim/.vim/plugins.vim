@@ -18,7 +18,6 @@ Plug 'Quramy/tsuquyomi' " , { 'for': ['typescript'] }  typescript tooling
 Plug 'roman/golden-ratio' " perfect split resizing
 Plug 'RRethy/vim-illuminate' " current word subtle highlight
 Plug 'sheerun/vim-polyglot' " all the language packages. but syntax only
-Plug 'Townk/vim-autoclose' " smart brace matching
 Plug 'tpope/vim-commentary' " language aware commenting command
 Plug 'tpope/vim-eunuch' " unix helpers
 Plug 'tpope/vim-fugitive' " git commands
