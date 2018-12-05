@@ -95,6 +95,9 @@
   unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
   assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
 
+  # clean is destructive, use trash instead
+  trash = "!mkdir -p .trash && git ls-files --others --exclude-standard | xargs -r mv -bfvt .trash"
+
 [merge]
   summary = true # Always include a summary in merge commits.
 

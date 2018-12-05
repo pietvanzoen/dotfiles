@@ -162,3 +162,5 @@ nohup.out
 
 # project specific .ctags
 /.ctags
+
+.trash
