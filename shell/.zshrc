@@ -18,11 +18,6 @@ bindkey -v
 # HISTORY KEY BINDINGS
 bindkey "^P" up-line-or-search
 bindkey "^N" down-line-or-search
-# use zsh-users/zsh-history-substring-search if installed
-if command -v history-substring-search-up > /dev/null; then
-  bindkey "^P" history-substring-search-up
-  bindkey "^N" history-substring-search-down
-fi
 if [[ -z "$(bindkey | grep fzf)" ]]; then
   bindkey '^R' history-incremental-search-backward
 fi
@@ -105,4 +100,12 @@ autoload -Uz run-help-svk
 alias help=run-help
 
 # auto suggestion
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=23"
+my-autosuggest-accept() {
+    zle forward-word
+    zle redisplay
+}
+zle -N my-autosuggest-accept
+bindkey '^ ' my-autosuggest-accept
+ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=my-autosuggest-accept
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=23"
+ZSH_AUTOSUGGEST_USE_ASYNC=true
