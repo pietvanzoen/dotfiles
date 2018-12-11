@@ -150,7 +150,9 @@ let g:ale_fixers = {
   \ 'python': ['yapf'],
   \ 'ruby': ['rufo'],
   \ 'css': ['prettier'],
-  \ 'scss': ['prettier']
+  \ 'scss': ['prettier'],
+  \ 'sh': ['shfmt'],
+  \ 'bash': ['shfmt']
   \ }
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
