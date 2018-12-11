@@ -16,9 +16,14 @@ alias ~="cd ~"
 alias ..="cd .."
 alias ...="cd ../.."
 
-# base command
-alias ls="ls --color=auto --group-directories-first --ignore='.DS_Store' -H"
-alias ll='ls -lAh'
+# base commands
+if command -v exa > /dev/null; then
+  alias ls="exa --group-directories-first --ignore='.DS_Store'"
+  alias ll="exa -lah"
+else
+  alias ls="ls --color=auto --group-directories-first --ignore='.DS_Store' -H"
+  alias ll='ls -lAh'
+fi
 alias rm='rm -I'
 alias cp='cp -vi'
 alias mv='mv -vi'
