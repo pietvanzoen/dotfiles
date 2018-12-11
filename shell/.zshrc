@@ -4,7 +4,6 @@ source $HOME/lib/aliases.zsh
 
 setopt autocd # cd without cd
 setopt globdots # match dotfiles in globs by default
-setopt correct # suggest spelling corrections
 setopt extendedglob # more globbing
 
 # Set up the prompt
