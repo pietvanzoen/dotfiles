@@ -96,7 +96,7 @@
   assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
 
   # clean is destructive, use trash instead
-  trash = "!mkdir -p .trash && git ls-files --others --exclude-standard | xargs -r mv -bfvt .trash"
+  trash = "!git ls-files --others --exclude-standard | xargs -r trash -v"
 
 [merge]
   summary = true # Always include a summary in merge commits.
