@@ -37,22 +37,13 @@ if not os.path.exists(base_dir):
     eprint('$GIT_PATH is set to %s, which does not exist.' % base_dir)
     sys.exit(1)
 
-url_for_path_parsing = git_url
-if git_url.startswith('git@'):
-    url_for_path_parsing = 'https://' + git_url.replace(':', '/')
-
-parsed_url = urlparse.urlparse(url_for_path_parsing)
-
-if not parsed_url.scheme:
-    eprint('%s is not a valid git url. Skipping.' % git_url)
+try:
+    parsed_url = urlparse.urlparse(git_url)
+    pathend = string.strip(os.path.splitext(parsed_url.path)[0], '/')
+    path = os.path.join(base_dir, parsed_url.hostname, pathend)
+except Exception:
+    eprint('Could not parse url %s' % git_url)
     sys.exit(1)
-
-if not parsed_url.path.endswith('.git'):
-    eprint('%s is not a valid git url. Skipping.' % git_url)
-    sys.exit(1)
-
-pathend = string.strip(os.path.splitext(parsed_url.path)[0], '/')
-path = os.path.join(base_dir, parsed_url.hostname, pathend)
 
 if os.path.exists(path):
     eprint('Path %s already exists.' % path)
@@ -60,7 +51,10 @@ if os.path.exists(path):
 
 temp_dir = tempfile.mkdtemp()
 
-subprocess.call(['git', 'clone', git_url, temp_dir])
+try:
+    subprocess.check_call(['git', 'clone', git_url, temp_dir])
+except subprocess.CalledProcessError:
+    sys.exit(1)
 
 parent_dir = os.path.dirname(path)
 if not os.path.exists(parent_dir):
