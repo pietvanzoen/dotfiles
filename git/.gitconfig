@@ -72,7 +72,7 @@
   ###############################################
 
   # Create pull request and open url: https://hub.github.com/
-  review = "!git push -u && hub pull-request -o"
+  review = "!hub pull-request -o"
 
   fr = fetch-rebase
   frm = !git fetch-rebase master
