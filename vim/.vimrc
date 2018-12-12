@@ -132,7 +132,7 @@ let g:TerminusMouse = 1
 let g:grepper = {}
 let g:grepper.tools = ['rg', 'ag', 'ack', 'git', 'grep', 'findstr', 'pt', 'sift']
 let g:grepper.rg = {
-      \ 'grepprg':    "rg -H --no-heading --vimgrep --hidden --glob \'!.git/\' \'$*\'",
+      \ 'grepprg':    "rg -H --no-heading --vimgrep --hidden --glob \'!.git/\' --glob \'!yarn.lock\' \'$*\'",
       \ 'grepformat': '%f:%l:%c:%m',
       \ 'escape':     "'" }
 
