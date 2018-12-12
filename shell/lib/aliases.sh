@@ -18,8 +18,8 @@ alias ...="cd ../.."
 
 # base commands
 if command -v exa > /dev/null; then
-  alias ls="exa --group-directories-first --ignore='.DS_Store'"
-  alias ll="exa -lah"
+  alias ls="exa --group-directories-first --ignore-glob='.DS_Store'"
+  alias ll="ls -lah --git --group"
 else
   alias ls="ls --color=auto --group-directories-first --ignore='.DS_Store' -H"
   alias ll='ls -lAh'
