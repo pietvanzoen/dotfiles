@@ -8,7 +8,7 @@ field() {
 }
 alias todo="rg --hidden --iglob '!{node_modules,.git}' 'TODO|FIXME'"
 gg() {
-  cd `git get $1`
+  cd $(git get $1)
 }
 
 # navigation
@@ -17,7 +17,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 
 # base commands
-if command -v exa > /dev/null; then
+if command -v exa >/dev/null; then
   alias ls="exa --group-directories-first --ignore-glob='.DS_Store'"
   alias ll="ls -lah --git --group"
   alias llt="ll --tree"
