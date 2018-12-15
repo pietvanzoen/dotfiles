@@ -37,8 +37,12 @@ if not os.path.exists(base_dir):
     eprint('$GIT_PATH is set to %s, which does not exist.' % base_dir)
     sys.exit(1)
 
+url_for_path_parsing = git_url
+if git_url.startswith('git@'):
+    url_for_path_parsing = 'https://' + git_url.replace(':', '/')
+
 try:
-    parsed_url = urlparse.urlparse(git_url)
+    parsed_url = urlparse.urlparse(url_for_path_parsing)
     pathend = string.strip(os.path.splitext(parsed_url.path)[0], '/')
     path = os.path.join(base_dir, parsed_url.hostname, pathend)
 except Exception:
