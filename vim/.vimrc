@@ -31,7 +31,7 @@ set noshowmode " hide mode in command line, shown in statusline instead
 set showtabline=2 " always show the tabline
 set completeopt-=preview " disable preview window
 set colorcolumn=72,120 " vertical lines at 71 and 120 chars
-set wildignore+=*/.git/*,*/tmp/*,*.swp,**/node_modules/**
+set wildignore+=*/tmp/*,*.swp
 set wildmode=longest,list
 set wildmenu
 set updatetime=500

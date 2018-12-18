@@ -1,7 +1,6 @@
 -R
 --tag-relative=yes
 --exclude=.git
---exclude=node_modules
 
 --langdef=typescript
 --langmap=typescript:.ts
