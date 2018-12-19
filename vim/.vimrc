@@ -147,6 +147,8 @@ command! Todo :Grepper
 let g:ale_fixers = {
   \ 'typescript': ['prettier'],
   \ 'javascript': ['prettier'],
+  \ 'yaml': ['prettier'],
+  \ 'json': ['prettier'],
   \ 'html': ['prettier'],
   \ 'python': ['yapf'],
   \ 'ruby': ['rufo'],
