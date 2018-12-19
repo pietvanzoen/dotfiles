@@ -1,6 +1,7 @@
 -R
 --tag-relative=yes
 --exclude=.git
+--exclude=*.min.js
 
 --langdef=typescript
 --langmap=typescript:.ts
