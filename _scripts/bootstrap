@@ -54,9 +54,14 @@ fi
 
 mkdir -p $HOME/repos
 
+if [[ -n "$SUDO_USER" ]]; then
+  user="$SUDO_USER"
+else
+  user="$USER"
+fi
 if [[ "$SHELL" != "$(which zsh)" ]]; then
   if _confirm "Set $(which zsh) as login shell?"; then
-    chsh -s $(which zsh) $USER
+    chsh -s $(which zsh) $user
   fi
 fi
 
