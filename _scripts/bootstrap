@@ -14,6 +14,12 @@ attempt_script() {
 
 source $SCRIPTS_DIR/_helpers.sh
 
+echo "==> creating directories"
+mkdir -vp $HOME/repos
+mkdir -vp $HOME/.config
+mkdir -vp $HOME/bin
+mkdir -vp $HOME/lib
+
 if is_executable apt-get; then
   if _confirm "Run linux install scripts?"; then
     attempt_script "install-linux"
@@ -52,13 +58,12 @@ if [[ "$(hostname)" == "finn" ]]; then
   attempt_script "install-pgp-key"
 fi
 
-mkdir -p $HOME/repos
-
 if [[ -n "$SUDO_USER" ]]; then
   user="$SUDO_USER"
 else
   user="$USER"
 fi
+
 if [[ "$SHELL" != "$(which zsh)" ]]; then
   if _confirm "Set $(which zsh) as login shell?"; then
     chsh -s $(which zsh) $user
