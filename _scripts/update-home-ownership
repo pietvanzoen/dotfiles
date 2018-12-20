@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ -n "$SUDO_USER" ]]; then
+  user="$SUDO_USER"
+else
+  user="$USER"
+fi
+
+files="$(ls -A "$HOME")"
+group=$(id -gn "$user")
+owner="$user:$group"
+
+echo "Files to update:"
+echo -e "$files" | xargs readlink -f
+
+echo -n "==> Updating ownership to '$owner'. Continue? [y/n] "
+read -r -n 1 ans
+echo
+
+if [[ "$ans" != "y" ]]; then
+  exit 0
+fi
+
+echo -e "$files" | xargs chown -v "$owner"
