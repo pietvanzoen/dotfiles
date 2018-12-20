@@ -19,6 +19,9 @@ module.exports = {
 
     // custom css to embed in the main window
     css: `
+      .term_fit {
+        padding: 0 2px !important;
+      }
       .t_tab.t_active:before,
       .tab_tab.tab_active:before {
         border-color: #002b36 !important;
