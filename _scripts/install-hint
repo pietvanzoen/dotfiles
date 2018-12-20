@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -ex
+
+TEMP=$(mktemp -d)
+
+git clone --depth=1 https://github.com/pietvanzoen/hint.git "$TEMP"
+
+cd "$TEMP"
+
+./install

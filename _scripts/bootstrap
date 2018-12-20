@@ -36,6 +36,14 @@ if [[ ! -d $HOME/.fzf ]]; then
   attempt_script "install-fzf"
 fi
 
+if [[ ! -e $HOME/bin/git-get ]]; then
+  attempt_script "install-git-get"
+fi
+
+if [[ ! -d $HOME/.hint ]]; then
+  attempt_script "install-hint"
+fi
+
 if _confirm "Install dotfiles dev dependencies?"; then
   attempt_script "install-dev"
 fi
