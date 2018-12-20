@@ -8,8 +8,9 @@ exe "apt-get upgrade -y"
 exe "apt-get install -y \
   curl \
   git \
+  gnupg2 \
   mosh \
-  pgrep \
+  pinentry-tty \
   psmisc \
   python \
   python-pip \
