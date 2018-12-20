@@ -26,6 +26,9 @@ is_zsh() {
 # LOCAL ENV
 [[ -e $HOME/.env ]] && source $HOME/.env
 
+# EDITOR
+export EDITOR=$(which vim)
+
 # ALIASES
 [[ -f $HOME/lib/aliases.sh ]] && source $HOME/lib/aliases.sh
 
