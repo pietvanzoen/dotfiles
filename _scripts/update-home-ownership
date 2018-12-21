@@ -2,17 +2,16 @@
 set -e
 
 if [[ -n "$SUDO_USER" ]]; then
-  user="$SUDO_USER"
-else
-  user="$USER"
+  export USER="$SUDO_USER"
+  export HOME="/home/$SUDO_USER"
 fi
 
-files="$(ls -A "$HOME")"
-group=$(id -gn "$user")
-owner="$user:$group"
+files="$(ls -A "$HOME" | xargs readlink -f)"
+GROUP=$(id -gn "$USER")
+owner="$USER:$GROUP"
 
 echo "Files to update:"
-echo -e "$files" | xargs readlink -f
+echo -e "$files"
 
 echo -n "==> Updating ownership to '$owner'. Continue? [y/n] "
 read -r -n 1 ans
