@@ -21,9 +21,6 @@ source $SCRIPTS_DIR/_helpers.sh
 
 echo "==> creating directories"
 mkdir -vp $HOME/repos
-mkdir -vp $HOME/.config
-mkdir -vp $HOME/bin
-mkdir -vp $HOME/lib
 
 if is_executable apt-get; then
   if _confirm "Run linux install scripts?"; then
