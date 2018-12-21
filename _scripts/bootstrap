@@ -59,6 +59,12 @@ if _confirm "Install dotfiles dev dependencies?"; then
   attempt_script "install-dev"
 fi
 
+if [[ ! -d $HOME/.nvm ]]; then
+  if _confirm "Install nvm?"; then
+    attempt_script "install-nvm"
+  fi
+fi
+
 if [[ "$(hostname)" == "finn" ]]; then
   attempt_script "install-pgp-key"
 fi
