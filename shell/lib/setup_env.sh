@@ -114,6 +114,9 @@ is_zsh && [[ -f $HOME/.iterm2_shell_integration.zsh ]] && source $HOME/.iterm2_s
 # GNUPG
 is_executable gpg-agent && [[ -z "$(pgrep gpg-agent)" ]] && eval $(gpg-agent --daemon)
 
+# SSH
+is_executable ssh-agent && [[ -z "$(pgrep ssh-agent)" ]] && eval "$(ssh-agent)"
+
 # TRAVIS GEM
 [[ -f $HOME/.travis/travis.sh ]] && source $HOME/.travis/travis.sh
 
