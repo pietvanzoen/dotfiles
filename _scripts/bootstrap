@@ -56,6 +56,12 @@ if _confirm "Install dotfiles dev dependencies?"; then
   attempt_script "install-dev"
 fi
 
+if [[ ! -d $HOME/.rvm ]]; then
+  if _confirm "Install rvm?"; then
+    attempt_script "install-rvm"
+  fi
+fi
+
 if [[ ! -d $HOME/.nvm ]]; then
   if _confirm "Install nvm?"; then
     attempt_script "install-nvm"
