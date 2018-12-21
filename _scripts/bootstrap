@@ -27,11 +27,11 @@ mkdir -vp $HOME/lib
 
 if is_executable apt-get; then
   if _confirm "Run linux install scripts?"; then
-    attempt_script "install-linux"
+    $SCRIPTS_DIR/install-linux
   fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if _confirm "Run MacOS install scripts?"; then
-    attempt_script "install-macos"
+    $SCRIPTS_DIR/install-macos
   fi
 fi
 
