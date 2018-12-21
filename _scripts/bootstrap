@@ -63,10 +63,14 @@ if [[ "$(hostname)" == "finn" ]]; then
   attempt_script "install-pgp-key"
 fi
 
-if [[ "$SHELL" != "$(which zsh)" ]]; then
-  if _confirm "Set $(which zsh) as login shell?"; then
-    chsh -s $(which zsh) $USER
+if [[ -n "$(which zsh)" ]]; then
+  if [[ "$SHELL" != "$(which zsh)" ]]; then
+    if _confirm "Set $(which zsh) as login shell?"; then
+      chsh -s "$(which zsh)" "$USER"
+    fi
   fi
+else
+  echo "Error: zsh is not installed. Skipping updating shell."
 fi
 
 echo "==> Bootstrapping finished"
