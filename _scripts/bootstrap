@@ -12,6 +12,11 @@ attempt_script() {
   fi
 }
 
+if [[ -n "$SUDO_USER" ]]; then
+  export USER="$SUDO_USER"
+  export HOME="/home/$SUDO_USER"
+fi
+
 source $SCRIPTS_DIR/_helpers.sh
 
 echo "==> creating directories"
@@ -58,15 +63,9 @@ if [[ "$(hostname)" == "finn" ]]; then
   attempt_script "install-pgp-key"
 fi
 
-if [[ -n "$SUDO_USER" ]]; then
-  user="$SUDO_USER"
-else
-  user="$USER"
-fi
-
 if [[ "$SHELL" != "$(which zsh)" ]]; then
   if _confirm "Set $(which zsh) as login shell?"; then
-    chsh -s $(which zsh) $user
+    chsh -s $(which zsh) $USER
   fi
 fi
 
