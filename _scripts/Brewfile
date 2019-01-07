@@ -46,6 +46,9 @@ brew 'gnutls', args: ['with-default-names']
 brew 'diffutils', args: ['with-default-names']
 brew 'grep', args: ['with-default-names']
 
+cask 'homebrew/cask-fonts/font-inconsolata'
+cask 'homebrew/cask-fonts/font-hack-nerd'
+
 cask_args appdir: "/Applications"
 cask '1password'
 cask 'alfred'
@@ -58,7 +61,6 @@ cask 'firefox'
 cask 'flux'
 cask 'gitter'
 cask 'google-chrome'
-cask 'homebrew/cask-fonts/font-inconsolata'
 cask 'istat-menus'
 cask 'iterm2'
 cask 'keybase'
