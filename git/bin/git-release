@@ -2,8 +2,10 @@
 
 set -e
 
+TRUNK="$(git trunk)"
+
 function main() {
-  update_master
+  update_trunk
 
   get_latest_tag_version
 
@@ -17,8 +19,8 @@ function main() {
 
 }
 
-function update_master() {
-  git checkout master --quiet
+function update_trunk() {
+  git checkout "$TRUNK" --quiet
   git pull --quiet
 }
 
@@ -32,9 +34,9 @@ function get_latest_tag_version() {
 
 function get_changelog() {
   echo
-  changelog="$(git log --pretty="* %ad - %s [%h]" --date=short "$latest_tag_version"..origin/master)"
+  changelog="$(git log --pretty="* %ad - %s [%h]" --date=short "$latest_tag_version"..origin/$TRUNK)"
 
-  change_count="$(git rev-list --count "$latest_tag_version"..origin/master)"
+  change_count="$(git rev-list --count "$latest_tag_version"..origin/$TRUNK)"
   if [[ "$change_count" -lt 1 ]]; then
     echo "No commits since $latest_tag_version"
     exit

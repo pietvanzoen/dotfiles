@@ -33,7 +33,7 @@
   l = log --graph --oneline --topo-order
   ln = l --no-merges
 
-  lb = !git l origin/master..$(git symbolic-ref --short HEAD) # Log commits that diverge from origin/master.
+  lb = !git l origin/$(git trunk)..$(git symbolic-ref --short HEAD) # Log commits that diverge from origin/<trunk>.
   lt = !git l $(git latest-tag-version)..HEAD
   la = !git l --all # Log with all refs.
   r = !git l -12 # Log recent commits.
@@ -43,8 +43,8 @@
 
   # Create a simple change log for copy/pasting into PRs.
   changelog = "!git log --pretty=\"* %ad - %s [%h]\" --date=short"
-  changelog-tag = "!git changelog $(git latest-tag-version)..origin/master"
-  changelog-branch = !git changelog origin/master..HEAD
+  changelog-tag = "!git changelog $(git latest-tag-version)..origin/$(git trunk)"
+  changelog-branch = !git changelog origin/$(git trunk)..HEAD
 
   # get last tag
   latest-tag-version = "!git tag --list --sort='-*authordate' 'v*' | head -n 1"
@@ -75,14 +75,16 @@
   review = "!hub pull-request -o"
 
   fr = fetch-rebase
-  frm = !git fetch-rebase master
-  diff-commits = "!git l master --not $(git symbolic-ref --short HEAD)"
+  frm = "!git fetch-rebase '$(git trunk)'"
+  diff-commits = "!git l $(git trunk) --not $(git symbolic-ref --short HEAD)"
 
-  # Run `yarn test` on each commit that diverges from master.
-  test-branch="!run-command-on-git-revisions origin/master $(git symbolic-ref --short HEAD) 'yarn test'"
+  # Run `yarn test` on each commit that diverges from trunk branch.
+  test-branch="!run-command-on-git-revisions origin/$(git trunk) $(git symbolic-ref --short HEAD) 'yarn test'"
 
-  # Fast-forward merge commits of current branch into master and push. Tidy after.
+  # Fast-forward merge commits of current branch into trunk branch and push. Tidy after.
   finish-branch="!git-finish-branch $1"
+
+  trunk="!git config --get local.trunk || echo master"
 
 
   ###############################################

@@ -4,7 +4,7 @@
 # Useful when squash merging branches via github.
 # WARNING: FORCE DELETES BRANCHES (uses -D delete command)
 set -e
-git checkout master --quiet
+git checkout "$(git trunk)" --quiet
 
 gone_branches="$(git branch -lvv | grep ": gone]" | sed -e 's/^ *//' | cut -d ' ' -f 1)"
 

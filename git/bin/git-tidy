@@ -1,7 +1,11 @@
 #!/bin/bash
-# Update master and prune any merged/gone branches
+# Update trunk branch and prune any merged/gone branches
 
 set -e
+
+TRUNK="$(git trunk)"
+
+echo "==> Trunk branch is '$TRUNK'"
 
 exe() { echo "==> $@" ; $@ ; }
 
@@ -10,8 +14,8 @@ if [[ ! -z "$(git status -s)" ]]; then
   exit 1
 fi
 
-if [[ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]; then
-  exe "git checkout master"
+if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$MAINBRANCH" ]]; then
+  exe "git checkout $TRUNK"
 fi
 exe "git fetch --all --prune"
 exe "git pull --rebase"
