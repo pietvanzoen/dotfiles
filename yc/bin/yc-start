@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+brew services run --all || echo "Warning: Services appear to be already running"
+
+

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+
+
+exe() { echo "==> $@" ; sh -c "$*" ; }
+
+if [[ -z "$YC_BD_DIR" ]]; then
+  echo "YC_BD_DIR not defined"
+  exit 1
+fi
+
+cd "$YC_BD_DIR"
+
+exe "git tidy"
+exe "bundle install"
