@@ -428,6 +428,32 @@ endfunction
 command! ReloadLocalVimrc call ReloadLocalVimrc(1)
 
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" GLOBAL SEARCH
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if executable('rg')
+  set grepprg=rg\ --vimgrep
+  set grepformat^=%f:%l:%c:%m  " f: file, l: line, c: column, m: message
+endif
+
+function! Search() abort
+  let input = input("Search in project: ")
+  let cleaned = escape(input, "%#!")
+
+  let saved_shellpipe = &shellpipe
+  let &shellpipe = '>'
+
+  try
+    silent! execute 'grep!' cleaned | copen
+  finally
+    let &shellpipe = saved_shellpipe
+  endtry
+
+  redraw!
+endfunction
+
+command! Search call Search()
+
 
 function! CleanSwp() abort
   exec '!find . -regex ".*\.sw[p|o]$" | xargs rm -v'
