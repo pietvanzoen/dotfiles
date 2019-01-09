@@ -48,7 +48,7 @@ brew 'diffutils', args: ['with-default-names']
 brew 'grep', args: ['with-default-names']
 
 cask 'homebrew/cask-fonts/font-inconsolata'
-cask 'homebrew/cask-fonts/font-hack-nerd'
+cask 'homebrew/cask-fonts/font-hack-nerd-font'
 
 cask_args appdir: "/Applications"
 cask '1password'
