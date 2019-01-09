@@ -41,11 +41,16 @@ export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 
 # HOMEBREW PATHS
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-export PATH="/usr/local/opt/curl/bin:$PATH"
-export MANPATH="/usr/local/opt/curl/share/man:$MANPATH"
-export PATH="/usr/local/opt/openssl/bin:$PATH"
+libexec_packages=(coreutils gnu-indent gnu-tar grep gnu-sed gawk gnu-time findutils)
+for pkg in ${libexec_packages[*]}; do
+  export PATH="/usr/local/opt/$pkg/libexec/gnubin:$PATH"
+  export MANPATH="/usr/local/opt/$pkg/libexec/gnuman:$MANPATH"
+done
+bin_packages=(openssl curl gnu-getopt)
+for pkg in ${bin_packages[*]}; do
+  export PATH="/usr/local/opt/$pkg/bin:$PATH"
+  export MANPATH="/usr/local/opt/$pkg/share/man:$MANPATH"
+done
 
 # GO BINARIES
 export GOPATH="$HOME/go"
