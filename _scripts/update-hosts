@@ -1,12 +1,34 @@
 #!/usr/bin/env bash
-set -ex
+set -e
+
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  echo "Error: OS "$OSTYPE" not supported."
+  exit 1
+fi
 
 cd "$(mktemp -d)"
 
-git clone --depth=1 https://github.com/StevenBlack/hosts .
+echo "==> Downloading latest hosts file"
+curl -sO https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 
-pip3 install --user -r requirements.txt
+if diff /etc/hosts ./hosts; then
+  echo "==> Current hosts file up to date"
+  exit 0
+fi
 
-python3 testUpdateHostsFile.py
+echo -n "==> Update hosts file with latest changes? [y/n] "
+read -n 1 ans
+echo
+if [[ "$ans" != 'y' ]]; then
+  echo "==> Aborting"
+  exit 0
+fi
 
-python3 updateHostsFile.py --auto --replace --backup --flush-dns-cache
+echo "==> Backing up old hosts file"
+sudo mv -v /etc/hosts "/etc/hosts_$(date -u +'%Y%m%d%H%M%S')"
+
+echo "==> Updating hosts file"
+sudo cp -v ./hosts /etc/hosts
+
+echo "==> Flushing cache"
+sudo killall -v -HUP mDNSResponder
