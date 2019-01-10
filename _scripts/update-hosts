@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+
+git clone --depth=1 https://github.com/StevenBlack/hosts .
+
+pip3 install --user -r requirements.txt
+
+python3 testUpdateHostsFile.py
+
+python3 updateHostsFile.py --auto --replace --backup --flush-dns-cache
