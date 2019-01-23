@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Commit changes with a fixup commit. If no sha is given a commit can
+# be selected from a list
+set -e
+
+trunk="$(git config --get local.trunk || echo master)"
+current_branch="$(git symbolic-ref --short HEAD)"
+
+FIXUP_COMMIT="$1"
+if [[ -z "$FIXUP_COMMIT" ]]; then
+  FIXUP_COMMIT="$(git log --oneline --color origin/$trunk..$current_branch |
+    fzf --header 'Chose a commit to fixup:' --ansi +m --preview="git show --color \$(echo '{}' | awk '{ print \$1 }')" |
+    awk '{ print $1'})"
+
+fi
+
+if [[ -z "$FIXUP_COMMIT" ]]; then
+  exit 1
+fi
+
+git commit --no-gpg-sign --fixup "$FIXUP_COMMIT"
