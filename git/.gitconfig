@@ -75,7 +75,7 @@
   review = "!hub pull-request -o"
 
   fr = fetch-rebase
-  frm = "!git fetch-rebase \"$(git trunk)\""
+  frt = "!git fetch-rebase \"$(git trunk)\""
   diff-commits = "!git l $(git trunk) --not $(git symbolic-ref --short HEAD)"
 
   # Run `yarn test` on each commit that diverges from trunk branch.
