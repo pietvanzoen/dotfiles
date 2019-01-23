@@ -12,4 +12,4 @@ if [[ -z "$branchname" ]]; then
 fi
 
 git fetch origin $branchname:$branchname
-git rebase $branchname
+git rebase --autosquash -i $branchname
