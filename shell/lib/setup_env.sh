@@ -137,3 +137,6 @@ source $HOME/lib/man_colors.sh
 
 # DIRRC
 source $HOME/lib/dirrc.sh
+
+# DENO
+[ -d "$HOME/.deno/bin" ] && export PATH="$PATH:$HOME/.deno/bin"
