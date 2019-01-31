@@ -1,0 +1,24 @@
+name: yc
+root: ~/repos/gitlab.ycdev.nl/youngcapital/
+on_project_first_start: brew services start --all
+
+windows:
+  - services:
+      layout: even-vertical
+      panes:
+        - blokkendoos:
+          - cd blokkendoos
+          - bundle install
+          - tmux-run-pane bundle exec rails server
+        - sidekiq:
+          - cd blokkendoos
+          - bundle install
+          - tmux-run-pane bundle exec sidekiq
+        - ocd:
+          - cd ocd
+          - bundle install
+          - tmux-run-pane bundle exec rails server
+        - backend:
+          - cd backend
+          - bundle install
+          - tmux-run-pane bundle exec rails server

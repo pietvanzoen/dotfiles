@@ -1,8 +1,0 @@
-project_name: blokkendoos
-project_root: /Users/temp/repos/gitlab.ycdev.nl/youngcapital/blokkendoos
-tabs:
-  blokkendoos:
-    layout: mail-vertical
-    panes:
-      - bundle exec rails start
-      - cd ../backend && bundle exec rails start
