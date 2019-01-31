@@ -140,3 +140,6 @@ source $HOME/lib/dirrc.sh
 
 # DENO
 [ -d "$HOME/.deno/bin" ] && export PATH="$PATH:$HOME/.deno/bin"
+
+# TMUXINATOR
+is_zsh && [[ -f $HOME/lib/tmuxinator.zsh ]] && source $HOME/lib/tmuxinator.zsh
