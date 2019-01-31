@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+printf '\033]2;%s\033\' "$1"
+tmux setw pane-border-format '#{pane_index}: "#{pane_title}"'
+tmux setw pane-border-status top
