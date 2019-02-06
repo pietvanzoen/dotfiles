@@ -106,6 +106,7 @@ is_bash && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # 
 
 # GIT
 export GIT_PATH="$HOME/repos/" # for git get
+export GIT_GET_DEFAULT_PREFIX="git@github.com:"
 is_executable hub && eval "$(hub alias -s)"
 is_bash && [[ -f $HOME/lib/git-completion.bash ]] && source $HOME/lib/git-completion.bash
 
