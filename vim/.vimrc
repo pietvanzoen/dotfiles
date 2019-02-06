@@ -157,9 +157,9 @@ let g:ale_fixers = {
   \ 'sh': ['shfmt'],
   \ 'bash': ['shfmt']
   \ }
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_echo_msg_error_str = 'Error'
+let g:ale_echo_msg_warning_str = 'Warn'
+let g:ale_echo_msg_format = '[%linter%:%code%] %s [%severity%]'
 let g:ale_fix_on_save = 0
 
 
