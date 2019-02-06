@@ -102,6 +102,8 @@
   # clean is destructive, use trash instead
   trash = "!git ls-files --others --exclude-standard | xargs -r trash -v"
 
+  ctag-files = ls-files -cdm
+
 [merge]
   summary = true # Always include a summary in merge commits.
 
