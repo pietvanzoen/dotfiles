@@ -326,6 +326,7 @@ augroup FileTypes
   autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
   autocmd BufRead,BufNewFile .dirrc set filetype=sh
   autocmd BufRead,BufNewFile .gitconfig* set filetype=gitconfig
+  autocmd BufRead,BufNewFile *.js.snap set filetype=javascript
 augroup END
 
 augroup Templates
