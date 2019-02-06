@@ -85,6 +85,7 @@
   finish-branch="!git-finish-branch $1"
 
   trunk="!git config --get local.trunk || echo master"
+  cot="!git checkout $(git trunk)"
 
 
   ###############################################
