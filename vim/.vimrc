@@ -146,7 +146,7 @@ command! Todo :Grepper
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ale_fixers = {
   \ 'typescript': ['prettier'],
-  \ 'javascript': ['prettier'],
+  \ 'javascript': ['prettier', 'eslint'],
   \ 'yaml': ['prettier'],
   \ 'json': ['prettier'],
   \ 'html': ['prettier'],
