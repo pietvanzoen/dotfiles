@@ -7,7 +7,7 @@ function main() {
   local merge_branch
 
   branch=$(git symbolic-ref --short HEAD)
-  target_branch="${1:-master}"
+  target_branch="$(git trunk)"
 
   assert_not_current
 
