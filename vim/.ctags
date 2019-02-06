@@ -2,6 +2,7 @@
 --tag-relative=yes
 --exclude=.git
 --exclude=*.min.js
+--exclude=node_modules
 
 --langdef=typescript
 --langmap=typescript:.ts
