@@ -6,6 +6,7 @@ set -e
 TRUNK="$(git trunk)"
 
 echo "==> Trunk branch is '$TRUNK'"
+sleep 1
 
 exe() { echo "==> $@" ; $@ ; }
 
