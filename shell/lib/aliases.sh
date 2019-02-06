@@ -8,7 +8,8 @@ field() {
 }
 alias todo="rg --hidden --iglob '!{node_modules,.git}' 'TODO|FIXME'"
 gg() {
-  cd $(git get $1)
+  dir="$(git get $1)"
+  [[ -n "$dir" ]] && cd $dir
 }
 alias serve="deno https://deno.land/x/http/file_server.ts --allow-net"
 
