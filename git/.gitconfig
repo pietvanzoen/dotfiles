@@ -84,7 +84,6 @@
   # Fast-forward merge commits of current branch into trunk branch and push. Tidy after.
   finish-branch="!git-finish-branch $1"
 
-  trunk="!git config --get local.trunk || echo master"
   cot="!git checkout $(git trunk)"
 
 
