@@ -35,6 +35,7 @@ set wildignore+=*/tmp/*,*.swp
 set wildmode=longest,list
 set wildmenu
 set updatetime=500
+set encoding=utf-8
 
 " persist undo history
 if !isdirectory($HOME . '/.vim/undo')
