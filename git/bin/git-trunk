@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# get or set the trunk branch for a project
+set -e
+
+SET="$1"
+BRANCH="$2"
+
+if [[ "$SET" == '--set' ]]; then
+  if [[ -z "$BRANCH" ]]; then
+    (echo >&2 "Must pass a branch name to set trunk")
+    exit 1
+  fi
+
+  git config local.trunk "$BRANCH"
+fi
+
+if [[ "$SET" == '--unset' ]]; then
+  git config --unset local.trunk
+fi
+
+git config --get local.trunk || echo master

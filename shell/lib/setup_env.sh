@@ -77,6 +77,7 @@ elif is_executable vim; then
 elif is_executable vi; then
   export EDITOR="$(which vi)"
 fi
+# alias vim=$EDITOR
 
 # FZF
 is_zsh && [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -106,7 +107,7 @@ is_bash && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # 
 
 # GIT
 export GIT_PATH="$HOME/repos/" # for git get
-export GIT_GET_DEFAULT_PREFIX="git@github.com:"
+export GIT_GET_DEFAULT_PREFIX="git@github.com:pietvanzoen/"
 is_executable hub && eval "$(hub alias -s)"
 is_bash && [[ -f $HOME/lib/git-completion.bash ]] && source $HOME/lib/git-completion.bash
 

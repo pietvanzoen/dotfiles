@@ -30,7 +30,7 @@
 
   # Pretty logging.
   ll = log --graph --topo-order --pretty=format:'%C(green)%h%Creset%C(red)%d%Creset %s %C(cyan)(%cr) %C(blue)<%an>%Creset %C(black)%G?%Creset' --abbrev-commit
-  l = log --graph --oneline --topo-order
+  l = "log --graph --oneline --topo-order"
   ln = l --no-merges
 
   lb = !git l origin/$(git trunk)..$(git symbolic-ref --short HEAD) # Log commits that diverge from origin/<trunk>.
@@ -84,7 +84,6 @@
   # Fast-forward merge commits of current branch into trunk branch and push. Tidy after.
   finish-branch="!git-finish-branch $1"
 
-  trunk="!git config --get local.trunk || echo master"
   cot="!git checkout $(git trunk)"
 
 

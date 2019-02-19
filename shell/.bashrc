@@ -14,3 +14,6 @@ export HISTIGNORE="cd:cd -:pwd:exit:date";
 if [ -f /usr/local/share/bash-completion/bash_completion ]; then
   . /usr/local/share/bash-completion/bash_completion
 fi
+
+# added by travis gem
+[ -f /Users/Piet/.travis/travis.sh ] && source /Users/Piet/.travis/travis.sh

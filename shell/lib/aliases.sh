@@ -11,7 +11,7 @@ gg() {
   dir="$(git get $1)"
   [[ -n "$dir" ]] && cd $dir
 }
-alias serve="deno https://deno.land/x/http/file_server.ts --allow-net"
+alias serve="deno https://deno.land/x/http/file_server.ts --allow-net --allow-read"
 
 # navigation
 alias ~="cd ~"

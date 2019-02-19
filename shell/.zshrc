@@ -91,12 +91,12 @@ zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
 # ignore completion functions (until the _ignored completer)
 zstyle ':completion:*:functions' ignored-patterns '_*'
 
-# Load help command
-autoload -Uz run-help
-autoload -Uz run-help-git
-autoload -Uz run-help-svn
-autoload -Uz run-help-svk
-alias help=run-help
+# # Load help command
+# autoload -Uz run-help
+# autoload -Uz run-help-git
+# autoload -Uz run-help-svn
+# autoload -Uz run-help-svk
+# alias help=run-help
 
 # auto suggestion
 my-autosuggest-accept() {
@@ -108,3 +108,6 @@ bindkey '^ ' my-autosuggest-accept
 ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=my-autosuggest-accept
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=23"
 ZSH_AUTOSUGGEST_USE_ASYNC=true
+
+# added by travis gem
+[ -f /Users/Piet/.travis/travis.sh ] && source /Users/Piet/.travis/travis.sh
