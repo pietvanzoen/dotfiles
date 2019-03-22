@@ -1,12 +1,6 @@
 call plug#begin('~/.vim/plugged')
-Plug 'vim-scripts/SyntaxComplete' " omni completion based on syntax highlighting
-Plug 'mxw/vim-jsx' " jsz highlighting
-Plug 'othree/yajs.vim' " moar js syntax
-Plug 'othree/javascript-libraries-syntax.vim' " js lib highlighting
-Plug 'othree/es.next.syntax.vim' " js next highlighting
 Plug 'airblade/vim-gitgutter' " gutter notations for git status
 Plug 'ajh17/VimCompletesMe' " smarter tab completion
-Plug 'christoomey/vim-tmux-navigator', { 'on': [] } " seamless navigation between tmux/vim. loaded on $TMUX env var
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'easymotion/vim-easymotion' " speedy motions. <leader><leader>s for quick search
 Plug 'editorconfig/editorconfig-vim' " editorconfig.org
@@ -19,6 +13,9 @@ Plug 'kristijanhusak/vim-js-file-import', { 'do': ':!npm install' } " auto impor
 Plug 'machakann/vim-highlightedyank' " briefly highlight yanked text
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css'] } " css/html abbreviations
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] } " better find command
+Plug 'othree/es.next.syntax.vim', { 'for': ['javascript', 'jsx'] } " js next highlighting
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'jsx'] } " js lib highlighting
+Plug 'othree/yajs.vim', { 'for': ['javascript', 'jsx'] } " moar js syntax
 Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] } " nice markdown handling
 Plug 'Quramy/tsuquyomi' " , { 'for': ['typescript'] }  typescript tooling
 Plug 'roman/golden-ratio' " perfect split resizing

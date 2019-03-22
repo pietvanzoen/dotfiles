@@ -57,10 +57,6 @@ source ~/.vim/plugins.vim
 
 " MANUAL LAZY LOAD
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if !empty($TMUX)
-  exec plug#load('vim-tmux-navigator')
-endif
-
 function! LoadAle()
   if IsModernVim() && IsFile()
     exec plug#load('ale')
