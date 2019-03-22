@@ -16,6 +16,32 @@ EOF
 
 cat << EOF > myhosts
 127.0.0.1 finn.local
+
+127.0.0.1    yc.localhost
+127.0.0.1    scw.localhost
+127.0.0.1    stnl.localhost
+127.0.0.1    stw.localhost
+127.0.0.1    ptw.localhost
+127.0.0.1    ivo.localhost
+127.0.0.1    voo.localhost
+127.0.0.1    vwo.localhost
+127.0.0.1    bbnl.localhost
+127.0.0.1    wvo.localhost
+127.0.0.1    fvo.localhost
+127.0.0.1    bijb.localhost
+127.0.0.1    sj.localhost
+127.0.0.1    sjde.localhost
+127.0.0.1    ycde.localhost
+127.0.0.1    njde.localhost
+127.0.0.1    sjbenl.localhost
+127.0.0.1    sjbefr.localhost
+127.0.0.1    sjfr.localhost
+127.0.0.1    sjes.localhost
+127.0.0.1    sjuk.localhost
+127.0.0.1    sjat.localhost
+127.0.0.1    sjse.localhost
+127.0.0.1    sjch.localhost
+127.0.0.1    sjie.localhost
 EOF
 
 python3 updateHostsFile.py --auto --replace --backup --flush-dns-cache
