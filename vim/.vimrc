@@ -1,4 +1,5 @@
 scriptencoding utf-8
+runtime macros/matchit.vim " better matching engine
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " BASIC SETTINGS
