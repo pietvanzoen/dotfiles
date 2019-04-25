@@ -9,6 +9,7 @@ windows:
         - blokkendoos:
           - cd blokkendoos
           - bundle install
+          - bundle exec rake db:migrate
           - tmux-run-pane bundle exec rails server
         - sidekiq:
           - cd blokkendoos
