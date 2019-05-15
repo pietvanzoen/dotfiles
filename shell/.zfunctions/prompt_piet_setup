@@ -2,8 +2,18 @@ autoload -U colors
 colors
 setopt PROMPT_SUBST
 
+if [[ -n "$TMUX" ]]; then
+  # current shell is under tmux
+  local tmux_current_session=$(tmux display-message -p '#S')
+  local tmux_client_id=$(tmux list-clients -t "${tmux_current_session}" -F '#{client_pid}')
+  # echo $tmux_current_session $tmux_client_id
+  local pid="$tmux_client_id"
+else
+  local pid="$$"
+fi
+
 CONNECTION_TYPE=""
-if [[ -n "$(pstree -ps $$ | grep mosh-server)" ]]; then
+if [[ -n "$(pstree -ps $pid | grep mosh-server)" ]]; then
   CONNECTION_TYPE="mosh"
 elif [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
   CONNECTION_TYPE="ssh"
