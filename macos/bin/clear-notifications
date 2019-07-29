@@ -1,0 +1,6 @@
+#!/bin/bash
+set -ex
+
+while true; do
+  osascript "$(dotfilesdir)/macos/clear-notifications.scpt"
+done

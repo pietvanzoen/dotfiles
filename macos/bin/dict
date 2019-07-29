@@ -1,5 +1,6 @@
 #!/bin/bash
 # Easily add, remove, or search words in your LocalDictionary file
+set -e
 
 dictionaryDir=~/Library/Spelling
 dictionaryFileName=LocalDictionary
