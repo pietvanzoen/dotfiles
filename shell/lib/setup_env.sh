@@ -26,6 +26,9 @@ is_zsh() {
 # LOCAL ENV
 [[ -e $HOME/.env ]] && source $HOME/.env
 
+# Fix locale
+export LC_ALL=en_US.UTF-8
+
 # EDITOR
 export EDITOR=$(which vim)
 
