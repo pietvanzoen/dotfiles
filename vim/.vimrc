@@ -75,7 +75,7 @@ command! PlugSync :so ~/.vimrc | PlugClean! | PlugInstall
 
 " FUGITIVE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
- let g:fugitive_gitlab_domains = ['https://gitlab.ycdev.nl']
+let g:fugitive_gitlab_domains = ['https://gitlab.ycdev.nl']
 
 " CTRLP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
