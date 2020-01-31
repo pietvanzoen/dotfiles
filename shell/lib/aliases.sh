@@ -11,7 +11,11 @@ gg() {
   dir="$(git get $1)"
   [[ -n "$dir" ]] && cd $dir
 }
-alias serve="deno run -A https://deno.land/x/http/file_server.ts"
+serve() {
+  local PORT="${1:-8000}"
+  echo "http://localhost:$PORT"
+  python -m SimpleHTTPServer "$PORT"
+}
 
 # navigation
 alias ~="cd ~"
