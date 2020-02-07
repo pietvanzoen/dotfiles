@@ -148,8 +148,6 @@ source $HOME/lib/dirrc.sh
 # TMUXINATOR
 is_zsh && [[ -f $HOME/lib/tmuxinator.zsh ]] && source $HOME/lib/tmuxinator.zsh
 
-# The next line updates PATH for the Google Cloud SDK.
-is_zsh && if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
-
-# The next line enables shell command completion for gcloud.
-is_zsh && if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
+# Updates PATH for the Google Cloud SDK.
+is_zsh && if [ -f "/usr/local/Caskroom/google-cloud-sdk/path.zsh.inc" ]; then . "/usr/local/Caskroom/google-cloud-sdk/path.zsh.inc"; fi
+is_zsh && if [ -f "/usr/local/Caskroom/google-cloud-sdk/completion.zsh.inc" ]; then . "/usr/local/Caskroom/google-cloud-sdk/completion.zsh.inc"; fi
