@@ -39,7 +39,8 @@ export EDITOR=$(which vim)
 export TERM=xterm-256color
 
 # BIN
-export PATH=$HOME/bin:$PATH
+export PATH=$HOME/bin:$PATH # TODO: move bin to .local/bin
+export PATH=$HOME/.local/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 
@@ -141,9 +142,6 @@ source $HOME/lib/man_colors.sh
 
 # DIRRC
 source $HOME/lib/dirrc.sh
-
-# DENO
-[ -d "$HOME/.deno/bin" ] && export PATH="$PATH:$HOME/.deno/bin"
 
 # TMUXINATOR
 is_zsh && [[ -f $HOME/lib/tmuxinator.zsh ]] && source $HOME/lib/tmuxinator.zsh
