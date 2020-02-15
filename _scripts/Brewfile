@@ -35,17 +35,17 @@ brew 'tree'
 brew 'vim'
 brew 'yarn-completion'
 
-brew 'coreutils', args: ['with-default-names']
-brew 'findutils', args: ['with-default-names']
-brew 'gawk', args: ['with-default-names']
-brew 'gnu-getopt', args: ['with-default-names']
-brew 'gnu-indent', args: ['with-default-names']
-brew 'gnu-sed', args: ['with-default-names']
-brew 'gnu-tar', args: ['with-default-names']
-brew 'gnu-time', args: ['with-default-names']
-brew 'gnutls', args: ['with-default-names']
-brew 'diffutils', args: ['with-default-names']
-brew 'grep', args: ['with-default-names']
+brew 'coreutils'
+brew 'findutils'
+brew 'gawk'
+brew 'gnu-getopt'
+brew 'gnu-indent'
+brew 'gnu-sed'
+brew 'gnu-tar'
+brew 'gnu-time'
+brew 'gnutls'
+brew 'diffutils'
+brew 'grep'
 
 cask 'homebrew/cask-fonts/font-inconsolata'
 cask 'homebrew/cask-fonts/font-hack-nerd-font'
