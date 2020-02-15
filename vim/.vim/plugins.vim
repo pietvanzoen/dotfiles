@@ -31,4 +31,5 @@ Plug 'tpope/vim-surround' " surround char manipulation
 Plug 'w0rp/ale', { 'on': [] } " gutter linting
 Plug 'wincent/terminus' " vim iterm ui impovements
 Plug 'yssl/QFEnter', { 'for': 'qf' } " better quicklist keyboard shortcuts
+Plug 'zoubin/vim-gotofile'
 call plug#end()
