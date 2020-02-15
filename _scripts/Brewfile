@@ -51,23 +51,15 @@ cask 'homebrew/cask-fonts/font-inconsolata'
 cask 'homebrew/cask-fonts/font-hack-nerd-font'
 
 cask_args appdir: "/Applications"
-cask '1password'
 cask 'alfred'
 cask 'bartender'
 cask 'bitbar'
 cask 'docker'
 cask 'dropbox'
-cask 'fantastical'
-cask 'firefox'
-cask 'flux'
-cask 'gitter'
-cask 'google-chrome'
 cask 'google-cloud-sdk'
 cask 'istat-menus'
 cask 'iterm2'
 cask 'keybase'
-cask 'magicprefs'
-cask 'ngrok'
 cask 'signal'
 cask 'slack'
 cask 'transmit'
@@ -84,3 +76,7 @@ mas 'NordVPN IKE', id: 1116599239
 mas 'Wallcat', id: 1000397973
 mas 'YubiKey Personalization Tool', id: 638161122
 mas 'Pixelmator', 407963104
+mas 'NextDNS', 1464122853
+mas 'Things 3', 904280696
+mas 'Monosnap', 540348655
+mas '1Password 7', 1333542190
