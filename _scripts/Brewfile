@@ -70,14 +70,12 @@ cask 'veracrypt'
 cask 'whatsapp'
 
 mas 'Amphetamine', id: 937984704
-mas 'Bear', id: 1091189122
 mas 'Monosnap', id: 540348655
 mas 'Moom', id: 419330170
-mas 'NordVPN IKE', id: 1116599239
 mas 'Wallcat', id: 1000397973
 mas 'YubiKey Personalization Tool', id: 638161122
-mas 'Pixelmator', 407963104
-mas 'NextDNS', 1464122853
-mas 'Things 3', 904280696
-mas 'Monosnap', 540348655
-mas '1Password 7', 1333542190
+mas 'Pixelmator', id: 407963104
+mas 'NextDNS', id: 1464122853 
+mas 'Things 3', id: 904280696
+mas 'Monosnap', id: 540348655
+mas '1Password 7', id: 1333542190
