@@ -149,3 +149,7 @@ is_zsh && [[ -f $HOME/lib/tmuxinator.zsh ]] && source $HOME/lib/tmuxinator.zsh
 # Updates PATH for the Google Cloud SDK.
 is_zsh && if [ -f "/usr/local/Caskroom/google-cloud-sdk/path.zsh.inc" ]; then . "/usr/local/Caskroom/google-cloud-sdk/path.zsh.inc"; fi
 is_zsh && if [ -f "/usr/local/Caskroom/google-cloud-sdk/completion.zsh.inc" ]; then . "/usr/local/Caskroom/google-cloud-sdk/completion.zsh.inc"; fi
+
+# PYTHON
+export PY_USER_BIN=$(python3 -c 'import site; print(site.USER_BASE + "/bin")')
+export PATH=$PY_USER_BIN:$PATH
