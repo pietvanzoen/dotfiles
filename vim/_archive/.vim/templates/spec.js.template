@@ -1,0 +1,11 @@
+// imports
+
+describe('Name', () => {
+  beforeEach(() => {
+    // initilize stuff
+  });
+
+  it('does stuff', () => {
+    // test stuff
+  });
+});
