@@ -10,3 +10,6 @@
 [submodule "vim/.vim/pack/sheerun/start/vim-polyglot"]
 	path = vim/.vim/pack/sheerun/start/vim-polyglot
 	url = git@github.com:sheerun/vim-polyglot.git
+[submodule "vim/.vim/pack/dense-analysis/start/ale"]
+	path = vim/.vim/pack/dense-analysis/start/ale
+	url = https://github.com/dense-analysis/ale.git
