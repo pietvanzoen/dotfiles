@@ -1,11 +1,14 @@
 colorscheme solarized
 
 " SET
+set clipboard=unnamed " use system clipboard
 set cursorline " highlight current cursor line
 set hlsearch " highlight all search matches
+set ignorecase " ignore case in search and stuff
+set relativenumber number " hybrid line numbers. show relative line numbers and current line number
+set smartcase " use case if search includes uppercase characters
 set spell " enable spell checker
 set spelllang=en_us " default dictionary
-set relativenumber number " hybrid line numbers. show relative line numbers and current line number
 
 let g:mapleader="\<Space>" " using space as <leader>
 
@@ -39,3 +42,12 @@ else
 endif
 let g:ctrlp_show_hidden=1
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+
+" FILETYPES
+
+augroup Templates
+  autocmd!
+  autocmd BufNewFile *.spec.js,*.test.js 0read ~/.vim/templates/spec.js.template
+  autocmd BufNewFile .vimrc.local 0read ~/.vim/templates/.vimrc.local.template
+augroup END
+
