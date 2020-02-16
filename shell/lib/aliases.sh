@@ -38,6 +38,10 @@ alias rsync="rsync -azrv --progress"
 alias tree="tree --dirsfirst"
 alias t="tree -a -I 'node_modules|.git' --dirsfirst"
 
+if command -v bat >/dev/null; then
+  alias cat="bat"
+fi
+
 # jobs
 alias nh="nohup group-task"
 alias nf="tail -f nohup.out"

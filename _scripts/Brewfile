@@ -1,6 +1,7 @@
 # vim: set filetype=ruby
 brew 'bash'
 brew 'bash-completion@2'
+brew 'bat'
 brew 'ctags'
 brew 'curl'
 brew 'docker-completion'
