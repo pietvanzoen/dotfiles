@@ -5,6 +5,7 @@ set cursorline " highlight current cursor line
 set hlsearch " highlight all search matches
 set spell " enable spell checker
 set spelllang=en_us " default dictionary
+set relativenumber number " hybrid line numbers. show relative line numbers and current line number
 
 let g:mapleader="\<Space>" " using space as <leader>
 
