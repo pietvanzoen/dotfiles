@@ -7,3 +7,6 @@
 [submodule "vim/.vim/pack/ctrlpvim/start/ctrlp.vim"]
 	path = vim/.vim/pack/ctrlpvim/start/ctrlp.vim
 	url = git@github.com:ctrlpvim/ctrlp.vim.git
+[submodule "vim/.vim/pack/sheerun/start/vim-polyglot"]
+	path = vim/.vim/pack/sheerun/start/vim-polyglot
+	url = git@github.com:sheerun/vim-polyglot.git
