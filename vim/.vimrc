@@ -17,8 +17,8 @@ set t_Co=16 " limit to 16 colors. fixes ale gutter color issue
 set undodir=~/.vim/undo
 set undofile
 
+
+" MAPPINGS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:mapleader="\<Space>" " using space as <leader>
-
-" disable highlight shortcut
-nnoremap <leader>h :let @/ = ""<cr>
-
