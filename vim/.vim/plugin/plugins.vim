@@ -3,11 +3,17 @@ function! PackInit() abort
 
   call minpac#init()
 
-  " Additional plugins here.
-  call minpac#add('ctrlpvim/ctrlp.vim')
-  call minpac#add('dense-analysis/ale')
-  call minpac#add('roman/golden-ratio')
-  call minpac#add('tpope/vim-sensible')
+  call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
+  call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
+  call minpac#add('dense-analysis/ale') " gutter linting
+  call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
+  call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
+  call minpac#add('roman/golden-ratio') " perfect split resizing
+  call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
+  call minpac#add('tpope/vim-commentary') " language aware commenting command
+  call minpac#add('tpope/vim-eunuch') " unix helpers
+  call minpac#add('tpope/vim-fugitive') " git commands
+  call minpac#add('tpope/vim-sensible') " sensible defaults
 
 endfunction
 
