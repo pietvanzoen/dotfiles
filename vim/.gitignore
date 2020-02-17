@@ -1,5 +1,5 @@
-.vim/plugged
 .vim/undo
-.vim/sessions
+!.vim/undo/.keep
+.netrwhist
 .netrwbook
 .vim/pack/minpac

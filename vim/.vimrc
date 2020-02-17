@@ -10,13 +10,8 @@ set smartcase " use case if search includes uppercase characters
 set spell " enable spell checker
 set spelllang=en_us " default dictionary
 set t_Co=16 " limit to 16 colors. fixes ale gutter color issue
-
-" persist undo history
 set undodir=~/.vim/undo
 set undofile
-if !isdirectory(&undodir)
-  call mkdir(&undodir)
-endif
 
 let g:mapleader="\<Space>" " using space as <leader>
 
