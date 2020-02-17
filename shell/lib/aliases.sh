@@ -75,3 +75,7 @@ alias grt=". git-root"
 alias ta="tmux a"
 alias tdev="tmux new-session -A -s dev"
 alias mux="tmuxinator"
+
+# PYTHON
+alias pip=pip3
+alias python=python3
