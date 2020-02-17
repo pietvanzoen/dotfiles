@@ -323,7 +323,6 @@ augroup FileTypes
   autocmd!
 
   autocmd BufRead,BufNewFile *.raml set filetype=yaml
-  autocmd FileType make setlocal noexpandtab tabstop=4 shiftwidth=4
   autocmd BufRead,BufNewFile .env.* set filetype=sh
   autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
   autocmd BufRead,BufNewFile .dirrc set filetype=sh
