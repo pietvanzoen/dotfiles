@@ -6,11 +6,7 @@ let g:loaded_clean_white_space = 1
 
 augroup CleanWhiteSpace
   autocmd!
-
-  " clean trailing whitespace on save
-  autocmd BufWritePre *.go let b:do_not_clean_whitespace=1
   autocmd BufWritePre * CleanTrailingWhitespace
-
 augroup END
 
 function! CleanTrailingWhitespace() abort
