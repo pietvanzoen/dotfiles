@@ -2,3 +2,4 @@
 .vim/undo
 .vim/sessions
 .netrwbook
+.vim/pack/minpac

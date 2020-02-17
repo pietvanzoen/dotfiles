@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+MINPAC_DIR="$(dirname $0)/.vim/pack/minpac/opt/minpac"
+
+if [[ -d "$MINPAC_DIR" ]]; then
+  exit
+fi
+
+echo "==> Installing minpac"
+
+git clone --depth=1 https://github.com/k-takata/minpac.git $MINPAC_DIR
