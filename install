@@ -20,6 +20,7 @@ install_package() {
     cp -vn "$example" "$(echo $example | sed 's/.example//')"
   done
   )
+  [[ -e "$package/_install" ]] && $package/_install
   stow $package
 }
 
