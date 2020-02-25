@@ -64,6 +64,9 @@ export GOPATH="$HOME/go"
 [ -e $HOME/.rvm/scripts/rvm ] && source $HOME/.rvm/scripts/rvm
 [ -d $HOME/.rvm/bin ] && export PATH="$PATH:$HOME/.rvm/bin"
 
+# RBENV
+is_executable rbenv && eval "$(rbenv init -)"
+
 # AUTOJUMP
 [[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 
