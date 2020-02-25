@@ -7,6 +7,7 @@ function! PackInit() abort
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
   call minpac#add('dense-analysis/ale') " gutter linting
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
+  call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('roman/golden-ratio') " perfect split resizing
@@ -47,3 +48,29 @@ else
 endif
 let g:ctrlp_show_hidden=1
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+
+" LIGHTLINE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:lightline = {}
+let g:lightline.colorscheme = 'solarized'
+let g:lightline.active = {}
+let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename', 'modified' ] ]
+let g:lightline.active.right = [ [], [ 'lineinfo' ], [ 'hostname', 'filetype' ] ]
+let g:lightline.inactive = {}
+let g:lightline.inactive.left = [ [], [], [ 'filename' ] ]
+let g:lightline.inactive.right = [ [], [], [ 'filetype' ] ]
+let g:lightline.component = {}
+let g:lightline.component.filename = '%<%f'
+let g:lightline.component.hostname = system('echo -n $(whoami)@$(hostname -s || echo)')
+let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
+let g:lightline.component_function = {}
+let g:lightline.component_function.cwd = 'CurrentWorkingDir'
+let g:lightline.component_function.mode = 'LightlineMode'
+
+function! LightlineMode()
+  return expand('%:t') ==# 'ControlP' ? 'CtrlP' :
+        \ expand('%:t') ==# '[Plugins]' ? 'Plugins' :
+        \ &filetype ==# 'qf' ? 'Quickfix' :
+        \ &filetype ==# 'netrw' ? 'Explorer' :
+        \ lightline#mode()
+endfunction
