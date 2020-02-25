@@ -13,6 +13,8 @@ prompt piet
 
 # Use vim keybindings
 bindkey -v
+# Use emacs keybindings
+# bindkey -e
 
 # HISTORY KEY BINDINGS
 bindkey "^P" up-line-or-search
