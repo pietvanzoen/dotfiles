@@ -7,6 +7,7 @@ function! PackInit() abort
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
   call minpac#add('dense-analysis/ale') " gutter linting
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
+  call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
