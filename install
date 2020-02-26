@@ -31,11 +31,8 @@ mkdir -vp $HOME/.local/lib
 mkdir -vp $HOME/.gnupg
 
 _info "Initializing stow"
-cp ./stow/.stowrc.example ./stow/.stowrc
-sed -i "s|\$HOME|$HOME|" ./stow/.stowrc
-cat ./stow/.stowrc
 echo "stow" >> "$INSTALLED_INDEX_TMP"
-stow --target $HOME --ignore=.*.example stow
+stow stow
 
 for package in $stowable; do
   if _confirm "Install $package?"; then
