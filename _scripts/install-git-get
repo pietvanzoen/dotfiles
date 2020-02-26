@@ -7,4 +7,4 @@ git clone --depth=1 https://github.com/pietvanzoen/git-get.git $TEMP
 
 cd $TEMP
 
-./install
+INSTALL_DIR=$HOME/.local/bin ./install

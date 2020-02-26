@@ -33,13 +33,12 @@ export LC_ALL=en_US.UTF-8
 export EDITOR=$(which vim)
 
 # ALIASES
-[[ -f $HOME/lib/aliases.sh ]] && source $HOME/lib/aliases.sh
+[[ -f $HOME/.local/lib/aliases.sh ]] && source $HOME/.local/lib/aliases.sh
 
 # COLORS
 export TERM=xterm-256color
 
 # BIN
-export PATH=$HOME/bin:$PATH # TODO: move bin to .local/bin
 export PATH=$HOME/.local/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
@@ -115,14 +114,14 @@ is_bash && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # 
 export GIT_PATH="$HOME/repos/" # for git get
 export GIT_GET_DEFAULT_PREFIX="git@github.com:"
 is_executable hub && eval "$(hub alias -s)"
-is_bash && [[ -f $HOME/lib/git-completion.bash ]] && source $HOME/lib/git-completion.bash
+is_bash && [[ -f $HOME/.local/lib/git-completion.bash ]] && source $HOME/.local/lib/git-completion.bash
 
 # ITERM
 #is_bash && [[ -f $HOME/.iterm2_shell_integration.bash ]] && source $HOME/.iterm2_shell_integration.bash
 is_zsh && [[ -f $HOME/.iterm2_shell_integration.zsh ]] && source $HOME/.iterm2_shell_integration.zsh
 
 # SANDBOX
-[[ -f $HOME/lib/sandbox.sh ]] && source $HOME/lib/sandbox.sh
+[[ -f $HOME/.local/lib/sandbox.sh ]] && source $HOME/.local/lib/sandbox.sh
 
 # GNUPG
 is_executable gpg-agent && [[ -z "$(pgrep gpg-agent)" ]] && eval $(gpg-agent --daemon)
@@ -141,13 +140,13 @@ is_executable ssh-agent && [[ -z "$(pgrep ssh-agent)" ]] && eval "$(ssh-agent)" 
 [ -d "$HOME/.hint/bin" ] && export PATH="$PATH:$HOME/.hint/bin"
 
 # MAN COLORS
-source $HOME/lib/man_colors.sh
+source $HOME/.local/lib/man_colors.sh
 
 # DIRRC
-source $HOME/lib/dirrc.sh
+source $HOME/.local/lib/dirrc.sh
 
 # TMUXINATOR
-is_zsh && [[ -f $HOME/lib/tmuxinator.zsh ]] && source $HOME/lib/tmuxinator.zsh
+is_zsh && [[ -f $HOME/.local/lib/tmuxinator.zsh ]] && source $HOME/.local/lib/tmuxinator.zsh
 
 # Updates PATH for the Google Cloud SDK.
 is_zsh && if [ -f "/usr/local/Caskroom/google-cloud-sdk/path.zsh.inc" ]; then . "/usr/local/Caskroom/google-cloud-sdk/path.zsh.inc"; fi

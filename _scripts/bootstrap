@@ -44,7 +44,7 @@ if [[ ! -d $HOME/.fzf ]]; then
   attempt_script "install-fzf"
 fi
 
-if [[ ! -e $HOME/bin/git-get ]]; then
+if [[ ! -e $HOME/.local/bin/git-get ]]; then
   attempt_script "install-git-get"
 fi
 

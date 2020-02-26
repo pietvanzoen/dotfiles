@@ -26,8 +26,8 @@ install_package() {
 
 _info "Creating directories"
 mkdir -vp $HOME/.config
-mkdir -vp $HOME/bin
-mkdir -vp $HOME/lib
+mkdir -vp $HOME/.local/bin
+mkdir -vp $HOME/.local/lib
 mkdir -vp $HOME/.gnupg
 
 _info "Initializing stow"
