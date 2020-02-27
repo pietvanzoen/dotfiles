@@ -1,0 +1,4 @@
+
+if [ -r .nvmrc ]; then
+  nvm use
+fi

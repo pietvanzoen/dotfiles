@@ -1,5 +1,8 @@
 load_dirrc() {
   if [ "${PREV_DIR}" != "$(pwd -P)" ]; then
+    if [ -r $HOME/.dirrc-global ]; then
+      source $HOME/.dirrc-global
+    fi
     if [ -r .dirrc ]; then
       source ./.dirrc
     fi
