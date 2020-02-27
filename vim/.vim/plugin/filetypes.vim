@@ -7,4 +7,5 @@ augroup FileTypes
   autocmd BufRead,BufNewFile .dirrc set filetype=sh
   autocmd BufRead,BufNewFile .gitconfig* set filetype=gitconfig
   autocmd BufRead,BufNewFile *.js.snap set filetype=javascript
+  autocmd BufRead,BufNewFile .dirrc* set filetype=sh
 augroup END
