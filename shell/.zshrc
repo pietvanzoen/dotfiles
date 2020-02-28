@@ -1,6 +1,3 @@
-source $HOME/.local/lib/load_plugins.zsh
-source $HOME/.local/lib/setup_env.sh
-source $HOME/.local/lib/aliases.zsh
 
 setopt autocd # cd without cd
 setopt globdots # match dotfiles in globs by default
