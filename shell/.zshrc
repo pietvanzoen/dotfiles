@@ -1,3 +1,4 @@
+source $HOME/.local/setup_env.sh
 
 setopt autocd # cd without cd
 setopt globdots # match dotfiles in globs by default

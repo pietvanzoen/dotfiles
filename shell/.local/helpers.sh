@@ -29,7 +29,7 @@ is_zsh() {
 add_path() {
   local dir="$1"
   if [ -d "$dir" ]; then
-    export PATH="$PATH:$dir"
+    export PATH="$dir:$PATH"
   fi
 }
 
