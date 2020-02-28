@@ -1,3 +1,6 @@
+is_zsh && safe_source ~/.fzf.zsh
+is_bash && safe_source ~/.fzf.bash
+
 # Setting fd as the default source for fzf
 if is_executable fd; then
   export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=always'

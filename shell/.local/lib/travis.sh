@@ -1,1 +1,1 @@
-/Users/piet/.travis/travis.sh
+safe_source $HOME/.travis/travis.sh
