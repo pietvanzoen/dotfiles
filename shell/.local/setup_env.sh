@@ -1,4 +1,3 @@
-set -e
 LOCAL_DIR=$(dirname $0)
 source "$LOCAL_DIR/helpers.sh"
 
