@@ -1,1 +1,1 @@
-/Users/piet/.autojump/etc/profile.d/autojump.sh
+~/.autojump/etc/profile.d/autojump.sh
