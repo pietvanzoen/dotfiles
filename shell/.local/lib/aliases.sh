@@ -74,3 +74,9 @@ alias mux="tmuxinator"
 # PYTHON
 alias pip=pip3
 alias python=python3
+
+flushdnscache() {
+  set -ex
+  sudo dscacheutil -flushcache;
+  sudo killall -HUP mDNSResponder;
+}
