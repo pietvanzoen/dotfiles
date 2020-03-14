@@ -7,7 +7,7 @@ set expandtab " use spaces instead for tabs
 set hlsearch " highlight all search matches
 set ignorecase " ignore case in search and stuff
 set modeline
-set mouse=a
+set mouse=nvc
 set noshowmode " hide mode in command line, shown in statusline instead
 set nowrap " don't wrap lines by default
 set relativenumber number " hybrid line numbers. show relative line numbers and current line number
