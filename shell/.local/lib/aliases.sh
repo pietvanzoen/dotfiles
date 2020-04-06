@@ -1,16 +1,10 @@
 # GENERAL
-alias gtop="cd \$(git rev-parse --show-toplevel || echo '.')"
-alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
 alias xn="exe-notify"
 alias date-iso="date -u +'%Y-%m-%dT%H:%M:%SZ'"
 field() {
   awk "{ print \$${1} }"
 }
 alias todo="rg --hidden --iglob '!{node_modules,.git}' 'TODO|FIXME'"
-gg() {
-  dir="$(git get $1)"
-  [[ -n "$dir" ]] && cd $dir
-}
 
 # navigation
 alias ~="cd ~"
@@ -49,31 +43,6 @@ sc() {
   local name="$(basename $PWD): $*"
   screen -S "$name" $@
 }
-
-# RUBY
-alias be="bundle exec"
-alias bi="bundle check || bundle install"
-
-# TERMUX
-if [[ "$(pwd)" =~ "com.termux" ]]; then
-  alias c=termux-clipboard-set
-  alias v=termux-clipboard-get
-fi
-
-# NPM
-alias show-scripts="jq .scripts package.json"
-
-# GIT
-alias grt=". git-root"
-
-# TMUX
-alias ta="tmux a"
-alias tdev="tmux new-session -A -s dev"
-alias mux="tmuxinator"
-
-# PYTHON
-alias pip=pip3
-alias python=python3
 
 flushdnscache() {
   set -ex
