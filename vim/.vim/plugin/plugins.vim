@@ -4,15 +4,19 @@ function! PackInit() abort
   call minpac#init()
 
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
-  call minpac#add('ajh17/VimCompletesMe') " smarter tab completion
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
   call minpac#add('dense-analysis/ale') " gutter linting
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
+  call minpac#add('ervandew/supertab') " tab completion
+  call minpac#add('garbas/vim-snipmate') " snippets
+  call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
+  call minpac#add('MarcWeber/vim-addon-mw-utils') " dependency for vim-snipmate
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
+  call minpac#add('tomtom/tlib_vim') " dependency for vim-snipmate
   call minpac#add('tpope/vim-commentary') " language aware commenting command
   call minpac#add('tpope/vim-eunuch') " unix helpers
   call minpac#add('tpope/vim-fugitive') " git commands
