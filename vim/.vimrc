@@ -19,6 +19,7 @@ set softtabstop=2 " number of spaces to use for "soft tabs"
 set spell " enable spell checker
 set spelllang=en_us " default dictionary
 set t_Co=16 " limit to 16 colors. fixes ale gutter color issue
+set tags=.git/tags
 set undodir=~/.vim/undo
 set undofile
 
