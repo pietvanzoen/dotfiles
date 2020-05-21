@@ -39,3 +39,6 @@ nnoremap <leader>h :let @/ = ""<cr>
 "
 " replace bad spelling with first suggestion
 map <leader>z 1z=
+
+" search for currently selected text
+vnoremap // y/<C-R>"<CR>
