@@ -19,6 +19,7 @@ function! PackInit() abort
   call minpac#add('tpope/vim-repeat') " more things to repeat
   call minpac#add('tpope/vim-sensible') " sensible defaults
   call minpac#add('tpope/vim-surround') " surround char manipulation
+  call minpac#add('yegappan/grep') " use modern grep tools and output results to quickfix
 
 endfunction
 
@@ -77,3 +78,8 @@ function! LightlineMode()
         \ &filetype ==# 'netrw' ? 'Explorer' :
         \ lightline#mode()
 endfunction
+
+
+" GREP
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let Rg_Options = '--hidden --ignore-case'
