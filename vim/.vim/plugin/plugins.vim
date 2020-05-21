@@ -14,6 +14,7 @@ function! PackInit() abort
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('MarcWeber/vim-addon-mw-utils') " dependency for vim-snipmate
+  call minpac#add('quramy/tsuquyomi', {'type': 'opt'}) " typescript integration
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
   call minpac#add('tomtom/tlib_vim') " dependency for vim-snipmate
