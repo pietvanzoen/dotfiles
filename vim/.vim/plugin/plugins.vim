@@ -4,6 +4,7 @@ function! PackInit() abort
   call minpac#init()
 
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
+  call minpac#add('ajh17/VimCompletesMe') " smarter tab completion
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
   call minpac#add('dense-analysis/ale') " gutter linting
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
