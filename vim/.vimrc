@@ -11,6 +11,7 @@ set mouse=nvc
 set noshowmode " hide mode in command line, shown in statusline instead
 set nowrap " don't wrap lines by default
 set relativenumber number " hybrid line numbers. show relative line numbers and current line number
+set scrolloff=5 " keep 5 lines of space to top/bottom from current line
 set shell=bash " vim is slow with zsh
 set shiftwidth=2 " number of spaces to use for autoindent
 set smartcase " use case if search includes uppercase characters
@@ -35,3 +36,6 @@ nnoremap <c-l> <c-w>l
 
 " disable highlight shortcut
 nnoremap <leader>h :let @/ = ""<cr>
+"
+" replace bad spelling with first suggestion
+map <leader>z 1z=
