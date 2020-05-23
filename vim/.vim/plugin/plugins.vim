@@ -93,3 +93,7 @@ let g:fugitive_gitlab_domains = ['https://gitlab.ycdev.nl']
 " GREP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let Rg_Options = '--hidden --ignore-case'
+
+" tsuquyomi
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:tsuquyomi_javascript_support = 1
