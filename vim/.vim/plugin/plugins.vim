@@ -12,6 +12,7 @@ function! PackInit() abort
   call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
+  call minpac#add('leafgarland/typescript-vim', { 'type': 'opt' }) " typescript syntax highlighting
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('MarcWeber/vim-addon-mw-utils') " dependency for vim-snipmate
   call minpac#add('quramy/tsuquyomi', {'type': 'opt'}) " typescript integration
