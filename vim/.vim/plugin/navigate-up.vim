@@ -1,7 +1,7 @@
 " Navigates to the folder containing the current file. Borrowed from vim-vinegar:
 " https://github.com/tpope/vim-vinegar/blob/master/plugin/vinegar.vim#L39-L64
 
-if exists("g:loaded_navigate_up")
+if exists('g:loaded_navigate_up')
   finish
 endif
 let g:loaded_navigate_up = 1

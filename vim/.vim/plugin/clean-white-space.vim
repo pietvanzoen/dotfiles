@@ -1,5 +1,5 @@
 
-if exists("g:loaded_clean_white_space")
+if exists('g:loaded_clean_white_space')
   finish
 endif
 let g:loaded_clean_white_space = 1

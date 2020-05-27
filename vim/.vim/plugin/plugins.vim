@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 function! PackInit() abort
   packadd minpac
 
@@ -108,4 +110,4 @@ nmap <buffer> <Leader>e <Plug>(TsuquyomiRenameSymbol)
 
 " SUPERTAB
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabDefaultCompletionType = 'context'

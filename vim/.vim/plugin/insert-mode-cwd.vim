@@ -2,7 +2,7 @@
 " Enables file completion relative to current file, but maintains project
 " dir as cwd for NORMAL mode operations.
 
-if exists("g:loaded_insert_mode_cwd")
+if exists('g:loaded_insert_mode_cwd')
   finish
 endif
 let g:loaded_insert_mode_cwd = 1
