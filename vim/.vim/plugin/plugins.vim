@@ -111,3 +111,26 @@ nmap <buffer> <Leader>e <Plug>(TsuquyomiRenameSymbol)
 " SUPERTAB
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:SuperTabDefaultCompletionType = 'context'
+
+" ALE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ale_fixers = {
+  \ 'typescript': ['prettier'],
+  \ 'javascript': ['prettier', 'eslint'],
+  \ 'yaml': ['prettier'],
+  \ 'json': ['prettier'],
+  \ 'html': ['prettier'],
+  \ 'python': ['yapf'],
+  \ 'ruby': ['rufo'],
+  \ 'css': ['prettier'],
+  \ 'scss': ['prettier'],
+  \ 'sh': ['shfmt'],
+  \ 'bash': ['shfmt']
+  \ }
+let g:ale_echo_msg_error_str = 'Error'
+let g:ale_echo_msg_warning_str = 'Warn'
+let g:ale_echo_msg_format = '[%linter%:%code%] %s [%severity%]'
+
+nnoremap <leader>af :ALEFix\|ALELint\|w<cr>
+nnoremap ]a :ALENext<cr>
+nnoremap [a :ALEPrevious<cr>
