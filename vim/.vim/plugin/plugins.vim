@@ -104,3 +104,7 @@ let Rg_Options = '--hidden --ignore-case'
 " tsuquyomi
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tsuquyomi_javascript_support = 1
+
+" SUPERTAB
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:SuperTabDefaultCompletionType = "context"
