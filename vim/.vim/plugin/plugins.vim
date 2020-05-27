@@ -22,6 +22,7 @@ function! PackInit() abort
   call minpac#add('tpope/vim-commentary') " language aware commenting command
   call minpac#add('tpope/vim-eunuch') " unix helpers
   call minpac#add('tpope/vim-fugitive') " git commands
+  call minpac#add('tpope/vim-obsession') " better session management
   call minpac#add('tpope/vim-repeat') " more things to repeat
   call minpac#add('tpope/vim-sensible') " sensible defaults
   call minpac#add('tpope/vim-surround') " surround char manipulation
@@ -65,7 +66,7 @@ let g:lightline = {}
 let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
 let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename', 'modified' ] ]
-let g:lightline.active.right = [ [], [ 'lineinfo' ], [ 'hostname', 'filetype' ] ]
+let g:lightline.active.right = [ ['obsession'], [ 'lineinfo' ], [ 'hostname', 'filetype'] ]
 let g:lightline.inactive = {}
 let g:lightline.inactive.left = [ [], [], [ 'filename' ] ]
 let g:lightline.inactive.right = [ [], [], [ 'filetype' ] ]
@@ -76,6 +77,7 @@ let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
 let g:lightline.component_function = {}
 let g:lightline.component_function.cwd = 'CurrentWorkingDir'
 let g:lightline.component_function.mode = 'LightlineMode'
+let g:lightline.component_function.obsession = 'LightlineObsession'
 
 function! LightlineMode()
   return expand('%:t') ==# 'ControlP' ? 'CtrlP' :
@@ -83,6 +85,10 @@ function! LightlineMode()
         \ &filetype ==# 'qf' ? 'Quickfix' :
         \ &filetype ==# 'netrw' ? 'Explorer' :
         \ lightline#mode()
+endfunction
+
+function! LightlineObsession()
+  return ObsessionStatus('●', 'Ⅱ')
 endfunction
 
 
