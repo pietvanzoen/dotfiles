@@ -103,7 +103,8 @@ let Rg_Options = '--hidden --ignore-case'
 
 " tsuquyomi
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:tsuquyomi_javascript_support = 1
+let g:truquyomi_javascript_support = 1
+nmap <buffer> <Leader>e <Plug>(TsuquyomiRenameSymbol)
 
 " SUPERTAB
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
