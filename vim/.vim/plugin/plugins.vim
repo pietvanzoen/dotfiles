@@ -57,8 +57,6 @@ else
     autocmd!
     autocmd BufNewFile * silent CtrlPClearCache " clear cache when a new file is created
   augroup END
-  let g:ctrlp_show_hidden=1
-  let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 endif
 let g:ctrlp_show_hidden=1
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
