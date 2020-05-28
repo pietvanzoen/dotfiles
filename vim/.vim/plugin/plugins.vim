@@ -26,6 +26,7 @@ function! PackInit() abort
   call minpac#add('tpope/vim-fugitive') " git commands
   call minpac#add('tpope/vim-obsession') " better session management
   call minpac#add('tpope/vim-repeat') " more things to repeat
+  call minpac#add('tpope/vim-rhubarb') " fugitive plugin for github
   call minpac#add('tpope/vim-sensible') " sensible defaults
   call minpac#add('tpope/vim-surround') " surround char manipulation
   call minpac#add('yegappan/grep') " use modern grep tools and output results to quickfix
