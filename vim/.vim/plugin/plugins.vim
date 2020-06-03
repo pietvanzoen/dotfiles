@@ -7,24 +7,17 @@ function! PackInit() abort
 
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
-  call minpac#add('dense-analysis/ale') " gutter linting
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
-  call minpac#add('ervandew/supertab') " tab completion
-  call minpac#add('garbas/vim-snipmate') " snippets
   call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
-  call minpac#add('leafgarland/typescript-vim', { 'type': 'opt' }) " typescript syntax highlighting
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
-  call minpac#add('MarcWeber/vim-addon-mw-utils') " dependency for vim-snipmate
-  call minpac#add('quramy/tsuquyomi', {'type': 'opt'}) " typescript integration
+  call minpac#add('neoclide/coc.nvim', { 'branch': 'release', 'do': '!yarn install --frozen-lockfile' })
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
-  call minpac#add('tomtom/tlib_vim') " dependency for vim-snipmate
   call minpac#add('tpope/vim-commentary') " language aware commenting command
   call minpac#add('tpope/vim-eunuch') " unix helpers
   call minpac#add('tpope/vim-fugitive') " git commands
-  call minpac#add('tpope/vim-obsession') " better session management
   call minpac#add('tpope/vim-repeat') " more things to repeat
   call minpac#add('tpope/vim-rhubarb') " fugitive plugin for github
   call minpac#add('tpope/vim-sensible') " sensible defaults
@@ -43,6 +36,19 @@ command! PackStatus call PackInit() | call minpac#status()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PACKAGE CONFIG
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" COC
+"
+let g:coc_global_extensions = [
+      \ 'coc-css',
+      \ 'coc-deno',
+      \ 'coc-eslint',
+      \ 'coc-json',
+      \ 'coc-snippets',
+      \ 'coc-tslint-plugin',
+      \ 'coc-tsserver',
+      \ 'coc-vimlsp',
+      \ ]
 
 " CTRLP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -79,6 +85,7 @@ let g:lightline.component_function = {}
 let g:lightline.component_function.cwd = 'CurrentWorkingDir'
 let g:lightline.component_function.mode = 'LightlineMode'
 let g:lightline.component_function.obsession = 'LightlineObsession'
+let g:lightline.component_function.coc = 'LighlineCoc'
 
 function! LightlineMode()
   return expand('%:t') ==# 'ControlP' ? 'CtrlP' :
@@ -92,6 +99,10 @@ function! LightlineObsession()
   return ObsessionStatus('●', 'Ⅱ')
 endfunction
 
+function! LighlineCoc()
+  return coc#status()
+endfunction
+
 
 " FUGITIVE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -101,35 +112,3 @@ let g:fugitive_gitlab_domains = ['https://gitlab.ycdev.nl']
 " GREP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let Rg_Options = '--hidden --ignore-case'
-
-" tsuquyomi
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:tsuquyomi_javascript_support = 1
-nmap <buffer> <Leader>e <Plug>(TsuquyomiRenameSymbol)
-
-" SUPERTAB
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:SuperTabDefaultCompletionType = 'context'
-
-" ALE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_fixers = {
-  \ 'typescript': ['prettier'],
-  \ 'javascript': ['prettier', 'eslint'],
-  \ 'yaml': ['prettier'],
-  \ 'json': ['prettier'],
-  \ 'html': ['prettier'],
-  \ 'python': ['yapf'],
-  \ 'ruby': ['rufo'],
-  \ 'css': ['prettier'],
-  \ 'scss': ['prettier'],
-  \ 'sh': ['shfmt'],
-  \ 'bash': ['shfmt']
-  \ }
-let g:ale_echo_msg_error_str = 'Error'
-let g:ale_echo_msg_warning_str = 'Warn'
-let g:ale_echo_msg_format = '[%linter%:%code%] %s [%severity%]'
-
-nnoremap <leader>af :ALEFix\|ALELint\|w<cr>
-nnoremap ]a :ALENext<cr>
-nnoremap [a :ALEPrevious<cr>
