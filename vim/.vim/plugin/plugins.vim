@@ -18,6 +18,7 @@ function! PackInit() abort
   call minpac#add('tpope/vim-commentary') " language aware commenting command
   call minpac#add('tpope/vim-eunuch') " unix helpers
   call minpac#add('tpope/vim-fugitive') " git commands
+  call minpac#add('tpope/vim-obsession') " better session management
   call minpac#add('tpope/vim-repeat') " more things to repeat
   call minpac#add('tpope/vim-rhubarb') " fugitive plugin for github
   call minpac#add('tpope/vim-sensible') " sensible defaults
