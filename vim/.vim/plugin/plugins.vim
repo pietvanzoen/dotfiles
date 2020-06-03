@@ -74,13 +74,13 @@ let g:lightline = {}
 let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
 let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename', 'modified' ] ]
-let g:lightline.active.right = [ ['obsession'], [ 'lineinfo' ], [ 'hostname', 'filetype'] ]
+let g:lightline.active.right = [ ['obsession'], [ 'lineinfo' ], [ 'filetype', 'coc'] ]
 let g:lightline.inactive = {}
-let g:lightline.inactive.left = [ [], [], [ 'filename' ] ]
-let g:lightline.inactive.right = [ [], [], [ 'filetype' ] ]
+let g:lightline.inactive.left = [ [], ['cwd'], [ 'filename' ] ]
+let g:lightline.inactive.right = [ [], ['obsession'], [ 'filetype' ] ]
 let g:lightline.component = {}
 let g:lightline.component.filename = '%<%f'
-let g:lightline.component.hostname = system('echo -n $(whoami)@$(hostname -s || echo)')
+" let g:lightline.component.hostname = system('echo -n $(whoami)@$(hostname -s || echo)')
 let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
 let g:lightline.component_function = {}
 let g:lightline.component_function.cwd = 'CurrentWorkingDir'
@@ -88,7 +88,7 @@ let g:lightline.component_function.mode = 'LightlineMode'
 let g:lightline.component_function.obsession = 'LightlineObsession'
 let g:lightline.component_function.coc = 'LighlineCoc'
 
-function! LightlineMode()
+function! LightlineMode() abort
   return expand('%:t') ==# 'ControlP' ? 'CtrlP' :
         \ expand('%:t') ==# '[Plugins]' ? 'Plugins' :
         \ &filetype ==# 'qf' ? 'Quickfix' :
@@ -96,13 +96,28 @@ function! LightlineMode()
         \ lightline#mode()
 endfunction
 
-function! LightlineObsession()
+function! LightlineObsession() abort
   return ObsessionStatus('●', 'Ⅱ')
 endfunction
 
-function! LighlineCoc()
-  return coc#status()
+function! LighlineCoc() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info) | return '' | endif
+  let msgs = []
+  if get(info, 'error', 0)
+    call add(msgs, 'E' . info['error'])
+  endif
+  if get(info, 'warning', 0)
+    call add(msgs, 'W' . info['warning'])
+  endif
+  if empty(msgs) | return '' | endif
+  return join(msgs, ' ') . ' ' . get(g:, 'coc_status', '')
 endfunction
+
+augroup LightLine
+  autocmd!
+  autocmd User BufEnter,CocStatusChange,CocDiagnosticChange call lightline#update()
+augroup END
 
 
 " FUGITIVE
