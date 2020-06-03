@@ -86,7 +86,8 @@ augroup mygroup
 
   autocmd BufRead * call SetSignColumn()
 
-  autocmd FileType json syntax match Comment +\/\/.\+$+
+  " comments supported for settings file
+  autocmd BufEnter coc-settings.json syntax match Comment +\/\/.\+$+
 augroup end
 
 
