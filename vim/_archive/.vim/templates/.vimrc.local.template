@@ -1,2 +1,2 @@
-let g:ale_fix_on_save = 1
 " let g:test_command = 'yarn test --findRelatedTests %'
+" let g:auto_indent_whole_file = 1
