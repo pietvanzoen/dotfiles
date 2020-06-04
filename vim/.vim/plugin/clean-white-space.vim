@@ -13,10 +13,9 @@ function! CleanTrailingWhitespace() abort
   if exists('b:do_not_clean_whitespace')
     return
   endif
-  let l:line = line('.')
-  let l:col = col('.')
-  exec '%s/\s\+$//e'
-  exec '%s/\($\n\s*\)\+\%$//e'
-  call cursor(l:line, l:col)
+  let l:winview = winsaveview()
+  silent! '%s/\s\+$//e'
+  silent! '%s/\($\n\s*\)\+\%$//e'
+  call winrestview(l:winview)
 endfunction
 command! CleanTrailingWhitespace call CleanTrailingWhitespace()
