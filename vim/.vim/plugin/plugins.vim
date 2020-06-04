@@ -42,7 +42,6 @@ command! PackStatus call PackInit() | call minpac#status()
 "
 let g:coc_global_extensions = [
       \ 'coc-css',
-      \ 'coc-deno',
       \ 'coc-eslint',
       \ 'coc-json',
       \ 'coc-snippets',
