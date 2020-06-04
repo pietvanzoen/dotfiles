@@ -92,11 +92,9 @@ augroup end
 
 
 function! SetSignColumn() abort
-  if !&modifiable
-    setlocal signcolumn=no
-  else
-    setlocal signcolumn=yes
-  end
+  let l:ignore_filetypes = [ 'qf', 'help' ]
+  if index(ignore_filetypes, &filetype) > -1 | return | endif
+  setlocal signcolumn=yes
 endfunction
 
 " Applying codeAction to the selected region.
