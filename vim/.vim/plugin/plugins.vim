@@ -7,6 +7,7 @@ function! PackInit() abort
 
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
+  call minpac#add('easymotion/vim-easymotion') " easy motion!
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
   call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
@@ -127,3 +128,15 @@ let g:fugitive_gitlab_domains = ['https://gitlab.ycdev.nl']
 " GREP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let Rg_Options = '--ignore-case'
+
+
+" EASYMOTION
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" map  / <Plug>(easymotion-sn)
+" omap / <Plug>(easymotion-tn)
+
+" " These `n` & `N` mappings are options. You do not have to map `n` & `N` to EasyMotion.
+" " Without these mappings, `n` & `N` works fine. (These mappings just provide
+" " different highlight method and have some other features )
+" map  n <Plug>(easymotion-next)
+" map  N <Plug>(easymotion-prev)
