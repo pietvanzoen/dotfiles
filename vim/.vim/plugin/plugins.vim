@@ -147,4 +147,4 @@ let Rg_Options = '--ignore-case'
 " PATHFINDER
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 highlight PathfinderPopup
-      \ ctermfg=Blue ctermbg=DarkGray
+      \ ctermfg=Blue ctermbg=Black
