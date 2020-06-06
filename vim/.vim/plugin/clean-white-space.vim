@@ -14,8 +14,8 @@ function! CleanTrailingWhitespace() abort
     return
   endif
   let l:winview = winsaveview()
-  silent! '%s/\s\+$//e'
-  silent! '%s/\($\n\s*\)\+\%$//e'
+  exec '%s/\s\+$//e'
+  exec '%s/\($\n\s*\)\+\%$//e'
   call winrestview(l:winview)
 endfunction
 command! CleanTrailingWhitespace call CleanTrailingWhitespace()
