@@ -15,7 +15,7 @@ function! PackInit() abort
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('lifepillar/vim-solarized8') " colorscheme
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
-  call minpac#add('neoclide/coc.nvim', { 'branch': 'release', 'do': '!yarn install --frozen-lockfile' })
+  call minpac#add('neoclide/coc.nvim', { 'branch': 'release' })
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
   call minpac#add('tpope/vim-commentary') " language aware commenting command
