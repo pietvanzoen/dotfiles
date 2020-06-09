@@ -1,0 +1,19 @@
+name: cms
+root: ~/repos/gitlab.ycdev.nl/team-cms/
+
+windows:
+  - services:
+      layout: even-vertical
+      panes:
+        - studio:
+          - cd cms-prototype/studio
+          - yarn
+          - tmux-run-pane yarn dev
+        - web:
+          - cd cms-prototype/web
+          - yarn
+          - tmux-run-pane yarn dev
+        - bff:
+          - cd cms-pages-bff
+          - yarn
+          - tmux-run-pane yarn dev
