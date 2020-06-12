@@ -1,0 +1,117 @@
+#!/bin/bash
+
+set -e
+
+USAGE="USAGE: $(basename $0) <new trunk branch>
+Example: $(basename $0) main"
+
+main() {
+  local new_default_branch="$1"
+  if [[ -z "$new_default_branch" ]]; then
+    echo "$USAGE"
+    exit 1
+  fi
+
+  echo "==> Updating local refs"
+  _exe "git fetch origin"
+  local current_default_branch="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
+
+  if [[ ! -z "$(git status -s)" ]]; then
+    echo "Commit and push changes before renaming branches."
+    exit 1
+  fi
+
+  if [[ "$current_default_branch" == "$new_default_branch" ]]; then
+    echo "Current default branch is already $new_default_branch"
+    exit
+  fi
+
+  echo "==> Renaming '$current_default_branch' to '$new_default_branch'"
+  _exe "git branch -m $current_default_branch $new_default_branch"
+  _exe "git push -u origin $new_default_branch"
+  _exe "git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/$new_default_branch"
+  if (_is_executable "git-trunk"); then
+    # https://github.com/pietvanzoen/dotfiles/blob/master/git/.local/bin/git-trunk
+    _exe "git trunk --set $new_default_branch"
+  fi
+
+  if (_confirm "Update the default branch for your github repo? [y/n]" "y"); then
+    update_default_branch "$(git remote get-url origin)" "$new_default_branch"
+  fi
+
+  echo
+  echo "Be sure to also update any protected branch settings. Once you've checked your remote repository you can run the following command to delete the old remote branch:"
+  echo "git push --delete origin $current_default_branch"
+  echo
+
+  if (_confirm "Or type DELETE to run this command now." "DELETE"); then
+    sleep 1
+    _exe "git push --delete origin $current_default_branch"
+  else
+    echo "==> Not deleting $current_default_branch. Run 'git push --delete origin $current_default_branch' to delete later."
+  fi
+
+}
+
+update_default_branch() {
+  local remote_url="$1"
+  local default_branch="$2"
+  re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$"
+
+  if [[ $remote_url =~ $re ]]; then
+    # protocol=${BASH_REMATCH[1]}
+    # separator=${BASH_REMATCH[2]}
+    hostname=${BASH_REMATCH[3]}
+    user=${BASH_REMATCH[4]}
+    repo=${BASH_REMATCH[5]}
+  fi
+
+  if [[ "$hostname" != "github.com" ]]; then
+    echo "==> Remote $remote_url is not a GitHub repo"
+    exit
+  fi
+
+  echo "==> Updating default branch for $remote_url to origin/$default_branch"
+  echo "If you have 2FA setup you will need to enter a personal access token as your password."
+  temp_file="$(mktemp)"
+  response=$(curl \
+    --silent \
+    -o $temp_file \
+    -w "%{http_code}" \
+    -u $user \
+    --header "Content-Type: application/json" \
+    --request PATCH \
+    --data "{\"default_branch\": \"$default_branch\" }" \
+    https://api.github.com/repos/$user/$repo)
+
+  if [[ $response != "200" ]]; then
+    echo "Error: Could not update default branch. Server returned:"
+    cat $temp_file
+  else
+    echo "==> Successfully updated default branch."
+  fi
+}
+
+# HELPERS
+_exe() { echo "+ $@" ; $@ ; }
+_confirm() {
+  local msg="$1"
+  local confirm_answer="$2"
+  echo -en "==> $msg "
+  read answer
+  echo
+  if [ "$answer" == "$confirm_answer" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+_is_executable() {
+  if hash $1 >/dev/null 2>&1; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+main $1
