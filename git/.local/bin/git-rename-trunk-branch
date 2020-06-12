@@ -1,4 +1,6 @@
 #!/bin/bash
+# Renames the trunk branch of the current repo locally and on remote.
+# Then attempts to update the default branch setting in Github.
 
 set -e
 
