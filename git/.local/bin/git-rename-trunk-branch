@@ -68,25 +68,27 @@ update_github() {
     exit
   fi
 
-  if [[ "$GITHUB_PRIVATE_TOKEN" ]]; then
-    userpassord="$user:$GITHUB_PRIVATE_TOKEN"
-  else
-    userpassord="$user"
-  fi
+  token=$GITHUB_PRIVATE_TOKEN
 
   if (_confirm "Update the GitHub default branch? [y/n]" "y"); then
-    echo "If you have 2FA setup you will need to enter a personal access token as your password."
+    if [[ -z "$token" ]]; then
+      echo -e "Enter github private token to make github repo changes: "
+      read -s token
+    fi
     github_request \
-      $userpassord \
+      $token \
       PATCH \
       "/repos/$user/$repo" \
       "{\"default_branch\": \"$default_branch\" }"
   fi
 
   if (_confirm "Setup GitHub branch protection? [y/n]" "y"); then
-    echo "If you have 2FA setup you will need to enter a personal access token as your password."
+    if [[ -z "$token" ]]; then
+      echo -e "Enter github private token to make github repo changes: "
+      read -s token
+    fi
     github_request \
-      $userpassord \
+      $token \
       PUT \
       "/repos/$user/$repo/branches/$new_default_branch/protection" \
       '{"required_status_checks": null, "enforce_admins": null, "required_pull_request_reviews": null, "restrictions": null, "allow_deletions": false, "allow_force_pushes": false }'
@@ -94,7 +96,7 @@ update_github() {
 }
 
 github_request() {
-  local user="$1"
+  local token="$1"
   local method="$2"
   local path="$3"
   local data="$4"
@@ -103,9 +105,9 @@ github_request() {
   response=$(curl \
     --silent \
     -o $temp_file \
-    -u $user \
     -w "%{http_code}" \
     --header "Content-Type: application/json" \
+    --header "Authorization: token $token" \
     --request $method \
     --data "$data" \
     https://api.github.com$path)
