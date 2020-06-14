@@ -71,6 +71,10 @@
   # BRANCH MANAGEMENT
   ###############################################
 
+  # get the name of the default branch
+  trunk="!git branch -r --points-at refs/remotes/origin/HEAD | grep '\\->' | cut -d' ' -f5 | sed 's/origin\\///'"
+  cot="!git checkout $(git trunk)"
+
   # Create pull request and open url: https://hub.github.com/
   review = "!hub pull-request -o"
 
@@ -80,11 +84,6 @@
 
   # Run `yarn test` on each commit that diverges from trunk branch.
   test-branch="!run-command-on-git-revisions origin/$(git trunk) $(git symbolic-ref --short HEAD) 'yarn test'"
-
-  # Fast-forward merge commits of current branch into trunk branch and push. Tidy after.
-  finish-branch="!git-finish-branch $1"
-
-  cot="!git checkout $(git trunk)"
 
 
   ###############################################

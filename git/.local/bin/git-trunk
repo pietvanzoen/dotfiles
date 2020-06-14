@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-# get the trunk branch for a project
-set -e
-
-git branch -r --points-at refs/remotes/origin/HEAD |
-  grep '\->' |
-  cut -d' ' -f5 |
-  sed 's/origin\///'
