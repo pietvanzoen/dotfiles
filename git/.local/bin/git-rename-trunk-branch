@@ -34,10 +34,6 @@ main() {
   _exe "git branch -m $current_default_branch $new_default_branch"
   _exe "git push -u origin $new_default_branch"
   _exe "git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/$new_default_branch"
-  if (_is_executable "git-trunk"); then
-    # https://github.com/pietvanzoen/dotfiles/blob/master/git/.local/bin/git-trunk
-    _exe "git trunk --set $new_default_branch"
-  fi
 
   update_github "$(git remote get-url origin)" "$new_default_branch"
 
@@ -131,13 +127,6 @@ _confirm() {
   read answer
   echo
   if [ "$answer" == "$confirm_answer" ]; then
-    return 0
-  else
-    return 1
-  fi
-}
-_is_executable() {
-  if hash $1 >/dev/null 2>&1; then
     return 0
   else
     return 1
