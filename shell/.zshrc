@@ -42,10 +42,10 @@ zle -N zle-keymap-select
 export KEYTIMEOUT=1
 
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
-setopt histignorealldups sharehistory
+setopt histignorealldups sharehistory HIST_IGNORE_SPACE
 HISTSIZE=1000
 SAVEHIST=1000
-HISTORY_IGNORE="(cd|cd -|pwd|exit)";
+HISTORY_IGNORE="(cd|cd -|pwd|exit|*token*|*TOKEN*)"
 HISTFILE=~/.zsh_history
 
 # Use modern completion system
