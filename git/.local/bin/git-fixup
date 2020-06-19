@@ -3,14 +3,16 @@
 # be selected from a list
 set -e
 
-trunk="$(git config --get local.trunk || echo master)"
+trunk="$(git branch -r --points-at refs/remotes/origin/HEAD | grep '\->' | cut -d' ' -f5)"
 current_branch="$(git symbolic-ref --short HEAD)"
 
 FIXUP_COMMIT="$1"
 if [[ -z "$FIXUP_COMMIT" ]]; then
-  FIXUP_COMMIT="$(git log --oneline --color origin/$trunk..$current_branch |
-    fzf --header 'Chose a commit to fixup:' --ansi +m --preview="git show --color \$(echo '{}' | awk '{ print \$1 }')" |
-    awk '{ print $1'})"
+  FIXUP_COMMIT="$(
+    git log --oneline --color $trunk..$current_branch |
+      fzf --header 'Chose a commit to fixup:' --ansi +m --preview="git show --color \$(echo {} | awk '{ print \$1 }')" |
+      awk '{ print $1 }'
+  )"
 
 fi
 
