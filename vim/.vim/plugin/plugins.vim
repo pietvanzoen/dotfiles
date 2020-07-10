@@ -6,7 +6,6 @@ function! PackInit() abort
   call minpac#init()
 
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
-  call minpac#add('AlphaMycelium/pathfinder.vim') " word motion suggestions
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
   call minpac#add('easymotion/vim-easymotion') " easy motion!
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
