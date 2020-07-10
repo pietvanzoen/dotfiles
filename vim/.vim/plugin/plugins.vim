@@ -17,6 +17,7 @@ function! PackInit() abort
   call minpac#add('neoclide/coc.nvim', { 'branch': 'release' })
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
+  call minpac#add('shumphrey/fugitive-gitlab.vim') " fugitive gitlab handler
   call minpac#add('tpope/vim-commentary') " language aware commenting command
   call minpac#add('tpope/vim-eunuch') " unix helpers
   call minpac#add('tpope/vim-fugitive') " git commands
@@ -74,7 +75,7 @@ let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 let g:lightline = {}
 let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
-let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd' ], [ 'readonly', 'filename', 'modified' ] ]
+let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd', 'gitbranch' ], [ 'readonly', 'filename', 'modified' ] ]
 let g:lightline.active.right = [ ['obsession'], [ 'lineinfo' ], [ 'filetype', 'coc'] ]
 let g:lightline.inactive = {}
 let g:lightline.inactive.left = [ [], ['cwd'], [ 'filename' ] ]
@@ -85,6 +86,7 @@ let g:lightline.component.filename = '%<%f'
 let g:lightline.enable = { 'statusline': 1, 'tabline': 0 }
 let g:lightline.component_function = {}
 let g:lightline.component_function.cwd = 'CurrentWorkingDir'
+let g:lightline.component_function.gitbranch = 'FugitiveHead'
 let g:lightline.component_function.mode = 'LightlineMode'
 let g:lightline.component_function.obsession = 'LightlineObsession'
 let g:lightline.component_function.coc = 'LighlineCoc'
