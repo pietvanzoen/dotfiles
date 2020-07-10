@@ -6,11 +6,11 @@ windows:
       layout: even-vertical
       panes:
         - studio:
-          - cd cms-prototype/studio
+          - cd cms-studio
           - yarn
           - tmux-run-pane yarn dev
         - web:
-          - cd cms-prototype/web
+          - cd cms-pages-generator
           - yarn
           - tmux-run-pane yarn dev
         - bff:
