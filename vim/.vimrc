@@ -1,6 +1,7 @@
 
 " Assumes sensible is loaded: https://github.com/tpope/vim-sensible
 set clipboard=unnamed " use system clipboard
+set colorcolumn=72,120 " vertical lines at 71 and 120 chars
 set cursorline " highlight current cursor line
 set expandtab " use spaces instead for tabs
 set hlsearch " highlight all search matches
