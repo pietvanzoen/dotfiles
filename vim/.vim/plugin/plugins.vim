@@ -18,6 +18,7 @@ function! PackInit() abort
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
   call minpac#add('shumphrey/fugitive-gitlab.vim') " fugitive gitlab handler
+  call minpac#add('simnalamburt/vim-mundo') " undo history navigation
   call minpac#add('tpope/vim-commentary') " language aware commenting command
   call minpac#add('tpope/vim-eunuch') " unix helpers
   call minpac#add('tpope/vim-fugitive') " git commands
@@ -143,3 +144,7 @@ let Rg_Options = '--ignore-case'
 " " different highlight method and have some other features )
 " map  n <Plug>(easymotion-next)
 " map  N <Plug>(easymotion-prev)
+
+" MUNDO
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <leader>u :MundoToggle<CR>
