@@ -82,7 +82,7 @@ source $HOME/.local/lib/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_STATESEPARATOR="|"
-GIT_PS1_SHOWUPSTREAM="auto"
+GIT_PS1_SHOWUPSTREAM="verbose"
 __git_info() {
   local info=$(__git_ps1 | sed -E 's/\(|\)//g' | xargs)
   [[ -z $info ]] && return;
