@@ -19,6 +19,7 @@ function! PackInit() abort
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
   call minpac#add('shumphrey/fugitive-gitlab.vim') " fugitive gitlab handler
   call minpac#add('simnalamburt/vim-mundo') " undo history navigation
+  call minpac#add('terryma/vim-multiple-cursors') " multiple cursors
   call minpac#add('tpope/vim-commentary') " language aware commenting command
   call minpac#add('tpope/vim-eunuch') " unix helpers
   call minpac#add('tpope/vim-fugitive') " git commands
