@@ -62,12 +62,6 @@ if [[ ! -d $HOME/.rvm ]]; then
   fi
 fi
 
-if [[ ! -d $HOME/.nvm ]]; then
-  if _confirm "Install nvm?"; then
-    attempt_script "install-nvm"
-  fi
-fi
-
 if [[ "$(hostname)" == "finn" ]]; then
   attempt_script "install-pgp-key"
 fi

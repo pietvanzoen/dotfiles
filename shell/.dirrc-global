@@ -1,4 +1,4 @@
 
-if [ -r .nvmrc ]; then
-  nvm use
+if [ -r .nvmrc ] || [ -r .node-version ]; then
+  fnm use
 fi
