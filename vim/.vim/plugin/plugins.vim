@@ -12,7 +12,6 @@ function! PackInit() abort
   call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
-  call minpac#add('lifepillar/vim-solarized8') " colorscheme
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('neoclide/coc.nvim', { 'branch': 'release' })
   call minpac#add('roman/golden-ratio') " perfect split resizing
