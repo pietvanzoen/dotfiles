@@ -166,3 +166,6 @@
 
 [tag]
   sort = -*authordate
+
+[commit]
+  template = /Users/piet/.local/etc/git-commit-message.txt
