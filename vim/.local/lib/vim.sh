@@ -3,6 +3,6 @@ vm() {
   if [ -e ./Session.vim ]; then
     vim -S
   else
-    vim .
+    vim -c 'Obsession' .
   fi
 }
