@@ -48,6 +48,11 @@ if [[ ! -e $HOME/.local/bin/git-get ]]; then
   attempt_script "install-git-get"
 fi
 
+if [[ ! -e $HOME/.local/bin/secrets ]]; then
+  attempt_script "install-secrets"
+fi
+
+
 if [[ ! -d $HOME/.hint ]]; then
   attempt_script "install-hint"
 fi
