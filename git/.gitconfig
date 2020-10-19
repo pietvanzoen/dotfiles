@@ -169,3 +169,6 @@
 
 [commit]
   template = /Users/piet/.local/etc/git-commit-message.txt
+
+[credential]
+  helper = osxkeychain
