@@ -22,16 +22,13 @@ do
   changes=$(git log --oneline $COMPARE)
   echo
   project_url=$(git open --print | sed -E 's/\/tree.+//')
-  echo "==> $i" | tr a-z A-Z
+  echo "$(echo $i | tr a-z A-Z) - $project_url/-/compare/$(echo $COMPARE | sed 's/origin\///g')"
   if [[ -z $changes ]]; then
     echo "No changes"
   else
-    echo "Commits:"
-    git log --pretty=format:'* %C(green)%h%Creset %s %C(cyan)(%cr) %C(blue)<%an>%Creset' --abbrev-commit $COMPARE
+    git log --pretty=format:'%C(green)%h%Creset %s %C(cyan)(%cr) %C(blue)<%an>%Creset' --abbrev-commit $COMPARE
+    echo
+    echo "Pipelines: $project_url/-/pipelines"
   fi
-  echo
-  echo "Links:"
-  echo "- Pipelines: $project_url/-/pipelines"
-  echo "- Compare: $project_url-/compare/$(echo $COMPARE | sed 's/origin\///g')"
   )
 done
