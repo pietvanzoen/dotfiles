@@ -99,7 +99,6 @@
   assumed = "!git ls-files -v | grep ^h | cut -c 3-"
   unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
   assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
-  ctags ="!.git/hooks/ctags"
 
   # clean is destructive, use trash instead
   trash = "!git ls-files --others --exclude-standard | xargs -r trash -v"

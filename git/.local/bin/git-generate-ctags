@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+PATH="/usr/local/bin:$PATH"
+dir="$(git rev-parse --git-dir)"
+trap 'rm -f "$dir/$$.tags"' EXIT
+if [[ -d './node_modules' ]]; then
+  git ctag-files | grep -E '\.js$' | xargs -I _ jsctags _ -f | sed '/^$/d' | LANG=C sort > "$dir/$$.tags"
+else
+  git ctag-files | ctags --tag-relative -L - -f"$dir/$$.tags"
+fi
+mv "$dir/$$.tags" "$dir/tags"

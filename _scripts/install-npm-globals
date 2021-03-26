@@ -1,0 +1,4 @@
+#!/bin/bash
+set -ex
+
+npm install -g $(cat $(dirname $0)/npmfile)
