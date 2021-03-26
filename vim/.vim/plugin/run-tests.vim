@@ -7,18 +7,21 @@ function! RunTests(test_command) abort
   else
     let l:test_command = 'yarn test'
   endif
-  let l:cmd = substitute(l:test_command, '%', expand('%'), '')
-  " disable gitgutter while running external test command otherwise rendering gets messed up
+  let l:tcmd = substitute(l:test_command, '%', expand('%'), '')
+
+  let l:cmd = 'clear && echo "==> Running ' . l:tcmd . '" && echo && time ' . l:tcmd
 
   if exists(':VimuxRunCommand')
-    call VimuxRunCommand('clear && ' . l:cmd)
+    call VimuxRunCommand(l:cmd)
   else
+    " disable gitgutter while running external test command otherwise rendering gets messed up
     exec ':GitGutterDisable | CocDisable'
     exec ':wall'
-    exec ':!clear && echo "Running ' . l:cmd . '" && time ' . l:cmd
+    exec ':!' . l:cmd
     exec ':redraw! | GitGutterEnable | CocEnable'
   endif
 endfunction
+let g:VimuxOpenExtraArgs = "-c bash"
 
 command! -nargs=? RunTests call RunTests(<q-args>)
 map <leader>t :RunTests<cr>

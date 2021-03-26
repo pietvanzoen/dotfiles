@@ -159,7 +159,14 @@ nnoremap <leader>u :MundoToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:VimuxOrientation = "h"
 let g:VimuxCloseOnExit = 1
-let g:VimuxHeight = "30"
+function! UpdateVimuxHeight()
+  let g:VimuxHeight = &columns / 8
+endfunction
+call UpdateVimuxHeight()
+augroup Vimux
+  autocmd!
+  autocmd VimResized * call UpdateVimuxHeight()
+augroup END
 
 
 " GIT-GUTTER
