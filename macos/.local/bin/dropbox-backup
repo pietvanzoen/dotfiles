@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+DEST="/Volumes/Moby/Dropbox Backup"
+LOGFILE="/Volumes/Moby/log/dropbox-backup.log"
+LOG_LEVEL='INFO'
+
+caffeinate -i \
+  rclone \
+  --progress \
+  --log-file "$LOGFILE" \
+  --log-level "$LOG_LEVEL" \
+  sync dropbox:/ "$DEST"
