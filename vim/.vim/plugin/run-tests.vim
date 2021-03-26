@@ -9,7 +9,7 @@ function! RunTests(test_command) abort
   endif
   let l:tcmd = substitute(l:test_command, '%', expand('%'), '')
 
-  let l:cmd = 'clear && echo "==> Running ' . l:tcmd . '" && echo && time ' . l:tcmd
+  let l:cmd = 'clear && echo "==> Running ' . l:tcmd . '" && echo && time (' . l:tcmd . ') && echo'
 
   if exists(':VimuxRunCommand')
     call VimuxRunCommand(l:cmd)
@@ -21,7 +21,6 @@ function! RunTests(test_command) abort
     exec ':redraw! | GitGutterEnable | CocEnable'
   endif
 endfunction
-let g:VimuxOpenExtraArgs = "-c bash"
 
 command! -nargs=? RunTests call RunTests(<q-args>)
 map <leader>t :RunTests<cr>

@@ -160,7 +160,7 @@ nnoremap <leader>u :MundoToggle<CR>
 let g:VimuxOrientation = "h"
 let g:VimuxCloseOnExit = 1
 function! UpdateVimuxHeight()
-  let g:VimuxHeight = &columns / 8
+  let g:VimuxHeight = &columns / 6
 endfunction
 call UpdateVimuxHeight()
 augroup Vimux
