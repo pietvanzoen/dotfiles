@@ -28,6 +28,7 @@ _info "Creating directories"
 mkdir -vp $HOME/.config
 mkdir -vp $HOME/.local/bin
 mkdir -vp $HOME/.local/lib
+mkdir -vp $HOME/.local/share
 mkdir -vp $HOME/.local/etc
 mkdir -vp $HOME/.gnupg
 
