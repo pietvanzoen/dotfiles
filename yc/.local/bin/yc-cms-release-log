@@ -22,7 +22,7 @@ do
   changes=$(git log --oneline $COMPARE)
   echo
   project_url=$(git open --print | sed -E 's/\/tree.+//')
-  echo "$(echo $i | tr a-z A-Z) - $project_url/-/compare/$(echo $COMPARE | sed 's/origin\///g')"
+  echo "==> $i - $project_url/-/compare/$(echo $COMPARE | sed 's/origin\///g')"
   if [[ -z $changes ]]; then
     echo "No changes"
   else
