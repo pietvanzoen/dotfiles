@@ -75,6 +75,7 @@
 
   # get the name of the default branch
   trunk="!git branch -r --points-at refs/remotes/origin/HEAD | grep '\\->' | cut -d' ' -f5 | sed 's/origin\\///'"
+  set-trunk="!f() { git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/$1; }; f"
   cot="!git checkout $(git trunk)"
 
   # Create pull request and open url: https://hub.github.com/
