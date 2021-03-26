@@ -13,7 +13,10 @@ function! PackInit() abort
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
+  call minpac#add('mattn/emmet-vim') " css/html abbreviations
   call minpac#add('neoclide/coc.nvim', { 'branch': 'release' })
+  call minpac#add('nikvdp/ejs-syntax')
+  call minpac#add('preservim/vimux') " vim/tmux test running
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
   call minpac#add('shumphrey/fugitive-gitlab.vim') " fugitive gitlab handler
@@ -27,7 +30,8 @@ function! PackInit() abort
   call minpac#add('tpope/vim-rhubarb') " fugitive plugin for github
   call minpac#add('tpope/vim-sensible') " sensible defaults
   call minpac#add('tpope/vim-surround') " surround char manipulation
-  call minpac#add('yegappan/grep') " use modern grep tools and output results to quickfix
+  call minpac#add('tyewang/vimux-jest-test') " vimux jest config
+  call minpac#add('jremmen/vim-ripgrep') " use modern grep tools and output results to quickfix
 
 endfunction
 
@@ -148,3 +152,15 @@ let Rg_Options = '--ignore-case'
 " MUNDO
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <leader>u :MundoToggle<CR>
+
+" EMMET
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" let g:user_emmet_leader_key='<C-Z>'
+" let g:user_emmet_install_global = 0
+" autocmd FileType html,css,scss EmmetInstall
+
+" VIMUX
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:VimuxOrientation = "h"
+let g:VimuxCloseOnExit = 1
+let g:VimuxHeight = "30"

@@ -9,10 +9,15 @@ function! RunTests(test_command) abort
   endif
   let l:cmd = substitute(l:test_command, '%', expand('%'), '')
   " disable gitgutter while running external test command otherwise rendering gets messed up
-  exec ':GitGutterDisable | CocDisable'
-  exec ':wall'
-  exec ':!clear && echo "Running ' . l:cmd . '" && time ' . l:cmd
-  exec ':redraw! | GitGutterEnable | CocEnable'
+
+  if exists(':VimuxRunCommand')
+    call VimuxRunCommand('clear && ' . l:cmd)
+  else
+    exec ':GitGutterDisable | CocDisable'
+    exec ':wall'
+    exec ':!clear && echo "Running ' . l:cmd . '" && time ' . l:cmd
+    exec ':redraw! | GitGutterEnable | CocEnable'
+  endif
 endfunction
 
 command! -nargs=? RunTests call RunTests(<q-args>)

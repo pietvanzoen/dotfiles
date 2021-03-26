@@ -1,8 +1,12 @@
 {
   "eslint.autoFixOnSave": true,
   "diagnostic.checkCurrentLine": true,
-  "diagnostic.messageTarget": "echo"
+  "diagnostic.messageTarget": "echo",
 
+  "emmet.includeLanguages": {
+    "scss": "css"
+  },
+  "emmet.showAbbreviationSuggestions": true
   // coc-deno causes tsserver to read js files as ts files. enable per project with :CocLocalConfig
   // "deno.enable": false
 }

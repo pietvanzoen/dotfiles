@@ -44,3 +44,10 @@ map <leader>z 1z=
 
 " search for currently selected text
 vnoremap // y/<C-R>"<CR>
+
+let &t_ut=''
+
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+  set grepformat=%f:%l:%c:%m
+endif
