@@ -7,10 +7,10 @@ function! PackInit() abort
 
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
-  call minpac#add('easymotion/vim-easymotion') " easy motion!
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
   call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
+  call minpac#add('jremmen/vim-ripgrep') " use modern grep tools and output results to quickfix
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('mattn/emmet-vim') " css/html abbreviations
@@ -30,8 +30,6 @@ function! PackInit() abort
   call minpac#add('tpope/vim-rhubarb') " fugitive plugin for github
   call minpac#add('tpope/vim-sensible') " sensible defaults
   call minpac#add('tpope/vim-surround') " surround char manipulation
-  call minpac#add('tyewang/vimux-jest-test') " vimux jest config
-  call minpac#add('jremmen/vim-ripgrep') " use modern grep tools and output results to quickfix
 
 endfunction
 
