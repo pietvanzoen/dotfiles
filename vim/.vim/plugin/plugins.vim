@@ -133,11 +133,6 @@ augroup END
 let g:fugitive_gitlab_domains = ['https://gitlab.ycdev.nl']
 
 
-" GREP
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let Rg_Options = '--ignore-case'
-
-
 " EASYMOTION
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " map  / <Plug>(easymotion-sn)
@@ -173,3 +168,9 @@ let g:VimuxHeight = "30"
 " https://github.com/airblade/vim-gitgutter/issues/164#issuecomment-75758204
 highlight clear SignColumn
 call gitgutter#highlight#define_highlights()
+
+
+" RIPGREP
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rg_highlight=1
+let g:rg_command='rg --vimgrep --hidden --glob !.git'
