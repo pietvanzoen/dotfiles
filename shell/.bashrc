@@ -7,7 +7,7 @@ source $HOME/.local/setup_env.sh
 export HISTSIZE=32768;
 export HISTFILESIZE=$HISTSIZE;
 export HISTCONTROL=ignoredups;
-export HISTIGNORE="cd:cd -:pwd:exit:date";
+export HISTIGNORE="cd:cd -:pwd:exit:date:*secrets set*";
 
 # BASH COMPLETION
 if [ -f /usr/local/share/bash-completion/bash_completion ]; then

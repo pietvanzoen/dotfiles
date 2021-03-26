@@ -45,7 +45,7 @@ export KEYTIMEOUT=1
 setopt histignorealldups sharehistory HIST_IGNORE_SPACE
 HISTSIZE=1000
 SAVEHIST=1000
-HISTORY_IGNORE="(cd|cd -|pwd|exit|*set-secret*)"
+HISTORY_IGNORE="(cd|cd -|pwd|exit|*set-secret*|*secrets set*)"
 HISTFILE=~/.zsh_history
 
 # Use modern completion system
