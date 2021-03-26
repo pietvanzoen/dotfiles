@@ -1,9 +1,10 @@
 name: cms
 root: ~/repos/gitlab.ycdev.nl/team-cms/
+on_project_first_start: brew services start redis
 
 windows:
-  - services:
-      layout: even-vertical
+  - CMS Services:
+      layout: tiled
       panes:
         - studio:
           - cd cms-studio
@@ -16,4 +17,8 @@ windows:
         - bff:
           - cd cms-pages-bff
           - yarn
-          - tmux-run-pane yarn dev
+          - tmux-run-pane yarn dev:server
+        - workers:
+          - cd cms-pages-bff
+          - sleep 10
+          - tmux-run-pane yarn dev:workers

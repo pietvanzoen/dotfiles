@@ -3,8 +3,8 @@ root: ~/repos/gitlab.ycdev.nl/youngcapital/
 on_project_first_start: brew services start --all
 
 windows:
-  - services:
-      layout: even-vertical
+  - Blokkentdoos Services:
+      layout: tiled
       panes:
         - blokkendoos:
           - cd blokkendoos
