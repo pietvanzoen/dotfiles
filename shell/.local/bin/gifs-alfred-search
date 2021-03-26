@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+
+QUERY=$1
+DIR=$HOME/Dropbox/Piet/gifs
+
+if [[ -z $QUERY ]]; then
+  ITEMS=$(/usr/local/bin/exa -r --sort created $DIR | xargs -I_ echo "$DIR/_")
+else
+  ITEMS=$(mdfind -onlyin $DIR "$QUERY")
+fi
+
+echo '{ "items": ['
+for f in $ITEMS; do
+cat <<EOB
+{
+  "title": "$(basename $f)",
+  "type": "file",
+  "arg": "$f",
+  "icon": {
+    "path": "$f"
+  }
+},
+EOB
+done
+echo ']}'

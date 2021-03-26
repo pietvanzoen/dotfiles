@@ -1,0 +1,14 @@
+#!/bin/bash
+# Sync gifs to s3 bucket: https://s3.console.aws.amazon.com/s3/buckets/xn--vi8h.piet.me?region=eu-west-1&prefix=%7E/&showversions=false
+
+set -e
+
+SOURCE=/Users/piet/Dropbox/Piet/gifs
+DEST=s3:xn--vi8h.piet.me/~
+
+set -x
+/usr/local/bin/rclone copy \
+  --progress \
+  --exclude .DS_Store \
+  --exclude _new_* \
+  $SOURCE $DEST

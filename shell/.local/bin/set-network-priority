@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -e
+
+NETWORKS=$(networksetup -listnetworkserviceorder | grep -E '\([0-9]\)' | cut -d ' ' -f2- | tr ' ' '_')
+
+FIRST=$1
+
+FIRST_WITH_UNDERSCORES=$(echo $FIRST | tr ' ' '_')
+
+if [[ -z "$FIRST" ]]; then
+  echo "Missing network name to prioritize"
+  exit 1
+fi
+
+if [[ "$NETWORKS" != *$FIRST_WITH_UNDERSCORES* ]]; then
+  echo "$FIRST is not a valid network"
+  exit 1
+fi
+
+NEW_NETWORK_LIST=("\"${FIRST}\" ")
+for n in ${NETWORKS}; do
+  net="$(echo "${n}" | tr '_' ' ')"
+  if [[ $net != $FIRST ]]; then
+    NEW_NETWORK_LIST+="\"${net}\" "
+  fi
+done
+
+eval "networksetup -ordernetworkservices ${NEW_NETWORK_LIST[@]}"
+
+echo "Priority network set to $FIRST"

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+NETWORKS="$(/usr/sbin/networksetup -listnetworkserviceorder | grep -E '\([0-9]\)' | cut -d ' ' -f2- | tr ' ' '_')"
+
+echo '{ "items": ['
+for n in ${NETWORKS}; do
+  net=$(echo $n | tr '_' ' ')
+cat <<EOB
+{
+  "title": "${net}",
+  "subtitle": "Set ${net} as priority network",
+  "arg": "${net}"
+},
+EOB
+done
+echo ']}'

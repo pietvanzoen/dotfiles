@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+DIR=/Users/piet/Dropbox/Piet/gifs
+URL=$1
+BASENAME=$(basename $URL);
+EXTENSION=$(echo $BASENAME | rev | cut -d. -f1 | rev)
+
+FILEPATH=$DIR/_new_$(/Users/piet/.local/bin/rand 8).$EXTENSION
+
+if [[ ! $URL = http* ]]; then
+  >&2 echo "Error: $URL is not a url"
+  exit 1
+fi
+
+curl $URL > $FILEPATH
+>&2 echo "==> File added"
+echo $FILEPATH
