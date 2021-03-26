@@ -523,7 +523,7 @@ colorscheme solarized
 
 function! EnableWriteAndRun() abort
   nmap <cr> :wa \|!%:p<cr>
-endfunction!
+endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FINAL
