@@ -159,8 +159,17 @@ nnoremap <leader>u :MundoToggle<CR>
 " let g:user_emmet_install_global = 0
 " autocmd FileType html,css,scss EmmetInstall
 
+
 " VIMUX
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:VimuxOrientation = "h"
 let g:VimuxCloseOnExit = 1
 let g:VimuxHeight = "30"
+
+
+" GIT-GUTTER
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" fix git-gutter signcolumn coloring with solarized
+" https://github.com/airblade/vim-gitgutter/issues/164#issuecomment-75758204
+highlight clear SignColumn
+call gitgutter#highlight#define_highlights()
