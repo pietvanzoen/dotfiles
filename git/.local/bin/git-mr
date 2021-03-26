@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+git open -s -/merge_requests
