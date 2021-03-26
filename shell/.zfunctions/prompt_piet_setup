@@ -20,7 +20,7 @@ elif [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 fi
 
 __black="%{$fg[black]%}"
-__dark="%{$fg_bold[green]%}"
+__dark="%{$fg_dark[white]%}"
 __red="%{$fg[red]%}"
 __green="%{$fg[green]%}"
 __yellow="%{$fg[yellow]%}"
