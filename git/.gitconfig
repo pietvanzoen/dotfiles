@@ -18,7 +18,8 @@
   excludesfile = ~/.gitignore_global
 
   # Use less when output is longer than screen. Also leave result on screen after exiting less.
-  pager = diff-highlight | less -F -X
+  # pager = diff-highlight | less -F -X
+  pager = delta
 
 [init]
   templatedir = ~/.gittemplate
@@ -124,7 +125,8 @@
 
 [diff]
   compactionHeuristic = 1
-  tool = vimdiff
+  # tool = vimdiff
+  colorMoved = default
 
 [difftool]
   prompt = false
@@ -132,11 +134,11 @@
 [mergetool]
   prompt = false
 
-[pager]
+#[pager]
   # Use diff-highlight from git-core for diffing. Better diffing. hello!
-  log =  diff-highlight | less --tabs=4 -FX
-  show = diff-highlight | less --tabs=4 -FX
-  diff = diff-highlight | less --tabs=4 -FX
+  # log =  diff-highlight | less --tabs=4 -FX
+  # show = diff-highlight | less --tabs=4 -FX
+  # diff = diff-highlight | less --tabs=4 -FX
 
 [color "diff"]
   commit = green
@@ -153,7 +155,26 @@
   newHighlight = green 22
 
 [interactive]
-  diffFilter = diff-highlight | less --tabs=4 -FX
+  diffFilter = delta --color-only
+
+[delta]
+  features = unobtrusive-line-numbers decorations
+  syntax-theme = Solarized (dark)
+
+[delta "unobtrusive-line-numbers"]
+    line-numbers = true
+    ; line-numbers-minus-style = "#444444"
+    ; line-numbers-zero-style = "#444444"
+    ; line-numbers-plus-style = "#444444"
+    line-numbers-left-format = "{nm:>4}┊"
+    line-numbers-right-format = "{np:>4}│"
+    line-numbers-left-style = white dim
+    line-numbers-right-style = white dim
+
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold yellow ul
+  file-decoration-style = none
 
 [fetch]
   prune = true # Always prune refs when fetching.
