@@ -12,6 +12,7 @@ function! PackInit() abort
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('jremmen/vim-ripgrep') " use modern grep tools and output results to quickfix
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
+  call minpac#add('kbarrette/mediummode') " break bad habits by limiting hjkl usage
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('mattn/emmet-vim') " css/html abbreviations
   call minpac#add('neoclide/coc.nvim', { 'branch': 'release' })
