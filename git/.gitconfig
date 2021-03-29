@@ -64,6 +64,7 @@
   amend = commit --amend
   pushf = push --force-with-lease
   aa = add --all
+  ap = aa -p
   b = branch -vv # Verbose branch list. Shows upstream branches.
   ds = diff --stat=160,120
   unmerged = diff --name-only --diff-filter=U
