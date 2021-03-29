@@ -22,7 +22,9 @@ fi
 __black="%{$fg[black]%}"
 __dark="%{$fg_dark[white]%}"
 __red="%{$fg[red]%}"
+__red_bold="%{$fg_bold[red]%}"
 __green="%{$fg[green]%}"
+__green_bold="%{$fg_bold[green]%}"
 __yellow="%{$fg[yellow]%}"
 __blue="%{$fg[blue]%}"
 __purple="%{$fg[purple]%}"
@@ -31,7 +33,7 @@ __reset_color="%{$reset_color%}"
 
 prompt_piet_setup() {
   local EXIT="$?"
-  PROMPT="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__job_info) $(__caret)"
+  PROMPT=$(echo "$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__job_info) $(__caret)" | tr -s ' ')
   RPROMPT="$(__node)"
   export PROMPT RPROMPT
 }
@@ -42,7 +44,7 @@ __caret() {
 
 __exit_caret() {
   [[ -z "$TMUX" ]] && [[ -n "$ITERM_PROFILE" ]] && return
-  echo -n "%(0?.$__green.$__red)λ$__reset_color"
+  echo -n "%B%(0?.$__green_bold.$__red_bold)›$__reset_color%b"
 }
 
 __cwd() {
@@ -62,6 +64,9 @@ __connection() {
 }
 
 __host() {
+  if [[ -z "$PIET_PROMPT_SHOW_HOST" ]]; then
+    return
+  fi
   echo -n "$__dark%m$__reset_color"
 }
 
