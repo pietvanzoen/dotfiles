@@ -5,9 +5,43 @@ setopt globdots # match dotfiles in globs by default
 setopt extendedglob # more globbing
 
 # Set up the prompt
+[[ $COLORTERM = *(24bit|truecolor)* ]] || zmodload zsh/nearcolor
 autoload -Uz promptinit
 promptinit
-prompt piet
+zstyle ':prompt:pure:prompt:success' color green
+zstyle ':prompt:pure:path' color cyan
+zstyle ':prompt:pure:git:arrow' color yellow
+zstyle ':prompt:pure:git:branch' color 242
+zstyle ':prompt:pure:git:branch:cached' color red
+zstyle ':prompt:pure:git:dirty' color yellow
+zstyle ':prompt:pure:execution_time' color magenta
+
+prompt pure
+
+__black="%{$fg[black]%}"
+__dark="%{$fg_light[black]%}"
+__red="%{$fg[red]%}"
+__red_bold="%{$fg_bold[red]%}"
+__green="%{$fg[green]%}"
+__green_bold="%{$fg_bold[green]%}"
+__yellow="%{$fg[yellow]%}"
+__blue="%{$fg[blue]%}"
+__purple="%{$fg[purple]%}"
+__cyan="%{$fg[cyan]%}"
+__reset_color="%{$reset_color%}"
+
+__right_prompt() {
+  local -a rprompt
+  local gitroot="$(git rev-parse --show-toplevel 2> /dev/null || echo '.')"
+  rprompt+=( "%(1j. ⚙%j.)" )
+  if [[ -d "$gitroot/node_modules" ]]; then
+    rprompt+=("⬢ $(node -v)")
+  fi
+  export RPROMPT="%F{240}${(j: :)rprompt}%{$reset_color%}"
+}
+
+precmd_functions+='__right_prompt'
+
 
 # Use vim keybindings
 bindkey -v
