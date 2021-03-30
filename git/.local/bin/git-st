@@ -5,14 +5,18 @@ remote=$(git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-n
 ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
 behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
 
-upstream="Upstream: "
 if [[ -z "$remote" ]]; then
-    upstream="$upstream $(tput setaf 3)none$(tput srg0)"
+    echo "$(tput setaf 1)u?$(tput sgr0)"
 else
-    (( $ahead )) && upstream="$upstream $(tput setaf 3)+$ahead$(tput srg0)"
-    (( $behind )) && upstream="$upstream $(tput setaf 3)-$behind$(tput srg0)"
-    [[ "$ahead" == 0 ]] && [[ "$behind" == 0 ]] && upstream="$upstream $(tput setaf 2)✔$(tput srg0)"
+    upstream="u"
+    (( $ahead )) && upstream="$upstream+$ahead"
+    (( $behind )) && upstream="$upstream-$behind"
+    [[ "$ahead" == 0 ]] && [[ "$behind" == 0 ]] && upstream="$upstream="
+    if [[ "$upstream" == 'u=' ]]; then
+        echo "$(tput setaf 2)$upstream$(tput sgr0)"
+    else
+        echo "$(tput setaf 3)$upstream$(tput sgr0)"
+    fi
 fi
 
-echo $upstream
 git status -s
