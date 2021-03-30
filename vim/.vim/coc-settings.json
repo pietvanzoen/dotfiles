@@ -1,7 +1,7 @@
 {
   "eslint.autoFixOnSave": true,
   "diagnostic.checkCurrentLine": true,
-  /* "diagnostic.messageTarget": "echo", */
+  "diagnostic.messageTarget": "float",
 
   "emmet.includeLanguages": {
     "scss": "css"
