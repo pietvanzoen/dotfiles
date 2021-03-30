@@ -1,4 +1,5 @@
 autoload -U colors
+autoload -Uz vcs_info
 colors
 setopt PROMPT_SUBST
 
@@ -31,20 +32,65 @@ __purple="%{$fg[purple]%}"
 __cyan="%{$fg[cyan]%}"
 __reset_color="%{$reset_color%}"
 
+zstyle ':vcs_info:git*' formats "($__red%b$__yellow%u%c%m$__reset_color)"
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' check-for-staged-changes true
+zstyle ':vcs_info:*' stagedstr '+'
+zstyle ':vcs_info:*' unstagedstr '*'
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-st
+# zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+
+function +vi-git-untracked(){
+    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
+        git status --porcelain | grep '??' &> /dev/null ; then
+        # This will show the marker if there are any untracked files in repo.
+        # If instead you want to show the marker only if there are untracked
+        # files in $PWD, use:
+        #[[ -n $(git ls-files --others --exclude-standard) ]] ; then
+        hook_com[staged]+='%%'
+    fi
+}
+function +vi-git-st() {
+    local ahead behind
+    local -a gitstatus
+
+    remote=${$(git rev-parse --verify ${hook_com[branch]}@{upstream} \
+      --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
+    [[ ! -z "${remote}" ]] && gitstatus+=( "u" )
+
+    # for git prior to 1.7
+    # ahead=$(git rev-list origin/${hook_com[branch]}..HEAD | wc -l)
+    ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+    (( $ahead )) && gitstatus+=( "+${ahead}" )
+
+    # for git prior to 1.7
+    # behind=$(git rev-list HEAD..origin/${hook_com[branch]} | wc -l)
+    behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+    (( $behind )) && gitstatus+=( "-${behind}" )
+
+    [[ ! -z "${remote}" ]] && [[ $behind == 0 ]] && [[ $ahead == 0 ]] && gitstatus+=("=")
+
+    gst=${(j::)gitstatus}
+    [[ ! -z "${gst}" ]] && hook_com[misc]+=" ${gst}"
+}
+
 prompt_piet_setup() {
   local EXIT="$?"
-  PROMPT=$(echo "$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__job_info) $(__caret)" | tr -s ' ')
-  RPROMPT="$(__node)"
+  vcs_info
+  PROMPT=$(echo "$(__context) $(__cwd)${vcs_info_msg_0_}$(__job_info) $(__caret)" | tr -s ' ' | sed -e 's/^ *//')
+  RPROMPT=""
   export PROMPT RPROMPT
 }
 
 __caret() {
-  echo -n "%(!.# .)"
+  local caret="%(!.# .› )"
+  [[ -z "$TMUX" ]] && [[ -n "$ITERM_PROFILE" ]] && return
+  echo "\n%(0?.$__green_bold.$__red_bold)$caret$__reset_color"
 }
 
 __exit_caret() {
   [[ -z "$TMUX" ]] && [[ -n "$ITERM_PROFILE" ]] && return
-  echo -n "%B%(0?.$__green_bold.$__red_bold)›$__reset_color%b"
+  echo -n "%(0?.$__green_bold.$__red_bold)›$__reset_color"
 }
 
 __cwd() {
@@ -83,7 +129,7 @@ __node() {
   echo -n "${__dark}⬢ $(node -v)$__reset_color"
 }
 
-source $HOME/.local/lib/git-prompt.sh
+# source $HOME/.local/lib/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_STATESEPARATOR="|"
