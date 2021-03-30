@@ -8,13 +8,14 @@ setopt extendedglob # more globbing
 [[ $COLORTERM = *(24bit|truecolor)* ]] || zmodload zsh/nearcolor
 autoload -Uz promptinit
 promptinit
-zstyle ':prompt:pure:prompt:success' color green
+zstyle ':prompt:pure:prompt:success' color 13
 zstyle ':prompt:pure:path' color cyan
+zstyle ':prompt:pure:jobs' color 13
 zstyle ':prompt:pure:git:arrow' color yellow
-zstyle ':prompt:pure:git:branch' color 242
-zstyle ':prompt:pure:git:branch:cached' color red
+zstyle ':prompt:pure:git:branch' color 10
+zstyle ':prompt:pure:git:branch:cached' color magenta
 zstyle ':prompt:pure:git:dirty' color yellow
-zstyle ':prompt:pure:execution_time' color magenta
+zstyle ':prompt:pure:execution_time' color black
 
 prompt pure
 
@@ -33,11 +34,10 @@ __reset_color="%{$reset_color%}"
 __right_prompt() {
   local -a rprompt
   local gitroot="$(git rev-parse --show-toplevel 2> /dev/null || echo '.')"
-  rprompt+=( "%(1j. ⚙%j.)" )
   if [[ -d "$gitroot/node_modules" ]]; then
     rprompt+=("⬢ $(node -v)")
   fi
-  export RPROMPT="%F{240}${(j: :)rprompt}%{$reset_color%}"
+  export RPROMPT="%F{10}${(j: :)rprompt}%{$reset_color%}"
 }
 
 precmd_functions+='__right_prompt'

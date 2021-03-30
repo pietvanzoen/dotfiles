@@ -135,7 +135,7 @@ prompt_pure_preprompt_render() {
 	[[ -n $prompt_pure_state[username] ]] && preprompt_parts+=($prompt_pure_state[username])
 
 	# Set the path.
-	preprompt_parts+=('%F{${prompt_pure_colors[path]}}%~%f')
+	preprompt_parts+=('%F{${prompt_pure_colors[path]}}%2~%f')
 
 	# Git branch and dirty status info.
 	typeset -gA prompt_pure_vcs_info
@@ -154,6 +154,9 @@ prompt_pure_preprompt_render() {
 	if [[ -n $prompt_pure_git_stash ]]; then
 		preprompt_parts+=('%F{$prompt_pure_colors[git:stash]}${PURE_GIT_STASH_SYMBOL:-≡}%f')
 	fi
+
+	preprompt_parts+=('%F{$prompt_pure_colors[jobs]}%(1j.⚙%j.)%f')
+
 
 	# Execution time.
 	[[ -n $prompt_pure_cmd_exec_time ]] && preprompt_parts+=('%F{$prompt_pure_colors[execution_time]}${prompt_pure_cmd_exec_time}%f')
@@ -183,7 +186,7 @@ prompt_pure_preprompt_render() {
 
 	if [[ $1 == precmd ]]; then
 		# Initial newline, for spaciousness.
-		# print
+		print
 	elif [[ $prompt_pure_last_prompt != $expanded_prompt ]]; then
 		# Redraw the prompt.
 		prompt_pure_reset_prompt
@@ -806,6 +809,7 @@ prompt_pure_setup() {
 		user                 242
 		user:root            default
 		virtualenv           242
+		jobs                 blue
 	)
 	prompt_pure_colors=("${(@kv)prompt_pure_colors_default}")
 
