@@ -1,0 +1,18 @@
+#!/bin/bash
+
+
+remote=$(git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)
+ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+
+upstream="Upstream: "
+if [[ -z "$remote" ]]; then
+    upstream="$upstream none"
+else
+    (( $ahead )) && upstream="$upstream +$ahead"
+    (( $behind )) && upstream="$upstream -$behind"
+    [[ "$ahead" == 0 ]] && [[ "$behind" == 0 ]] && upstream="$upstream ✔"
+fi
+
+echo $upstream
+git status -s
