@@ -8,7 +8,7 @@ behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
 if [[ -z "$remote" ]]; then
     echo "$(tput setaf 1)u?$(tput sgr0)"
 else
-    upstream="u"
+    upstream=" u"
     (( $ahead )) && upstream="$upstream+$ahead"
     (( $behind )) && upstream="$upstream-$behind"
     [[ "$ahead" == 0 ]] && [[ "$behind" == 0 ]] && upstream="$upstream="
