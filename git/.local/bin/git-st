@@ -7,11 +7,11 @@ behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
 
 upstream="Upstream: "
 if [[ -z "$remote" ]]; then
-    upstream="$upstream none"
+    upstream="$upstream $(tput setaf 3)none$(tput srg0)"
 else
-    (( $ahead )) && upstream="$upstream +$ahead"
-    (( $behind )) && upstream="$upstream -$behind"
-    [[ "$ahead" == 0 ]] && [[ "$behind" == 0 ]] && upstream="$upstream ✔"
+    (( $ahead )) && upstream="$upstream $(tput setaf 3)+$ahead$(tput srg0)"
+    (( $behind )) && upstream="$upstream $(tput setaf 3)-$behind$(tput srg0)"
+    [[ "$ahead" == 0 ]] && [[ "$behind" == 0 ]] && upstream="$upstream $(tput setaf 2)✔$(tput srg0)"
 fi
 
 echo $upstream
