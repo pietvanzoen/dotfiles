@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-echo
-echo "==> $(date -u +'%Y-%m-%d %H:%M:%SZ')"
-sh -c "$*"
-echo "==> Done (exit code: $?)"
-echo

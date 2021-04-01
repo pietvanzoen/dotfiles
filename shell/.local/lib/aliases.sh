@@ -31,10 +31,6 @@ if command -v bat >/dev/null; then
   alias cat="bat"
 fi
 
-# jobs
-alias nh="nohup group-task"
-alias nf="tail -f nohup.out"
-
 # SCREEN
 alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | sed 's/\./ /' | column -s \" \" -t | sort -k 2,2"
 alias sr="screen -r"

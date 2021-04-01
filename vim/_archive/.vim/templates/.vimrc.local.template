@@ -1,2 +1,0 @@
-" let g:test_command = 'yarn test --findRelatedTests %'
-" let g:auto_indent_whole_file = 1
