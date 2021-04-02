@@ -47,3 +47,6 @@ flushdnscache() {
 }
 
 alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport
+
+# always allow "put back" behaviour
+alias trash='trash -F'
