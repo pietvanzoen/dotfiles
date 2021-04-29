@@ -182,3 +182,11 @@ call gitgutter#highlight#define_highlights()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:rg_highlight=1
 let g:rg_command='rg --vimgrep --hidden --glob !.git'
+
+
+" GOLDEN RATIO
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup GoldenRatio
+  autocmd!
+  autocmd VimResized * exec ':GoldenRatioResize'
+augroup END
