@@ -11,12 +11,12 @@ function! RunTests(test_command) abort
 
   let l:cmd = 'clear && echo "==> Running ' . l:tcmd . '" && echo && time (' . l:tcmd . ') && echo'
 
+  exec ':wall'
   if exists(':VimuxRunCommand')
     call VimuxRunCommand(l:cmd)
   else
     " disable gitgutter while running external test command otherwise rendering gets messed up
     exec ':GitGutterDisable | CocDisable'
-    exec ':wall'
     exec ':!' . l:cmd
     exec ':redraw! | GitGutterEnable | CocEnable'
   endif
