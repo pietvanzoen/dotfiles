@@ -9,8 +9,8 @@ setopt extendedglob # more globbing
 autoload -Uz promptinit
 promptinit
 zstyle ':prompt:pure:prompt:success' color 13
-zstyle ':prompt:pure:path' color cyan
-zstyle ':prompt:pure:jobs' color 13
+zstyle ':prompt:pure:path' color 13
+zstyle ':prompt:pure:jobs' color blue
 zstyle ':prompt:pure:git:arrow' color yellow
 zstyle ':prompt:pure:git:branch' color 10
 zstyle ':prompt:pure:git:branch:cached' color magenta
