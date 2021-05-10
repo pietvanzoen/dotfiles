@@ -1,4 +1,7 @@
-colorscheme solarized
+colorscheme solarized8
+set background=dark
+set termguicolors
+
 
 " Assumes sensible is loaded: https://github.com/tpope/vim-sensible
 set clipboard=unnamed " use system clipboard
@@ -19,7 +22,7 @@ set smartcase " use case if search includes uppercase characters
 set softtabstop=2 " number of spaces to use for "soft tabs"
 set spell " enable spell checker
 set spelllang=en_us " default dictionary
-set t_Co=16 " limit to 16 colors. fixes ale gutter color issue
+" set t_Co=16 " limit to 16 colors. fixes ale gutter color issue
 set tags=.git/tags
 set undodir=~/.vim/undo
 set undofile
@@ -45,7 +48,7 @@ map <leader>z 1z=
 " search for currently selected text
 vnoremap // y/<C-R>"<CR>
 
-let &t_ut=''
+" let &t_ut=''
 
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
