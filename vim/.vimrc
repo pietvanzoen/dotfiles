@@ -56,3 +56,6 @@ if executable('rg')
   set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
   set grepformat=%f:%l:%c:%m
 endif
+
+" type %% in command mode to get current directory
+cnoremap %% <C-R>=expand('%:h').'/'<cr>
