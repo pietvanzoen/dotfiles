@@ -14,7 +14,7 @@ fi
 HAS_ERROR=""
 while read package; do
   echo -n "==> Restowing package $package..."
-  if stow --verbose=0 $package >/dev/null 2>&1; then
+  if stow --target=$HOME --restow --verbose=0 $package >/dev/null 2>&1; then
     echo -n " done"
   else
     HAS_ERROR=1

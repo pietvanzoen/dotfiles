@@ -21,7 +21,7 @@ install_package() {
   done
   )
   [[ -e "$package/_install" ]] && $package/_install
-  stow $package
+  stow --target=$HOME --restow --verbose $package
 }
 
 _info "Creating directories"
@@ -34,7 +34,7 @@ mkdir -vp $HOME/.gnupg
 
 _info "Initializing stow"
 echo "stow" >> "$INSTALLED_INDEX_TMP"
-stow stow
+stow --target=$HOME --restow --verbose stow
 
 for package in $stowable; do
   if _confirm "Install $package?"; then
