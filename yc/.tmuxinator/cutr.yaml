@@ -1,0 +1,20 @@
+name: cutr
+root: ~/repos/gitlab.com/cutr-git/cutr-server
+on_project_first_start: brew services start mongodb-community
+
+windows:
+  - Cutr:
+      layout: tiled
+      panes:
+        - ui:
+          - cd ui
+          - yarn
+          - tmux-run-pane yarn dev
+        - server:
+          - cd server
+          - yarn
+          - tmux-run-pane yarn dev
+        - console:
+          - cd server
+          - sleep 5
+          - tmux-run-pane yarn console
