@@ -2,6 +2,7 @@
 brew 'bash'
 brew 'bash-completion@2'
 brew 'bat'
+brew 'blueutil'
 brew 'ctags'
 brew 'curl'
 brew 'docker-completion'
@@ -23,6 +24,7 @@ brew 'lnav'
 brew 'mas'
 brew 'mosh'
 brew 'mtr'
+brew 'neovim'
 brew 'pstree'
 brew 'reattach-to-user-namespace'
 brew 'rename'
@@ -35,9 +37,11 @@ brew 'temuxinator'
 brew 'terminal-notifier'
 brew 'tldr'
 brew 'tmux'
+brew 'tmuxinator'
 brew 'trash'
 brew 'tree'
 brew 'vim'
+brew 'yamllint'
 brew 'yarn'
 brew 'yarn-completion'
 
@@ -54,34 +58,34 @@ brew 'gnutls'
 brew 'grep'
 brew 'moreutils'
 
-cask 'homebrew/cask-fonts/font-inconsolata'
-cask 'homebrew/cask-fonts/font-hack-nerd-font'
-
 cask_args appdir: "/Applications"
 cask 'alfred'
 cask 'bartender'
 cask 'bitbar'
 cask 'docker'
-cask 'dropbox'
+# cask 'dropbox'
 cask 'google-cloud-sdk'
 cask 'istat-menus'
-cask 'iterm2'
-cask 'keybase'
+# cask 'iterm2'
+# cask 'keybase'
 cask 'signal'
-cask 'slack'
+# cask 'slack'
 cask 'transmit'
 cask 'tripmode'
 cask 'tunnelblick'
 cask 'veracrypt'
 cask 'whatsapp'
 
+mas '1Blocker', id: 1107421413
 mas 'Amphetamine', id: 937984704
-mas 'Monosnap', id: 540348655
+mas 'Color Picker', id: 1545870783
+mas 'Instapaper Save', id: 1481302432
+mas 'MeetingBar', id: 1532419400
 mas 'Moom', id: 419330170
-mas 'Wallcat', id: 1000397973
-mas 'YubiKey Personalization Tool', id: 638161122
-mas 'Pixelmator', id: 407963104
 mas 'NextDNS', id: 1464122853
-mas 'Things 3', id: 904280696
-mas 'Monosnap', id: 540348655
-mas '1Password 7', id: 1333542190
+mas 'Parcel', id: 639968404
+mas 'Pixelmator', id: 407963104
+mas 'Raindrop.io for Safari', id: 957810159
+mas 'Ring', id: 1142753258
+mas 'TranslateMe', id: 1448316680
+mas 'Wallcat', id: 1000397973
