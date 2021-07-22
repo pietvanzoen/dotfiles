@@ -58,6 +58,9 @@ brew 'gnutls'
 brew 'grep'
 brew 'moreutils'
 
+tap 'homebrew/cask-fonts'
+cask 'font-fira-code'
+
 cask_args appdir: "/Applications"
 cask 'alfred'
 cask 'bartender'
