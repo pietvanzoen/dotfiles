@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -ex
+
+# Set correct permissions for .gnupg
+chown -R $(whoami) ~/.gnupg/
+chmod 600 ~/.gnupg/*
+chmod 700 ~/.gnupg
+
+# Restart gpg agent
+gpgconf --kill gpg-agent
