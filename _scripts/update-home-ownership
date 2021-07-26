@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
+if [[ "$OSTYPE" != "linux"* ]]; then
+  echo "Error: OS $OSTYPE not compatible with script"
+  exit 1
+fi
+
 if [[ -n "$SUDO_USER" ]]; then
   export USER="$SUDO_USER"
   export HOME="/home/$SUDO_USER"
