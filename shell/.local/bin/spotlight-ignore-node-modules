@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+BASE="$HOME/repos"
+
+find $BASE -type d -name 'node_modules' | while read dir; do
+  if [[ $(grep -o "node_modules" <<< "$dir" | grep ""  -c) == 1 ]]; then
+    if [ -f "$dir/.metadata_never_index" ]; then
+      echo "$dir already has been ignored"
+    else
+      echo "Adding ignore to $dir"
+      touch "$dir/.metadata_never_index"
+    fi
+  fi
+done
+
+echo "==> All done"
