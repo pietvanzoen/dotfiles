@@ -28,7 +28,9 @@ set spelllang=en_us " default dictionary
 set tags=.git/tags
 set undodir=~/.vim/undo
 set undofile
-
+if has("nvim")
+  set inccommand=nosplit
+endif
 
 " MAPPINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
