@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -ex
+
+ln -sf ~/Dropbox/Apps/karabiner ~/.config/karabiner
