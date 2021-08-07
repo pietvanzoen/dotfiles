@@ -3,3 +3,4 @@
 set -ex
 
 ln -sf ~/Dropbox/Apps/karabiner ~/.config/karabiner
+ln -sf ~/Dropbox/Apps/rclone ~/.config/rclone
