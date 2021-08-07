@@ -18,3 +18,4 @@ windows:
           - cd server
           - sleep 5
           - tmux-run-pane yarn console
+        - dev:
