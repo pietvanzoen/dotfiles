@@ -1,5 +1,0 @@
-#!/bin/bash
-# Print all todo's and fixme's in the current git project.
-set -e
-
-git ls-files | while read file; do grep -nHo -E ' TODO.*$| FIXME.*$' $file; done
