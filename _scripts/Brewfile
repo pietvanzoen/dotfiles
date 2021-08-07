@@ -61,23 +61,18 @@ tap 'homebrew/cask-fonts'
 cask 'font-fira-code'
 
 cask_args appdir: "/Applications"
-# cask 'alfred'
+# cask 'keybase'
+# cask 'slack'
+# cask 'veracrypt'
+cask 'alfred'
 cask 'bartender'
 cask 'bitbar'
 cask 'docker'
-# cask 'dropbox'
-# cask 'google-cloud-sdk'
 cask 'istat-menus'
-# cask 'iterm2'
-# cask 'keybase'
 cask 'signal'
-# cask 'slack'
 cask 'transmit'
-# cask 'tripmode'
-# cask 'tunnelblick'
-# cask 'veracrypt'
-cask 'whatsapp'
 cask 'visual-studio-code'
+cask 'whatsapp'
 
 mas '1Blocker', id: 1107421413
 mas 'Amphetamine', id: 937984704
