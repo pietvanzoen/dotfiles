@@ -1,4 +1,5 @@
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
+alias clean-sessions="find . -name 'Session.vim' | xargs rm -v"
 alias vim=nvim
 vm() {
   __clean_old_session_file
