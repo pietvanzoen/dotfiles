@@ -10,3 +10,6 @@ fi
 echo "==> Installing minpac"
 
 git clone --depth=1 https://github.com/k-takata/minpac.git $MINPAC_DIR
+
+echo "==> Symlinking coc settings"
+ln -sf ~/Dropbox/Apps/coc ~/.config/coc
