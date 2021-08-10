@@ -136,3 +136,7 @@ bindkey '^ ' my-autosuggest-accept
 ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=my-autosuggest-accept
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=23"
 ZSH_AUTOSUGGEST_USE_ASYNC=true
+
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey "^X^E" edit-command-line
