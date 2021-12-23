@@ -15,10 +15,11 @@ if [[ ! -z "$(git status -s)" ]]; then
   exit 1
 fi
 
-if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$MAINBRANCH" ]]; then
+if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$TRUNK" ]]; then
   exe "git checkout $TRUNK"
 fi
 exe "git fetch --all --prune"
 exe "git pull --rebase"
 exe "git prune-merged"
 exe "git prune-gone"
+exe "git prune-sessions"

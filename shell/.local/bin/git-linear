@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -e
+
+LINEAR_TOKEN="$(secrets get LINEAR_TOKEN)"
+
+if [[ -z $LINEAR_TOKEN ]]; then
+  echo "Error: LINEAR_TOKEN not set"
+  exit 1
+fi
+
+QUERY="{
+  issues {
+    nodes {
+      branchName
+    }
+  }
+}"
+
+branches="$(curl \
+  -X POST \
+  --silent \
+  -H "Content-Type: application/json" \
+  -H "Authorization: $LINEAR_TOKEN" \
+  --data "{ \"query\": \"$(echo $QUERY | tr '\n' ' ')\" }" \
+  https://api.linear.app/graphql | jq -r '.data.issues.nodes[].branchName')"
+
+branch=$(echo "$branches" | fzf)
+
+git switch -c $branch

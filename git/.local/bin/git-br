@@ -8,4 +8,4 @@ trunk=$(git trunk)
 preview_cmd="echo $trunk..{}; echo; git log --graph --oneline --color origin/$trunk..{}"
 header="Current branch: $(git rev-parse --abbrev-ref HEAD)"
 branch=$(echo "$branches" | fzf --query "$prefilter" --header "$header" --ansi +s +m -0 --preview "$preview_cmd")
-git checkout $(echo "$branch" | sed 's/^* //' | awk '{ print $1 }' | sed "s|remotes/origin/||")
+git switch $(echo "$branch" | sed 's/^* //' | awk '{ print $1 }' | sed "s|remotes/origin/||")

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Use fzf to checkout a branch
+set -e
+
+prefilter=$1
+branches=$(git branch -a --color | grep -v "remotes/origin/HEAD" | grep -v '^*' | tr -d ' ')
+trunk=$(git trunk)
+preview_cmd="echo $trunk..{}; echo; git log --graph --oneline --color origin/$trunk..{}"
+branches=$(echo "$branches" | fzf --query "$prefilter" --header "$header" --ansi +s -m -0 --preview "$preview_cmd")
+
+echo "==> Selected branches:"
+echo "$branches"
+echo
+read -r -p "Delete these branches? " response
+if [[ ! $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+  echo "Pruning aborted"
+  exit;
+fi
+
+echo "===> Deleting branches"
+
+git branch -D $branches

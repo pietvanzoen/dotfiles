@@ -13,6 +13,7 @@ set ignorecase " ignore case in search and stuff
 set modeline
 set mouse=nvc
 set noshowmode " hide mode in command line, shown in statusline instead
+set showtabline=2 " always show tabline
 set nowrap " don't wrap lines by default
 set relativenumber number " hybrid line numbers. show relative line numbers and current line number
 set scrolloff=5 " keep 5 lines of space to top/bottom from current line

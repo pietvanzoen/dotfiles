@@ -169,3 +169,5 @@ nohup.out
 /.vim
 
 .rgignore
+
+.sessions

@@ -9,7 +9,8 @@ function! RunTests(test_command) abort
   endif
   let l:tcmd = substitute(l:test_command, '%', expand('%'), '')
 
-  let l:cmd = 'clear && echo "==> Running ' . l:tcmd . '" && echo && time (' . l:tcmd . ') && echo'
+  " add space before so command does not polute history
+  let l:cmd = ' clear && echo "==> Running ' . l:tcmd . '" && echo && time (' . l:tcmd . ') && echo'
 
   exec ':wall'
   if exists(':VimuxRunCommand')

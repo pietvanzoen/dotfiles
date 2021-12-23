@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+gitroot="$(git root)"
+branches="$(git branch | tr -d '*' | sed -r 's/\s*(.*?)\s*$/\1/')"
+sessions="$(find $gitroot -maxdepth 4 -wholename '*/.sessions/*-session.vim' | sed 's/.*\.sessions\/\(.*\)-session\.vim/\1/' | sort | uniq)"
+
+for session in $sessions ; do
+  if [[ "$branches" != *"$session"* ]]; then
+    rm -v `find $gitroot -maxdepth 4 -wholename "*/.sessions/$session-session.vim"`
+  fi
+done
