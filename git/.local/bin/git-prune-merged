@@ -2,12 +2,9 @@
 # Prune merged branches from local.
 set -e
 
-git fetch --quiet
-
 merged_branches="$(git branch --merged | grep -vE '^\*' | grep -vE " $(git trunk)$" || echo)"
 
 if [[ -z "$merged_branches" ]]; then
-  echo "No merged branches to delete."
   exit
 fi
 

@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
-
 set -e
 
-gitroot="$(git root)"
-branches="$(git branch | tr -d '*' | sed -r 's/\s*(.*?)\s*$/\1/')"
-sessions="$(find $gitroot -maxdepth 4 -wholename '*/.sessions/*-session.vim' | sed 's/.*\.sessions\/\(.*\)-session\.vim/\1/' | sort | uniq)"
+# Get the root directory of the repository
+git_root_dir="$(git rev-parse --show-toplevel 2> /dev/null || echo '.')"
+
+# Get a list of local branches
+branches="$(git branch | sed -r 's/\*?\s*(.*?)\s*$/\1/')"
+
+# Get a list existing session names. (Handles sessions in folders up to 4 levels deep).
+sessions="$(find $git_root_dir -maxdepth 4 -wholename '*/.sessions/*-session.vim' | sed 's/.*\.sessions\/\(.*\)-session\.vim/\1/' | sort | uniq)"
 
 for session in $sessions ; do
   if [[ "$branches" != *"$session"* ]]; then
-    rm -v `find $gitroot -maxdepth 4 -wholename "*/.sessions/$session-session.vim"`
+    # If session name isn't in branch list, delete it.
+    rm -v `find $git_root_dir -maxdepth 4 -wholename "*/.sessions/$session-session.vim"`
   fi
 done

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Use fzf to checkout a branch
+set -e
+
+trunk=$(git trunk)
+
+exe() { echo "==> $@" ; $@ ; }
+
+if [[ ! -z "$(git status -s)" ]]; then
+  echo "Commit changes before continuing."
+  exit 1
+fi
+
+if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$trunk" ]]; then
+  exe "git checkout $trunk"
+fi
+
+function delete_branch() {
+  local b=$1
+  echo
+
+  git checkout $b
+  exe "git status"
+  exe "git lb $b"
+  git checkout -q $trunk
+
+  echo
+  echo -n "==> Do you want to delete branch '$b'? "
+  read confirm
+  echo
+  if [ "$confirm" = "y" ]; then
+    git branch -D $b
+  else
+    echo "Not deleting branch."
+  fi
+
+}
+
+prefilter=$1
+branches=$(git branch --color | grep -v '^*' | sed -e 's/^[[:space:]]*//' | grep -v "^$(git trunk)")
+preview_cmd="echo $trunk..{}; echo; git log --graph --oneline --color origin/$trunk..{}"
+header="Select branches to delete:"
+branches_to_delete=$(echo "$branches" | fzf --query "$prefilter" --header "$header" --ansi +s -m -0 --preview "$preview_cmd")
+
+readarray -t arr <<< "$branches_to_delete"
+for branch in "${arr[@]}";do
+  delete_branch $branch
+done

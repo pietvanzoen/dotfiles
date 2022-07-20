@@ -171,3 +171,6 @@ nohup.out
 .rgignore
 
 .sessions
+.vim/
+
+.nova/

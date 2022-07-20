@@ -8,6 +8,7 @@ function! PackInit() abort
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('ctrlpvim/ctrlp.vim') " fuzzy file finder
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
+  call minpac#add('google/vim-searchindex') " indexes search results
   call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('jremmen/vim-ripgrep') " use modern grep tools and output results to quickfix
@@ -15,6 +16,7 @@ function! PackInit() abort
   call minpac#add('lifepillar/vim-solarized8') " solarized colors
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('mattn/emmet-vim') " css/html abbreviations
+  call minpac#add('mg979/vim-visual-multi') " multiple cursors
   call minpac#add('neoclide/coc.nvim', {'do': '!yarn install --frozen-lockfile'})
   call minpac#add('nikvdp/ejs-syntax')
   call minpac#add('preservim/vimux') " vim/tmux test running
@@ -22,7 +24,6 @@ function! PackInit() abort
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
   call minpac#add('shumphrey/fugitive-gitlab.vim') " fugitive gitlab handler
   call minpac#add('simnalamburt/vim-mundo') " undo history navigation
-  call minpac#add('mg979/vim-visual-multi') " multiple cursors
   call minpac#add('tpope/vim-abolish') " text replacement helpers
   call minpac#add('tpope/vim-commentary') " language aware commenting command
   call minpac#add('tpope/vim-eunuch') " unix helpers

@@ -1,16 +1,21 @@
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
-alias clean-sessions="find . -name 'Session.vim' | xargs rm -v"
+alias clean-sessions="fd -HIp -E 'node_modules' 'Session.vim$|.sessions/.*session.vim$' -X rm -v"
 alias vim=nvim
 vm() {
+
+  # Create .sessions folder if it doesn't exist
   if [[ ! -d './.sessions' ]]; then
     mkdir './.sessions'
   fi
+
+  # Create a session file name based on the current branch
   local session_name=".sessions/$(git rev-parse --abbrev-ref HEAD)-session.vim"
+
   if [ -e $session_name ]; then
-    echo "==> Opening existing session $session_name"
+    # If the session file exists open it
     nvim -S $session_name
   else
-    echo "==> Creating session $session_name"
+    # Otherwise create it
     nvim -c "Obsession $session_name" .
   fi
 }
