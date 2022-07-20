@@ -20,6 +20,7 @@
 
 [init]
   templatedir = ~/.gittemplate
+  defaultBranch = main
 
 [alias]
   ###############################################
