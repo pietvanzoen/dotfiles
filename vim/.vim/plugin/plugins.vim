@@ -192,3 +192,7 @@ augroup GoldenRatio
   autocmd!
   autocmd VimResized * exec ':GoldenRatioResize'
 augroup END
+
+" POLYGLOT
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:polyglot_disabled = ['vue']
