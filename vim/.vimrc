@@ -60,3 +60,5 @@ endif
 
 " type %% in command mode to get current directory
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
+
+source $HOME/.vim/plugins.vim
