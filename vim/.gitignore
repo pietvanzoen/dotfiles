@@ -4,3 +4,4 @@
 .netrwbook
 .vim/pack/minpac
 .vim/spell
+!.vim
