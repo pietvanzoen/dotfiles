@@ -1,7 +1,8 @@
 
 
+alias cutr-login-staging="aws sso login --profile cutr-staging"
+
 function cutr-login () {
-  set -e
 PASS="$(secrets get cutr-aws-ssh-passphrase)"
   expect << EOF
             spawn ssh-add  -t 4h $HOME/.ssh/aws-ssh-access
@@ -11,8 +12,8 @@ PASS="$(secrets get cutr-aws-ssh-passphrase)"
 EOF
 }
 
+
 function cutr-shn() {
-  set -e
   aws ec2 describe-instances \
     --profile cutr \
     --region eu-central-1 \
@@ -21,7 +22,6 @@ function cutr-shn() {
   }
 
 function cutr-shn-staging() {
-  set -e
   aws ec2 describe-instances \
     --profile cutr-staging \
     --region eu-central-1 \
@@ -30,10 +30,9 @@ function cutr-shn-staging() {
   }
 
 function get_db_host() {
-  set -e
   CUTR_ENV=${1}
 
-  if [ "${CUTR_ENV}" == "cutr-staging" ]; then
+  if [[ "${CUTR_ENV}" == "cutr-staging" ]]; then
     aws rds describe-db-instances --profile ${CUTR_ENV} \
       --region eu-central-1 \
       --query 'DBInstances[].Endpoint[].Address[]' \
@@ -44,42 +43,37 @@ function get_db_host() {
 }
 
 function get_ssh_instance() {
-  set -e
   aws ec2 describe-instances \
     --profile ${1} \
     --region eu-central-1 \
     --filters 'Name=tag:Name,Values=ssh_proxy' \
     --query "Reservations[].Instances[].[Tags[?Key=='Name']|[0].Value, InstanceId]" \
     --output text | awk {'print $2'}
-  }
+}
 
-function get_profile() {
-  set -e
-  if [ "${1}" == "staging" ]; then
-    aws_profile="cutr-staging"
-  elif [ "${1}" == "prod]" ]; then
-    aws_profile="cutr"
+get_profile() {
+  if [[ "$1" == "staging" ]]; then
+    echo cutr-staging
+  elif [[ "$1" == "prod" ]]; then
+    echo cutr
   fi
-  echo ${aws_profile}
 }
 
 function send_key() {
-  set -e
   INSTANCE_ID=${1}
   CUTR_ENV=${2}
   aws ec2-instance-connect send-ssh-public-key \
     --profile ${CUTR_ENV} \
     --instance-id ${INSTANCE_ID} \
     --instance-os-user ubuntu \
-    --ssh-public-key file:///Users/waynep/.ssh/id_ed25519.pub
+    --ssh-public-key file:///Users/piet/.ssh/id_rsa.pub
 }
 
 function cutr-postgres-staging() {
-  set -e
-  CUTR_ENV=$(get_profile staging)
-  DB_HOST=$(get_db_host ${CUTR_ENV})
-  INSTANCE_ID=$(get_ssh_instance ${CUTR_ENV})
-  send_key ${INSTANCE_ID} ${CUTR_ENV}
+  CUTR_ENV="$(get_profile 'staging')"
+  DB_HOST="$(get_db_host "${CUTR_ENV}")"
+  INSTANCE_ID=$(get_ssh_instance "${CUTR_ENV}")
+  send_key "${INSTANCE_ID}" "${CUTR_ENV}"
   echo "==> Serving STAGING postgres on port 5433"
 	ssh -N -L 5433:${DB_HOST}:5432 ubuntu@3.74.186.186
 }
