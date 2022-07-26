@@ -21,4 +21,4 @@ function! SearchVisuallySelectedText() abort
     endif
 endfunction
 
-map <leader>f :call SearchVisuallySelectedText()<cr>
+" map <leader>f :call SearchVisuallySelectedText()<cr>
