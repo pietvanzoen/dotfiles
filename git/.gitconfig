@@ -56,6 +56,7 @@
   ci = commit --verbose # Verbose commit. Shows diff in commit message editor.
   roll-back-one = reset HEAD~1 # Roll back one commit.
   co = checkout
+  mt = mergetool
   sw = switch
   di = diff
   dc = diff --cached
@@ -105,7 +106,14 @@
   ctag-files = ls-files -cdm
 
 [merge]
+  tool = nvim
   summary = true # Always include a summary in merge commits.
+
+[mergetool "nvim"]
+  cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
+
+[mergetool]
+  prompt = false
 
 [push]
   # Default push to update current branch on remote. Then you don't need to type out upstream
@@ -120,18 +128,12 @@
 [difftool]
   prompt = false
 
-[mergetool]
-  prompt = false
-
 [diff]
   compactionHeuristic = 1
   # tool = vimdiff
   colorMoved = default
 
 [difftool]
-  prompt = false
-
-[mergetool]
   prompt = false
 
 [color "diff"]
