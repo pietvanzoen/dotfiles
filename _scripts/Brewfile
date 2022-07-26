@@ -57,7 +57,7 @@ brew 'grep'
 brew 'moreutils'
 
 tap 'homebrew/cask-fonts'
-cask 'font-fira-code'
+cask 'font-fira-code-nerd-font'
 
 cask_args appdir: "/Applications"
 # cask 'keybase'

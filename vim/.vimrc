@@ -27,6 +27,7 @@ set spelllang=en_us " default dictionary
 set tags=.git/tags
 set undodir=~/.vim/undo
 set undofile
+set diffopt+=vertical
 if has("nvim")
   set inccommand=nosplit
 endif
