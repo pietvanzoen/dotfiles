@@ -5,15 +5,16 @@ function! PackInit() abort
 
   call minpac#init()
 
-  " call minpac#add('nvim-treesitter/nvim-treesitter') " tree-sitter?
+  call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
+  call minpac#add('bkad/CamelCaseMotion') " camel case junction text object
+  call minpac#add('deathlyfrantic/vim-textobj-blanklines') " blanklines textobject
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
   call minpac#add('fannheyward/telescope-coc.nvim') " telescope coc integration
   call minpac#add('glts/vim-textobj-comment') " comment textobjects
   call minpac#add('google/vim-searchindex') " indexes search results
   call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
-  call minpac#add('jremmen/vim-ripgrep') " use modern grep tools and output results to quickfix
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('kana/vim-textobj-user') " custom text objects
   call minpac#add('kyazdani42/nvim-web-devicons') " nvim dev icons
@@ -27,8 +28,10 @@ function! PackInit() abort
   call minpac#add('nvim-lua/plenary.nvim') " dependency of nvim-telescope/telescope.nvim
   call minpac#add('nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }) " fzf extension for telescope
   call minpac#add('nvim-telescope/telescope.nvim') " fuzzy file finder
+  call minpac#add('nvim-treesitter/nvim-treesitter') " tree-sitter?
   call minpac#add('preservim/vimux') " vim/tmux test running
   call minpac#add('roman/golden-ratio') " perfect split resizing
+  call minpac#add('saihoooooooo/vim-textobj-space') " space characters text object
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
   call minpac#add('shumphrey/fugitive-gitlab.vim') " fugitive gitlab handler
   call minpac#add('simnalamburt/vim-mundo') " undo history navigation
@@ -41,7 +44,9 @@ function! PackInit() abort
   call minpac#add('tpope/vim-rhubarb') " fugitive plugin for github
   call minpac#add('tpope/vim-sensible') " sensible defaults
   call minpac#add('tpope/vim-surround') " surround char manipulation
-  call minpac#add('vim-scripts/argtextobj.vim') " argument text object
+  call minpac#add('vimtaku/vim-textobj-keyvalue') " key value text objects
+  call minpac#add('wellle/targets.vim') " additional text objects
+  call minpac#add('whatyouhide/vim-textobj-xmlattr') " xml attribute text object
 
 endfunction
 
@@ -57,34 +62,23 @@ command! PackStatus source $HOME/.vim/plugins.vim | call PackInit() | call minpa
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " COC
-"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:coc_global_extensions = [
       \ 'coc-css',
       \ 'coc-eslint',
       \ 'coc-json',
+      \ 'coc-prettier',
+      \ 'coc-sh',
       \ 'coc-snippets',
       \ 'coc-tslint-plugin',
       \ 'coc-tsserver',
       \ 'coc-vimlsp',
       \ ]
 
-" CTRLP
+
+" CAMELCASEMOTION
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" if executable('fd')
-"   let g:ctrlp_user_command = 'fd -H -E .git --type f --color=never "" %s'
-"   let g:ctrlp_use_caching = 0
-" elseif executable('git')
-"   let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard', 'find %s -type f']
-"   let g:ctrlp_use_caching = 0
-" else
-"   augroup CtrlP
-"     autocmd!
-"     autocmd BufNewFile * silent CtrlPClearCache " clear cache when a new file is created
-"   augroup END
-" endif
-" let g:ctrlp_show_hidden=1
-" let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-" nnoremap ð :CtrlPTag<cr>
+let g:camelcasemotion_key = '<leader>'
 
 
 " LIGHTLINE
@@ -153,27 +147,9 @@ augroup END
 let g:fugitive_gitlab_domains = ['https://gitlab.ycdev.nl']
 
 
-" EASYMOTION
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" map  / <Plug>(easymotion-sn)
-" omap / <Plug>(easymotion-tn)
-
-" " These `n` & `N` mappings are options. You do not have to map `n` & `N` to EasyMotion.
-" " Without these mappings, `n` & `N` works fine. (These mappings just provide
-" " different highlight method and have some other features )
-" map  n <Plug>(easymotion-next)
-" map  N <Plug>(easymotion-prev)
-
 " MUNDO
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <leader>u :MundoToggle<CR>
-
-" EMMET
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:user_emmet_leader_key='<C-Z>'
-" let g:user_emmet_install_global = 0
-" autocmd FileType html,css,scss EmmetInstall
-
 
 " VIMUX
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -187,21 +163,6 @@ augroup Vimux
   autocmd!
   autocmd VimResized * call UpdateVimuxHeight()
 augroup END
-
-
-" GIT-GUTTER
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" fix git-gutter signcolumn coloring with solarized
-" https://github.com/airblade/vim-gitgutter/issues/164#issuecomment-75758204
-highlight clear SignColumn
-call gitgutter#highlight#define_highlights()
-
-
-
-" RIPGREP
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:rg_highlight=1
-let g:rg_command='rg --vimgrep --hidden --glob !.git'
 
 
 " GOLDEN RATIO
@@ -218,58 +179,19 @@ let g:polyglot_disabled = ['vue']
 " TELESCOPE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <c-p> <cmd>Telescope find_files theme=ivy<cr>
-nnoremap <leader>ff <cmd>Telescope find_files theme=ivy<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep theme=ivy<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags theme=ivy<cr>
-nnoremap <leader>fc <cmd>Telescope coc theme=ivy<cr>
-nnoremap <leader>fb <cmd>Telescope current_buffer_fuzzy_find theme=ivy<cr>
-nmap <silent> gd <cmd>Telescope coc definitions theme=ivy<cr>
-nmap <silent> gi <cmd>Telescope coc implementations theme=ivy<cr>
-nmap <silent> gr <cmd>Telescope coc references theme=ivy<cr>
-
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fc <cmd>Telescope coc<cr>
+nnoremap <leader>fb <cmd>Telescope current_buffer_fuzzy_find<cr>
+nnoremap <expr> <leader>fG ':Telescope live_grep default_text=' . expand('<cword>') .'<cr>'
+nnoremap <silent> gd <cmd>Telescope coc definitions<cr>
+nnoremap <silent> gi <cmd>Telescope coc implementations<cr>
+nnoremap <silent> gr <cmd>Telescope coc references<cr>
 
 lua << EOF
 local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
-
-local telescope_custom_actions = {}
-
-function telescope_custom_actions._multiopen(prompt_bufnr, open_cmd)
-  local picker = action_state.get_current_picker(prompt_bufnr)
-  local num_selections = #picker:get_multi_selection()
-  if not num_selections or num_selections <= 1 then
-    actions.select_default(prompt_bufnr)
-    return
-  end
-  actions.send_selected_to_qflist(prompt_bufnr)
-
-  local results = vim.fn.getqflist()
-
-  for _, result in ipairs(results) do
-    local current_file = vim.fn.bufname()
-    local next_file = vim.fn.bufname(result.bufnr)
-
-    if current_file == "" then
-      vim.api.nvim_command("edit" .. " " .. next_file)
-    else
-      vim.api.nvim_command(open_cmd .. " " .. next_file)
-    end
-  end
-
-  vim.api.nvim_command("cd .")
-end
-function telescope_custom_actions.multi_selection_open_vsplit(prompt_bufnr)
-    telescope_custom_actions._multiopen(prompt_bufnr, "vsplit")
-end
-function telescope_custom_actions.multi_selection_open_split(prompt_bufnr)
-    telescope_custom_actions._multiopen(prompt_bufnr, "split")
-end
-function telescope_custom_actions.multi_selection_open_tab(prompt_bufnr)
-    telescope_custom_actions._multiopen(prompt_bufnr, "tabe")
-end
-function telescope_custom_actions.multi_selection_open(prompt_bufnr)
-    telescope_custom_actions._multiopen(prompt_bufnr, "edit")
-end
 
 require("telescope").setup {
   defaults = {
