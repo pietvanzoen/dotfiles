@@ -29,6 +29,7 @@ function! PackInit() abort
   call minpac#add('nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }) " fzf extension for telescope
   call minpac#add('nvim-telescope/telescope.nvim') " fuzzy file finder
   call minpac#add('nvim-treesitter/nvim-treesitter') " tree-sitter?
+  call minpac#add('posva/vim-vue') " vue stuff
   call minpac#add('preservim/vimux') " vim/tmux test running
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('saihoooooooo/vim-textobj-space') " space characters text object
@@ -174,7 +175,7 @@ augroup END
 
 " POLYGLOT
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:polyglot_disabled = ['vue']
+"let g:polyglot_disabled = ['vue']
 
 " TELESCOPE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
