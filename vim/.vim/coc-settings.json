@@ -6,7 +6,8 @@
   "emmet.includeLanguages": {
     "scss": "css"
   },
-  "emmet.showAbbreviationSuggestions": true
+  "emmet.showAbbreviationSuggestions": true,
   // coc-deno causes tsserver to read js files as ts files. enable per project with :CocLocalConfig
   // "deno.enable": false
+  "snippets.userSnippetsDirectory": "~/.vim/snippets"
 }
