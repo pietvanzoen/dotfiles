@@ -1,0 +1,30 @@
+#!/bin/sh
+# Tests if there are pending migrations, if there are verifies if
+# you want to run them.
+
+set -eu
+
+echo "==> Checking for pending migrations"
+
+cd "$CUTR_DIR/server"
+
+pending_migrations="$(yarn sequelize db:migrate:status | grep '^down' || true)"
+
+if [ -z "$pending_migrations" ]; then
+  echo "No pending migrations"
+  exit 0
+fi
+
+echo
+echo "Migrations pending:"
+echo "$pending_migrations"
+echo
+
+echo "==> Run migrations? [y/n] "
+read answer
+if [ "$answer" = 'y' ]; then
+  (cd server && yarn sequelize db:migrate)
+else
+  echo "Not running migrations"
+  exit
+fi
