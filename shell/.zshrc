@@ -55,6 +55,17 @@ if [[ -z "$(bindkey | grep fzf)" ]]; then
   bindkey '^R' history-incremental-search-backward
 fi
 
+function _git-find-branch {
+  local branch
+  branch="$(git-find-branch)"
+  zle -U "$branch"
+  zle reset-prompt
+}
+zle -N _git-find-branch
+bindkey "^G" _git-find-branch
+
+zle -N gb; bindkey '^gb' gb
+
 # Use slim cursor when in insert mode. Block cursor when in normal mode.
 function zle-keymap-select zle-line-init {
   # change cursor shape in iTerm2
