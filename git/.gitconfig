@@ -66,6 +66,7 @@
   ap = aa -p
   b = branch -vv # Verbose branch list. Shows upstream branches.
   ds = diff --staged --stat=160,120
+  dsb = "!git diff --stat=160,120 $(git trunk)..HEAD"
   unmerged = diff --name-only --diff-filter=U
   edit-unmerged = "!nvim `git diff --name-only --diff-filter=U`"
 
