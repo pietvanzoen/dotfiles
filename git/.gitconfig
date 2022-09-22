@@ -41,7 +41,7 @@
   rl = !git ll -12
 
   # Create a simple change log for copy/pasting into PRs.
-  changelog = "!git log --pretty=\"* %ad - %s [%h]\" --date=short"
+  changelog = "!git log --pretty=\"* %s\" --date=short"
   changelog-tag = "!git changelog $(git latest-tag-version)..origin/$(git trunk)"
   changelog-branch = !git changelog origin/$(git trunk)..HEAD
 
