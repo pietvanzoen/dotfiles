@@ -23,7 +23,7 @@ echo
 echo "==> Run migrations? [y/n] "
 read answer
 if [ "$answer" = 'y' ]; then
-  (cd server && yarn sequelize db:migrate)
+  yarn sequelize db:migrate
 else
   echo "Not running migrations"
   exit
