@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Use fzf to checkout a branch in the current stack
+set -e
+
+prefilter=$1
+branches=$(git stack --show-commits none --stack descendants --color always)
+result=$(echo "$branches" | fzf --ansi +s +m -0)
+
+branch=$(echo "$result" | cut -d' ' -f1)
+
+if [[ "$branch" == "master" ]]; then
+  git switch master
+  exit
+fi
+
+git switch $(echo "$result" | cut -d' ' -f2)
