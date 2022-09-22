@@ -89,6 +89,7 @@
   # Run `yarn test` on each commit that diverges from trunk branch.
   test-branch="!run-command-on-git-revisions origin/$(git trunk) $(git symbolic-ref --short HEAD) 'yarn test'"
 
+  push-stack="!git push origin $(git stack --format list --stack descendants) --force-with-lease --set-upstream"
 
   ###############################################
   # OTHER HELPERS
@@ -184,3 +185,6 @@
 
 [credential]
   helper = osxkeychain
+
+[stack]
+  stack = descendants
