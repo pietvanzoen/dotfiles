@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+COMMIT="$(
+  git log --oneline --decorate --color |
+    fzf --ansi +m --preview="git show --color \$(echo {} | awk '{ print \$1 }')" |
+    awk '{ print $1 }'
+)"
+
+
+echo "$COMMIT" | pbcopy
