@@ -53,22 +53,8 @@ if [[ ! -e $HOME/.local/bin/secrets ]]; then
 fi
 
 
-if [[ ! -d $HOME/.hint ]]; then
-  attempt_script "install-hint"
-fi
-
 if _confirm "Install dotfiles dev dependencies?"; then
   attempt_script "install-dev"
-fi
-
-if [[ ! -d $HOME/.rvm ]]; then
-  if _confirm "Install rvm?"; then
-    attempt_script "install-rvm"
-  fi
-fi
-
-if [[ "$(hostname)" == "finn" ]]; then
-  attempt_script "install-pgp-key"
 fi
 
 if [[ -n "$(which zsh)" ]]; then
