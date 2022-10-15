@@ -63,27 +63,27 @@ cask_args appdir: "/Applications"
 # cask 'keybase'
 # cask 'slack'
 # cask 'veracrypt'
-cask 'alfred'
-cask 'bartender'
-cask 'bitbar'
-cask 'docker'
-cask 'istat-menus'
-cask 'karabiner-elements'
-cask 'signal'
-cask 'transmit'
-cask 'visual-studio-code'
-cask 'whatsapp'
+# cask 'alfred'
+# cask 'bartender'
+# cask 'bitbar'
+# cask 'docker'
+# cask 'istat-menus'
+# cask 'karabiner-elements'
+# cask 'signal'
+# cask 'transmit'
+# cask 'visual-studio-code'
+# cask 'whatsapp'
 
-mas '1Blocker', id: 1107421413
-mas 'Amphetamine', id: 937984704
-mas 'Color Picker', id: 1545870783
-mas 'Instapaper Save', id: 1481302432
-mas 'MeetingBar', id: 1532419400
-mas 'Moom', id: 419330170
-mas 'NextDNS', id: 1464122853
-mas 'Parcel', id: 639968404
-mas 'Pixelmator', id: 407963104
-mas 'Raindrop.io for Safari', id: 957810159
-mas 'Ring', id: 1142753258
-mas 'TranslateMe', id: 1448316680
-mas 'Wallcat', id: 1000397973
+# mas '1Blocker', id: 1107421413
+# mas 'Amphetamine', id: 937984704
+# mas 'Color Picker', id: 1545870783
+# mas 'Instapaper Save', id: 1481302432
+# mas 'MeetingBar', id: 1532419400
+# mas 'Moom', id: 419330170
+# mas 'NextDNS', id: 1464122853
+# mas 'Parcel', id: 639968404
+# mas 'Pixelmator', id: 407963104
+# mas 'Raindrop.io for Safari', id: 957810159
+# mas 'Ring', id: 1142753258
+# mas 'TranslateMe', id: 1448316680
+# mas 'Wallcat', id: 1000397973
