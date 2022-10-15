@@ -6,10 +6,17 @@
   name = pietvanzoen
   email = hi@pietvanzoen.com
   username = pietvanzoen
-  signingkey = 119BA45BFDF0E612
+  ; signingkey = 119BA45BFDF0E612
+  signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC7NF6N6kihpyaaGT6YNsEe5IQQ0vi9/loKW9PktTegzN6sPTkogPufWcSHoPNapqnLrPIJeK6v1l44tduMQsxgI83m7y6UN1AaN2s5tPvEk3EVzEdGmSsL8NW3ggNo4EcBvQce1Eaxg6aKoJf+qnlQa4hzaDaupxAM8RMmE/CtcHj7GeW5rG5LNpJhwG6LnVEcGXStVbc7JvmbYF3C2X+bi5uPBCGtwMyS/fJWhfAKwGGTv3pJ9ZBX/wSi23SkuQ4qWnB4ZnPY8iwkMtmBllPnBfarZJmZQ66lgix9gKwX4ZTh8NFc4UoQs5nx56rog8C07mOy6bEfxIwOCWTMXa+5kuFkJOMHa34C85caItSfmgB72V/laZzU+KKoZGjQ9lhGLvwgnH20IG8bCLLgjSUmWNCdBP5nx2BIgzSiObi+SXHSrX2XJbhMxtBMfu33gyCuxO1dxJDErFe3NdI20ODdeEPteUvE/I1hPW7T4g4CS+jYvxKN5bBZxewAYdvJ6o4bSPcpO+6x4o9zEjJ+vTBNtfGUKLyuQq0gx2E0ZFHhJIcNTTSLJ42fniDAbDj7WMWZTE6PsFnmSauCG6mSDp/ZJYVVceHdsGEIZehOOWYXkdKSQDM15XJqKgKIU+/Yt5DZ5FxNh8cSGqpfpzmhU1lBaxR4BeYSeWX8l7ObGd7k2w==
 
 [gpg]
-  program = gpgx
+  format = ssh
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[commit]
+  gpgsign = true
 
 [github]
   user = pietvanzoen
