@@ -3,6 +3,3 @@
 
 [url "https://<github-token>:x-oauth-basic@gist.github.com/"]
 	insteadOf = https://gist.github.com/
-
-[commit]
-  gpgsign = true
