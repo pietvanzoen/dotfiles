@@ -180,9 +180,9 @@ augroup END
 " TELESCOPE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <c-p> <cmd>Telescope find_files theme=ivy<cr>
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>ff <cmd>Telescope grep_string<cr>
 nnoremap <leader>fc <cmd>Telescope coc<cr>
 nnoremap <leader>fb <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <expr> <leader>fG ':Telescope live_grep default_text=' . expand('<cword>') .'<cr>'
