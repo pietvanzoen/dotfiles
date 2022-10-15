@@ -13,5 +13,5 @@ else
   exit 1
 fi
 
-exe "pip3 install flake8 yapf vim-vint"
+exe "pip3 install flake8 yapf vim-vint pynvim"
 exe "$INSTALLER_CMD shellcheck"
