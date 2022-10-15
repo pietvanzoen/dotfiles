@@ -1,4 +1,5 @@
 # vim: set filetype=ruby
+brew 'awscli'
 brew 'bash'
 brew 'bash-completion@2'
 brew 'bat'
