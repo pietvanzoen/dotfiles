@@ -2,5 +2,5 @@
 set -ex
 
 TEMP_DIR="$(mktemp -d)"
-git clone --depth=1 https://github.com/wting/autojump.git $TEMP_DIR
+git clone --depth=1 --branch wting_default_python3 https://github.com/wting/autojump.git $TEMP_DIR
 cd $TEMP_DIR && ./install.py
