@@ -4,9 +4,10 @@ set -e
 
 QUERY=$1
 DIR=$HOME/Dropbox/Piet/gifs
+BREW_PREFIX=$(brew --prefix)
 
 if [[ -z $QUERY ]]; then
-  ITEMS=$(/usr/local/bin/exa -r --sort created $DIR | xargs -I_ echo "$DIR/_")
+  ITEMS=$($BREW_PREFIX/bin/exa -r --sort created $DIR | xargs -I_ echo "$DIR/_")
 else
   ITEMS=$(mdfind -onlyin $DIR "$QUERY")
 fi

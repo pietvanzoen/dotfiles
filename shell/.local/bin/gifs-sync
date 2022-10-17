@@ -7,7 +7,7 @@ SOURCE=/Users/piet/Dropbox/Piet/gifs
 DEST=s3:xn--vi8h.piet.me/~
 
 set -x
-/usr/local/bin/rclone copy \
+"$BREW_PREFIX/bin/rclone" copy \
   --progress \
   --exclude .DS_Store \
   --exclude _new_* \
