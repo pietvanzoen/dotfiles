@@ -11,11 +11,11 @@ windows:
           - tmux-run-pane yarn dev
         - workers:
           - cd server
-          - sleep 15
+          - sleep 5
           - tmux-run-pane yarn dev:worker
         - ui:
           - cd ui
-          - sleep 15
+          - sleep 5
           - tmux-run-pane yarn dev
         - dev:
           - cutr-migrate
