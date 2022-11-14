@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+cd "$HOME/repos/github.com/ytdl-org/youtube-dl"
+
+python3 -m youtube_dl "$@"
