@@ -1,0 +1,18 @@
+#!/bin/sh
+# Kill and restart/seed all the things
+
+set -eux
+
+tmuxinator stop cutr
+
+dropdb --if-exists cutr
+
+createdb cutr
+
+cd $CUTR_DIR/server
+
+yarn sequelize db:migrate
+
+yarn seed:all
+
+tmuxinator cutr
