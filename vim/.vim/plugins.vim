@@ -11,6 +11,7 @@ function! PackInit() abort
   call minpac#add('deathlyfrantic/vim-textobj-blanklines') " blanklines textobject
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
   call minpac#add('fannheyward/telescope-coc.nvim') " telescope coc integration
+  call minpac#add('ggandor/leap.nvim') " quick movements
   call minpac#add('glts/vim-textobj-comment') " comment textobjects
   call minpac#add('google/vim-searchindex') " indexes search results
   call minpac#add('honza/vim-snippets') " snippet definitions
@@ -176,6 +177,11 @@ augroup END
 " POLYGLOT
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "let g:polyglot_disabled = ['vue']
+
+" LEAP
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+lua require('leap').add_default_mappings()
+lua require('leap').opts.highlight_unlabeled_phase_one_targets = true
 
 " TELESCOPE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
