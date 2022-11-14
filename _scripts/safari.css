@@ -1,7 +1,14 @@
-.v-Page--sidebar {
-  background-image: none !important;
-}
 
-.v-BetaFeedback {
-  display: none !important;
+/* Mastodon */
+
+@media screen and (min-width: 631px) {
+
+  #mastodon .column,
+  #mastodon .drawer {
+    max-width: 450px;
+    flex: 1 0 auto !important;
+  }
+  #mastodon .columns-area--mobile .column {
+    max-width: 100%;
+  }
 }
