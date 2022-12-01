@@ -174,3 +174,5 @@ nohup.out
 .vim/
 
 .nova/
+
+.envrc

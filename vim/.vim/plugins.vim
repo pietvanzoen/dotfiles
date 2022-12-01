@@ -18,6 +18,7 @@ function! PackInit() abort
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('kana/vim-textobj-user') " custom text objects
+  call minpac#add('kkharji/sqlite.lua') " lua db
   call minpac#add('kyazdani42/nvim-web-devicons') " nvim dev icons
   call minpac#add('lifepillar/vim-solarized8') " solarized colors
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
@@ -28,6 +29,7 @@ function! PackInit() abort
   call minpac#add('nikvdp/ejs-syntax')
   call minpac#add('nvim-lua/plenary.nvim') " dependency of nvim-telescope/telescope.nvim
   call minpac#add('nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }) " fzf extension for telescope
+  call minpac#add('nvim-telescope/telescope-smart-history.nvim') " Telescope history
   call minpac#add('nvim-telescope/telescope.nvim') " fuzzy file finder
   call minpac#add('nvim-treesitter/nvim-treesitter') " tree-sitter?
   call minpac#add('posva/vim-vue') " vue stuff
@@ -187,6 +189,7 @@ lua require('leap').opts.highlight_unlabeled_phase_one_targets = true
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <c-p> <cmd>Telescope find_files theme=ivy<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fr <cmd>Telescope resume<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>ff <cmd>Telescope grep_string<cr>
 nnoremap <leader>fc <cmd>Telescope coc<cr>
@@ -202,10 +205,16 @@ local action_state = require('telescope.actions.state')
 
 require("telescope").setup {
   defaults = {
+    history = {
+      path = '~/.local/share/nvim/databases/telescope_history.sqlite3',
+      limit = 100,
+    },
     mappings = {
       i = {
-          ["<C-J>"] = actions.move_selection_next,
-          ["<C-K>"] = actions.move_selection_previous,
+        ["<C-J>"] = actions.move_selection_next,
+        ["<C-K>"] = actions.move_selection_previous,
+        ["<C-N>"] = actions.cycle_history_next,
+        ["<C-P>"] = actions.cycle_history_prev,
       },
       n = {
           ["<C-J>"] = actions.move_selection_next,
@@ -228,4 +237,5 @@ require("telescope").setup {
 }
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('coc')
+require('telescope').load_extension('smart_history')
 EOF

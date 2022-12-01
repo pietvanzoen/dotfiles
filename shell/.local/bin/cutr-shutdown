@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eu
+
+processes="$(ps | grep node | grep cutr-server | cut -d' ' -f1 | xargs)"
+
+if [[ -z $processes ]]; then
+  exit
+fi
+
+echo "==> Killing $processes"
+
+kill $processes

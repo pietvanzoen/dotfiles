@@ -2,3 +2,4 @@
 *.local
 !.local/
 .installed_packages
+shell/.tmux/tmux-safekill
