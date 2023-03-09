@@ -190,6 +190,7 @@ lua require('leap').opts.highlight_unlabeled_phase_one_targets = true
 nnoremap <c-p> <cmd>Telescope find_files theme=ivy<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fr <cmd>Telescope resume<cr>
+nnoremap <leader>fz <cmd>Telescope spell_suggest<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>ff <cmd>Telescope grep_string<cr>
 nnoremap <leader>fc <cmd>Telescope coc<cr>
