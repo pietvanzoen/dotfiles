@@ -5,8 +5,8 @@ function! PackInit() abort
 
   call minpac#init()
 
-  call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
+  call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
   call minpac#add('bkad/CamelCaseMotion') " camel case junction text object
   call minpac#add('deathlyfrantic/vim-textobj-blanklines') " blanklines textobject
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
@@ -34,6 +34,7 @@ function! PackInit() abort
   call minpac#add('nvim-treesitter/nvim-treesitter') " tree-sitter?
   call minpac#add('posva/vim-vue') " vue stuff
   call minpac#add('preservim/vimux') " vim/tmux test running
+  call minpac#add('prisma/vim-prisma') " prisma support
   call minpac#add('roman/golden-ratio') " perfect split resizing
   call minpac#add('saihoooooooo/vim-textobj-space') " space characters text object
   call minpac#add('sheerun/vim-polyglot') " all the language packages. but syntax only
