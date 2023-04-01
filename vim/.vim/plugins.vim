@@ -5,13 +5,14 @@ function! PackInit() abort
 
   call minpac#init()
 
-  call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
+  call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('bkad/CamelCaseMotion') " camel case junction text object
   call minpac#add('deathlyfrantic/vim-textobj-blanklines') " blanklines textobject
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
   call minpac#add('fannheyward/telescope-coc.nvim') " telescope coc integration
   call minpac#add('ggandor/leap.nvim') " quick movements
+  call minpac#add('github/copilot.vim') " github copilot
   call minpac#add('glts/vim-textobj-comment') " comment textobjects
   call minpac#add('google/vim-searchindex') " indexes search results
   call minpac#add('honza/vim-snippets') " snippet definitions
