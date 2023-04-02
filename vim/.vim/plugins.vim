@@ -182,6 +182,11 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "let g:polyglot_disabled = ['vue']
 
+" COPILOT
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+imap <silent><script><expr> <M-\> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
 " LEAP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 lua require('leap').add_default_mappings()
