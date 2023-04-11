@@ -1,0 +1,120 @@
+#!/usr/bin/env node
+const https = require("https");
+const search = process.argv[2];
+const fs = require("fs/promises");
+
+const CACHE_PATH = `${process.env.HOME}/Library/Caches/com.runningwithcrayons.Alfred/Workflow Data/com.piet.gifme`;
+
+async function main() {
+  if (!process.env.GIFME_AUTH) {
+    console.log(
+      JSON.stringify({
+        items: [
+          {
+            title: "No GIFME_AUTH env var set",
+            subtitle: "Set this to your API token",
+            valid: false,
+          },
+        ],
+      })
+    );
+    return;
+  }
+
+  let gifs;
+  try {
+    console.error("Fetching results...");
+    gifs = await fetchResults(search);
+  } catch (e) {
+    console.error(`Error fetching results: ${e.message}`);
+    return;
+  }
+
+  console.error("Caching files...");
+
+  const cachedFiles = await Promise.all(
+    gifs.map(async ({ url, id }) => ({
+      url,
+      href: `https://gifme.piet.me/view/${id}`,
+      path: await cacheURL(url),
+    }))
+  );
+
+  const manifest = cachedFiles.reduce((acc, data) => {
+    acc[data.path] = data;
+    return acc;
+  }, {});
+
+  await fs.writeFile(`${CACHE_PATH}/manifest.json`, JSON.stringify(manifest));
+
+  const items = gifs.map((gif) => {
+    const title = gif.url.split("/").pop();
+    const { path } = cachedFiles.find((f) => f.url === gif.url);
+    return {
+      uid: gif.url,
+      title,
+      type: "file",
+      subtitle: gif.comment,
+      arg: path,
+      icon: { path },
+    };
+  });
+
+  console.log(JSON.stringify({ items }));
+}
+
+async function cacheURL(url) {
+  const filename = url.split("/").pop();
+  const filePath = `${CACHE_PATH}/${filename}`;
+  await fs.mkdir(CACHE_PATH, { recursive: true, force: true });
+  try {
+    console.error(`Checking cache for ${filename}`);
+    await fs.access(filePath);
+    return filePath;
+  } catch (e) {
+    console.error(`Downloading ${filename}`);
+    await fs.writeFile(filePath, await downloadURL(url));
+    return filePath;
+  }
+}
+
+async function fetchResults(search = "") {
+  const url = `https://gifme.piet.me/api/assets?search=${search}`;
+  headers = {
+    authorization: process.env.GIFME_AUTH,
+    Accept: "application/json",
+  };
+
+  console.error(`Fetching ${url}`);
+  const resp = await fetch(url, { headers });
+
+  console.error(`Got response ${resp.status}`);
+
+  if (!resp.ok) {
+    throw new Error(json.message);
+  }
+
+  return resp.json();
+}
+
+function downloadURL(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = [];
+
+      res.on("data", (chunk) => {
+        data.push(chunk);
+      });
+
+      res.on("end", () => {
+        if (res.statusCode > 299) {
+          reject({ message: "Request failed", status: res.statusCode });
+          return;
+        }
+        resolve(Buffer.concat(data));
+      });
+    });
+  });
+}
+
+main();
