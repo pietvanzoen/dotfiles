@@ -5,8 +5,8 @@ function! PackInit() abort
 
   call minpac#init()
 
-  call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
+  call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
   call minpac#add('bkad/CamelCaseMotion') " camel case junction text object
   call minpac#add('deathlyfrantic/vim-textobj-blanklines') " blanklines textobject
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
@@ -14,6 +14,7 @@ function! PackInit() abort
   call minpac#add('ggandor/leap.nvim') " quick movements
   call minpac#add('github/copilot.vim') " github copilot
   call minpac#add('glts/vim-textobj-comment') " comment textobjects
+  call minpac#add('godlygeek/tabular') " text alignment
   call minpac#add('google/vim-searchindex') " indexes search results
   call minpac#add('honza/vim-snippets') " snippet definitions
   call minpac#add('itchyny/lightline.vim') " better statusline
@@ -93,10 +94,10 @@ let g:lightline = {}
 let g:lightline.colorscheme = 'solarized'
 let g:lightline.active = {}
 let g:lightline.active.left = [ [ 'mode', 'paste' ], [ 'cwd', 'gitbranch' ], [ 'readonly', 'filename', 'modified' ] ]
-let g:lightline.active.right = [ ['obsession'], [ 'lineinfo' ], [ 'filetype', 'coc'] ]
+let g:lightline.active.right = [ [], [ 'lineinfo' ], [ 'filetype', 'coc'] ]
 let g:lightline.inactive = {}
 let g:lightline.inactive.left = [ [], ['cwd'], [ 'filename' ] ]
-let g:lightline.inactive.right = [ [], ['obsession'], [ 'filetype' ] ]
+let g:lightline.inactive.right = [ [], [], [ 'filetype' ] ]
 let g:lightline.component = {}
 let g:lightline.component.filename = '%<%f'
 " let g:lightline.component.hostname = system('echo -n $(whoami)@$(hostname -s || echo)')
@@ -105,7 +106,7 @@ let g:lightline.component_function = {}
 let g:lightline.component_function.cwd = 'LightlineCWD'
 let g:lightline.component_function.gitbranch = 'LightlineGitBranch'
 let g:lightline.component_function.mode = 'LightlineMode'
-let g:lightline.component_function.obsession = 'LightlineObsession'
+" let g:lightline.component_function.copilot = 'LightlineCopilot'
 let g:lightline.component_function.coc = 'LighlineCoc'
 
 function! LightlineGitBranch() abort
@@ -127,6 +128,18 @@ endfunction
 function! LightlineObsession() abort
   return ObsessionStatus('●', 'Ⅱ')
 endfunction
+
+function! LightlineCopilot()
+  let l:status = execute(':Copilot status')
+  if l:status =~# 'Enabled'
+    return "\ufba7 \uf00c"
+  elseif l:status =~# 'Disabled'
+    return "\ufba7 \uf04c"
+  else
+    return "\ufba7 \uf071"
+  endif
+endfunction
+
 
 function! LighlineCoc() abort
   let info = get(b:, 'coc_diagnostic_info', {})
@@ -184,8 +197,20 @@ augroup END
 
 " COPILOT
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+highlight CopilotSuggestion guifg=#555555 ctermfg=8
+
 imap <silent><script><expr> <M-\> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
+let g:copilot_filetypes = {
+      \ '*': v:true,
+      \ 'markdown': v:false,
+      \ }
+
+augroup Copilot
+  autocmd!
+  autocmd BufRead,BufNewFile .env* let b:copilot_enabled = v:false
+augroup END
+
 
 " LEAP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -196,12 +221,14 @@ lua require('leap').opts.highlight_unlabeled_phase_one_targets = true
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <c-p> <cmd>Telescope find_files theme=ivy<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fm <cmd>Telescope marks<cr>
 nnoremap <leader>fr <cmd>Telescope resume<cr>
 nnoremap <leader>fz <cmd>Telescope spell_suggest<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>ff <cmd>Telescope grep_string<cr>
 nnoremap <leader>fc <cmd>Telescope coc<cr>
 nnoremap <leader>fb <cmd>Telescope current_buffer_fuzzy_find<cr>
+nnoremap <leader>fd <cmd>Telescope coc diagnostics<cr>
 nnoremap <expr> <leader>fG ':Telescope live_grep default_text=' . expand('<cword>') .'<cr>'
 nnoremap <silent> gd <cmd>Telescope coc definitions<cr>
 nnoremap <silent> gi <cmd>Telescope coc implementations<cr>

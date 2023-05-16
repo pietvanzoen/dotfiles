@@ -4,6 +4,7 @@ set -e
 
 DIR="$HOME/Documents/gifs"
 URL=$1
+NAME=$2
 BASENAME=$(basename $URL);
 EXTENSION=$(echo $BASENAME | rev | cut -d. -f1 | rev)
 

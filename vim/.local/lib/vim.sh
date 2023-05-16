@@ -1,23 +1,33 @@
 alias clean-swp="find . -regex '.*\.sw[p|o]$' | xargs rm -v"
-alias clean-sessions="fd -HIp -E 'node_modules' 'Session.vim$|.sessions/.*session.vim$' -X rm -v"
+alias clean-sessions="rm -rfv .sessions"
 alias vim=nvim
 vm() {
 
+  local sessions_dir="./.sessions"
+
   # Create .sessions folder if it doesn't exist
-  if [[ ! -d './.sessions' ]]; then
-    mkdir './.sessions'
+  if [[ ! -d "$sessions_dir" ]]; then
+    mkdir "$sessions_dir"
   fi
 
-  # Create a session file name based on the current branch
-  local session_name=".sessions/$(git rev-parse --abbrev-ref HEAD)-session.vim"
+  tmux rename-window "$(basename $(pwd))"
 
-  if [ -e $session_name ]; then
+  local session_dir="${sessions_dir}/$(git rev-parse --abbrev-ref HEAD)"
+  if [[ ! -d "${session_dir}" ]]; then
+    mkdir "${session_dir}"
+    touch "${session_dir}/file_frecency.sqlite3"
+  fi
+
+  local session_name="${session_dir}/Session.vim"
+
+  if [ -e "${session_name}" ]; then
     # If the session file exists open it
-    nvim -S $session_name
+    SESSION_DIR="${session_dir}" nvim -S "${session_name}"
   else
     # Otherwise create it
-    nvim -c "Obsession $session_name" .
+    SESSION_DIR="${session_dir}" nvim -c "Obsession ${session_name}" .
   fi
+
 }
 
 # __clean_old_session_file() {

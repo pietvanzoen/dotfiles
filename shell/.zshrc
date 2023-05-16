@@ -151,3 +151,9 @@ ZSH_AUTOSUGGEST_USE_ASYNC=true
 autoload -z edit-command-line
 zle -N edit-command-line
 bindkey "^X^E" edit-command-line
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/piet/.local/lib/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/piet/.local/lib/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/piet/.local/lib/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/piet/.local/lib/google-cloud-sdk/completion.zsh.inc'; fi

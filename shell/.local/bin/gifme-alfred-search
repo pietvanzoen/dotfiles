@@ -3,7 +3,7 @@ const https = require("https");
 const search = process.argv[2];
 const fs = require("fs/promises");
 
-const CACHE_PATH = `${process.env.HOME}/Library/Caches/com.runningwithcrayons.Alfred/Workflow Data/com.piet.gifme`;
+const CACHE_PATH = `${process.env.HOME}/Library/Caches/com.runningwithcrayons.Alfred/Workflow Data/com.gifable`;
 
 async function main() {
   if (!process.env.GIFME_AUTH) {
@@ -34,8 +34,9 @@ async function main() {
 
   const cachedFiles = await Promise.all(
     gifs.map(async ({ url, id }) => ({
+      id,
       url,
-      href: `https://gifme.piet.me/view/${id}`,
+      href: `https://app.gifable.club/media/${id}`,
       path: await cacheURL(url),
     }))
   );
@@ -73,13 +74,17 @@ async function cacheURL(url) {
     return filePath;
   } catch (e) {
     console.error(`Downloading ${filename}`);
-    await fs.writeFile(filePath, await downloadURL(url));
+    // For some reason gfbl.club doesn't work, but media.gifable.club does
+    // Something to do with local SSL certs?
+    const buffer = await downloadURL(url.replace('gfbl.club', 'media.gifable.club'));
+    console.error(`Writing ${filename}`);
+    await fs.writeFile(filePath, buffer);
     return filePath;
   }
 }
 
 async function fetchResults(search = "") {
-  const url = `https://gifme.piet.me/api/assets?search=${search}`;
+  const url = `https://app.gifable.club/api/media?search=${search}`;
   headers = {
     authorization: process.env.GIFME_AUTH,
     Accept: "application/json",
@@ -94,10 +99,12 @@ async function fetchResults(search = "") {
     throw new Error(json.message);
   }
 
-  return resp.json();
+  const json = await resp.json();
+  return json.data;
 }
 
 function downloadURL(url) {
+  console.error(`Downloading ${url}`);
   return new Promise((resolve, reject) => {
     https.get(url, (res) => {
       let data = [];
@@ -116,5 +123,16 @@ function downloadURL(url) {
     });
   });
 }
+
+function chunk(arr, size) {
+  const chunked_arr = [];
+  let index = 0;
+  while (index < arr.length) {
+    chunked_arr.push(arr.slice(index, size + index));
+    index += size;
+  }
+  return chunked_arr;
+}
+
 
 main();
