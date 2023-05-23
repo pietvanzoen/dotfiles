@@ -15,7 +15,6 @@ vm() {
   local session_dir="${sessions_dir}/$(git rev-parse --abbrev-ref HEAD)"
   if [[ ! -d "${session_dir}" ]]; then
     mkdir "${session_dir}"
-    touch "${session_dir}/file_frecency.sqlite3"
   fi
 
   local session_name="${session_dir}/Session.vim"
