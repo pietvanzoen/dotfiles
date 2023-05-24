@@ -20,6 +20,7 @@ function! PackInit() abort
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('kana/vim-textobj-user') " custom text objects
+  call minpac#add('kbarrette/mediummode') " prevent too many manual motions
   call minpac#add('kkharji/sqlite.lua') " lua db
   call minpac#add('kyazdani42/nvim-web-devicons') " nvim dev icons
   call minpac#add('lifepillar/vim-solarized8') " solarized colors
