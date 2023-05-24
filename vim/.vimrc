@@ -54,6 +54,9 @@ vnoremap // y/<C-R>"<CR>
 
 let &t_ut=''
 
+" enable gutter for netrw
+let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
+
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
   set grepformat=%f:%l:%c:%m
