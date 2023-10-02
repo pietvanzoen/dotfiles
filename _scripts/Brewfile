@@ -45,6 +45,8 @@ brew 'vim'
 brew 'yamllint'
 brew 'yarn'
 brew 'yarn-completion'
+tap 'samwho/spacer'
+brew 'spacer'
 
 brew 'coreutils'
 brew 'diffutils'
