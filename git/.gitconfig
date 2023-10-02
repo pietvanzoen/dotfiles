@@ -59,7 +59,7 @@
   # COMMITING
   ###############################################
 
-  ci = commit --verbose # Verbose commit. Shows diff in commit message editor.
+  ci = commit
   roll-back-one = reset HEAD~1 # Roll back one commit.
   co = checkout
   mt = mergetool
@@ -187,7 +187,8 @@
   sort = -*authordate
 
 [commit]
-  template = /Users/piet/.local/etc/git-commit-message.txt
+  template = ~/.git-commit-message.txt
+	verbose = true
 
 [credential]
   helper = osxkeychain
