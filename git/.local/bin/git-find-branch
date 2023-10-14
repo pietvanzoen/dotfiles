@@ -3,8 +3,14 @@
 set -e
 
 prefilter=$1
-branches=$(git branch -a --color | grep -v "remotes/origin/HEAD" | grep -v '^*' | tr -d ' ')
+
+branches="$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname)' | sed 's|^refs/heads/||' &&
+  git for-each-ref --sort=-committerdate refs/remotes/ --format='%(color:red)%(refname)%(color:reset)')"
 trunk=$(git trunk)
 preview_cmd="echo $trunk..{}; echo; git log --graph --oneline --color origin/$trunk..{}"
 header="Current branch: $(git rev-parse --abbrev-ref HEAD)"
-echo "$branches" | fzf --query "$prefilter" --header "$header" --ansi +s +m -0 --preview "$preview_cmd"
+
+echo -e "$branches" |
+  fzf --query "$prefilter" --header "$header" --ansi +s -m -0 --preview "$preview_cmd" |
+  tr '\n' ' ' | # fzf returns a list of branches separated by newlines, so we need to convert them to spaces
+  sed 's|^refs/remotes/.*\/||g'  # remove refs/remotes/* prefix
