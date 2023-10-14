@@ -50,3 +50,5 @@ alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Cu
 
 # always allow "put back" behaviour
 alias trash='trash -F'
+
+alias rainicorn-speedtest="ssh rainicorn /home/piet/bin/librespeed-cli"
