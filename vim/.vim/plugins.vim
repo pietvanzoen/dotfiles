@@ -5,13 +5,14 @@ function! PackInit() abort
 
   call minpac#init()
 
+  " call minpac#add('kbarrette/mediummode') " prevent too many manual motions
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
   call minpac#add('bkad/CamelCaseMotion') " camel case junction text object
   call minpac#add('deathlyfrantic/vim-textobj-blanklines') " blanklines textobject
   call minpac#add('editorconfig/editorconfig-vim') " editorconfig.org
+  call minpac#add('evanleck/vim-svelte') " svelte syntax
   call minpac#add('fannheyward/telescope-coc.nvim') " telescope coc integration
-  call minpac#add('ggandor/leap.nvim') " quick movements
   call minpac#add('github/copilot.vim') " github copilot
   call minpac#add('glts/vim-textobj-comment') " comment textobjects
   call minpac#add('godlygeek/tabular') " text alignment
@@ -20,7 +21,6 @@ function! PackInit() abort
   call minpac#add('itchyny/lightline.vim') " better statusline
   call minpac#add('junegunn/goyo.vim', { 'type': 'opt' }) " Nice markdown editing
   call minpac#add('kana/vim-textobj-user') " custom text objects
-  call minpac#add('kbarrette/mediummode') " prevent too many manual motions
   call minpac#add('kkharji/sqlite.lua') " lua db
   call minpac#add('kyazdani42/nvim-web-devicons') " nvim dev icons
   call minpac#add('lifepillar/vim-solarized8') " solarized colors
@@ -35,6 +35,7 @@ function! PackInit() abort
   call minpac#add('nvim-telescope/telescope-smart-history.nvim') " Telescope history
   call minpac#add('nvim-telescope/telescope.nvim') " fuzzy file finder
   call minpac#add('nvim-treesitter/nvim-treesitter') " tree-sitter?
+  call minpac#add('phaazon/hop.nvim') " quick movements
   call minpac#add('posva/vim-vue') " vue stuff
   call minpac#add('preservim/vimux') " vim/tmux test running
   call minpac#add('prisma/vim-prisma') " prisma support
@@ -68,7 +69,13 @@ command! PackStatus source $HOME/.vim/plugins.vim | call PackInit() | call minpa
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PACKAGE CONFIG
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" For 1 character to search before showing hints
+noremap <leader>f <Cmd>call stargate#OKvim(1)<CR>
+" For 2 consecutive characters to search
+noremap <leader>F <Cmd>call stargate#OKvim(2)<CR>
 
+" Instead of 1 or 2 you can use any higher number, but it isn't much practical
+" and it is easier to use `/` or `?` for that
 " COC
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:coc_global_extensions = [
@@ -213,10 +220,10 @@ augroup Copilot
 augroup END
 
 
-" LEAP
+" HOP
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-lua require('leap').add_default_mappings()
-lua require('leap').opts.highlight_unlabeled_phase_one_targets = true
+nnoremap s <cmd>HopChar1<cr>
+
 
 " TELESCOPE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -274,4 +281,7 @@ require("telescope").setup {
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('coc')
 require('telescope').load_extension('smart_history')
+require'hop'.setup {
+  multi_windows = false,
+}
 EOF
