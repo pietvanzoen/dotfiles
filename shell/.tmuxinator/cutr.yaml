@@ -1,5 +1,5 @@
 name: cutr
-root: ~/repos/gitlab.com/cutr-git/cutr-server
+root: ~/repos/github.com/cutr-dev/cutr-server
 
 on_project_stop: pkill node
 
@@ -11,11 +11,11 @@ windows:
         - server:
           - cd server
           - yarn
-          - tmux-run-pane yarn dev
+          - tmux-run-pane yarn dev | spacer
         - workers:
           - cd server
           - sleep 5
-          - tmux-run-pane yarn dev:worker
+          - tmux-run-pane yarn dev:worker | spacer
         - ui:
           - cd ui
           - sleep 5
