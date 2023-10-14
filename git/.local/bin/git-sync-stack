@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -e
+
+TRUNK_BRANCH=$(git trunk)
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+if [[ "$TRUNK_BRANCH" == "$CURRENT_BRANCH" ]]; then
+  echo "You are on trunk branch. Nothing to do."
+  exit 1
+fi
+
+set -x
+
+git stack --pull
+
+git tidy
+
+git switch "$CURRENT_BRANCH"
+
+git push-stack
