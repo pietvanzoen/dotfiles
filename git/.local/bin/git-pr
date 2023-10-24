@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+# get last branch in stack
+TRUNK_BRANCH="$(git trunk)"
+CURRENT_BRANCH="$(git symbolic-ref --short HEAD)"
+
+git config --unset-all push.pushOption | true
+
+if [[ "$TRUNK_BRANCH" == "$CURRENT_BRANCH" ]]; then
+  echo "==> MR settings cleaned"
+  exit 0
+fi
+
+TARGET_BRANCH=$(
+  git log --oneline "origin/$TRUNK_BRANCH..$CURRENT_BRANCH" --format="%D" | # get all branches in stack
+    grep -v '^[[:blank:]]*$' | # remove empty lines
+    grep -v "origin/$CURRENT_BRANCH" | # remove current branch
+    tail -n +2 | # remove first line (also current branch)
+    head -n 1 | # get last branch
+    cut -d' ' -f2 | # get branch name
+    xargs # remove leading and trailing spaces
+)
+
+if [ -z "$TARGET_BRANCH" ]; then
+  TARGET_BRANCH="$TRUNK_BRANCH"
+fi
+
+CHANGELOG=$(git log --pretty='* %s' --date=short "origin/$TARGET_BRANCH..HEAD")
+
+DESCRIPTION="$CHANGELOG"
+
+git push -u --force-with-lease
+
+current_pr="$(gh pr view --json 'number,state' || true)"
+
+pr_number="$(echo "$current_pr" | jq -r '.number')"
+pr_state="$(echo "$current_pr" | jq -r '.state')"
+
+if [[ -z "$pr_number" || "$pr_state" == "CLOSED" ]]; then
+  gh pr create --fill --body "$DESCRIPTION" --base "$TARGET_BRANCH" --draft
+  exit 0
+fi
+
+gh pr edit "$pr_number" --body "$DESCRIPTION"
