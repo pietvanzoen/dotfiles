@@ -14,6 +14,7 @@ function! RunTests(test_command) abort
 
   exec ':wall'
   if exists(':VimuxRunCommand')
+    call VimuxSendKeys("C-c")
     call VimuxRunCommand(l:cmd)
   else
     " disable gitgutter while running external test command otherwise rendering gets messed up
