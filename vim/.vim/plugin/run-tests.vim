@@ -32,7 +32,7 @@ function RunFile() abort
   if (l:file =~# '.*\.js$')
     let l:program = 'node'
   elseif (l:file =~# '.*\.ts$')
-    let l:program = 'ts-node'
+    let l:program = 'ts-node -O "{\"resolveJsonModule\": true }"'
   elseif (l:file =~# '.*\.py$')
     let l:program = 'python'
   elseif (l:file =~# '.*\.go$')
