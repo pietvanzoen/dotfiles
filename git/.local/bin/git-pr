@@ -43,4 +43,4 @@ if [[ -z "$pr_number" || "$pr_state" == "CLOSED" ]]; then
   exit 0
 fi
 
-gh pr edit "$pr_number" --body "$DESCRIPTION"
+gh pr edit "$pr_number" --body "$DESCRIPTION" --base "$TARGET_BRANCH"
