@@ -117,7 +117,6 @@ let g:lightline.component_function = {}
 let g:lightline.component_function.cwd = 'LightlineCWD'
 let g:lightline.component_function.gitbranch = 'LightlineGitBranch'
 let g:lightline.component_function.mode = 'LightlineMode'
-" let g:lightline.component_function.copilot = 'LightlineCopilot'
 let g:lightline.component_function.coc = 'LighlineCoc'
 
 function! LightlineGitBranch() abort
@@ -139,18 +138,6 @@ endfunction
 function! LightlineObsession() abort
   return ObsessionStatus('●', 'Ⅱ')
 endfunction
-
-function! LightlineCopilot()
-  let l:status = execute(':Copilot status')
-  if l:status =~# 'Enabled'
-    return "\ufba7 \uf00c"
-  elseif l:status =~# 'Disabled'
-    return "\ufba7 \uf04c"
-  else
-    return "\ufba7 \uf071"
-  endif
-endfunction
-
 
 function! LighlineCoc() abort
   let info = get(b:, 'coc_diagnostic_info', {})

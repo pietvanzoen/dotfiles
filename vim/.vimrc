@@ -2,7 +2,6 @@ colorscheme solarized8
 set background=dark
 set termguicolors
 
-
 " Assumes sensible is loaded: https://github.com/tpope/vim-sensible
 set clipboard=unnamed " use system clipboard
 set colorcolumn=72,120 " vertical lines at 71 and 120 chars
