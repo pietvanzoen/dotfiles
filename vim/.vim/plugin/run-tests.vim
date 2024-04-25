@@ -2,6 +2,8 @@
 function! RunTests(test_command) abort
   if (a:test_command !=# '')
     let l:test_command = a:test_command
+  elseif (exists('b:test_command'))
+    let l:test_command = b:test_command
   elseif (exists('g:test_command'))
     let l:test_command = g:test_command
   else
@@ -10,7 +12,7 @@ function! RunTests(test_command) abort
   let l:tcmd = substitute(l:test_command, '%', expand('%'), '')
 
   " add space before so command does not polute history
-  let l:cmd = ' clear && echo "==> Running ' . l:tcmd . '" && echo && time (' . l:tcmd . ') && echo'
+  let l:cmd = ' clear && (' . l:tcmd . ')'
 
   exec ':wall'
   if exists(':VimuxRunCommand')
@@ -93,22 +95,26 @@ function! OpenTestFile() abort
   let l:file = expand('%')
   let l:dir = substitute(expand('%:p:h'), getcwd() . '/', '', '')
   let l:filename = expand('%:t:r')
-  let l:ext = expand('%:e')
+  let l:filename = substitute(l:filename, '\.test$', '', '')
 
-  let l:test_file = ''
+  let l:target_file = ''
 
-  if (l:file =~# '.*\.js$')
-    let l:test_file = l:dir . '/' . l:filename . '.test.js'
+  if (l:file =~# '.*\.test\.js$')
+    let l:target_file = l:dir . '/' . l:filename . '.js'
+  elseif (l:file =~# '.*\.test\.ts$')
+    let l:target_file = l:dir . '/' . l:filename . '.ts'
+  elseif (l:file =~# '.*\.js$')
+    let l:target_file = l:dir . '/' . l:filename . '.test.js'
   elseif (l:file =~# '.*\.ts$')
-    let l:test_file = l:dir . '/' . l:filename . '.test.ts'
+    let l:target_file = l:dir . '/' . l:filename . '.test.ts'
   endif
 
-  if (l:test_file ==# '')
+  if (l:target_file ==# '')
     echo 'No test file found for file type'
     return
   endif
 
-  exec ':vsp ' . l:test_file
+  exec ':vsp ' . l:target_file
 endfunction
 
 command! -nargs=? RunTests call RunTests(<q-args>)
