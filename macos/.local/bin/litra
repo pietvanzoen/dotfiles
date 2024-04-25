@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+set -e
+
+"$HOME/.local/lib/hid-litra/hid-litra.py" "$@"
