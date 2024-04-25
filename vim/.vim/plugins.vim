@@ -56,6 +56,8 @@ function! PackInit() abort
   call minpac#add('vimtaku/vim-textobj-keyvalue') " key value text objects
   call minpac#add('wellle/targets.vim') " additional text objects
   call minpac#add('whatyouhide/vim-textobj-xmlattr') " xml attribute text object
+  call minpac#add('yaegassy/coc-volar', { 'do': '!yarn install --frozen-lockfile' }) " vue language server
+  call minpac#add('yaegassy/coc-volar-tools', { 'do': '!yarn install --frozen-lockfile' }) " vue language server tools
 
 endfunction
 
