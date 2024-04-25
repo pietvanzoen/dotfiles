@@ -5,7 +5,6 @@ function! PackInit() abort
 
   call minpac#init()
 
-  " call minpac#add('kbarrette/mediummode') " prevent too many manual motions
   call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
   call minpac#add('bkad/CamelCaseMotion') " camel case junction text object
