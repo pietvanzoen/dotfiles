@@ -25,6 +25,7 @@ function! PackInit() abort
   call minpac#add('lifepillar/vim-solarized8') " solarized colors
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('mattn/emmet-vim') " css/html abbreviations
+  call minpac#add('mfussenegger/nvim-dap') " debugger
   call minpac#add('mg979/vim-visual-multi') " multiple cursors
   call minpac#add('michaeljsmith/vim-indent-object') " indent text object
   call minpac#add('neoclide/coc.nvim', {'do': '!yarn install --frozen-lockfile'})
