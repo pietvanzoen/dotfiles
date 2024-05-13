@@ -5,7 +5,6 @@ function! PackInit() abort
 
   call minpac#init()
 
-  call minpac#add('airblade/vim-gitgutter') " gutter notations for git status
   call minpac#add('AndrewRadev/tagalong.vim') " update matching html tags
   call minpac#add('bkad/CamelCaseMotion') " camel case junction text object
   call minpac#add('deathlyfrantic/vim-textobj-blanklines') " blanklines textobject
@@ -22,6 +21,7 @@ function! PackInit() abort
   call minpac#add('kana/vim-textobj-user') " custom text objects
   call minpac#add('kkharji/sqlite.lua') " lua db
   call minpac#add('kyazdani42/nvim-web-devicons') " nvim dev icons
+  call minpac#add('lewis6991/gitsigns.nvim') " git signs
   call minpac#add('lifepillar/vim-solarized8') " solarized colors
   call minpac#add('machakann/vim-highlightedyank') " briefly highlight yanked text
   call minpac#add('mattn/emmet-vim') " css/html abbreviations
@@ -301,4 +301,67 @@ require('telescope').load_extension('smart_history')
 require'hop'.setup {
   multi_windows = false,
 }
+require('gitsigns').setup {
+ current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
+    delay = 1000,
+    ignore_whitespace = false,
+    virt_text_priority = 100,
+  },
+  current_line_blame = true,
+  preview_config = {
+    -- Options passed to nvim_open_win
+    border = 'rounded',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1
+  },
+  on_attach = function(bufnr)
+    local gitsigns = require('gitsigns')
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', ']c', function()
+      if vim.wo.diff then
+        vim.cmd.normal({']c', bang = true})
+      else
+        gitsigns.nav_hunk('next')
+      end
+    end)
+
+    map('n', '[c', function()
+      if vim.wo.diff then
+        vim.cmd.normal({'[c', bang = true})
+      else
+        gitsigns.nav_hunk('prev')
+      end
+    end)
+
+    -- Actions
+    map('n', '<leader>hs', gitsigns.stage_hunk)
+    map('n', '<leader>hr', gitsigns.reset_hunk)
+    map('v', '<leader>hs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+    map('v', '<leader>hr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+    map('n', '<leader>hS', gitsigns.stage_buffer)
+    map('n', '<leader>hu', gitsigns.undo_stage_hunk)
+    map('n', '<leader>hR', gitsigns.reset_buffer)
+    map('n', '<leader>hp', gitsigns.preview_hunk)
+    map('n', '<leader>hb', function() gitsigns.blame_line{full=true} end)
+    map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
+    map('n', '<leader>hd', gitsigns.diffthis)
+    map('n', '<leader>hD', function() gitsigns.diffthis('~') end)
+    map('n', '<leader>td', gitsigns.toggle_deleted)
+
+    -- Text object
+    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end
+}
+
 EOF
