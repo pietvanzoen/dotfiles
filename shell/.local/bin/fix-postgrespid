@@ -1,0 +1,38 @@
+#!/bin/bash
+# This script is used to fix the issue where postgres is not starting because of a stale pid file
+
+set -e
+
+MATCHING_ERROR="$(cat "$(brew --prefix)/var/log/postgresql@14.log" | tail | grep "HINT:  Is another postmaster" || true)"
+
+if [ -z "$MATCHING_ERROR" ]; then
+  echo "No matching postgres stale PID error found"
+  exit 1
+fi
+
+POSTGRES_DIR="$(echo "$MATCHING_ERROR" | tail -1 | # Get the last error
+  xargs | # Remove leading and trailing whitespace
+  rev | # Reverse the string (the directory is at the end)
+  cut -d' ' -f1 | # Get the last string (the directory)
+  rev | # Reverse the string back
+  sed 's/?$//')" # Remove the trailing question mark
+
+
+POSTGRES_PID_FILE="$POSTGRES_DIR/postmaster.pid"
+
+if [ ! -f "$POSTGRES_PID_FILE" ]; then
+  echo "==> No postgres pid file found"
+  exit 1
+fi
+
+echo "==> Found postgres pid file: $POSTGRES_PID_FILE:"
+
+cat "$POSTGRES_PID_FILE"
+
+echo
+
+echo "==> Running postgres services:"
+pgrep -a postgres || echo "No postgres services running"
+
+echo
+rm -iv "$POSTGRES_PID_FILE"
