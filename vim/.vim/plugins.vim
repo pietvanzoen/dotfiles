@@ -318,6 +318,7 @@ require('gitsigns').setup {
     row = 0,
     col = 1
   },
+  current_line_blame_formatter = '<author>, <author_time:%R>: <summary>',
   on_attach = function(bufnr)
     local gitsigns = require('gitsigns')
 
