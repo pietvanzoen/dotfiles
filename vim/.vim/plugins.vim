@@ -1,6 +1,7 @@
 scriptencoding utf-8
 
 function! PackInit() abort
+
   packadd minpac
 
   call minpac#init()
@@ -54,7 +55,7 @@ function! PackInit() abort
   call minpac#add('tpope/vim-rhubarb') " fugitive plugin for github
   call minpac#add('tpope/vim-sensible') " sensible defaults
   call minpac#add('tpope/vim-surround') " surround char manipulation
-  call minpac#add('vimtaku/vim-textobj-keyvalue') " key value text objects
+  all minpac#add('vimtaku/vim-textobj-keyvalue') " key value text objects
   call minpac#add('wellle/targets.vim') " additional text objects
   call minpac#add('whatyouhide/vim-textobj-xmlattr') " xml attribute text object
   call minpac#add('yaegassy/coc-volar', { 'do': '!yarn install --frozen-lockfile' }) " vue language server
