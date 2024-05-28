@@ -1,4 +1,15 @@
 require("lazy").setup({
+  {
+    "smoka7/hop.nvim",
+    config = function()
+      local hop = require("hop")
+      hop.setup()
+      -- Use `s` to trigger hop
+      vim.keymap.set("", "s", function()
+        hop.hint_char1({})
+      end, { remap = true, desc = "Hop" })
+    end,
+  },
   "tpope/vim-obsession",
   "tpope/vim-fugitive",
   "nvim-treesitter/nvim-treesitter-context",
