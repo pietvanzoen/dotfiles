@@ -10,16 +10,31 @@ require("lazy").setup({
       vim.g.VimuxOrientation = "h"
     end,
   },
-  "github/copilot.vim",
+
+  {
+    "zbirenbaum/copilot.lua",
+    opts = {
+      panel = {
+        layout = {
+          position = "right",
+        },
+      },
+      suggestion = {
+        auto_trigger = true,
+        keymap = {
+          accept = "<Tab>",
+        },
+      },
+      filetypes = {
+        gitcommit = true,
+      },
+    },
+  },
+
   "tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
   { "numToStr/Comment.nvim", opts = {} }, -- "gc" to comment visual regions/lines
 
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
   require("kickstart/plugins/gitsigns"),
 
   require("kickstart/plugins/which-key"),
@@ -37,8 +52,7 @@ require("lazy").setup({
 
   require("kickstart/plugins/treesitter"),
 
-  -- Highlight todo, notes, etc in comments
-  {
+  { -- Highlight todo, notes, etc in comments
     "folke/todo-comments.nvim",
     event = "VimEnter",
     dependencies = { "nvim-lua/plenary.nvim" },
