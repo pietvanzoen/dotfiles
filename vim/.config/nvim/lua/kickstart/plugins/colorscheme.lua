@@ -1,11 +1,10 @@
 return {
   {
-    "maxmx03/solarized.nvim",
+    "ishan9299/nvim-solarized-lua",
     priority = 1000,
-    init = function()
-      vim.o.background = "dark" -- or 'light'
+    config = function()
+      vim.opt.termguicolors = true
       vim.cmd.colorscheme("solarized")
-      -- vim.cmd.hi("Comment gui=none")
     end,
   },
 }
