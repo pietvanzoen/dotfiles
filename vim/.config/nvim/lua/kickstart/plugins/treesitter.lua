@@ -1,4 +1,5 @@
 return {
+  "nvim-treesitter/nvim-treesitter-context",
   { -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",

@@ -12,7 +12,6 @@ require("lazy").setup({
   },
   "tpope/vim-obsession",
   "tpope/vim-fugitive",
-  "nvim-treesitter/nvim-treesitter-context",
   "roman/golden-ratio",
   {
     "preservim/vimux",
