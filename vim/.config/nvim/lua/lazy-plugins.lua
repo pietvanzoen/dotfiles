@@ -22,34 +22,6 @@ require("lazy").setup({
     end,
   },
 
-  {
-    "zbirenbaum/copilot.lua",
-    opts = {
-      panel = {
-        layout = {
-          position = "right",
-        },
-      },
-      suggestion = {
-        auto_trigger = true,
-        keymap = {
-          accept = "<Tab>",
-          accept_word = "<C-Space>",
-        },
-      },
-      filetypes = {
-        gitcommit = true,
-        sh = function()
-          if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), "^%.env.*") then
-            -- disable for .env files
-            return false
-          end
-          return true
-        end,
-      },
-    },
-  },
-
   "tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
   { "numToStr/Comment.nvim", opts = {} }, -- "gc" to comment visual regions/lines

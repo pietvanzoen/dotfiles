@@ -1,4 +1,31 @@
 return {
+  {
+    "zbirenbaum/copilot.lua",
+    opts = {
+      panel = {
+        layout = {
+          position = "right",
+        },
+      },
+      suggestion = {
+        auto_trigger = true,
+        keymap = {
+          accept = "<c-cr>",
+        },
+      },
+      filetypes = {
+        gitcommit = true,
+        sh = function()
+          if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), "^%.env.*") then
+            -- disable for .env files
+            return false
+          end
+          return true
+        end,
+      },
+    },
+  },
+
   { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
     dependencies = {
