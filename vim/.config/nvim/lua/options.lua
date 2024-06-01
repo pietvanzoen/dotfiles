@@ -59,4 +59,10 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Disable line wrapping
+vim.opt.wrap = false
+
+-- always show the tabline
+vim.opt.showtabline = 2
+
 -- vim: ts=2 sts=2 sw=2 et

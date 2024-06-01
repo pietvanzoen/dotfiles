@@ -21,7 +21,8 @@ require("lazy").setup({
     end,
   },
 
-  "tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+  -- "tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+  "tpope/vim-surround",
 
   { "numToStr/Comment.nvim", opts = {} }, -- "gc" to comment visual regions/lines
 
