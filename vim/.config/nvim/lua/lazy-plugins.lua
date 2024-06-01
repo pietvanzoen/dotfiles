@@ -54,7 +54,7 @@ require("lazy").setup({
 
   { "numToStr/Comment.nvim", opts = {} }, -- "gc" to comment visual regions/lines
 
-  require("kickstart/plugins/gitsigns"),
+  require("kickstart/plugins/git"),
 
   require("kickstart/plugins/which-key"),
 
