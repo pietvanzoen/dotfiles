@@ -539,8 +539,10 @@ require("lazy").setup({
         return "%2l:%-2v"
       end
 
-      require("mini.indentscope").setup({})
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#555555" })
+      require("mini.indentscope").setup({
+        symbol = "",
+      })
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#526f76" })
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
