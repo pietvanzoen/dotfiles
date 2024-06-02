@@ -176,3 +176,5 @@ nohup.out
 .nova/
 
 .envrc
+
+.nvim.lua
