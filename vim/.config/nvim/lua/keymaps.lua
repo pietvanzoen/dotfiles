@@ -1,3 +1,4 @@
+-- luacheck: globals vim
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -44,8 +45,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking (copying) text",
   group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    vim.highlight.on_yank({
+      timeout = 500,
+    })
   end,
 })
+
+vim.keymap.set("n", "<leader>h", ":let @/ = ''<CR>", { desc = "Disable search highlighting" })
+
+vim.keymap.set("n", "<leader>z", "1z=", { desc = "Replace bad spelling with first suggestion" })
+
+vim.keymap.set("v", "//", 'y/<C-R>"<CR>', { desc = "Search for currently selected text" })
 
 -- vim: ts=2 sts=2 sw=2 et
