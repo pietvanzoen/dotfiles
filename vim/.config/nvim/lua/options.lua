@@ -69,4 +69,8 @@ vim.opt.showtabline = 2
 -- Enable exrc
 vim.opt.exrc = true
 
+-- Spell checking
+vim.opt.spell = true
+vim.opt.spelllang = "en_us"
+
 -- vim: ts=2 sts=2 sw=2 et
