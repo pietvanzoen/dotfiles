@@ -15,11 +15,6 @@ require("lazy").setup({
     },
   },
 
-  { -- "gc" to comment visual regions/lines
-    "numToStr/Comment.nvim",
-    opts = {}, -- required so setup is run
-  },
-
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     "lewis6991/gitsigns.nvim",
     opts = {
@@ -608,6 +603,9 @@ require("lazy").setup({
         symbol = "",
       })
       vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#526f76" })
+
+      -- Commenting out lines or blocks of code
+      require("mini.comment").setup()
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
