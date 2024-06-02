@@ -1,3 +1,4 @@
+-- luacheck: globals vim
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -64,5 +65,8 @@ vim.opt.wrap = false
 
 -- always show the tabline
 vim.opt.showtabline = 2
+
+-- Enable exrc
+vim.opt.exrc = true
 
 -- vim: ts=2 sts=2 sw=2 et
