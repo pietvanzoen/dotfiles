@@ -805,6 +805,43 @@ require("lazy").setup({
       end
     end,
   },
+
+  -- {
+  --   "nvim-neotest/neotest",
+  --   dependencies = {
+  --     "nvim-neotest/neotest-jest",
+  --
+  --     "nvim-neotest/nvim-nio",
+  --     "nvim-lua/plenary.nvim",
+  --     "antoinemadec/FixCursorHold.nvim",
+  --     "nvim-treesitter/nvim-treesitter",
+  --   },
+  --   config = function()
+  --     local neotest = require("neotest")
+  --
+  --     neotest.setup({
+  --       discovery = {
+  --         enabled = false,
+  --       },
+  --       adapters = {
+  --
+  --         require("neotest-jest")({
+  --           jestCommand = require("neotest-jest.jest-util").getJestCommand(vim.fn.expand("%:p:h")) .. " --watch",
+  --           jestConfigFile = "jest.config.js",
+  --           -- env = { CI = true },
+  --           cwd = function(path)
+  --             return vim.fn.getcwd()
+  --           end,
+  --         }),
+  --       },
+  --     })
+  --
+  --     vim.keymap.set("n", "<leader>tt", neotest.run.run, { desc = "[T]est Current [T]est" })
+  --     vim.keymap.set("n", "<leader>tf", function()
+  --       neotest.run(vim.fn.expand("%"))
+  --     end, { desc = "[T]est [F]ile" })
+  --   end,
+  -- },
 }, {
   change_detection = {
     -- automatically check for config file changes and reload the ui

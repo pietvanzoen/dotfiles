@@ -1,9 +1,3 @@
-.vim/undo
-!.vim/undo/.keep
 .netrwhist
 .netrwbook
-.vim/pack/minpac
-.vim/spell
-!.vim
-!.vimrc
 !.config
