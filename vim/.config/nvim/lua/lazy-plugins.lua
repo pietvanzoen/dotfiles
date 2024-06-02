@@ -599,6 +599,7 @@ require("lazy").setup({
         return "%2l:%-2v"
       end
 
+      -- Indentation scope indicator
       require("mini.indentscope").setup({
         symbol = "",
       })
@@ -722,7 +723,6 @@ require("lazy").setup({
         -- online, please don't ask me how to install them :)
         ensure_installed = {
           -- Update this to ensure that you have the debuggers for the langs you want
-          "delve",
         },
       })
 
@@ -762,8 +762,8 @@ require("lazy").setup({
       vim.keymap.set("n", "<F7>", dapui.toggle, { desc = "Debug: See last session result." })
 
       dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-      dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-      dap.listeners.before.event_exited["dapui_config"] = dapui.close
+      -- dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+      -- dap.listeners.before.event_exited["dapui_config"] = dapui.close
 
       require("dap-vscode-js").setup({
         debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
