@@ -462,6 +462,7 @@ require("lazy").setup({
 
       local servers = {
         tsserver = {},
+        volar = {},
 
         eslint = {
           codeAction = {
@@ -562,6 +563,12 @@ require("lazy").setup({
       formatters_by_ft = {
         lua = { "stylua" },
         javascript = { { "eslint_d" } },
+        typescript = { { "eslint_d" } },
+        vue = { { "eslint_d" } },
+        react = { { "eslint_d" } },
+        html = { { "prettier" } },
+        css = { { "prettier" } },
+        scss = { { "prettier" } },
       },
     },
   },
