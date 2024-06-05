@@ -683,6 +683,11 @@ require("lazy").setup({
       vim.api.nvim_set_hl(0, "@keyword.function", { link = "Keyword" })
       vim.api.nvim_set_hl(0, "@include", { link = "Keyword" })
 
+      -- Use Treesitter for folding
+      vim.opt.foldmethod = "expr"
+      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      vim.opt.foldenable = false
+
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
       --
