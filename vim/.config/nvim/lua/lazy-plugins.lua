@@ -476,6 +476,8 @@ require("lazy").setup({
           },
         },
 
+        html = {},
+
         lua_ls = {
           settings = {
             Lua = {
