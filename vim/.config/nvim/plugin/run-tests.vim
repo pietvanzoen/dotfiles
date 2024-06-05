@@ -20,9 +20,7 @@ function! RunTests(test_command) abort
     call VimuxRunCommand(l:cmd)
   else
     " disable gitgutter while running external test command otherwise rendering gets messed up
-    exec ':GitGutterDisable | CocDisable'
     exec ':!' . l:cmd
-    exec ':redraw! | GitGutterEnable | CocEnable'
   endif
 endfunction
 
