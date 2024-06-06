@@ -462,7 +462,14 @@ require("lazy").setup({
 
       local servers = {
         tsserver = {},
-        volar = {},
+        volar = {
+          init_options = {
+            vue = {
+              hybridMode = false,
+            },
+          },
+        },
+        emmet_ls = {},
 
         eslint = {
           codeAction = {
@@ -476,7 +483,13 @@ require("lazy").setup({
           },
         },
 
-        html = {},
+        html = {
+          filetypes = { "html", "vue" },
+        },
+
+        cssls = {
+          filetypes = { "css", "scss", "less", "vue" },
+        },
 
         lua_ls = {
           settings = {
