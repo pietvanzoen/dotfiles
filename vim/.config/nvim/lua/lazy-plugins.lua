@@ -619,9 +619,8 @@ require("lazy").setup({
           end,
           active = function()
             local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
-            local git = MiniStatusline.section_git({ trunc_width = 40 })
+            local git = CustomStatusline.section_git({ trunc_width = 100 })
             local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 60 })
-            local lsp = MiniStatusline.section_lsp({ trunc_width = 40 })
             local filetype = CustomStatusline.section_filetype({ trunc_width = 70 })
             local project = CustomStatusline.section_project({ trunc_width = 80 })
             local location = CustomStatusline.section_location({ trunc_width = 120 })
@@ -632,17 +631,41 @@ require("lazy").setup({
 
             return MiniStatusline.combine_groups({
               { hl = mode_hl, strings = { mode:upper() } },
-              { hl = "MiniStatuslineDevinfo", strings = { git, project } },
+              { hl = "MiniStatuslineDevinfo", strings = { git, "│", project } },
               "%<", -- Mark general truncate point
               { hl = "MiniStatuslineFilename", strings = { pathname } },
               "%=", -- End left alignment
-              { hl = "MiniStatuslineFileinfo", strings = { filetype, diagnostics, lsp } },
+              { hl = "MiniStatuslineFileinfo", strings = { filetype, diagnostics } },
               { hl = mode_hl, strings = { search .. location } },
             })
             -- stylua: ignore end
           end,
         },
       })
+
+      local truncate_string = function(str, length)
+        if #str > length then
+          return string.sub(str, 1, length) .. "…"
+        else
+          return str
+        end
+      end
+
+      CustomStatusline.section_git = function(args)
+        ---@diagnostic disable-next-line: undefined-field
+        local git = vim.b.gitsigns_head or ""
+        if git == "" then
+          return ""
+        end
+
+        git = " " .. git
+
+        if MiniStatusline.is_truncated(args.trunc_width) then
+          return truncate_string(git, 12)
+        end
+
+        return truncate_string(git, 30)
+      end
 
       -- Utility from mini.statusline
       CustomStatusline.isnt_normal_buffer = function()
@@ -730,7 +753,7 @@ require("lazy").setup({
           return project_dir
         end
 
-        return "│  " .. project_dir
+        return " " .. project_dir
       end
 
       CustomStatusline.section_pathname = function(args)
