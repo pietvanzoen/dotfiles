@@ -966,7 +966,8 @@ require("lazy").setup({
 
       require("dap-vscode-js").setup({
         debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
-        adapters = { "pwa-node" }, -- "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
+        -- which adapters to register in nvim-dap
+        adapters = { "pwa-node" }, -- "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
       })
 
       for _, language in ipairs({ "typescript", "javascript" }) do
