@@ -584,6 +584,7 @@ require("lazy").setup({
         html = { { "prettier" } },
         css = { { "prettier" } },
         scss = { { "prettier" } },
+        json = { { "prettier" } },
       },
     },
   },
