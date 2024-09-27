@@ -18,4 +18,6 @@ function open_aider_with_buffers()
   vim.cmd("VimuxRunCommand aider " .. table.concat(buffers, " "))
 end
 
+vim.api.nvim_set_keymap('n', '<leader>oa', ':lua open_aider_with_buffers()<CR>', { noremap = true, silent = true })
+
 return {}
