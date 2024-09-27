@@ -6,6 +6,14 @@ require("lazy").setup({
   "tpope/vim-surround", -- Surround text objects
   "tpope/vim-fugitive", -- Git commands in vim
   "tpope/vim-rhubarb", -- Github extension for fugitive
+  "AndrewRadev/tagalong.vim", -- Auto close HTML tags
+
+  { -- Emmet for neovim
+    "olrtg/nvim-emmet",
+    config = function()
+      vim.keymap.set({ "n", "v" }, "<leader>xe", require("nvim-emmet").wrap_with_abbreviation)
+    end,
+  },
 
   { -- Manage lua dependencies
     "vhyrro/luarocks.nvim",
