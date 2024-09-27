@@ -108,7 +108,7 @@ require("lazy").setup({
   { -- Open tmux splits from vim
     "preservim/vimux",
     config = function()
-      vim.g.VimuxHeight = "30"
+      vim.g.VimuxHeight = "60"
       vim.g.VimuxOrientation = "h"
     end,
   },
