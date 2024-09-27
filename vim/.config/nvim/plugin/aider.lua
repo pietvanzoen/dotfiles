@@ -5,7 +5,8 @@ local function get_open_buffers_in_current_window()
 
     for _, win in ipairs(windows) do
         local buf = vim.api.nvim_win_get_buf(win)
-        table.insert(buffers, buf)
+        local buf_name = vim.api.nvim_buf_get_name(buf)
+        table.insert(buffers, buf_name)
     end
 
     return buffers
