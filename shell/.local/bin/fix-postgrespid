@@ -3,7 +3,7 @@
 
 set -e
 
-MATCHING_ERROR="$(cat "$(brew --prefix)/var/log/postgresql@14.log" | tail | grep "HINT:  Is another postmaster" || true)"
+MATCHING_ERROR="$(cat "$(brew --prefix)/var/log/postgresql@16.log" | tail | grep "HINT:  Is another postmaster" || true)"
 
 if [ -z "$MATCHING_ERROR" ]; then
   echo "No matching postgres stale PID error found"
