@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 const words = [
-    'apple', 'banana', 'cherry', 'date', 'elderberry', 'fig', 'grape', 'honeydew',
-    'kiwi', 'lemon', 'mango', 'nectarine', 'orange', 'papaya', 'quince', 'raspberry',
-    'strawberry', 'tangerine', 'ugli', 'vanilla', 'watermelon', 'xigua', 'yam', 'zucchini',
-    'apricot', 'blackberry', 'cantaloupe', 'dragonfruit', 'elderflower', 'feijoa', 'guava',
-    'huckleberry', 'imbe', 'jackfruit', 'kumquat', 'lime', 'mulberry', 'nectar', 'olive',
-    'peach', 'plum'
+    'apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon',
+    'mango', 'orange', 'papaya', 'quince', 'ugli', 'vanilla', 'xigua', 'yam',
+    'apricot', 'guava', 'imbe', 'lime', 'olive', 'peach', 'plum', 'berry',
+    'melon', 'pear', 'citrus', 'grapefruit', 'lychee', 'nectar', 'prune',
+    'raisin', 'squash', 'tomato', 'carrot', 'radish', 'turnip', 'onion',
+    'garlic', 'leek', 'chive', 'beet'
 ];
 
 function getRandomWord() {
