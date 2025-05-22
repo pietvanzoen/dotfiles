@@ -36,6 +36,9 @@ _info "Initializing stow"
 echo "stow" >> "$INSTALLED_INDEX_TMP"
 stow --target=$HOME --restow --verbose stow
 
+_info "Installing npm packages"
+npm install random-words
+
 for package in $stowable; do
   if _confirm "Install $package?"; then
     _info "Installing $package"

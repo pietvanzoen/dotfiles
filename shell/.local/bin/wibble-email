@@ -1,4 +1,13 @@
 #!/usr/bin/env node
 
-console.log("Hello from wibble-email");
+const randomWords = require('random-words');
+
+function generateRandomEmail() {
+    const word1 = randomWords();
+    const word2 = randomWords();
+    const randomNumber = Math.floor(1000 + Math.random() * 9000);
+    return `${word1}.${word2}${randomNumber}@wibble.top`;
+}
+
+console.log(generateRandomEmail());
 
