@@ -21,5 +21,7 @@ def generate_random_email():
     random_number = random.randint(1000, 9999)
     return f"{word1}.{word2}{random_number}@wibble.top"
 
-print(generate_random_email())
+import sys
+
+sys.stdout.write(generate_random_email())
 
