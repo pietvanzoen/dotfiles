@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 
-const randomWords = require('random-words');
+const words = ['apple', 'banana', 'cherry', 'date', 'elderberry', 'fig', 'grape', 'honeydew'];
+
+function getRandomWord() {
+    return words[Math.floor(Math.random() * words.length)];
+}
 
 function generateRandomEmail() {
-    const word1 = randomWords();
-    const word2 = randomWords();
+    const word1 = getRandomWord();
+    const word2 = getRandomWord();
     const randomNumber = Math.floor(1000 + Math.random() * 9000);
     return `${word1}.${word2}${randomNumber}@wibble.top`;
 }
