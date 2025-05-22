@@ -4,9 +4,10 @@ const words = [
     'apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon',
     'mango', 'orange', 'papaya', 'quince', 'ugli', 'vanilla', 'xigua', 'yam',
     'apricot', 'guava', 'imbe', 'lime', 'olive', 'peach', 'plum', 'berry',
-    'melon', 'pear', 'citrus', 'grapefruit', 'lychee', 'nectar', 'prune',
-    'raisin', 'squash', 'tomato', 'carrot', 'radish', 'turnip', 'onion',
-    'garlic', 'leek', 'chive', 'beet'
+    'melon', 'pear', 'citrus', 'prune', 'raisin', 'squash', 'tomato', 'carrot',
+    'radish', 'turnip', 'onion', 'garlic', 'leek', 'chive', 'beet', 'tiger',
+    'eagle', 'shark', 'zebra', 'panda', 'koala', 'otter', 'llama', 'gecko',
+    'bison', 'camel', 'dingo', 'finch', 'goose', 'horse', 'ibex', 'jaguar'
 ];
 
 function getRandomWord() {
