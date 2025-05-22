@@ -1,6 +1,8 @@
-#!/usr/bin/env node
+#!/usr/bin/env python3
 
-const words = [
+import random
+
+words = [
     'apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon',
     'mango', 'orange', 'papaya', 'quince', 'ugli', 'vanilla', 'xigua', 'yam',
     'apricot', 'guava', 'imbe', 'lime', 'olive', 'peach', 'plum', 'berry',
@@ -8,18 +10,16 @@ const words = [
     'radish', 'turnip', 'onion', 'garlic', 'leek', 'chive', 'beet', 'tiger',
     'eagle', 'shark', 'zebra', 'panda', 'koala', 'otter', 'llama', 'gecko',
     'bison', 'camel', 'dingo', 'finch', 'goose', 'horse', 'ibex', 'jaguar'
-];
+]
 
-function getRandomWord() {
-    return words[Math.floor(Math.random() * words.length)];
-}
+def get_random_word():
+    return random.choice(words)
 
-function generateRandomEmail() {
-    const word1 = getRandomWord();
-    const word2 = getRandomWord();
-    const randomNumber = Math.floor(1000 + Math.random() * 9000);
-    return `${word1}.${word2}${randomNumber}@wibble.top`;
-}
+def generate_random_email():
+    word1 = get_random_word()
+    word2 = get_random_word()
+    random_number = random.randint(1000, 9999)
+    return f"{word1}.{word2}{random_number}@wibble.top"
 
-console.log(generateRandomEmail());
+print(generate_random_email())
 
