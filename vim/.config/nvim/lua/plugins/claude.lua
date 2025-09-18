@@ -11,7 +11,7 @@ end
 
 function open_claude_with_buffers()
   local branch = get_git_branch()
-  vim.cmd("VimuxRunCommand 'claude code --session-id " .. branch .. "'")
+  vim.cmd("VimuxRunCommand 'claude --session-id " .. branch .. "'")
 end
 
 vim.api.nvim_set_keymap("n", "<leader>oc", ":lua open_claude_with_buffers()<CR>", { noremap = true, silent = true })
