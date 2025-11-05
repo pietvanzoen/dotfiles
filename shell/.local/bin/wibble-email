@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import random
+from urllib.parse import urlparse
 
 words = [
     'apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi', 'lemon',
@@ -15,13 +16,57 @@ words = [
 def get_random_word():
     return random.choice(words)
 
+def to_pig_latin(word):
+    """Convert a word to pig latin"""
+    vowels = 'aeiouAEIOU'
+    if word[0] in vowels:
+        return word + 'way'
+    else:
+        # Find the first vowel
+        for i, char in enumerate(word):
+            if char in vowels:
+                return word[i:] + word[:i] + 'ay'
+        # If no vowels found, just add 'ay'
+        return word + 'ay'
+
 def generate_random_email():
     word1 = get_random_word()
     word2 = get_random_word()
-    random_number = random.randint(1000, 9999)
+    random_number = random.randint(000, 999)
     return f"{word1}.{word2}{random_number}@wibble.top"
+
+def generate_domain_email(url_or_domain):
+    # Parse the URL to extract hostname
+    if '://' in url_or_domain:
+        # It's a full URL
+        parsed = urlparse(url_or_domain)
+        hostname = parsed.hostname
+    else:
+        # It's just a domain
+        hostname = url_or_domain
+
+    # Extract the main domain name (remove subdomains)
+    if hostname:
+        parts = hostname.split('.')
+        if len(parts) >= 2:
+            domain_name = parts[-2]  # Get the second-to-last part (e.g., 'fablehobby' from 'www.fablehobby.com')
+        else:
+            domain_name = parts[0]
+    else:
+        # Fallback to random if parsing fails
+        return generate_random_email()
+
+    return f"{to_pig_latin(domain_name)}@wibble.top"
 
 import sys
 
-sys.stdout.write(generate_random_email())
+if len(sys.argv) > 1:
+    # Use the provided URL or domain
+    email = generate_domain_email(sys.argv[1])
+else:
+    # Generate random email as before
+    email = generate_random_email()
+
+sys.stdout.write(email)
+
 
