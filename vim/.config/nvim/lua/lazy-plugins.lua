@@ -128,30 +128,8 @@ require("lazy").setup({
   {                     -- Useful plugin to show you pending keybinds.
     "folke/which-key.nvim",
     event = "VimEnter", -- Sets the loading event to 'VimEnter'
-    config = function() -- This is the function that runs, AFTER loading
+    config = function()
       require("which-key").setup()
-
-      -- Document existing key chains
-      -- require("which-key").register({
-      --   { "<leader>c", group = "[C]ode" },
-      --   { "<leader>c_", hidden = true },
-      --   { "<leader>d", group = "[D]ocument" },
-      --   { "<leader>d_", hidden = true },
-      --   { "<leader>h", group = "Git [H]unk" },
-      --   { "<leader>h_", hidden = true },
-      --   { "<leader>r", group = "[R]ename" },
-      --   { "<leader>r_", hidden = true },
-      --   { "<leader>s", group = "[S]earch" },
-      --   { "<leader>s_", hidden = true },
-      --   { "<leader>t", group = "[T]oggle" },
-      --   { "<leader>t_", hidden = true },
-      --   { "<leader>w", group = "[W]orkspace" },
-      --   { "<leader>w_", hidden = true },
-      -- })
-      -- visual mode
-      -- require("which-key").register({
-      --   { "<leader>h", group = "Git [H]unk" },
-      -- }, { mode = "v" })
     end,
   },
 
@@ -238,38 +216,13 @@ require("lazy").setup({
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
-      -- {
-      --   "L3MON4D3/LuaSnip",
-      --   build = "make install_jsregexp",
-      --   dependencies = {
-      --     { -- https://github.com/rafamadriz/friendly-snippets
-      --       "rafamadriz/friendly-snippets",
-      --       config = function()
-      --         require("luasnip.loaders.from_vscode").lazy_load()
-      --       end,
-      --     },
-      --   },
-      -- },
-      -- "saadparwaiz1/cmp_luasnip",
-
-      -- Adds other completion capabilities.
-      --  nvim-cmp does not ship with all sources by default. They are split
-      --  into multiple repos for maintenance purposes.
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
     },
     config = function()
-      -- See `:help cmp`
       local cmp = require("cmp")
-      -- local luasnip = require("luasnip")
-      -- luasnip.config.setup({})
 
       cmp.setup({
-        -- snippet = {
-        --   expand = function(args)
-        --     luasnip.lsp_expand(args.body)
-        --   end,
-        -- },
         completion = { completeopt = "menu,menuone,noinsert" },
 
         -- For an understanding of why these mappings were
@@ -286,137 +239,16 @@ require("lazy").setup({
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
 
-          -- Accept ([y]es) the completion.
-          --  This will auto-import if your LSP supports it.
-          --  This will expand snippets if the LSP sent a snippet.
-          -- ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-
-          -- If you prefer more traditional completion keymaps,
-          -- you can uncomment the following lines
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
-
-          -- Manually trigger a completion from nvim-cmp.
-          --  Generally you don't need this, because nvim-cmp will display
-          --  completions whenever it has completion options available.
           ["<C-Space>"] = cmp.mapping.complete({}),
-
-          -- Think of <c-l> as moving to the right of your snippet expansion.
-          --  So if you have a snippet that's like:
-          --  function $name($args)
-          --    $body
-          --  end
-          --
-          -- <c-l> will move you to the right of each of the expansion locations.
-          -- <c-h> is similar, except moving you backwards.
-          -- ["<C-l>"] = cmp.mapping(function()
-          --   if luasnip.expand_or_locally_jumpable() then
-          --     luasnip.expand_or_jump()
-          --   end
-          -- end, { "i", "s" }),
-          -- ["<C-h>"] = cmp.mapping(function()
-          --   if luasnip.locally_jumpable(-1) then
-          --     luasnip.jump(-1)
-          --   end
-          -- end, { "i", "s" }),
-
-          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-          --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         }),
         sources = {
           { name = "nvim_lsp" },
-          -- { name = "luasnip" },
           { name = "path" },
         },
       })
     end,
   },
-
-  -- {
-  --   "joshuavial/aider.nvim",
-  --
-  --   opts = {
-  --     auto_manage_context = true,
-  --     default_bindings = false,
-  --   },
-  --
-  --   keys = function()
-  --     return {
-  --       {
-  --         "<leader>ao",
-  --         "<cmd>lua AiderOpen()<cr>i",
-  --         desc = "Aider Open",
-  --       },
-  --       {
-  --         "<leader>ab",
-  --         "<cmd>lua AiderBackground()<cr>",
-  --         desc = "Aider Background",
-  --         -- defaults to message "Complete as many todo items as you can and remove the comment for any item you complete."
-  --       },
-  --     }
-  --   end,
-  -- },
-
-  -- {
-  --   "yetone/avante.nvim",
-  --   event = "VeryLazy",
-  --   version = false, -- Never set this value to "*"! Never!
-  --   opts = {
-  --     -- add any opts here
-  --     -- for example
-  --     provider = "openai",
-  --     openai = {
-  --       endpoint = "https://api.openai.com/v1",
-  --       model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
-  --       timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-  --       temperature = 0,
-  --       max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-  --       --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-  --     },
-  --   },
-  --   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-  --   build = "make",
-  --   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-  --   dependencies = {
-  --     "nvim-treesitter/nvim-treesitter",
-  --     "stevearc/dressing.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --     "MunifTanjim/nui.nvim",
-  --     --- The below dependencies are optional,
-  --     "echasnovski/mini.pick", -- for file_selector provider mini.pick
-  --     "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-  --     "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-  --     "ibhagwan/fzf-lua", -- for file_selector provider fzf
-  --     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-  --     "zbirenbaum/copilot.lua", -- for providers='copilot'
-  --     {
-  --       -- support for image pasting
-  --       "HakonHarnes/img-clip.nvim",
-  --       event = "VeryLazy",
-  --       opts = {
-  --         -- recommended settings
-  --         default = {
-  --           embed_image_as_base64 = false,
-  --           prompt_for_file_name = false,
-  --           drag_and_drop = {
-  --             insert_mode = true,
-  --           },
-  --           -- required for Windows users
-  --           use_absolute_path = true,
-  --         },
-  --       },
-  --     },
-  --     {
-  --       -- Make sure to set this up properly if you have lazy=true
-  --       "MeanderingProgrammer/render-markdown.nvim",
-  --       opts = {
-  --         file_types = { "markdown", "Avante" },
-  --       },
-  --       ft = { "markdown", "Avante" },
-  --     },
-  --   },
-  -- },
 
   { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
@@ -551,15 +383,6 @@ require("lazy").setup({
             })
           end
 
-          -- The following autocommand is used to enable inlay hints in your
-          -- code, if the language server you are using supports them
-          --
-          -- This may be unwanted, since they displace some of your code
-          -- if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-          --   map("<leader>th", function()
-          --     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-          --   end, "[T]oggle Inlay [H]ints")
-          -- end
         end,
       })
 
@@ -573,8 +396,6 @@ require("lazy").setup({
           '/mason/packages/vue-language-server/node_modules/@vue/language-server'
 
       local servers = {
-        -- vue_ls   = {},
-
         ts_ls    = {
           init_options = {
             plugins = {
@@ -641,56 +462,8 @@ require("lazy").setup({
         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
         vim.lsp.config(server_name, server)
       end
-
-      --
-      -- -- You can add other tools here that you want Mason to install
-      -- -- for you, so that they are available from within Neovim.
-      -- require("mason-tool-installer").setup({
-      --   ensure_installed = {
-      --     "ts_ls",
-      --     "emmet_ls",
-      --     "vue_ls",
-      --     "html",
-      --     "cssls",
-      --     "lua_ls",
-      --     "vale_ls",
-      --     "stylua", -- Used to format Lua code
-      --     { "eslint", version = "4.8.0", auto_update = false },
-      --   },
-      -- })
-      --
-      -- require("mason-lspconfig").setup({
-      --   handlers = {
-      --     function(server_name)
-      --       local server = servers[server_name] or {}
-      --       -- This handles overriding only values explicitly passed
-      --       -- by the server configuration above. Useful when disabling
-      --       -- certain features of an LSP (for example, turning off formatting for tsserver)
-      --       server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-      --       require("lspconfig")[server_name].setup(server)
-      --     end,
-      --   },
-      -- })
     end,
   },
-
-  -- { -- Linting
-  --   "mfussenegger/nvim-lint",
-  --   event = { "BufReadPre", "BufNewFile" },
-  --   config = function()
-  --     local lint = require("lint")
-  --     lint.linters_by_ft["lua"] = { "luacheck" }
-  --     -- Create autocommand which carries out the actual linting
-  --     -- on the specified events.
-  --     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-  --     vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-  --       group = lint_augroup,
-  --       callback = function()
-  --         require("lint").try_lint()
-  --       end,
-  --     })
-  --   end,
-  -- },
 
   { -- Autoformat
     "stevearc/conform.nvim",
@@ -1031,167 +804,6 @@ require("lazy").setup({
       mode = "cursor",      -- Show context at cursor position
     }
   },
-
-  -- { -- Debug Adapter Protocol
-  --   "mfussenegger/nvim-dap",
-  --   dependencies = {
-  --     -- Creates a beautiful debugger UI
-  --     "rcarriga/nvim-dap-ui",
-  --
-  --     -- Required dependency for nvim-dap-ui
-  --     "nvim-neotest/nvim-nio",
-  --
-  --     -- Installs the debug adapters for you
-  --     "williamboman/mason.nvim",
-  --     "jay-babu/mason-nvim-dap.nvim",
-  --
-  --     {
-  --       "mxsdev/nvim-dap-vscode-js",
-  --       dependencies = {
-  --         {
-  --           "microsoft/vscode-js-debug",
-  --           build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
-  --         },
-  --       },
-  --     },
-  --   },
-  --   config = function()
-  --     local dap = require("dap")
-  --     local dapui = require("dapui")
-  --
-  --     require("mason-nvim-dap").setup({
-  --       -- Makes a best effort to setup the various debuggers with
-  --       -- reasonable debug configurations
-  --       automatic_installation = true,
-  --
-  --       -- You can provide additional configuration to the handlers,
-  --       -- see mason-nvim-dap README for more information
-  --       handlers = {},
-  --
-  --       -- You'll need to check that you have the required things installed
-  --       -- online, please don't ask me how to install them :)
-  --       ensure_installed = {
-  --         -- Update this to ensure that you have the debuggers for the langs you want
-  --       },
-  --     })
-  --
-  --     -- Basic debugging keymaps, feel free to change to your liking!
-  --     vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
-  --     vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })
-  --     vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
-  --     vim.keymap.set("n", "<F3>", dap.step_out, { desc = "Debug: Step Out" })
-  --     vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
-  --     vim.keymap.set("n", "<leader>B", function()
-  --       dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-  --     end, { desc = "Debug: Set Breakpoint" })
-  --
-  --     -- Dap UI setup
-  --     -- For more information, see |:help nvim-dap-ui|
-  --     dapui.setup({
-  --       -- Set icons to characters that are more likely to work in every terminal.
-  --       --    Feel free to remove or use ones that you like more! :)
-  --       --    Don't feel like these are good choices.
-  --       icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
-  --       controls = {
-  --         icons = {
-  --           pause = "⏸",
-  --           play = "▶",
-  --           step_into = "⏎",
-  --           step_over = "⏭",
-  --           step_out = "⏮",
-  --           step_back = "b",
-  --           run_last = "▶▶",
-  --           terminate = "⏹",
-  --           disconnect = "⏏",
-  --         },
-  --       },
-  --     })
-  --
-  --     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-  --     vim.keymap.set("n", "<F7>", dapui.toggle, { desc = "Debug: See last session result." })
-  --
-  --     dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-  --     -- dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-  --     -- dap.listeners.before.event_exited["dapui_config"] = dapui.close
-  --
-  --     require("dap-vscode-js").setup({
-  --       debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
-  --       -- which adapters to register in nvim-dap
-  --       adapters = { "pwa-node" }, -- "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
-  --     })
-  --
-  --     for _, language in ipairs({ "typescript", "javascript" }) do
-  --       require("dap").configurations[language] = {
-  --         {
-  --           type = "pwa-node",
-  --           request = "launch",
-  --           name = "Launch file",
-  --           program = "${file}",
-  --           cwd = "${workspaceFolder}",
-  --         },
-  --         {
-  --           type = "pwa-node",
-  --           request = "attach",
-  --           name = "Attach",
-  --           processId = require("dap.utils").pick_process,
-  --           cwd = "${workspaceFolder}",
-  --         },
-  --         {
-  --           type = "pwa-node",
-  --           request = "launch",
-  --           name = "Debug Jest Tests",
-  --           trace = true, -- include debugger info
-  --           runtimeExecutable = "node",
-  --           runtimeArgs = {
-  --             "./node_modules/jest/bin/jest.js",
-  --             "--runInBand",
-  --           },
-  --           rootPath = "${workspaceFolder}",
-  --           cwd = "${workspaceFolder}",
-  --           console = "integratedTerminal",
-  --           internalConsoleOptions = "neverOpen",
-  --         },
-  --       }
-  --     end
-  --   end,
-  -- },
-
-  -- {
-  --   "nvim-neotest/neotest",
-  --   dependencies = {
-  --     "nvim-neotest/neotest-jest",
-  --
-  --     "nvim-neotest/nvim-nio",
-  --     "nvim-lua/plenary.nvim",
-  --     "antoinemadec/FixCursorHold.nvim",
-  --     "nvim-treesitter/nvim-treesitter",
-  --   },
-  --   config = function()
-  --     local neotest = require("neotest")
-  --
-  --     neotest.setup({
-  --       discovery = {
-  --         enabled = false,
-  --       },
-  --       adapters = {
-  --
-  --         require("neotest-jest")({
-  --           jestCommand = require("neotest-jest.jest-util").getJestCommand(vim.fn.expand("%:p:h")) .. " --watch",
-  --           jestConfigFile = "jest.config.js",
-  --           -- env = { CI = true },
-  --           cwd = function(path)
-  --             return vim.fn.getcwd()
-  --           end,
-  --         }),
-  --       },
-  --     })
-  --
-  --     vim.keymap.set("n", "<leader>tt", neotest.run.run, { desc = "[T]est Current [T]est" })
-  --     vim.keymap.set("n", "<leader>tf", function()
-  --       neotest.run(vim.fn.expand("%"))
-  --     end, { desc = "[T]est [F]ile" })
-  --   end,
-  -- },
 }, {
   change_detection = {
     -- automatically check for config file changes and reload the ui
