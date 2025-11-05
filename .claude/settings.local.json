@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./update)",
+      "Read(//Users/piet/.claude/**)",
+      "Bash(stow:*)",
+      "Bash(readlink:*)",
+      "Bash(cat:*)",
+      "Read(//Users/piet/**)",
+      "Bash(git config:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
