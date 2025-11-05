@@ -3,13 +3,18 @@ require("lazy").setup({
   { import = "plugins" },     -- custom plugins folder
   "roman/golden-ratio",       -- Auto resize windows
   "tpope/vim-obsession",      -- Auto save session
-  "tpope/vim-surround",       -- Surround text objects
-  "tpope/vim-fugitive",       -- Git commands in vim
-  "tpope/vim-rhubarb",        -- Github extension for fugitive
+  { -- Git commands in vim
+    "tpope/vim-fugitive",
+    cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Ggrep", "Gblame" },
+    dependencies = {
+      "tpope/vim-rhubarb", -- Github extension for fugitive
+    },
+  },
   "AndrewRadev/tagalong.vim", -- Auto close HTML tags
 
-  {                           -- Emmet for neovim
+  { -- Emmet for neovim
     "olrtg/nvim-emmet",
+    ft = { "html", "css", "scss", "vue", "javascriptreact", "typescriptreact" },
     config = function()
       vim.keymap.set({ "n", "v" }, "<leader>xe", require("nvim-emmet").wrap_with_abbreviation)
     end,
@@ -25,6 +30,7 @@ require("lazy").setup({
 
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     opts = {
       signs = {
         add = { text = "+" },
@@ -276,7 +282,7 @@ require("lazy").setup({
           nes = {
             enabled = true,
             keymap = {
-              accept_and_goto = "<leader>p",
+              accept_and_goto = "<S-Tab>",
               accept = false,
               dismiss = "<Esc>",
             },
