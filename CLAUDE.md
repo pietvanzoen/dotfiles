@@ -1,0 +1,1 @@
+shell/.claude/CLAUDE.md
