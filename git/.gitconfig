@@ -115,7 +115,7 @@
   summary = true # Always include a summary in merge commits.
 
 [mergetool "nvim"]
-  cmd = nvim -f -c \"Gdiffsplit\" \"$MERGED\"
+  cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
 
 [mergetool]
   prompt = false
