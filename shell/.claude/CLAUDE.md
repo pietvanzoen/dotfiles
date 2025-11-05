@@ -1,0 +1,3 @@
+- As necessary follow TDD pattern of writing tests first, running tests to verify they fail for correct reason, and then implement changes to make tests pass
+- Always run lint --fix when available before commiting
+- Never use "should" at the beginning of test descriptions. E.g. BAD it('should return wibble'). GOOD it('returns wibble')

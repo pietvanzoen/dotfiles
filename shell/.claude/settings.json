@@ -1,0 +1,81 @@
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
+    "USE_BUILTIN_RIPGREP": "0"
+  },
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Bash(npm run :*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ls:*)",
+      "Bash(pwd)",
+      "Bash(which:*)",
+      "Bash(node:*)",
+      "Bash(npx:*)",
+      "Bash(yarn:*)",
+      "Bash(pnpm:*)",
+      "Bash(mkdir:*)",
+      "Bash(sips:*)",
+      "Bash(terminal-notifier:*)",
+      "Bash(echo:*)",
+      "Bash(jq:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh issue view:*)",
+      "Read(~/.zshrc)",
+      "Read(~/.bashrc)",
+      "Read(~/.config/**)",
+      "Read(package.json)",
+      "Read(tsconfig.json)",
+      "Read(*.md)"
+    ],
+    "deny": [
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(rm -rf:*)",
+      "Bash(sudo:*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Edit(./.env*)",
+      "Write(./.env*)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); completed=$(echo \"$input\" | jq -r '.todos[]? | select(.status == \"completed\") | .content' 2>/dev/null | wc -l | xargs); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir // \"\"'); if [ -z \"$cwd\" ] || [ \"$cwd\" = \"null\" ]; then dir_context=\"unknown\"; else dir_context=$(echo \"$cwd\" | sed \"s|$HOME|~|\" | awk -F'/' '{if (NF>=2) print $(NF-1)\"/\"$NF; else print $NF}'); fi; if [ \"$completed\" -gt 0 ]; then terminal-notifier -title \"Claude Code - $dir_context\" -message \"Completed $completed task(s)\" -sound Glass -contentImage \"$HOME/.claude/icons/claude.png\"; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir // \"\"'); if [ -z \"$cwd\" ] || [ \"$cwd\" = \"null\" ]; then cwd=$(pwd); fi; dir_context=$(echo \"$cwd\" | sed \"s|$HOME|~|\" | awk -F'/' '{if (NF>=2) print $(NF-1)\"/\"$NF; else print $NF}'); terminal-notifier -title \"Claude Code - $dir_context\" -message \"Waiting for your input\" -sound Purr -contentImage \"$HOME/.claude/icons/claude.png\""
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir'); dir_name=$(basename \"$cwd\"); if git -C \"$cwd\" rev-parse --git-dir > /dev/null 2>&1; then branch=$(git -C \"$cwd\" branch --show-current 2>/dev/null); git_status=\" $(printf '\\033[33m')${branch}$(printf '\\033[0m')\"; else git_status=\"\"; fi; if [ -d \"$cwd/node_modules\" ]; then node_ver=$(node -v 2>/dev/null); node_status=\" $(printf '\\033[92m')⬢ ${node_ver}$(printf '\\033[0m')\"; else node_status=\"\"; fi; printf \"$(printf '\\033[95m')%s$(printf '\\033[0m')%s%s\" \"$dir_name\" \"$git_status\" \"$node_status\""
+  },
+  "alwaysThinkingEnabled": true
+}
