@@ -18,9 +18,10 @@ function cc() {
   local session_id=""
 
   if [[ -d "$project_dir" ]]; then
-    local files
-    files=$(grep -rl "\"gitBranch\":\"$branch\"" "$project_dir"/*.jsonl 2>/dev/null)
-    if [[ -n "$files" ]]; then
+    local latest
+    latest=$(grep -rl "\"gitBranch\":\"$branch\"" "$project_dir"/*.jsonl 2>/dev/null | xargs ls -t 2>/dev/null | head -1)
+    if [[ -n "$latest" ]]; then
+      session_id=$(basename "$latest" .jsonl)
     fi
   fi
 
