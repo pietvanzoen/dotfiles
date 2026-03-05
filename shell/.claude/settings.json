@@ -51,6 +51,7 @@
       "Write(./.env*)"
     ]
   },
+  "model": "opus[1m]",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -77,5 +78,14 @@
     "type": "command",
     "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir'); dir_name=$(basename \"$cwd\"); if git -C \"$cwd\" rev-parse --git-dir > /dev/null 2>&1; then branch=$(git -C \"$cwd\" branch --show-current 2>/dev/null); git_status=\" $(printf '\\033[33m')${branch}$(printf '\\033[0m')\"; else git_status=\"\"; fi; if [ -d \"$cwd/node_modules\" ]; then node_ver=$(node -v 2>/dev/null); node_status=\" $(printf '\\033[92m')⬢ ${node_ver}$(printf '\\033[0m')\"; else node_status=\"\"; fi; printf \"$(printf '\\033[95m')%s$(printf '\\033[0m')%s%s\" \"$dir_name\" \"$git_status\" \"$node_status\""
   },
-  "alwaysThinkingEnabled": true
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "linear@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
+  }
 }
