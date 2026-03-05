@@ -8,7 +8,10 @@
       "Bash(cat:*)",
       "Read(//Users/piet/**)",
       "Bash(git config:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(tmux send-keys:*)",
+      "Bash(tmux list-panes:*)",
+      "Bash(tmux list-windows:*)"
     ],
     "deny": [],
     "ask": []

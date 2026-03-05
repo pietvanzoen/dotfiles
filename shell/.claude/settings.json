@@ -30,6 +30,9 @@
       "Bash(gh pr view:*)",
       "Bash(gh run view:*)",
       "Bash(gh issue view:*)",
+      "Bash(tmux send-keys:*)",
+      "Bash(tmux list-panes:*)",
+      "Bash(tmux list-windows:*)",
       "Read(~/.zshrc)",
       "Read(~/.bashrc)",
       "Read(~/.config/**)",
@@ -51,7 +54,7 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "hooks": {
     "UserPromptSubmit": [
       {
