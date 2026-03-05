@@ -1,8 +1,8 @@
 -- luacheck: globals vim MiniStatusline
 require("lazy").setup({
   { import = "plugins" },     -- custom plugins folder
-  "roman/golden-ratio",       -- Auto resize windows
-  "tpope/vim-obsession",      -- Auto save session
+  { "roman/golden-ratio", event = "WinNew" },
+  { "tpope/vim-obsession", cmd = "Obsession" },
   { -- Git commands in vim
     "tpope/vim-fugitive",
     cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Ggrep", "Gblame" },
@@ -10,7 +10,7 @@ require("lazy").setup({
       "tpope/vim-rhubarb", -- Github extension for fugitive
     },
   },
-  "AndrewRadev/tagalong.vim", -- Auto close HTML tags
+  { "AndrewRadev/tagalong.vim", ft = { "html", "vue", "javascriptreact", "typescriptreact", "xml" } },
 
   { -- Emmet for neovim
     "olrtg/nvim-emmet",
@@ -20,13 +20,6 @@ require("lazy").setup({
     end,
   },
 
-  {                  -- Manage lua dependencies
-    "vhyrro/luarocks.nvim",
-    priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
-    opts = {
-      rocks = { "lunajson" },
-    },
-  },
 
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     "lewis6991/gitsigns.nvim",
@@ -46,7 +39,7 @@ require("lazy").setup({
         ignore_whitespace = false,
         virt_text_priority = 100,
       },
-      current_line_blame = true,
+      current_line_blame = false,
       preview_config = {
         -- Options passed to nvim_open_win
         border = "rounded",
@@ -113,27 +106,28 @@ require("lazy").setup({
 
   { -- Open tmux splits from vim
     "preservim/vimux",
+    cmd = { "VimuxRunCommand", "VimuxPromptCommand", "VimuxOpenRunner" },
     config = function()
-      vim.g.VimuxHeight = "60"
       vim.g.VimuxOrientation = "h"
+      local function update_vimux_height()
+        vim.g.VimuxHeight = vim.o.columns > 200 and "80" or "60"
+      end
+      update_vimux_height()
+      vim.api.nvim_create_autocmd("VimResized", { callback = update_vimux_height })
     end,
   },
 
   { -- Quickly switch between files
     "smoka7/hop.nvim",
-    config = function()
-      local hop = require("hop")
-      hop.setup()
-      -- Use `s` to trigger hop
-      vim.keymap.set("", "s", function()
-        hop.hint_char1({})
-      end, { remap = true, desc = "Hop" })
-    end,
+    keys = {
+      { "s", function() require("hop").hint_char1({}) end, mode = "", desc = "Hop" },
+    },
+    opts = {},
   },
 
   {                     -- Useful plugin to show you pending keybinds.
     "folke/which-key.nvim",
-    event = "VimEnter", -- Sets the loading event to 'VimEnter'
+    event = "VeryLazy",
     config = function()
       require("which-key").setup()
     end,
@@ -141,8 +135,38 @@ require("lazy").setup({
 
   { -- Fuzzy Finder (files, lsp, etc)
     "nvim-telescope/telescope.nvim",
-    event = "VimEnter",
+    cmd = "Telescope",
     branch = "master",
+    keys = {
+      { "<leader>sh", function() require("telescope.builtin").help_tags() end, desc = "[S]earch [H]elp" },
+      { "<leader>sk", function() require("telescope.builtin").keymaps() end, desc = "[S]earch [K]eymaps" },
+      { "<leader>sf", function() require("telescope.builtin").find_files() end, desc = "[S]earch [F]iles" },
+      { "<c-p>", function() require("telescope.builtin").find_files() end, desc = "[S]earch [F]iles" },
+      { "<leader>ss", function() require("telescope.builtin").lsp_document_symbols() end, desc = "[S]earch [S]ymbols" },
+      { "<leader>sws", function() require("telescope.builtin").lsp_workspace_symbols() end, desc = "[S]earch [W]orkspace [S]ymbols" },
+      { "<leader>sw", function() require("telescope.builtin").grep_string() end, desc = "[S]earch current [W]ord" },
+      { "<leader>sg", function() require("telescope.builtin").live_grep() end, desc = "[S]earch by [G]rep" },
+      { "<leader>sd", function() require("telescope.builtin").diagnostics() end, desc = "[S]earch [D]iagnostics" },
+      { "<leader>sr", function() require("telescope.builtin").resume() end, desc = "[S]earch [R]esume" },
+      { "<leader>s.", function() require("telescope.builtin").oldfiles() end, desc = '[S]earch Recent Files ("." for repeat)' },
+      { "<leader><leader>", function() require("telescope.builtin").buffers() end, desc = "[ ] Find existing buffers" },
+      { "<leader>su", "<cmd>Telescope undo<cr>", desc = "[S]earch [U]ndo Tree" },
+      { "<leader>/", function()
+        require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
+          winblend = 10,
+          previewer = false,
+        }))
+      end, desc = "[/] Fuzzily search in current buffer" },
+      { "<leader>s/", function()
+        require("telescope.builtin").live_grep({
+          grep_open_files = true,
+          prompt_title = "Live Grep in Open Files",
+        })
+      end, desc = "[S]earch [/] in Open Files" },
+      { "<leader>sn", function()
+        require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
+      end, desc = "[S]earch [N]eovim files" },
+    },
     dependencies = {
       "nvim-lua/plenary.nvim",
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -185,45 +209,6 @@ require("lazy").setup({
       pcall(require("telescope").load_extension, "fzf")
       pcall(require("telescope").load_extension, "ui-select")
       pcall(require("telescope").load_extension, "undo")
-
-      -- See `:help telescope.builtin`
-      local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-      vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-      vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-      vim.keymap.set("n", "<c-p>", builtin.find_files, { desc = "[S]earch [F]iles" })
-      vim.keymap.set("n", "<leader>ss", builtin.lsp_document_symbols, { desc = "[S]earch [S]ymbols" })
-      vim.keymap.set("n", "<leader>sws", builtin.lsp_workspace_symbols, { desc = "[S]earch [W]orkspace [S]ymbols" })
-      vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-      vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-      vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-      vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-      vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
-      vim.keymap.set("n", "<leader>su", "<cmd>Telescope undo<cr>", { desc = "[S]earch [U]ndo Tree" })
-
-      -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set("n", "<leader>/", function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-          winblend = 10,
-          previewer = false,
-        }))
-      end, { desc = "[/] Fuzzily search in current buffer" })
-
-      -- It's also possible to pass additional configuration options.
-      --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set("n", "<leader>s/", function()
-        builtin.live_grep({
-          grep_open_files = true,
-          prompt_title = "Live Grep in Open Files",
-        })
-      end, { desc = "[S]earch [/] in Open Files" })
-
-      -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set("n", "<leader>sn", function()
-        builtin.find_files({ cwd = vim.fn.stdpath("config") })
-      end, { desc = "[S]earch [N]eovim files" })
     end,
   },
 
@@ -482,7 +467,7 @@ require("lazy").setup({
 
   { -- Autoformat
     "stevearc/conform.nvim",
-    lazy = false,
+    event = "BufWritePre",
     keys = {
       {
         "<leader>f",
@@ -746,7 +731,7 @@ require("lazy").setup({
 
   { -- Highlight todo, notes, etc in comments
     "folke/todo-comments.nvim",
-    event = "VimEnter",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = { signs = false },
   },
@@ -795,7 +780,7 @@ require("lazy").setup({
 
       -- Use Treesitter for folding
       vim.opt.foldmethod = "expr"
-      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
       vim.opt.foldenable = false
 
       -- There are additional nvim-treesitter modules that you can use to interact
@@ -809,6 +794,7 @@ require("lazy").setup({
 
   {
     "nvim-treesitter/nvim-treesitter-context",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
     },
