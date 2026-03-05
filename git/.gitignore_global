@@ -180,3 +180,5 @@ nohup.out
 .nvim.lua
 
 .aider*
+
+.claude/worktrees

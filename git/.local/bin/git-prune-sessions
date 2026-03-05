@@ -16,3 +16,15 @@ for session in $sessions ; do
     rm -v `find $git_root_dir -maxdepth 4 -wholename "*/.sessions/$session-session.vim"`
   fi
 done
+
+echo "==> Pruning Claude Code sessions for deleted branches"
+claude_project_dir="$HOME/.claude/projects/$(git rev-parse --show-toplevel | tr '/.' '-')"
+if [[ -d "$claude_project_dir" ]]; then
+  for session_file in "$claude_project_dir"/*.jsonl; do
+    [[ -f "$session_file" ]] || continue
+    session_branch=$(grep -o '"gitBranch":"[^"]*"' "$session_file" | head -1 | sed 's/"gitBranch":"//;s/"//')
+    if [[ -n "$session_branch" ]] && [[ "$branches" != *"$session_branch"* ]]; then
+      rm -v "$session_file"
+    fi
+  done
+fi

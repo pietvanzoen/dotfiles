@@ -36,10 +36,15 @@ current_pr="$(gh pr view --json 'number,state' || true)"
 
 pr_number="$(echo "$current_pr" | jq -r '.number')"
 pr_state="$(echo "$current_pr" | jq -r '.state')"
+repo="$(gh repo view --json 'nameWithOwner' | jq -r '.nameWithOwner')"
 
 if [[ -z "$pr_number" || "$pr_state" == "CLOSED" ]]; then
   echo "==> Creating new PR"
   gh pr create --fill --body "$DESCRIPTION" --base "$TARGET_BRANCH" --draft
+
+  echo "==> Requesting Copilot review"
+  pr_number="$(gh pr view --json 'number' | jq -r '.number')"
+  gh save-me-copilot "$repo" "$pr_number" > /dev/null # suppress output
   exit 0
 fi
 
