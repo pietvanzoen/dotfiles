@@ -8,7 +8,7 @@ function! ReloadLocalVimrc(warn) abort
   let l:git_path = GetCurrentGitProject()
   let l:git_vimrc = substitute(l:git_path, '\n', '', '') . '/.vimrc.local'
   if !empty(glob(l:git_vimrc))
-    sandbox exec ':source ' . l:git_vimrc
+    exec ':source ' . l:git_vimrc
   else
     if a:warn
       call ErrorMessage('.vimrc.local not found in this repo')

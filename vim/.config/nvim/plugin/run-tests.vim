@@ -9,7 +9,14 @@ function! RunTests(test_command) abort
   else
     let l:test_command = 'yarn test'
   endif
-  let l:tcmd = substitute(l:test_command, '%', expand('%'), '')
+  let l:file = expand('%')
+  let l:match = matchlist(l:test_command, '%:\(\w\+\)')
+  if !empty(l:match)
+    let l:file = substitute(l:file, '^' . l:match[1] . '/', '', '')
+    let l:tcmd = substitute(l:test_command, '%:' . l:match[1], l:file, '')
+  else
+    let l:tcmd = substitute(l:test_command, '%', l:file, '')
+  endif
 
   " add space before so command does not polute history
   let l:cmd = ' clear && (' . l:tcmd . ')'
