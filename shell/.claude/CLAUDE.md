@@ -1,5 +1,12 @@
-- As necessary follow TDD pattern of writing tests first, running tests to verify they fail for correct reason, and then implement changes to make tests pass
-- Always run lint --fix when available before commiting
+## TDD
+- Follow TDD when writing tests: one test at a time, red-green-refactor
+  1. Write a single failing test
+  2. Run it — confirm it fails for the expected reason
+  3. Write the minimum implementation to make it pass
+  4. Run it — confirm it passes
+  5. Repeat from step 1 for the next test
+- Once all tests pass, suggest refactoring improvements to remove duplication in both tests and implementation
+- Do NOT write multiple tests at once or implement ahead of the current test
 - Never use "should" at the beginning of test descriptions. E.g. BAD it('should return wibble'). GOOD it('returns wibble')
 
 ## Tmux/Neovim
