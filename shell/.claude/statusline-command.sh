@@ -73,24 +73,38 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   fi
 fi
 
-# Session cost & environmental estimates
+# Session cost & energy range estimate
 cost_part=""
 cost_usd=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 total_input=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0')
 total_output=$(echo "$input" | jq -r '.context_window.total_output_tokens // 0')
 
+model=$(echo "$input" | jq -r '.model // ""')
+model_short=""
+case "$model" in
+  *opus*)   model_short="opus" ;;
+  *sonnet*) model_short="sonnet" ;;
+  *haiku*)  model_short="haiku" ;;
+esac
+[ -n "$model_short" ] && model_part=" $(printf '\033[90m')${model_short}$(printf '\033[0m')"
+
 if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; then
-  # Format cost
   cost_fmt=$(printf '$%.2f' "$cost_usd")
 
-  # Energy estimate: ~6 Wh per 1M tokens (large model inference)
-  total_tokens=$(( total_input + total_output ))
-  energy_wh=$(awk "BEGIN { printf \"%.1f\", $total_tokens / 1000000.0 * 6.0 }")
+  # Energy estimate based on current model. Wh per output token:
+  #   opus: 0.003, sonnet: 0.0005, haiku: 0.0001. Input: 0.25× output.
+  # Sources: TokenPowerBench (2024), Ren et al. (2025), vLLM benchmarks (2025).
+  case "$model" in
+    *opus*)  out_rate=0.003;   in_rate=0.00075  ;;
+    *haiku*) out_rate=0.0001;  in_rate=0.000025 ;;
+    *)       out_rate=0.0005;  in_rate=0.000125 ;;
+  esac
+  energy_wh=$(awk "BEGIN { printf \"%.0f\", ($total_output * $out_rate) + ($total_input * $in_rate) }")
 
-  # Water estimate: ~0.5 mL per Wh (data center cooling)
+  # Water: ~0.5 mL per Wh (evaporative cooling). Source: Ren, "Making AI Less Thirsty" (2023).
   water_ml=$(awk "BEGIN { printf \"%.0f\", $energy_wh * 0.5 }")
 
-  cost_part=" $(printf '\033[32m')${cost_fmt}$(printf '\033[0m') $(printf '\033[90m')⚡${energy_wh}Wh ∿${water_ml}mL$(printf '\033[0m')"
+  cost_part=" $(printf '\033[90m')${cost_fmt} ⚡${energy_wh}Wh ∿${water_ml}mL$(printf '\033[0m')"
 fi
 
-printf "$(printf '\033[95m')%s$(printf '\033[0m')%s%s%s" "$dir_name" "$git_status" "$pr_part" "$cost_part"
+printf "$(printf '\033[95m')%s$(printf '\033[0m')%s%s%s%s" "$dir_name" "$git_status" "$pr_part" "$model_part" "$cost_part"
