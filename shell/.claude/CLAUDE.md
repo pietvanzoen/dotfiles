@@ -3,8 +3,16 @@ At the beginning of each new session, display this shortcuts reminder:
 
 ```
 Shortcuts: !cmd (shell) | @file (mention) | Ctrl+R (history) | Shift+Tab (mode) | Ctrl+B (background)
+           Opt+P (model) | Opt+T (thinking)
 Commands:  /vim | /cost | /diff | /status | /compact | /help
 ```
+
+## Response status
+End each response with a one-line status summary so the user can quickly regain context when switching between sessions:
+
+> **[current task] → [next step]**
+
+Omit when the conversation is idle or the task is fully complete.
 
 ## TDD
 - Follow TDD when writing tests: one test at a time, red-green-refactor

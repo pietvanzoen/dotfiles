@@ -58,7 +58,6 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opus",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -112,7 +111,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir'); dir_name=$(basename \"$cwd\"); if git -C \"$cwd\" rev-parse --git-dir > /dev/null 2>&1; then branch=$(git -C \"$cwd\" branch --show-current 2>/dev/null); dirty=\"\"; git -C \"$cwd\" diff --quiet 2>/dev/null || dirty=\"*\"; git -C \"$cwd\" diff --cached --quiet 2>/dev/null || dirty=\"${dirty}+\"; remote=\"\"; if git -C \"$cwd\" rev-parse --verify \"@{upstream}\" > /dev/null 2>&1; then ahead=$(git -C \"$cwd\" rev-list \"@{upstream}..HEAD\" 2>/dev/null | wc -l | xargs); behind=$(git -C \"$cwd\" rev-list \"HEAD..@{upstream}\" 2>/dev/null | wc -l | xargs); [ \"$ahead\" -gt 0 ] && remote=\"${remote}↑\"; [ \"$behind\" -gt 0 ] && remote=\"${remote}↓\"; fi; git_status=\" $(printf '\\033[33m')${branch}${dirty}${remote}$(printf '\\033[0m')\"; else git_status=\"\"; fi; printf \"$(printf '\\033[95m')%s$(printf '\\033[0m')%s\" \"$dir_name\" \"$git_status\""
+    "command": "bash /Users/piet/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
