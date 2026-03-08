@@ -34,8 +34,8 @@
   ###############################################
 
   # Pretty logging.
-  ll = log --graph --topo-order --pretty=format:'%C(green)%h%Creset%C(red)%d%Creset %s %C(cyan)(%cr) %C(blue)<%an>%Creset %C(black)%G?%Creset' --abbrev-commit
-  l = log --graph --oneline --topo-order
+  ll = log --graph --topo-order --pretty=format:'%C(green)%h%Creset%C(red)%d%Creset %s %C(cyan)(%cr) %C(blue)<%an>%Creset %C(black)%G?%Creset' --abbrev-commit --color=always
+  l = log --graph --oneline --topo-order --color=always
   ln = l --no-merges
 
   lb = !git l origin/$(git trunk)..$(git symbolic-ref --short HEAD) # Log commits that diverge from origin/<trunk>.
@@ -64,15 +64,16 @@
   co = checkout
   mt = mergetool
   sw = switch
-  di = diff
-  dc = diff --cached
+  di = diff --color=always
+  dc = diff --cached --color=always
+  st = status --color=always
   amend = commit --amend
   pushf = push --force-with-lease
   aa = add --all
   ap = aa -p
-  b = branch -vv # Verbose branch list. Shows upstream branches.
-  ds = diff --staged --stat=160,120
-  dsb = "!git diff --stat=160,120 $(git trunk)..HEAD"
+  b = branch -vv --color=always # Verbose branch list. Shows upstream branches.
+  ds = diff --staged --stat=160,120 --color=always
+  dsb = "!git diff --stat=160,120 --color=always $(git trunk)..HEAD"
   unmerged = diff --name-only --diff-filter=U
   edit-unmerged = "!nvim `git diff --name-only --diff-filter=U`"
 
