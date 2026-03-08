@@ -1,3 +1,11 @@
+## Session start
+At the beginning of each new session, display this shortcuts reminder:
+
+```
+Shortcuts: !cmd (shell) | @file (mention) | Ctrl+R (history) | Shift+Tab (mode) | Ctrl+B (background)
+Commands:  /vim | /cost | /diff | /status | /compact | /help
+```
+
 ## TDD
 - Follow TDD when writing tests: one test at a time, red-green-refactor
   1. Write a single failing test
