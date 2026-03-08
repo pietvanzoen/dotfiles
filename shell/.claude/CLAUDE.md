@@ -14,6 +14,14 @@ End each response with a one-line status summary so the user can quickly regain 
 
 Omit when the conversation is idle or the task is fully complete.
 
+## Model usage
+At the start of a session, suggest switching to a lighter model if the task doesn't need Opus:
+- **Sonnet** is sufficient for: reading/explaining code, simple edits, git operations, writing docs, answering questions
+- **Haiku** is sufficient for: quick lookups, single-file edits, running commands, short Q&A
+- **Opus** is warranted for: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
+
+Remind the user with a one-liner: e.g. _"This looks like a Sonnet task — switch with Opt+P to save cost."_
+
 ## TDD
 - Follow TDD when writing tests: one test at a time, red-green-refactor
   1. Write a single failing test
