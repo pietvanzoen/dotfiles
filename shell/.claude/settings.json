@@ -122,5 +122,6 @@
     "claude-md-management@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
-  }
+  },
+  "model": "opus"
 }
