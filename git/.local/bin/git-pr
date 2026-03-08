@@ -44,7 +44,7 @@ if [[ -z "$pr_number" || "$pr_state" == "CLOSED" ]]; then
 
   echo "==> Requesting Copilot review"
   pr_number="$(gh pr view --json 'number' | jq -r '.number')"
-  gh save-me-copilot "$repo" "$pr_number" > /dev/null # suppress output
+  gh pr edit "$pr_number" --add-reviewer "copilot-pull-request-reviewer" > /dev/null
   exit 0
 fi
 
