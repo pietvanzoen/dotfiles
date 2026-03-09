@@ -15,3 +15,5 @@ export TERM=xterm-256color
 export PATH=$HOME/.local/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
+
+export PLAYDATE_SDK_PATH="$HOME/Developer/PlaydateSDK"
