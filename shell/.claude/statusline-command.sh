@@ -1,17 +1,30 @@
 #!/usr/bin/env bash
 # Claude Code status line script
 # Displays: dirname (magenta) + git branch/dirty/ahead/behind (yellow) + PR number (cyan, if any)
+# In worktree sessions: repo·worktree_name (magenta) + branch (yellow)
 # PR lookup is cached in /tmp to avoid slowing down the status line.
 
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir')
-dir_name=$(basename "$cwd")
+
+# Worktree context (populated by Claude Code when session is inside a worktree)
+worktree_name=$(echo "$input" | jq -r '.worktree.name // ""')
+worktree_branch=$(echo "$input" | jq -r '.worktree.branch // ""')
+
+if [ -n "$worktree_name" ]; then
+  # In a worktree: show "repo·worktree_name"
+  main_worktree=$(git -C "$cwd" worktree list --porcelain 2>/dev/null | grep "^worktree" | head -1 | cut -d' ' -f2)
+  repo_name=$(basename "${main_worktree:-$cwd}")
+  dir_name="${repo_name}·${worktree_name}"
+else
+  dir_name=$(basename "$cwd")
+fi
 
 git_status=""
 pr_part=""
 
 if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
-  branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
+  branch="${worktree_branch:-$(git -C "$cwd" branch --show-current 2>/dev/null)}"
 
   # Dirty / staged indicators
   dirty=""
