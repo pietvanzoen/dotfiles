@@ -58,7 +58,7 @@
       "Write(./.env*)"
     ]
   },
-  "model": "sonnet",
+  "model": "haiku",
   "hooks": {
     "UserPromptSubmit": [
       {
