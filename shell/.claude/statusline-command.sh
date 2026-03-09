@@ -104,7 +104,10 @@ if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; th
   # Water: ~0.5 mL per Wh (evaporative cooling). Source: Ren, "Making AI Less Thirsty" (2023).
   water_ml=$(awk "BEGIN { printf \"%.0f\", $energy_wh * 0.5 }")
 
-  cost_part=" $(printf '\033[90m')${cost_fmt} ⚡${energy_wh}Wh ∿${water_ml}mL$(printf '\033[0m')"
+  # Context window usage
+  ctx_used=$(echo "$input" | jq -r '[.context_window.current_usage.input_tokens // 0, .context_window.current_usage.cache_creation_input_tokens // 0, .context_window.current_usage.cache_read_input_tokens // 0] | add' | awk '{printf "%.0f", $1/1000}')
+  ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // 0' | awk '{printf "%.0f", $1/1000}')
+  cost_part=" $(printf '\033[90m')${cost_fmt} ⚡${energy_wh}Wh ∿${water_ml}mL ctx:${ctx_used}k/${ctx_size}k$(printf '\033[0m')"
 fi
 
 printf "$(printf '\033[95m')%s$(printf '\033[0m')%s%s%s%s" "$dir_name" "$git_status" "$pr_part" "$model_part" "$cost_part"
