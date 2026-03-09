@@ -20,7 +20,9 @@ At the start of a session, suggest switching to a lighter model if the task does
 - **Haiku** is sufficient for: quick lookups, single-file edits, running commands, short Q&A
 - **Opus** is warranted for: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
 
-Remind the user with a one-liner: e.g. _"This looks like a Sonnet task — switch with Opt+P to save cost."_
+Include a prominent model suggestion in the session start output, e.g.:
+
+**> Switch to Haiku (Opt+P) — this task doesn't need Sonnet.**
 
 ## TDD
 - Follow TDD when writing tests: one test at a time, red-green-refactor
