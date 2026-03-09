@@ -10,8 +10,6 @@ vm() {
     mkdir "$sessions_dir"
   fi
 
-  tmux rename-window "$(basename $(pwd))"
-
   local session_dir="${sessions_dir}/$(git rev-parse --abbrev-ref HEAD | tr '/' '_')"
   if [[ ! -d "${session_dir}" ]]; then
     mkdir "${session_dir}"
