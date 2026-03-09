@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Remove worktrees for branches that have been deleted.
+set -e
+
+# Parse git worktree list --porcelain into (path, branch) pairs, skip main worktree
+worktree_data=$(git worktree list --porcelain | awk '
+  /^worktree / { path = substr($0, 10) }
+  /^branch /   { branch = substr($0, 8) }
+  /^$/          { if (path && branch) print path "|" branch; path=""; branch="" }
+' | tail -n +2)  # skip first entry (main worktree)
+
+if [[ -z "$worktree_data" ]]; then
+  echo "==> No linked worktrees found."
+  exit 0
+fi
+
+pruned=0
+while IFS='|' read -r wt_path branch_ref; do
+  branch="${branch_ref#refs/heads/}"
+  if ! git show-ref --verify --quiet "refs/heads/$branch"; then
+    echo "==> Removing worktree for deleted branch '$branch': $wt_path"
+    git worktree remove "$wt_path" 2>/dev/null \
+      || echo "    warning: could not remove $wt_path (may have uncommitted changes)"
+    pruned=$((pruned + 1))
+  fi
+done <<< "$worktree_data"
+
+if [[ $pruned -eq 0 ]]; then
+  echo "==> No stale worktrees to remove."
+fi
