@@ -1,7 +1,8 @@
 {
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
-    "USE_BUILTIN_RIPGREP": "0"
+    "USE_BUILTIN_RIPGREP": "0",
+    "FORCE_COLOR": "1"
   },
   "includeCoAuthoredBy": false,
   "permissions": {
@@ -58,7 +59,6 @@
       "Write(./.env*)"
     ]
   },
-  "model": "haiku",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -123,5 +123,6 @@
     "claude-md-management@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
-  }
+  },
+  "model": "haiku"
 }
