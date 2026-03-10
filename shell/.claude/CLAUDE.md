@@ -44,3 +44,6 @@ Include a prominent model suggestion in the session start output, e.g.:
 
 ## Pull requests
 When asked to merge a PR: **ALWAYS wait for checks to pass**. Do not use admin override unless specifically instructed.
+
+## Linting and formatting
+Before committing code: **always run the project's linter/formatter if available**. Check for a lint command in the project (package.json, Makefile, pyproject.toml, etc.) and run it with auto-fix flags before staging commits.
