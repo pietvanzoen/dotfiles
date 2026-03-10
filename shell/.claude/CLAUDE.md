@@ -49,4 +49,4 @@ When asked to merge a PR: **ALWAYS wait for checks to pass**. Do not use admin o
 Before committing code: **always run the project's linter/formatter if available**. Check for a lint command in the project (package.json, Makefile, pyproject.toml, etc.) and run it with auto-fix flags before staging commits.
 
 ## Git commands
-Run git commands sequentially (one after another) rather than in parallel. This keeps the activity history clear and readable in the output, and makes it easier to see the progression of changes.
+Run git commands as separate tool calls, one at a time. Never chain them with `&&` or `;` in a single Bash call. This keeps the activity history clear and readable in the output, and makes it easier to see the progression of changes.
