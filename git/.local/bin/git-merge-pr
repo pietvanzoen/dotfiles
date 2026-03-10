@@ -1,0 +1,65 @@
+#!/bin/bash
+
+set -e
+
+PR_NUMBER="${1:-}"
+
+# Get PR number from current branch if not provided
+if [[ -z "$PR_NUMBER" ]]; then
+  PR_NUMBER="$(gh pr view --json 'number' | jq -r '.number')" || {
+    echo "Error: Could not find PR for current branch. Specify PR number as argument: git merge-pr <number>"
+    exit 1
+  }
+fi
+
+echo "==> Checking PR #$PR_NUMBER"
+
+# Get PR details
+pr_info=$(gh pr view "$PR_NUMBER" --json 'state,reviewDecision')
+pr_state=$(echo "$pr_info" | jq -r '.state')
+review_decision=$(echo "$pr_info" | jq -r '.reviewDecision')
+
+if [[ "$pr_state" != "OPEN" ]]; then
+  echo "Error: PR #$PR_NUMBER is $pr_state (not OPEN)"
+  exit 1
+fi
+
+echo "✓ PR is open"
+
+# Check if required reviews are satisfied
+echo "==> Checking required reviews..."
+if [[ "$review_decision" != "APPROVED" ]]; then
+  echo "Error: Required reviews not satisfied. Review decision: $review_decision"
+  exit 1
+fi
+
+echo "✓ All required reviews approved"
+
+# Check if all checks have passed
+echo "==> Verifying checks..."
+checks_status=$(gh pr checks "$PR_NUMBER" || true)
+
+if echo "$checks_status" | grep -q "PENDING\|FAILING"; then
+  echo "Error: Some checks are pending or failing:"
+  echo "$checks_status"
+  exit 1
+fi
+
+echo "✓ All checks passed"
+
+# Check if there are unresolved conversations
+echo "==> Checking for unresolved comments..."
+unresolved=$(gh api "repos/{owner}/{repo}/pulls/$PR_NUMBER/comments" --template '{{range .}}{{if .unresolved}}true{{end}}{{end}}' 2>/dev/null || echo "")
+
+if [[ -n "$unresolved" ]]; then
+  echo "Error: There are unresolved conversations. Please resolve them before merging."
+  exit 1
+fi
+
+echo "✓ No unresolved conversations"
+
+# Merge PR without admin override
+echo "==> Merging PR #$PR_NUMBER"
+gh pr merge "$PR_NUMBER" --squash --auto 2>/dev/null || gh pr merge "$PR_NUMBER" --squash
+
+echo "✓ PR #$PR_NUMBER merged successfully"
