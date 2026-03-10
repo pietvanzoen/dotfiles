@@ -41,3 +41,6 @@ Include a prominent model suggestion in the session start output, e.g.:
 - Find the nvim pane for the current project: `tmux list-panes -t dev:<window_name> -F '#{session_name}:#{window_name}.#{pane_index} #{pane_current_command}' | grep nvim | head -1 | cut -d' ' -f1`
 - To open files: `tmux send-keys -t <pane> ':e <path>' Enter`
 - To open in vertical split: `tmux send-keys -t <pane> ':vs <path>' Enter`
+
+## Pull requests
+When asked to merge a PR: **ALWAYS wait for checks to pass**. Do not use admin override unless specifically instructed.
