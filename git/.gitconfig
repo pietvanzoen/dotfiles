@@ -96,12 +96,6 @@
   push-stack="!git push origin $(git stack --format list --stack descendants) --force-with-lease --set-upstream"
 
   ###############################################
-  # WORKTREE MANAGEMENT
-  ###############################################
-
-  wo = worktree-open
-
-  ###############################################
   # OTHER HELPERS
   ###############################################
 
