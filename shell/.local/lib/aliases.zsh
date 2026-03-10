@@ -40,6 +40,7 @@ function gwo() {
   fi
   worktree_dir="${repo_parent}/${repo_name}-${dir_slug}"
 
+  local is_new_worktree=0
   if [[ ! -d "$worktree_dir" ]]; then
     local existing_wt
     existing_wt=$(git worktree list --porcelain 2>/dev/null \
@@ -57,11 +58,18 @@ function gwo() {
       echo "==> Creating new branch $branch from $current_branch"
       git worktree add -b "$branch" "$worktree_dir" "$current_branch"
     fi
+    is_new_worktree=1
   fi
 
   cd "$worktree_dir" || return 1
   local window_name="${repo_name}/${branch}"
   tmux rename-window "${window_name:0:50}" 2>/dev/null || true
+
+  if [[ $is_new_worktree -eq 1 ]]; then
+    echo "✓ Created and navigated to new worktree: $branch"
+  else
+    echo "✓ Navigated to existing worktree: $branch"
+  fi
 }
 
 function cc() {
