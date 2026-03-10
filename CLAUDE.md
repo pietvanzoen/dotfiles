@@ -24,3 +24,13 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - Neovim plugin configs go in `vim/.config/nvim/lua/plugins/`
 - Git custom commands are named `git-<command>` in `git/.local/bin/`
 - Use `*.example` suffix for files that contain placeholders for secrets
+
+## Workflow
+
+After creating new files that need to be stowed (executables, configs, etc.), run:
+
+```bash
+./update
+```
+
+This restows all packages and creates the necessary symlinks in `$HOME`.
