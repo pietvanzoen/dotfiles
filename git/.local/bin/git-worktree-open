@@ -46,8 +46,10 @@ if [[ ! -d "$worktree_dir" ]]; then
   elif git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
     git worktree add --track -b "$branch" "$worktree_dir" "origin/$branch"
   else
-    echo "==> Creating new branch $branch from $(git trunk)"
-    git worktree add -b "$branch" "$worktree_dir" "$(git trunk)"
+    local current_branch
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
+    echo "==> Creating new branch $branch from $current_branch"
+    git worktree add -b "$branch" "$worktree_dir" "$current_branch"
   fi
 fi
 
