@@ -35,6 +35,8 @@
       "Bash(gh pr view:*)",
       "Bash(gh run view:*)",
       "Bash(gh issue view:*)",
+      "mcp__linear-server__get_issue",
+      "mcp__linear-server__get_issue_status",
       "Bash(tmux send-keys:*)",
       "Bash(tmux list-panes:*)",
       "Bash(tmux list-windows:*)",
@@ -123,6 +125,5 @@
     "claude-md-management@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
-  },
-  "model": "haiku"
+  }
 }
