@@ -1,5 +1,5 @@
 name: cutr
-root: ~/repos/github.com/cutr-dev/cutr-server
+root: <%= ENV.fetch('CUTR_ROOT', '~/repos/github.com/cutr-dev/cutr-server') %>
 
 on_project_start: cd server && yarn
 
@@ -20,4 +20,4 @@ windows:
           - cd cutlist
           - tmux-run-pane yarn dev
         - dev:
-          - cutr-migrate
+          - CUTR_DIR="<%= ENV.fetch('CUTR_ROOT', '~/repos/github.com/cutr-dev/cutr-server') %>" cutr-migrate

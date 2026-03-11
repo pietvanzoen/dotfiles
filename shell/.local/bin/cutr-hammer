@@ -1,7 +1,20 @@
 #!/bin/sh
 # Kill and restart/seed all the things
+# Usage: cutr-hammer [path]
 
 set -eux
+
+DEFAULT_ROOT=~/repos/github.com/cutr-dev/cutr-server
+
+if [ -n "${1:-}" ]; then
+  CUTR_ROOT="$(cd "$1" && pwd)"
+elif [ -f "./server/package.json" ]; then
+  CUTR_ROOT="$(pwd)"
+else
+  CUTR_ROOT="$(cd "$DEFAULT_ROOT" && pwd)"
+fi
+
+export CUTR_ROOT CUTR_DIR="$CUTR_ROOT"
 
 tmuxinator stop cutr
 
@@ -9,10 +22,10 @@ dropdb --if-exists cutr
 
 createdb cutr
 
-cd $CUTR_DIR/server
+cd "$CUTR_ROOT/server"
 
 yarn sequelize db:migrate
 
 yarn seed:all
 
-tmuxinator cutr
+cutr-start "$CUTR_ROOT"

@@ -1,0 +1,22 @@
+#!/bin/sh
+# Start the cutr tmuxinator session, optionally targeting a worktree path.
+# Usage: cutr-start [path]
+#   path  Optional path to a cutr-server worktree. Defaults to cwd if it
+#         looks like a cutr repo, otherwise uses the main repo.
+
+set -eu
+
+DEFAULT_ROOT=~/repos/github.com/cutr-dev/cutr-server
+
+if [ -n "${1:-}" ]; then
+  CUTR_ROOT="$(cd "$1" && pwd)"
+elif [ -f "./server/package.json" ]; then
+  CUTR_ROOT="$(pwd)"
+else
+  CUTR_ROOT="$(cd "$DEFAULT_ROOT" && pwd)"
+fi
+
+export CUTR_ROOT CUTR_DIR="$CUTR_ROOT"
+
+echo "==> Starting cutr at $CUTR_ROOT"
+tmuxinator start cutr
