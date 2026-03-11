@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Hook: Notification (elicitation_dialog)
+# - Fires terminal-notifier asking for input
+# - Renames tmux window to ⏸ <basename> to signal Claude is waiting
+
+input=$(cat)
+
+cwd=$(echo "$input" | jq -r '.cwd // ""')
+if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
+  cwd=$(pwd)
+fi
+
+dir_context=$(echo "$cwd" | sed "s|$HOME|~|" | awk -F'/' '{if (NF>=2) print $(NF-1)"/"$NF; else print $NF}')
+
+terminal-notifier \
+  -title "Claude Code - $dir_context" \
+  -message "Has a question for you" \
+  -sound Purr \
+  -contentImage "$HOME/.claude/icons/claude.png"
+
+[ -n "$TMUX" ] && tmux rename-window "⏸ $(basename "${cwd:-$PWD}")"

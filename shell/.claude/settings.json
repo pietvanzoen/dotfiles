@@ -89,7 +89,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ~/.claude/hooks/on-notification 'Has a question for you' Purr"
+            "command": "bash ~/.claude/hooks/on-elicitation"
           }
         ]
       },
