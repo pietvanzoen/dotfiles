@@ -19,4 +19,5 @@ fi
 export CUTR_ROOT CUTR_DIR="$CUTR_ROOT"
 
 echo "==> Starting cutr at $CUTR_ROOT"
+tmuxinator stop cutr 2>/dev/null || true
 tmuxinator start cutr
