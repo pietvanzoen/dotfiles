@@ -45,6 +45,9 @@ Include a prominent model suggestion in the session start output, e.g.:
 ## Pull requests
 When asked to merge a PR: **ALWAYS wait for checks to pass**. Do not use admin override unless specifically instructed.
 
+## PR review comments
+When posting replies to GitHub PR review comments, always prefix the message with `> _Posted by Claude Code_` on its own line, followed by a blank line, before the reply body. This makes it clear the comment was AI-generated and not written by the user.
+
 ## Linting and formatting
 Before committing code: **always run the project's linter/formatter if available**. Check for a lint command in the project (package.json, Makefile, pyproject.toml, etc.) and run it with auto-fix flags before staging commits.
 
