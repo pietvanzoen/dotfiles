@@ -2,6 +2,9 @@
 After each response, run `/notes` in the background to update `.claude-notes`.
 Use the Skill tool with `run_in_background: true` so it doesn't delay the response.
 
+Also update notes when a plan is ready for review and after a plan is accepted
+(e.g. user says "y", "yes", "go", "do it"), before beginning implementation.
+
 ## Session start
 At the beginning of each new session, display this shortcuts reminder:
 

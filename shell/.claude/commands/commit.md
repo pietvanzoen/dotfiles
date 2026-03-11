@@ -2,7 +2,7 @@
 name: commit
 description: Create a Git commit
 disable-model-invocation: true
-allowed-tools: Bash(git *), Bash(yarn * lint *)
+allowed-tools: Bash(git *), Bash(yarn * lint *), Bash(gh pr view *), Write(.claude-notes), Edit(.claude-notes)
 ---
 
 Create git commits for the current changes.
@@ -17,6 +17,7 @@ Create git commits for the current changes.
    c. Write a concise commit message that focuses on the "why" not the "what"
    d. Create the commit using a HEREDOC for the message
 6. Run `git status` to verify
+7. Run `/notes` to update `.claude-notes` with current session state
 
 Important:
 - NEVER prefix commands with `cd <path> &&`. Run all git and lint commands directly — they will automatically use the current working directory. Git commands work from any subdirectory of a repo.
