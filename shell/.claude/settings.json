@@ -47,7 +47,9 @@
       "Read(~/.config/**)",
       "Read(package.json)",
       "Read(tsconfig.json)",
-      "Read(*.md)"
+      "Read(*.md)",
+      "Write(.claude-notes)",
+      "Edit(.claude-notes)"
     ],
     "deny": [
       "Bash(curl:*)",
