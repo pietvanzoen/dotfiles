@@ -42,6 +42,17 @@ __right_prompt() {
 
 precmd_functions+='__right_prompt'
 
+__tmux_clear_indicator() {
+  [[ -z "$TMUX" ]] && return
+  local name
+  name="$(tmux display-message -p "#{window_name}" 2>/dev/null)" || return
+  [[ "$name" != "⏺ "* ]] && return
+  local clean="${name#⏺ }"
+  tmux rename-window "$clean" 2>/dev/null || true
+  tmux set-window-option automatic-rename on 2>/dev/null || true
+}
+precmd_functions+='__tmux_clear_indicator'
+
 
 # Use vim keybindings
 bindkey -v

@@ -18,7 +18,11 @@ terminal-notifier \
   -sound Glass \
   -contentImage "$HOME/.claude/icons/claude.png"
 
-if [ -n "$TMUX" ]; then
-  tmux rename-window "$(basename "${cwd:-$PWD}")"
-  tmux set-window-option automatic-rename on
-fi
+# Clear ⏺ from any tmux windows — find by name rather than relying on $TMUX
+tmux list-windows -a -F "#{session_name}:#{window_index} #{window_name}" 2>/dev/null \
+  | grep "^[^ ]* ⏺ " \
+  | while IFS=' ' read -r target name; do
+      clean="${name#⏺ }"
+      tmux rename-window -t "$target" "$clean" 2>/dev/null || true
+      tmux set-window-option -t "$target" automatic-rename on 2>/dev/null || true
+    done
