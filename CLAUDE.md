@@ -34,3 +34,4 @@ After creating new files that need to be stowed (executables, configs, etc.), ru
 ```
 
 This restows all packages and creates the necessary symlinks in `$HOME`.
+Also run `./update` after renaming or moving stowed files to fix symlinks.
