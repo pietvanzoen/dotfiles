@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 # Show status of all active Claude Code sessions across projects.
-# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [--prune] [--prune-merged] [--delete ID]
+# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--prune] [--prune-merged] [--delete ID]
 #   -a, --all         Show all sessions regardless of age (default: last 30 days)
 #   -i, --ids         Show session IDs (for use with --delete)
 #   -p, --pr          Fetch PR info from GitHub (slower — requires gh)
+#   -w, --watch [N]   Live-updating dashboard, refreshing every N seconds (default: 5)
 #   --prune           Remove project dirs whose cwd no longer exists
 #   --prune-merged    Remove project dirs and worktrees for merged PRs
 #   --delete ID       Delete a specific session by its short ID
 
+import atexit
 import json
 import os
+import signal
 import shutil
 import subprocess
 import sys
@@ -46,6 +49,7 @@ fetch_pr = False
 prune = False
 prune_merged = False
 delete_id = None
+watch_interval = None
 
 args = sys.argv[1:]
 i = 0
@@ -57,6 +61,11 @@ while i < len(args):
         show_ids = True
     elif arg in ("-p", "--pr"):
         fetch_pr = True
+    elif arg in ("-w", "--watch"):
+        watch_interval = 5
+        if i + 1 < len(args) and args[i + 1].isdigit():
+            i += 1
+            watch_interval = int(args[i])
     elif arg == "--prune":
         prune = True
     elif arg == "--prune-merged":
@@ -70,9 +79,15 @@ while i < len(args):
         delete_id = args[i]
         show_all = True
     else:
-        print(f"Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [--prune] [--prune-merged] [--delete ID]", file=sys.stderr)
+        print(f"Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--prune] [--prune-merged] [--delete ID]", file=sys.stderr)
         sys.exit(1)
     i += 1
+
+if watch_interval is not None and (delete_id or prune or prune_merged):
+    print("--watch cannot be combined with --delete, --prune, or --prune-merged", file=sys.stderr)
+    sys.exit(1)
+
+LOCKFILE = "/tmp/claude-sessions-watch.pid"
 
 now = int(time.time())
 
@@ -215,157 +230,201 @@ def make_label(cwd, branch):
     return project, suffix
 
 
-# --- Collect projects ---
+def run():
+    global now
+    now = int(time.time())
 
-# Map cwd -> (mtime, jsonl_path, age, branch, project_dir) — keep most recent session per cwd
-best = {}
+    # --- Collect projects ---
 
-for entry in os.scandir(PROJECTS_DIR):
-    if not entry.is_dir():
-        continue
-    latest_jsonl = None
-    latest_mtime = 0
-    for f in os.scandir(entry.path):
-        if not f.name.endswith(".jsonl"):
+    # Map cwd -> (mtime, jsonl_path, age, branch, project_dir) — keep most recent session per cwd
+    best = {}
+
+    for entry in os.scandir(PROJECTS_DIR):
+        if not entry.is_dir():
             continue
-        mtime = int(f.stat().st_mtime)
-        if mtime > latest_mtime:
-            latest_mtime = mtime
-            latest_jsonl = f.path
+        latest_jsonl = None
+        latest_mtime = 0
+        for f in os.scandir(entry.path):
+            if not f.name.endswith(".jsonl"):
+                continue
+            mtime = int(f.stat().st_mtime)
+            if mtime > latest_mtime:
+                latest_mtime = mtime
+                latest_jsonl = f.path
 
-    if not latest_jsonl:
-        continue
+        if not latest_jsonl:
+            continue
 
-    age = now - latest_mtime
-    if not show_all and age > MAX_AGE_DAYS * 86400:
-        continue
+        age = now - latest_mtime
+        if not show_all and age > MAX_AGE_DAYS * 86400:
+            continue
 
-    cwd, branch = read_session(latest_jsonl)
-    if not cwd:
-        continue
+        cwd, branch = read_session(latest_jsonl)
+        if not cwd:
+            continue
 
-    # Short ID: first 7 chars of the most recent session UUID
-    sid = os.path.basename(latest_jsonl).replace(".jsonl", "")[:7]
+        # Short ID: first 7 chars of the most recent session UUID
+        sid = os.path.basename(latest_jsonl).replace(".jsonl", "")[:7]
 
-    if delete_id:
-        if sid.startswith(delete_id) or delete_id == sid:
-            proj, suf = make_label(cwd, branch)
-            is_worktree = os.path.isdir(cwd) and find_worktree_root(cwd)
-            print(f"  Session: {proj}{suf} ({sid})")
-            print(f"  Path:    {cwd}")
-            if is_worktree:
-                print(f"  Worktree will also be removed")
-            answer = input("\n  Delete this session? [y/N] ")
-            if answer.lower() in ("y", "yes"):
+        if delete_id:
+            if sid.startswith(delete_id) or delete_id == sid:
+                proj, suf = make_label(cwd, branch)
+                is_worktree = os.path.isdir(cwd) and find_worktree_root(cwd)
+                print(f"  Session: {proj}{suf} ({sid})")
+                print(f"  Path:    {cwd}")
                 if is_worktree:
-                    if remove_worktree(cwd):
-                        print(f"  Removed worktree: {cwd}")
-                print(f"  Deleted: {proj}{suf} ({sid})")
+                    print(f"  Worktree will also be removed")
+                answer = input("\n  Delete this session? [y/N] ")
+                if answer.lower() in ("y", "yes"):
+                    if is_worktree:
+                        if remove_worktree(cwd):
+                            print(f"  Removed worktree: {cwd}")
+                    print(f"  Deleted: {proj}{suf} ({sid})")
+                    shutil.rmtree(entry.path)
+                else:
+                    print("  Skipped.")
+            continue
+
+        if prune:
+            if not os.path.isdir(cwd):
+                print(f"Pruning: {entry.path}")
                 shutil.rmtree(entry.path)
-            else:
-                print("  Skipped.")
-        continue
+            continue
 
-    if prune:
-        if not os.path.isdir(cwd):
-            print(f"Pruning: {entry.path}")
-            shutil.rmtree(entry.path)
-        continue
+        if prune_merged:
+            if not os.path.isdir(cwd):
+                continue
+            state = pr_state_from_notes(cwd)
+            # Fall back to gh if notes don't have PR state
+            if not state and branch:
+                pr_str = gh_pr_info(cwd, branch)
+                if pr_str and pr_str != "—":
+                    state = pr_str.split()[1] if len(pr_str.split()) >= 2 else ""
+            if state == "merged":
+                proj, suf = make_label(cwd, branch)
+                if remove_worktree(cwd):
+                    print(f"  Removed worktree: {cwd}")
+                print(f"  Pruned: {proj}{suf}")
+                shutil.rmtree(entry.path)
+            continue
 
-    if prune_merged:
         if not os.path.isdir(cwd):
             continue
-        state = pr_state_from_notes(cwd)
-        # Fall back to gh if notes don't have PR state
-        if not state and branch:
-            pr_str = gh_pr_info(cwd, branch)
-            if pr_str and pr_str != "—":
-                state = pr_str.split()[1] if len(pr_str.split()) >= 2 else ""
-        if state == "merged":
-            proj, suf = make_label(cwd, branch)
-            if remove_worktree(cwd):
-                print(f"  Removed worktree: {cwd}")
-            print(f"  Pruned: {proj}{suf}")
-            shutil.rmtree(entry.path)
-        continue
 
-    if not os.path.isdir(cwd):
-        continue
+        # Keep only the most recent session per cwd
+        if cwd not in best or latest_mtime > best[cwd][0]:
+            best[cwd] = (latest_mtime, latest_jsonl, age, branch, entry.path)
 
-    # Keep only the most recent session per cwd
-    if cwd not in best or latest_mtime > best[cwd][0]:
-        best[cwd] = (latest_mtime, latest_jsonl, age, branch, entry.path)
+    if delete_id or prune or prune_merged:
+        sys.exit(0)
 
-if delete_id or prune or prune_merged:
-    sys.exit(0)
+    if not best:
+        print("No active Claude sessions found.")
+        return
 
-if not best:
-    print("No active Claude sessions found.")
-    sys.exit(0)
+    # Sort by mtime descending
+    projects = sorted(best.items(), key=lambda x: x[1][0], reverse=True)
 
-# Sort by mtime descending
-projects = sorted(best.items(), key=lambda x: x[1][0], reverse=True)
+    # --- Fetch git status and (optionally) PR info in parallel ---
 
-# --- Fetch git status and (optionally) PR info in parallel ---
+    def fetch_project_data(item):
+        cwd, (mtime, jsonl, age, branch, project_dir) = item
+        dirty = git_dirty_count(cwd)
+        notes, pr = read_notes(cwd)
+        sid = os.path.basename(jsonl).replace(".jsonl", "")[:7]
+        # --pr flag overrides with a live gh lookup
+        if fetch_pr and branch:
+            pr = gh_pr_info(cwd, branch)
+        if not pr:
+            pr = "—"
+        return cwd, branch, age, dirty, pr, notes, sid
 
-def fetch_project_data(item):
-    cwd, (mtime, jsonl, age, branch, project_dir) = item
-    dirty = git_dirty_count(cwd)
-    notes, pr = read_notes(cwd)
-    sid = os.path.basename(jsonl).replace(".jsonl", "")[:7]
-    # --pr flag overrides with a live gh lookup
-    if fetch_pr and branch:
-        pr = gh_pr_info(cwd, branch)
-    if not pr:
-        pr = "—"
-    return cwd, branch, age, dirty, pr, notes, sid
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        results = list(pool.map(fetch_project_data, projects))
 
-with ThreadPoolExecutor(max_workers=8) as pool:
-    results = list(pool.map(fetch_project_data, projects))
+    # --- Output ---
 
-# --- Output ---
-
-ID_W = 7
-id_pre = f"{'ID':<{ID_W}}  " if show_ids else ""
-id_div = f"{'─' * ID_W}  " if show_ids else ""
-header = f"  {id_pre}{'SESSION':<{NAME_W}}  {'STATUS':<12}  {'PR':<16}  LAST ACTIVE"
-divider = f"  {id_div}{'─' * NAME_W}  {'─' * 12}  {'─' * 16}  {'─' * 11}"
-print(c(header, BOLD))
-print(c(divider, DIM))
-print()
-
-for cwd, branch, age, dirty, pr, notes, sid in results:
-    proj, suf = make_label(cwd, branch)
-    label_plain = proj + suf
-    label_styled = c(proj, BOLD) + c(suf, DIM)
-    age_str = human_age(age)
-
-    if dirty:
-        status_str = c(f"dirty ({dirty})", YELLOW)
-        status_pad = f"dirty ({dirty})"
-    else:
-        status_str = c("clean", GREEN)
-        status_pad = "clean"
-
-    if pr.startswith("#"):
-        parts = pr.split()
-        state = parts[1].lower() if len(parts) >= 2 else ""
-        pr_url = parts[2] if len(parts) >= 3 and parts[2].startswith("http") else ""
-        pr_display = f"{parts[0]} {state}"
-        pr_color = GREEN if state == "open" else (BLUE if state == "merged" else DIM)
-        pr_str = c(hyperlink(pr_url, pr_display), pr_color)
-        pr = pr_display  # use display text for padding calculation
-    else:
-        pr_str = c(pr, DIM)
-
-    # Pad manually since color codes throw off f-string width
-    id_col     = (c(sid, DIM) + " " * (ID_W - len(sid)) + "  ") if show_ids else ""
-    label_col  = label_styled         + " " * (NAME_W - len(label_plain))
-    status_col = status_str           + " " * (12 - len(status_pad))
-    pr_col     = pr_str               + " " * (16 - len(pr))
-    notes_pad  = (" " * ID_W + "  ") if show_ids else ""
-
-    print(f"  {id_col}{label_col}  {status_col}  {pr_col}  {c(age_str, DIM)}")
-    if notes:
-        print(f"  {notes_pad}{c('└', DIM)} {notes}")
+    ID_W = 7
+    id_pre = f"{'ID':<{ID_W}}  " if show_ids else ""
+    id_div = f"{'─' * ID_W}  " if show_ids else ""
+    header = f"  {id_pre}{'SESSION':<{NAME_W}}  {'STATUS':<12}  {'PR':<16}  LAST ACTIVE"
+    divider = f"  {id_div}{'─' * NAME_W}  {'─' * 12}  {'─' * 16}  {'─' * 11}"
+    print(c(header, BOLD))
+    print(c(divider, DIM))
     print()
+
+    for cwd, branch, age, dirty, pr, notes, sid in results:
+        proj, suf = make_label(cwd, branch)
+        label_plain = proj + suf
+        label_styled = c(proj, BOLD) + c(suf, DIM)
+        age_str = human_age(age)
+
+        if dirty:
+            status_str = c(f"dirty ({dirty})", YELLOW)
+            status_pad = f"dirty ({dirty})"
+        else:
+            status_str = c("clean", GREEN)
+            status_pad = "clean"
+
+        if pr.startswith("#"):
+            parts = pr.split()
+            state = parts[1].lower() if len(parts) >= 2 else ""
+            pr_url = parts[2] if len(parts) >= 3 and parts[2].startswith("http") else ""
+            pr_display = f"{parts[0]} {state}"
+            pr_color = GREEN if state == "open" else (BLUE if state == "merged" else DIM)
+            pr_str = c(hyperlink(pr_url, pr_display), pr_color)
+            pr = pr_display  # use display text for padding calculation
+        else:
+            pr_str = c(pr, DIM)
+
+        # Pad manually since color codes throw off f-string width
+        id_col     = (c(sid, DIM) + " " * (ID_W - len(sid)) + "  ") if show_ids else ""
+        label_col  = label_styled         + " " * (NAME_W - len(label_plain))
+        status_col = status_str           + " " * (12 - len(status_pad))
+        pr_col     = pr_str               + " " * (16 - len(pr))
+        notes_pad  = (" " * ID_W + "  ") if show_ids else ""
+
+        print(f"  {id_col}{label_col}  {status_col}  {pr_col}  {c(age_str, DIM)}")
+        if notes:
+            print(f"  {notes_pad}{c('└', DIM)} {notes}")
+        print()
+
+
+def cleanup_lockfile():
+    try:
+        os.unlink(LOCKFILE)
+    except OSError:
+        pass
+
+
+if watch_interval is not None:
+    # Single-instance check
+    try:
+        with open(LOCKFILE) as f:
+            old_pid = int(f.read().strip())
+        try:
+            os.kill(old_pid, 0)
+            print(f"claude-sessions --watch is already running (pid {old_pid})", file=sys.stderr)
+            sys.exit(1)
+        except OSError:
+            pass  # stale lockfile, proceed
+    except (OSError, ValueError):
+        pass
+
+    with open(LOCKFILE, "w") as f:
+        f.write(str(os.getpid()))
+    atexit.register(cleanup_lockfile)
+
+    def handle_sigint(*_):
+        cleanup_lockfile()
+        print()
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, handle_sigint)
+
+    while True:
+        print("\033[2J\033[H", end="", flush=True)
+        run()
+        time.sleep(watch_interval)
+else:
+    run()
