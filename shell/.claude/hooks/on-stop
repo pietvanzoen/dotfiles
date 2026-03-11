@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Hook: Stop
 # - Fires terminal-notifier "Done"
-# - Re-enables tmux automatic-rename
+# - Renames tmux window back to basename (removes ⏺ indicator)
 
 input=$(cat)
 
@@ -18,4 +18,7 @@ terminal-notifier \
   -sound Glass \
   -contentImage "$HOME/.claude/icons/claude.png"
 
-[ -n "$TMUX" ] && tmux set-window-option automatic-rename on
+if [ -n "$TMUX" ]; then
+  tmux rename-window "$(basename "${cwd:-$PWD}")"
+  tmux set-window-option automatic-rename on
+fi
