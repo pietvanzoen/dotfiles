@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Hook: UserPromptSubmit
+# - Fires terminal-notifier if any todos were completed
+# - Renames tmux window to ⏺ <basename>
+
+input=$(cat)
+
+completed=$(echo "$input" | jq -r '.todos[]? | select(.status == "completed") | .content' 2>/dev/null | wc -l | xargs)
+cwd=$(echo "$input" | jq -r '.workspace.current_dir // ""')
+
+if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
+  dir_context="unknown"
+else
+  dir_context=$(echo "$cwd" | sed "s|$HOME|~|" | awk -F'/' '{if (NF>=2) print $(NF-1)"/"$NF; else print $NF}')
+fi
+
+if [ "$completed" -gt 0 ]; then
+  terminal-notifier \
+    -title "Claude Code - $dir_context" \
+    -message "Completed $completed task(s)" \
+    -sound Glass \
+    -contentImage "$HOME/.claude/icons/claude.png"
+fi
+
+[ -n "$TMUX" ] && tmux rename-window "⏺ $(basename "${cwd:-$PWD}")"

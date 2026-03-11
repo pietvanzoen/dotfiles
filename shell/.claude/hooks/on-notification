@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Hook: Notification (shared handler)
+# Usage: on-notification <message> <sound>
+
+message="${1:?message required}"
+sound="${2:?sound required}"
+
+input=$(cat)
+
+cwd=$(echo "$input" | jq -r '.cwd // ""')
+if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
+  cwd=$(pwd)
+fi
+
+dir_context=$(echo "$cwd" | sed "s|$HOME|~|" | awk -F'/' '{if (NF>=2) print $(NF-1)"/"$NF; else print $NF}')
+
+terminal-notifier \
+  -title "Claude Code - $dir_context" \
+  -message "$message" \
+  -sound "$sound" \
+  -contentImage "$HOME/.claude/icons/claude.png"

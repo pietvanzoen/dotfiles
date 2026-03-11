@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Hook: Stop
+# - Fires terminal-notifier "Done"
+# - Re-enables tmux automatic-rename
+
+input=$(cat)
+
+cwd=$(echo "$input" | jq -r '.cwd // ""')
+if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
+  cwd=$(pwd)
+fi
+
+dir_context=$(echo "$cwd" | sed "s|$HOME|~|" | awk -F'/' '{if (NF>=2) print $(NF-1)"/"$NF; else print $NF}')
+
+terminal-notifier \
+  -title "Claude Code - $dir_context" \
+  -message "Done" \
+  -sound Glass \
+  -contentImage "$HOME/.claude/icons/claude.png"
+
+[ -n "$TMUX" ] && tmux set-window-option automatic-rename on
