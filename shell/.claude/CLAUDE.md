@@ -7,6 +7,10 @@ Shortcuts: !cmd (shell) | @file (mention) | Ctrl+R (history) | Shift+Tab (mode) 
 Commands:  /vim | /cost | /diff | /status | /compact | /help
 ```
 
+## Text width
+Wrap prose text at 80 characters per line. Apply this to explanations, plans,
+and any multi-sentence text output. Do not wrap code blocks or tool output.
+
 ## Response status
 End each response with a one-line status summary so the user can quickly regain context when switching between sessions:
 
