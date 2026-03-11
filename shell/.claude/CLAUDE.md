@@ -1,9 +1,11 @@
 ## Session notes
-After each response, run `/notes` in the background to update `.claude-notes`.
-Use the Skill tool with `run_in_background: true` so it doesn't delay the response.
+Run `/notes` in the background after:
+- committing or pushing code
+- completing a task or milestone
+- updating or accepting a plan (before beginning implementation)
+- any response where project state changed
 
-Also update notes when a plan is ready for review and after a plan is accepted
-(e.g. user says "y", "yes", "go", "do it"), before beginning implementation.
+Use the Skill tool with `run_in_background: true` so it doesn't delay the response.
 
 ## Session start
 At the beginning of each new session, display this shortcuts reminder:
