@@ -61,6 +61,10 @@ When asked to merge a PR: **ALWAYS wait for checks to pass**. Do not use admin o
 ## PR review comments
 When posting replies to GitHub PR review comments, always prefix the message with `> _Posted by Claude Code_` on its own line, followed by a blank line, before the reply body. This makes it clear the comment was AI-generated and not written by the user.
 
+To reply **in a review thread** (not as a general PR comment), use:
+`gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies -X POST -f body="..."`
+Note: the URL must include the PR number — `pulls/{pr}/comments/{id}/replies`, NOT `pulls/comments/{id}/replies`.
+
 ## Linting and formatting
 Before committing code: **always run the project's linter/formatter if available**. Check for a lint command in the project (package.json, Makefile, pyproject.toml, etc.) and run it with auto-fix flags before staging commits.
 
