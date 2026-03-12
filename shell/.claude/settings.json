@@ -48,6 +48,7 @@
       "Read(package.json)",
       "Read(tsconfig.json)",
       "Read(*.md)",
+      "Read(.claude-notes)",
       "Write(.claude-notes)",
       "Edit(.claude-notes)",
       "Skill(notes)"
@@ -130,5 +131,6 @@
     "claude-md-management@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
-  }
+  },
+  "model": "opus"
 }

@@ -6,7 +6,7 @@
 input=$(cat)
 
 completed=$(echo "$input" | jq -r '.todos[]? | select(.status == "completed") | .content' 2>/dev/null | wc -l | xargs)
-cwd=$(echo "$input" | jq -r '.workspace.current_dir // ""')
+cwd=$(echo "$input" | jq -r '.cwd // ""')
 
 if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
   dir_context="unknown"
@@ -24,13 +24,31 @@ fi
 
 [ -n "$TMUX" ] && tmux rename-window "⏺ $(basename "${cwd:-$PWD}")"
 
-# Seed .claude-notes from first prompt if none exists yet
+# Update prompt: line in .claude-notes (create file if absent)
 notes_file="${cwd}/.claude-notes"
-if [ -n "$cwd" ] && [ "$cwd" != "null" ] && [ ! -f "$notes_file" ]; then
+if [ -n "$cwd" ] && [ "$cwd" != "null" ]; then
   prompt=$(echo "$input" | jq -r '.prompt // ""' 2>/dev/null)
   # Skip slash commands and empty prompts
   if [ -n "$prompt" ] && [[ "$prompt" != /* ]]; then
     first_line=$(echo "$prompt" | head -1 | cut -c1-120)
-    echo "$first_line" > "$notes_file"
+    if [ -f "$notes_file" ]; then
+      python3 - "$notes_file" "$first_line" <<'PYEOF'
+import sys
+path, prompt_line = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    lines = f.readlines()
+new_line = f"prompt: {prompt_line}\n"
+for i, l in enumerate(lines):
+    if l.startswith("prompt:"):
+        lines[i] = new_line
+        break
+else:
+    lines.append(new_line)
+with open(path, "w") as f:
+    f.writelines(lines)
+PYEOF
+    else
+      echo "prompt: $first_line" > "$notes_file"
+    fi
   fi
 fi
