@@ -129,24 +129,25 @@ def human_age(age):
 
 
 def read_notes(cwd):
-    """Return (summary, prompt_line, pr_str) from .claude-notes, or ('', '', '') if absent."""
+    """Return (summary, prompt_line, next_line, pr_str) from .claude-notes, or ('', '', '', '') if absent."""
     notes_path = os.path.join(cwd, ".claude-notes")
     if not os.path.isfile(notes_path):
-        return "", "", ""
+        return "", "", "", ""
     try:
         with open(notes_path) as f:
             lines = [l.strip() for l in f.readlines()]
-        summary = next((l for l in lines if not l.startswith(("prompt:", "pr:"))), "")
+        summary = next((l for l in lines if not l.startswith(("prompt:", "pr:", "next:"))), "")
         prompt_line = next((l[7:].strip() for l in lines if l.startswith("prompt:")), "")
+        next_line = next((l[5:].strip() for l in lines if l.startswith("next:")), "")
         pr_str = next((l[3:].strip() for l in lines if l.startswith("pr:")), "")
-        return summary, prompt_line, pr_str
+        return summary, prompt_line, next_line, pr_str
     except OSError:
-        return "", "", ""
+        return "", "", "", ""
 
 
 def pr_state_from_notes(cwd):
     """Return the PR state string from .claude-notes (e.g. 'merged'), or ''."""
-    _, _prompt, pr_str = read_notes(cwd)
+    _, _prompt, _next, pr_str = read_notes(cwd)
     if pr_str:
         parts = pr_str.split()
         return parts[1].lower() if len(parts) >= 2 else ""
@@ -224,7 +225,7 @@ def gh_pr_info(cwd, branch):
     try:
         out = subprocess.check_output(
             ["gh", "pr", "list", "--head", branch, "--state", "all",
-             "--limit", "1", "--json", "number,state,url"],
+             "--limit", "1", "--json", "number,state,url,reviews"],
             cwd=cwd,
             stderr=subprocess.DEVNULL,
             timeout=10,
@@ -232,7 +233,12 @@ def gh_pr_info(cwd, branch):
         items = json.loads(out)
         if items:
             item = items[0]
-            return f"#{item['number']} {item['state'].lower()} {item['url']}"
+            approved = any(r.get("state") == "APPROVED" for r in item.get("reviews", []))
+            parts = [f"#{item['number']}", item['state'].lower()]
+            if approved:
+                parts.append("approved")
+            parts.append(item['url'])
+            return " ".join(parts)
     except (subprocess.SubprocessError, FileNotFoundError, json.JSONDecodeError):
         pass
     return "—"
@@ -370,30 +376,31 @@ def run():
     def fetch_project_data(item):
         cwd, (mtime, jsonl, age, branch, project_dir) = item
         dirty = git_dirty_count(cwd)
-        notes, prompt_line, pr = read_notes(cwd)
+        notes, prompt_line, next_line, pr = read_notes(cwd)
         sid = os.path.basename(jsonl).replace(".jsonl", "")[:7]
         # --pr flag overrides with a live gh lookup
         if fetch_pr and branch:
             pr = gh_pr_info(cwd, branch)
         if not pr:
             pr = "—"
-        return cwd, branch, age, dirty, pr, notes, prompt_line, sid
+        return cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(fetch_project_data, projects))
 
     # --- Output ---
 
-    ID_W = 7
+    ID_W   = 7
+    NEXT_W = 28
     id_pre = f"{'ID':<{ID_W}}  " if show_ids else ""
     id_div = f"{'─' * ID_W}  " if show_ids else ""
-    header = f"  {id_pre}{'SESSION':<{NAME_W}}  {'STATUS':<12}  {'PR':<16}  LAST ACTIVE"
-    divider = f"  {id_div}{'─' * NAME_W}  {'─' * 12}  {'─' * 16}  {'─' * 11}"
+    header = f"  {id_pre}{'SESSION':<{NAME_W}}  {'STATUS':<12}  {'PR':<16}  {'NEXT':<{NEXT_W}}  LAST ACTIVE"
+    divider = f"  {id_div}{'─' * NAME_W}  {'─' * 12}  {'─' * 16}  {'─' * NEXT_W}  {'─' * 11}"
     print(c(header, BOLD))
     print(c(divider, DIM))
     print()
 
-    for cwd, branch, age, dirty, pr, notes, prompt_line, sid in results:
+    for cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid in results:
         proj, suf = make_label(cwd, branch)
         label_plain = proj + suf
         label_styled = c(proj, BOLD) + c(suf, DIM)
@@ -409,9 +416,19 @@ def run():
         if pr.startswith("#"):
             parts = pr.split()
             state = parts[1].lower() if len(parts) >= 2 else ""
-            pr_url = parts[2] if len(parts) >= 3 and parts[2].startswith("http") else ""
+            approved = "approved" in parts
+            pr_url = next((p for p in parts if p.startswith("http")), "")
             pr_display = f"{parts[0]} {state}"
-            pr_color = GREEN if state == "open" else (BLUE if state == "merged" else DIM)
+            if approved:
+                pr_display += " ✓"
+            if state == "open" and approved:
+                pr_color = GREEN
+            elif state == "open":
+                pr_color = YELLOW
+            elif state == "merged":
+                pr_color = BLUE
+            else:
+                pr_color = DIM
             pr_str = c(hyperlink(pr_url, pr_display), pr_color)
             pr = pr_display  # use display text for padding calculation
         elif pr == "—":
@@ -421,13 +438,15 @@ def run():
             pr_str = c(pr, DIM)
 
         # Pad manually since color codes throw off f-string width
+        next_plain = (next_line[:NEXT_W - 1] + "…" if len(next_line) > NEXT_W else next_line)
         id_col     = (c(sid, DIM) + " " * (ID_W - len(sid)) + "  ") if show_ids else ""
         label_col  = label_styled         + " " * (NAME_W - len(label_plain))
         status_col = status_str           + " " * (12 - len(status_pad))
         pr_col     = pr_str               + " " * (16 - len(pr))
+        next_col   = c(next_plain, CYAN)  + " " * (NEXT_W - len(next_plain))
         notes_pad  = (" " * ID_W + "  ") if show_ids else ""
 
-        print(f"  {id_col}{label_col}  {status_col}  {pr_col}  {c(age_str, DIM)}")
+        print(f"  {id_col}{label_col}  {status_col}  {pr_col}  {next_col}  {c(age_str, DIM)}")
         # Truncate prompt to fit terminal width (4 = indent + connector + space)
         if prompt_line:
             max_prompt = max(40, cols - 4 - len(notes_pad))
