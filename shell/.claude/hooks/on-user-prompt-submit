@@ -3,6 +3,8 @@
 # - Fires terminal-notifier if any todos were completed
 # - Renames tmux window to ⏺ <basename>
 
+export PATH="/opt/homebrew/bin:$PATH"
+
 input=$(cat)
 
 completed=$(echo "$input" | jq -r '.todos[]? | select(.status == "completed") | .content' 2>/dev/null | wc -l | xargs)

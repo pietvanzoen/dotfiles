@@ -3,6 +3,8 @@
 # - Fires terminal-notifier "Done"
 # - Renames tmux window back to basename (removes ⏺ indicator)
 
+export PATH="/opt/homebrew/bin:$PATH"
+
 input=$(cat)
 
 cwd=$(echo "$input" | jq -r '.cwd // ""')
@@ -18,11 +20,11 @@ terminal-notifier \
   -sound Glass \
   -contentImage "$HOME/.claude/icons/claude.png"
 
-# Clear ⏺ from any tmux windows — find by name rather than relying on $TMUX
-tmux list-windows -a -F "#{session_name}:#{window_index} #{window_name}" 2>/dev/null \
-  | grep "^[^ ]* ⏺ " \
-  | while IFS=' ' read -r target name; do
-      clean="${name#⏺ }"
-      tmux rename-window -t "$target" "$clean" 2>/dev/null || true
-      tmux set-window-option -t "$target" automatic-rename on 2>/dev/null || true
-    done
+# Clear ⏺ from the current tmux window only
+if [ -n "$TMUX" ]; then
+  current_name=$(tmux display-message -p '#{window_name}' 2>/dev/null)
+  if [[ "$current_name" == "⏺ "* ]]; then
+    tmux rename-window "${current_name#⏺ }" 2>/dev/null || true
+    tmux set-window-option automatic-rename on 2>/dev/null || true
+  fi
+fi
