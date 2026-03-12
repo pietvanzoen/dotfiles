@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # Show status of all active Claude Code sessions across projects.
-# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--prune] [--prune-merged] [--delete ID]
+# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--age AGE] [--prune] [--prune-merged] [--delete ID]
 #   -a, --all         Show all sessions regardless of age (default: last 30 days)
 #   -i, --ids         Show session IDs (for use with --delete)
 #   -p, --pr          Fetch PR info from GitHub (slower — requires gh)
 #   -w, --watch [N]   Live-updating dashboard, refreshing every N seconds (default: 5)
+#   --age AGE         Only show sessions newer than AGE (e.g. 7d, 24h, 30m)
 #   --prune           Remove project dirs whose cwd no longer exists
 #   --prune-merged    Remove project dirs and worktrees for merged PRs
 #   --delete ID       Delete a specific session by its short ID
@@ -51,6 +52,17 @@ prune = False
 prune_merged = False
 delete_id = None
 watch_interval = None
+max_age_seconds = MAX_AGE_DAYS * 86400
+
+
+def parse_age(s):
+    """Parse an age string like 7d, 24h, 30m into seconds. Returns None on failure."""
+    m = re.fullmatch(r'(\d+)(d|h|m|s)?', s.strip())
+    if not m:
+        return None
+    n = int(m.group(1))
+    unit = m.group(2) or 'd'
+    return n * {'d': 86400, 'h': 3600, 'm': 60, 's': 1}[unit]
 
 args = sys.argv[1:]
 i = 0
@@ -67,6 +79,16 @@ while i < len(args):
         if i + 1 < len(args) and args[i + 1].isdigit():
             i += 1
             watch_interval = int(args[i])
+    elif arg == "--age":
+        i += 1
+        if i >= len(args):
+            print("--age requires a value (e.g. 7d, 24h, 30m)", file=sys.stderr)
+            sys.exit(1)
+        parsed = parse_age(args[i])
+        if parsed is None:
+            print(f"--age: invalid value '{args[i]}' (use e.g. 7d, 24h, 30m)", file=sys.stderr)
+            sys.exit(1)
+        max_age_seconds = parsed
     elif arg == "--prune":
         prune = True
     elif arg == "--prune-merged":
@@ -80,7 +102,7 @@ while i < len(args):
         delete_id = args[i]
         show_all = True
     else:
-        print(f"Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--prune] [--prune-merged] [--delete ID]", file=sys.stderr)
+        print(f"Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--age AGE] [--prune] [--prune-merged] [--delete ID]", file=sys.stderr)
         sys.exit(1)
     i += 1
 
@@ -274,7 +296,7 @@ def run():
             continue
 
         age = now - latest_mtime
-        if not show_all and age > MAX_AGE_DAYS * 86400:
+        if not show_all and age > max_age_seconds:
             continue
 
         cwd, branch = read_session(latest_jsonl)
