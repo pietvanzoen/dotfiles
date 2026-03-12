@@ -422,9 +422,16 @@ if watch_interval is not None:
 
     signal.signal(signal.SIGINT, handle_sigint)
 
+    import io
     while True:
-        print("\033[2J\033[H", end="", flush=True)
-        run()
+        buf = io.StringIO()
+        _stdout, sys.stdout = sys.stdout, buf
+        try:
+            run()
+        finally:
+            sys.stdout = _stdout
+        sys.stdout.write("\033[2J\033[H" + buf.getvalue())
+        sys.stdout.flush()
         time.sleep(watch_interval)
 else:
     run()
