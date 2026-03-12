@@ -1,9 +1,12 @@
+@~/.claude/CLAUDE.local.md
+
 ## Session notes
-Run `/notes` in the background after:
-- committing or pushing code
-- completing a task or milestone
-- updating or accepting a plan (before beginning implementation)
-- any response where project state changed
+Run `/notes` in the background after **every response** where any of the following happened:
+- a plan was presented or accepted (run notes, then begin implementation)
+- code was committed or pushed
+- a task or milestone was completed
+- a code review or PR review was run
+- project state or global config changed in any meaningful way (e.g. CLAUDE.md edits, new config files)
 
 Use the Skill tool with `run_in_background: true` so it doesn't delay the response.
 
