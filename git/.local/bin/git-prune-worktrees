@@ -21,6 +21,11 @@ while IFS='|' read -r wt_path branch_ref; do
     echo "==> Removing worktree for deleted branch '$branch': $wt_path"
     git worktree remove "$wt_path" 2>/dev/null \
       || echo "    warning: could not remove $wt_path (may have uncommitted changes)"
+    if command -v tmux &>/dev/null; then
+      while IFS=' ' read -r wid ppath; do
+        [[ "$ppath" == "$wt_path"* ]] && tmux kill-window -t "$wid" 2>/dev/null || true
+      done < <(tmux list-panes -s -t dev -F '#{window_id} #{pane_current_path}' 2>/dev/null | sort -u -k1,1)
+    fi
     pruned=$((pruned + 1))
   fi
 done <<< "$worktree_data"

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# git done — clean up a merged branch: remove worktree, delete branch, close tmux window
+# Usage: git done [--force]
+
+set -e
+
+force=0
+for arg in "$@"; do
+  [[ "$arg" == "--force" ]] && force=1
+done
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+trunk=$(git trunk)
+
+if [[ "$branch" == "$trunk" ]]; then
+  echo "error: already on trunk '$trunk'" >&2
+  echo "Usage: git done [--force]  (run from the feature branch)" >&2
+  exit 1
+fi
+
+if [[ $force -eq 0 ]]; then
+  state=$(gh pr view --json state -q .state 2>/dev/null | tr '[:upper:]' '[:lower:]' || echo "")
+  if [[ "$state" != "merged" ]]; then
+    echo "error: PR is not merged (state: ${state:-not found})" >&2
+    echo "Use --force to clean up anyway." >&2
+    exit 1
+  fi
+fi
+
+wt_path=$(git rev-parse --show-toplevel)
+main_root=$(git worktree list --porcelain | awk '/^worktree / { print substr($0,10); exit }')
+
+# Capture tmux window before removing worktree
+current_window=""
+if [[ -n "${TMUX:-}" ]]; then
+  current_window=$(tmux display-message -p '#{window_id}' 2>/dev/null || echo "")
+fi
+
+echo "==> Removing worktree: $wt_path"
+git -C "$main_root" worktree remove --force "$wt_path"
+
+echo "==> Deleting branch: $branch"
+git -C "$main_root" branch -D "$branch"
+
+echo "==> Pruning sessions"
+git -C "$main_root" prune-sessions 2>/dev/null || true
+
+# Close the tmux window last — script terminates as the window closes
+if [[ -n "$current_window" ]]; then
+  echo "==> Closing tmux window $current_window"
+  tmux kill-window -t "$current_window" 2>/dev/null || true
+fi

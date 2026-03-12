@@ -2,7 +2,7 @@
 # Prune merged branches from local.
 set -e
 
-merged_branches="$(git branch --merged | grep -vE '^\*' | grep -vE " $(git trunk)$" || echo)"
+merged_branches="$(git branch --merged | grep -vE '^[*+]' | grep -vE "$(git trunk)" | sed 's/^[[:space:]]*//' || echo)"
 
 if [[ -z "$merged_branches" ]]; then
   exit
