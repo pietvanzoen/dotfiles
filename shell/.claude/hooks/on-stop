@@ -3,8 +3,6 @@
 # - Fires terminal-notifier "Done"
 # - Renames tmux window back to basename (removes ⏺ indicator)
 
-export PATH="/opt/homebrew/bin:$PATH"
-
 input=$(cat)
 
 cwd=$(echo "$input" | jq -r '.cwd // ""')
