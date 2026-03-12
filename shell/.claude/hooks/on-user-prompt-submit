@@ -28,8 +28,8 @@ fi
 notes_file="${cwd}/.claude-notes"
 if [ -n "$cwd" ] && [ "$cwd" != "null" ]; then
   prompt=$(echo "$input" | jq -r '.prompt // ""' 2>/dev/null)
-  # Skip slash commands and empty prompts
-  if [ -n "$prompt" ] && [[ "$prompt" != /* ]]; then
+  # Skip slash commands, empty prompts, and system messages
+  if [ -n "$prompt" ] && [[ "$prompt" != /* ]] && [[ "$prompt" != *"<task-notification>"* ]] && [[ "$prompt" != *"<command-"* ]]; then
     first_line=$(echo "$prompt" | head -1 | cut -c1-120)
     if [ -f "$notes_file" ]; then
       python3 - "$notes_file" "$first_line" <<'PYEOF'
