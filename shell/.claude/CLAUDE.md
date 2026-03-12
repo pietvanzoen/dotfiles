@@ -8,7 +8,7 @@ Run `/notes` in the background after **every response** where any of the followi
 - a code review or PR review was run
 - project state or global config changed in any meaningful way (e.g. CLAUDE.md edits, new config files)
 
-Run in background with a single Bash call:
+Run in background with a single Bash call — use `run_in_background: true` and do NOT add `&` or redirections to the command string itself:
 ```
 Bash(claude-notes-update "<done> → <next step>", run_in_background: true)
 ```
@@ -33,12 +33,12 @@ End each response with a one-line status summary so the user can quickly regain 
 > **[current task] → [next step]**
 
 ## Model usage
-At the start of a task, suggest switching to an appropriate model based on the following:
+After reviewing any tickets/bugs in context gathering (step 2 of Task Workflow), suggest switching to an appropriate model based on task complexity:
 - **Sonnet** is sufficient for: reading/explaining code, simple edits, git operations, writing docs, answering questions
 - **Haiku** is sufficient for: quick lookups, single-file edits, running commands, short Q&A
 - **Opus** is warranted for: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
 
-Include a prominent model suggestion in the task start output, e.g.:  
+Include a prominent model suggestion, e.g.:
 **> Switch to Haiku (Opt+P) — this task doesn't need Sonnet.**
 
 ## TDD
@@ -89,6 +89,7 @@ and proactively suggest the next action:
    - Ask: "Are there any Linear tickets or Sentry bugs related to this
      task?"
    - Gather and reference ticket IDs and bug reports
+   - Suggest the appropriate model based on task complexity (see Model usage)
    - Run `/notes` to document the task starting point
 
 3. **Planning**

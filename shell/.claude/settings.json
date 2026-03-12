@@ -35,6 +35,7 @@
       "Bash(gh pr view:*)",
       "Bash(gh run view:*)",
       "Bash(gh issue view:*)",
+      "Bash(gh save-me-copilot:*)",
       "mcp__linear-server__get_issue",
       "mcp__linear-server__get_issue_status",
       "Bash(tmux send-keys:*)",
