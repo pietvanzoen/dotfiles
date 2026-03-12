@@ -24,7 +24,7 @@ Commands:  /vim | /cost | /diff | /status | /compact | /help
 ```
 
 ## Text width
-Wrap prose text at 80 characters per line. Apply this to explanations, plans,
+Wrap prose text at 120 characters per line. Apply this to explanations, plans,
 and any multi-sentence text output. Do not wrap code blocks or tool output.
 
 ## Response status
