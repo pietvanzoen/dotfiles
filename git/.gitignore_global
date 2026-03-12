@@ -184,3 +184,5 @@ nohup.out
 .claude/worktrees
 
 .claude-notes
+
+.claude.local.md
