@@ -12,6 +12,7 @@
 import atexit
 import json
 import os
+import re
 import signal
 import shutil
 import subprocess
@@ -93,8 +94,10 @@ now = int(time.time())
 
 
 def human_age(age):
-    if age < 3600:
-        return "today"
+    if age < 60:
+        return "just now"
+    elif age < 3600:
+        return f"{age // 60}m ago"
     elif age < 86400:
         return f"{age // 3600}h ago"
     elif age < 172800:
@@ -104,23 +107,24 @@ def human_age(age):
 
 
 def read_notes(cwd):
-    """Return (summary, pr_str) from .claude-notes, or ('', '') if absent."""
+    """Return (summary, prompt_line, pr_str) from .claude-notes, or ('', '', '') if absent."""
     notes_path = os.path.join(cwd, ".claude-notes")
     if not os.path.isfile(notes_path):
-        return "", ""
+        return "", "", ""
     try:
         with open(notes_path) as f:
             lines = [l.strip() for l in f.readlines()]
-        summary = lines[0] if lines else ""
-        pr_str = next((l[3:].strip() for l in lines[1:] if l.startswith("pr:")), "")
-        return summary, pr_str
+        summary = next((l for l in lines if not l.startswith(("prompt:", "pr:"))), "")
+        prompt_line = next((l[7:].strip() for l in lines if l.startswith("prompt:")), "")
+        pr_str = next((l[3:].strip() for l in lines if l.startswith("pr:")), "")
+        return summary, prompt_line, pr_str
     except OSError:
-        return "", ""
+        return "", "", ""
 
 
 def pr_state_from_notes(cwd):
     """Return the PR state string from .claude-notes (e.g. 'merged'), or ''."""
-    _, pr_str = read_notes(cwd)
+    _, _prompt, pr_str = read_notes(cwd)
     if pr_str:
         parts = pr_str.split()
         return parts[1].lower() if len(parts) >= 2 else ""
@@ -212,18 +216,32 @@ def gh_pr_info(cwd, branch):
     return "—"
 
 
-NAME_W = 40
+NAME_W = 50
+try:
+    cols = os.get_terminal_size().columns
+except OSError:
+    cols = 120
+
+TICKET_RE = re.compile(r'^[a-z]+-\d+', re.IGNORECASE)
 
 def make_label(cwd, branch):
     """Return (project, branch_suffix) for separate styling."""
     project = os.path.basename(cwd)
-    suffix = f":{branch}" if branch else ""
+    if branch:
+        m = TICKET_RE.match(branch)
+        if m and m.group(0).lower() in project.lower():
+            display_branch = branch[len(m.group(0)):].lstrip("-") or branch
+        else:
+            display_branch = branch
+    else:
+        display_branch = ""
+    suffix = f":{display_branch}" if display_branch else ""
     total = len(project) + len(suffix)
     if total > NAME_W:
         # Truncate branch first, then project if needed
         avail = NAME_W - len(project) - 1  # -1 for ellipsis
         if avail >= 2:  # room for ":" + at least 1 char
-            suffix = f":{branch[:avail - 1]}…"
+            suffix = f":{display_branch[:avail - 1]}…"
         else:
             suffix = ""
             project = project[:NAME_W - 1] + "…"
@@ -330,14 +348,14 @@ def run():
     def fetch_project_data(item):
         cwd, (mtime, jsonl, age, branch, project_dir) = item
         dirty = git_dirty_count(cwd)
-        notes, pr = read_notes(cwd)
+        notes, prompt_line, pr = read_notes(cwd)
         sid = os.path.basename(jsonl).replace(".jsonl", "")[:7]
         # --pr flag overrides with a live gh lookup
         if fetch_pr and branch:
             pr = gh_pr_info(cwd, branch)
         if not pr:
             pr = "—"
-        return cwd, branch, age, dirty, pr, notes, sid
+        return cwd, branch, age, dirty, pr, notes, prompt_line, sid
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(fetch_project_data, projects))
@@ -353,7 +371,7 @@ def run():
     print(c(divider, DIM))
     print()
 
-    for cwd, branch, age, dirty, pr, notes, sid in results:
+    for cwd, branch, age, dirty, pr, notes, prompt_line, sid in results:
         proj, suf = make_label(cwd, branch)
         label_plain = proj + suf
         label_styled = c(proj, BOLD) + c(suf, DIM)
@@ -374,6 +392,9 @@ def run():
             pr_color = GREEN if state == "open" else (BLUE if state == "merged" else DIM)
             pr_str = c(hyperlink(pr_url, pr_display), pr_color)
             pr = pr_display  # use display text for padding calculation
+        elif pr == "—":
+            pr_str = ""
+            pr = ""
         else:
             pr_str = c(pr, DIM)
 
@@ -385,9 +406,19 @@ def run():
         notes_pad  = (" " * ID_W + "  ") if show_ids else ""
 
         print(f"  {id_col}{label_col}  {status_col}  {pr_col}  {c(age_str, DIM)}")
-        if notes:
-            print(f"  {notes_pad}{c('└', DIM)} {notes}")
-        print()
+        # Truncate prompt to fit terminal width (4 = indent + connector + space)
+        if prompt_line:
+            max_prompt = max(40, cols - 4 - len(notes_pad))
+            truncated = prompt_line[:max_prompt - 1] + "…" if len(prompt_line) > max_prompt else prompt_line
+            prompt_display = c(f"> {truncated}", DIM)
+        else:
+            prompt_display = ""
+        sub_lines = [l for l in [prompt_display, notes] if l]
+        for i, line in enumerate(sub_lines):
+            connector = "└" if i == len(sub_lines) - 1 else "├"
+            print(f"  {notes_pad}{c(connector, DIM)} {line}")
+        if sub_lines:
+            print()
 
 
 def cleanup_lockfile():
