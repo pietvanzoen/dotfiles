@@ -33,12 +33,12 @@ End each response with a one-line status summary so the user can quickly regain 
 > **[current task] → [next step]**
 
 ## Model usage
-At the start of a task, suggest switching to a lighter model if the task doesn't need Opus:
+At the start of a task, suggest switching to an appropriate model based on the following:
 - **Sonnet** is sufficient for: reading/explaining code, simple edits, git operations, writing docs, answering questions
 - **Haiku** is sufficient for: quick lookups, single-file edits, running commands, short Q&A
 - **Opus** is warranted for: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
 
-Include a prominent model suggestion in the session start output, e.g.:
+Include a prominent model suggestion in the task start output, e.g.:
 
 **> Switch to Haiku (Opt+P) — this task doesn't need Sonnet.**
 
