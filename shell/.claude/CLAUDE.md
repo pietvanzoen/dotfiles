@@ -8,7 +8,11 @@ Run `/notes` in the background after **every response** where any of the followi
 - a code review or PR review was run
 - project state or global config changed in any meaningful way (e.g. CLAUDE.md edits, new config files)
 
-Use the Skill tool with `run_in_background: true` so it doesn't delay the response.
+Run in background with a single Bash call:
+```
+Bash(claude-notes-update "<done> → <next step>", run_in_background: true)
+```
+Be detailed — include file names, ticket IDs, feature names. No trailing punctuation.
 
 ## Session start
 At the beginning of each new session, display this shortcuts reminder:

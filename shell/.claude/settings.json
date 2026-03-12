@@ -51,6 +51,7 @@
       "Read(.claude-notes)",
       "Write(.claude-notes)",
       "Edit(.claude-notes)",
+      "Bash(claude-notes-update *)",
       "Skill(notes)"
     ],
     "deny": [

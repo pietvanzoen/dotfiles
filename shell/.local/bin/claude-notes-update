@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Update .claude-notes with an AI summary, preserving the prompt: line.
+# Usage: claude-notes-update "summary text here"
+# Fetches PR info via gh if no pr: line exists yet.
+
+set -euo pipefail
+
+summary="${1:-}"
+if [ -z "$summary" ]; then
+  echo "Usage: claude-notes-update <summary>" >&2
+  exit 1
+fi
+
+notes_file=".claude-notes"
+
+# Preserve existing prompt: and pr: lines
+prompt_line=""
+pr_line=""
+if [ -f "$notes_file" ]; then
+  prompt_line=$(grep '^prompt:' "$notes_file" 2>/dev/null || true)
+  pr_line=$(grep '^pr:' "$notes_file" 2>/dev/null || true)
+fi
+
+# Fetch PR info if not already cached
+if [ -z "$pr_line" ]; then
+  branch=$(git branch --show-current 2>/dev/null || true)
+  if [ -n "$branch" ] && [ "$branch" != "main" ] && [ "$branch" != "master" ]; then
+    pr_json=$(gh pr view --json number,state,url 2>/dev/null || true)
+    if [ -n "$pr_json" ] && [ "$pr_json" != "null" ]; then
+      pr_num=$(echo "$pr_json" | jq -r '.number // empty')
+      pr_state=$(echo "$pr_json" | jq -r '.state // empty' | tr '[:upper:]' '[:lower:]')
+      pr_url=$(echo "$pr_json" | jq -r '.url // empty')
+      if [ -n "$pr_num" ]; then
+        pr_line="pr: #${pr_num} ${pr_state} ${pr_url}"
+      fi
+    fi
+  fi
+fi
+
+# Write notes file
+{
+  [ -n "$prompt_line" ] && echo "$prompt_line" || true
+  echo "$summary"
+  [ -n "$pr_line" ] && echo "$pr_line" || true
+} > "$notes_file"
