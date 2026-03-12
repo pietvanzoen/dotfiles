@@ -63,6 +63,7 @@ function gwo() {
 
   cd "$worktree_dir" || return 1
   local window_name="${repo_name}/${branch}"
+  tmux set-window-option automatic-rename off 2>/dev/null || true
   tmux rename-window "${window_name:0:50}" 2>/dev/null || true
 
   if [[ $is_new_worktree -eq 1 ]]; then
