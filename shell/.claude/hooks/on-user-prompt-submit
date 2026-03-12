@@ -22,7 +22,10 @@ if [ "$completed" -gt 0 ]; then
     -contentImage "$HOME/.claude/icons/claude.png"
 fi
 
-[ -n "$TMUX" ] && tmux rename-window "⏺ $(basename "${cwd:-$PWD}")"
+if [ -n "$TMUX" ]; then
+  current_name=$(tmux display-message -p '#{window_name}' 2>/dev/null)
+  [[ "$current_name" != "⏺ "* ]] && tmux rename-window "⏺ $current_name"
+fi
 
 # Update prompt: line in .claude-notes (create file if absent)
 notes_file="${cwd}/.claude-notes"

@@ -28,15 +28,14 @@ function gwo() {
     branch="$1"
   fi
 
-  local repo_root repo_name repo_parent dir_slug worktree_dir ticket_id
+  local repo_root repo_name repo_parent dir_slug worktree_dir
   repo_root=$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')
   repo_name=$(basename "$repo_root")
   repo_parent=$(dirname "$repo_root")
-  ticket_id=$(echo "$branch" | grep -oE '^[a-z]+-[0-9]+' || true)
-  if [[ -n "$ticket_id" ]]; then
-    dir_slug="$ticket_id"
-  else
-    dir_slug="${branch//\//-}"
+  dir_slug="${branch//\//-}"
+  if (( ${#dir_slug} > 40 )); then
+    dir_slug="${dir_slug:0:40}"
+    dir_slug="${dir_slug%-*}"
   fi
   worktree_dir="${repo_parent}/${repo_name}-${dir_slug}"
 
@@ -62,9 +61,6 @@ function gwo() {
   fi
 
   cd "$worktree_dir" || return 1
-  local window_name="${repo_name}/${ticket_id:-$branch}"
-  tmux set-window-option automatic-rename off 2>/dev/null || true
-  tmux rename-window "${window_name:0:50}" 2>/dev/null || true
 
   if [[ $is_new_worktree -eq 1 ]]; then
     echo "✓ Created and navigated to new worktree: $branch"
