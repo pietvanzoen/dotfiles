@@ -429,7 +429,7 @@ def run():
                 pr_color = BLUE
             else:
                 pr_color = DIM
-            pr_str = c(hyperlink(pr_url, pr_display), pr_color)
+            pr_str = hyperlink(pr_url, c(pr_display, pr_color))
             pr = pr_display  # use display text for padding calculation
         elif pr == "—":
             pr_str = ""
