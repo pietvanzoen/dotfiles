@@ -32,8 +32,6 @@ End each response with a one-line status summary so the user can quickly regain 
 
 > **[current task] → [next step]**
 
-Omit when the conversation is idle or the task is fully complete.
-
 ## Model usage
 At the start of a session, suggest switching to a lighter model if the task doesn't need Opus:
 - **Sonnet** is sufficient for: reading/explaining code, simple edits, git operations, writing docs, answering questions
