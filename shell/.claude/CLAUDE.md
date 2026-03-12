@@ -116,7 +116,7 @@ and proactively suggest the next action:
    - Assess review comments and suggest fixes
    - Make necessary changes
    - Reply to comments using proper format (see "PR review comments")
-   - Resolve comments once addressed
+   - Do NOT resolve comments — the user resolves them in the GitHub UI
    - Prompt: "All comments addressed. Push updates?"
 
 7. **Human review**
