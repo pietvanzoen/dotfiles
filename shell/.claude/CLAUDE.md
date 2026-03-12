@@ -38,7 +38,7 @@ At the start of a task, suggest switching to an appropriate model based on the f
 - **Haiku** is sufficient for: quick lookups, single-file edits, running commands, short Q&A
 - **Opus** is warranted for: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
 
-Include a prominent model suggestion in the task start output, e.g.:
+Include a prominent model suggestion in the task start output, e.g.:  
 
 **> Switch to Haiku (Opt+P) — this task doesn't need Sonnet.**
 
@@ -75,3 +75,13 @@ Before committing code: **always run the project's linter/formatter if available
 
 ## Git commands
 Run git commands as separate tool calls, one at a time. Never chain them with `&&` or `;` in a single Bash call. This keeps the activity history clear and readable in the output, and makes it easier to see the progression of changes.
+
+## Task Workflow
+- Checkout the branch relevant to the task. If a new branch is needed, create and check it out.
+- Gather any context about relevant Linear tickets or century bugs.
+- Plan the work and discuss possible solutions and trade-offs.
+- Complete development.
+- Open a pull request (PR). Claude can run a PR review locally.
+- Copilot will automatically review the PR once available. Assess and address any PR comments.
+- Reply to comments and resolve them as needed.
+- When ready, submit the PR for human review (if appropriate).
