@@ -23,3 +23,14 @@ if [ "$completed" -gt 0 ]; then
 fi
 
 [ -n "$TMUX" ] && tmux rename-window "⏺ $(basename "${cwd:-$PWD}")"
+
+# Seed .claude-notes from first prompt if none exists yet
+notes_file="${cwd}/.claude-notes"
+if [ -n "$cwd" ] && [ "$cwd" != "null" ] && [ ! -f "$notes_file" ]; then
+  prompt=$(echo "$input" | jq -r '.prompt // ""' 2>/dev/null)
+  # Skip slash commands and empty prompts
+  if [ -n "$prompt" ] && [[ "$prompt" != /* ]]; then
+    first_line=$(echo "$prompt" | head -1 | cut -c1-120)
+    echo "$first_line" > "$notes_file"
+  fi
+fi
