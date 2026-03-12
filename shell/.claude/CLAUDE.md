@@ -39,7 +39,6 @@ At the start of a task, suggest switching to an appropriate model based on the f
 - **Opus** is warranted for: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
 
 Include a prominent model suggestion in the task start output, e.g.:  
-
 **> Switch to Haiku (Opt+P) — this task doesn't need Sonnet.**
 
 ## TDD
@@ -77,11 +76,57 @@ Before committing code: **always run the project's linter/formatter if available
 Run git commands as separate tool calls, one at a time. Never chain them with `&&` or `;` in a single Bash call. This keeps the activity history clear and readable in the output, and makes it easier to see the progression of changes.
 
 ## Task Workflow
-- Checkout the branch relevant to the task. If a new branch is needed, create and check it out.
-- Gather any context about relevant Linear tickets or century bugs.
-- Plan the work and discuss possible solutions and trade-offs.
-- Complete development.
-- Open a pull request (PR). Claude can run a PR review locally.
-- Copilot will automatically review the PR once available. Assess and address any PR comments.
-- Reply to comments and resolve them as needed.
-- When ready, submit the PR for human review (if appropriate).
+When starting a new task, Claude should guide the user through these steps
+and proactively suggest the next action:
+
+1. **Branch setup**
+   - Check current branch status
+   - If not on a task-specific branch, prompt: "Should I create a new branch
+     for this task, or switch to an existing one?"
+   - Create/checkout the appropriate branch
+
+2. **Context gathering**
+   - Ask: "Are there any Linear tickets or Sentry bugs related to this
+     task?"
+   - Gather and reference ticket IDs and bug reports
+   - Run `/notes` to document the task starting point
+
+3. **Planning**
+   - Present a plan outlining the approach
+   - Discuss possible solutions and trade-offs
+   - Get user approval before implementation
+   - Run `/notes` after plan is accepted
+
+4. **Development**
+   - Follow TDD workflow if writing tests
+   - Make changes incrementally
+   - Run linter/formatter before committing (see "Linting and formatting")
+   - Run tests to verify functionality
+   - Commit work with clear messages
+   - Run `/notes` after commits
+
+5. **PR creation**
+   - Prompt: "Development is complete. Should I open a pull request?"
+   - Open the PR with descriptive title and body (include ticket references)
+   - Use Claude's built-in PR review skill to review the changes
+   - Run `/notes` after PR is opened
+
+6. **PR review response**
+   - Wait for Copilot's automatic review
+   - Assess review comments and suggest fixes
+   - Make necessary changes
+   - Reply to comments using proper format (see "PR review comments")
+   - Resolve comments once addressed
+   - Prompt: "All comments addressed. Push updates?"
+
+7. **Human review**
+   - Once automated checks pass and comments are resolved, prompt: "Ready
+     for human review. Shall I request reviewers?"
+   - Wait for human approval before merging
+
+**At each step, Claude should:**
+- Indicate the current step in the workflow
+- Complete the current step's actions
+- Explicitly suggest the next step
+- Wait for user confirmation before major actions (creating branches,
+  opening PRs, merging)
