@@ -68,6 +68,7 @@
       "Write(./.env*)"
     ]
   },
+  "model": "opus",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -132,6 +133,5 @@
     "claude-md-management@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
-  },
-  "model": "haiku"
+  }
 }
