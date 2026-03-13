@@ -13,6 +13,7 @@ Run in background with a single Bash call — use `run_in_background: true` and 
 Bash(claude-notes-update "<done> → <next step>", run_in_background: true)
 ```
 Be detailed — include file names, ticket IDs, feature names. No trailing punctuation.
+Keep the `<next step>` part to **40 characters or fewer** where possible — it maps to a fixed-width column in the sessions dashboard.
 
 ## Session start
 At the beginning of each new session, display this shortcuts reminder:
