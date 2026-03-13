@@ -6,7 +6,12 @@
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir')
 
+# Truncation helpers
+# Dir: trim from the RIGHT so the beginning stays visible (max 30 chars)
 dir_name=$(basename "$cwd")
+if [ ${#dir_name} -gt 30 ]; then
+  dir_name="${dir_name:0:29}…"
+fi
 
 # Colors
 C_RESET=$(printf '\033[0m')
@@ -23,6 +28,10 @@ pr_part=""
 
 if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
+  # Truncate long branch names from the right (keep ticket prefix visible, max 35 chars)
+  if [ ${#branch} -gt 35 ]; then
+    branch="${branch:0:34}…"
+  fi
 
   # Dirty / staged indicators
   dirty=""
