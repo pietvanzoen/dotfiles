@@ -74,6 +74,31 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   fi
 fi
 
+# Notes: stage + next step from .claude-notes (local file read, no blocking)
+notes_part=""
+notes_file="$cwd/.claude-notes"
+if [ -f "$notes_file" ]; then
+  notes_stage=$(grep '^stage:' "$notes_file" 2>/dev/null | head -1 | sed 's/^stage: *//')
+  notes_next=$(grep '^next:' "$notes_file" 2>/dev/null | head -1 | sed 's/^next: *//')
+  if [ -n "$notes_stage" ]; then
+    case "$notes_stage" in
+      setup|context)          stage_color='\033[90m' ;;
+      planning)               stage_color='\033[33m' ;;
+      dev)                    stage_color='\033[32m' ;;
+      pr|review|human-review) stage_color='\033[36m' ;;
+      cleanup)                stage_color='\033[34m' ;;
+      *)                      stage_color='\033[90m' ;;
+    esac
+    notes_part=" $(printf "$stage_color")${notes_stage}$(printf '\033[0m')"
+    if [ -n "$notes_next" ]; then
+      if [ ${#notes_next} -gt 35 ]; then
+        notes_next="${notes_next:0:34}…"
+      fi
+      notes_part="${notes_part} $(printf '\033[90m')› ${notes_next}$(printf '\033[0m')"
+    fi
+  fi
+fi
+
 # Session cost & energy range estimate
 cost_part=""
 cost_usd=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
@@ -111,4 +136,4 @@ if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; th
   cost_part=" $(printf '\033[90m')${cost_fmt} ⚡${energy_wh}Wh ∿${water_ml}mL ctx:${ctx_used}k/${ctx_size}k$(printf '\033[0m')"
 fi
 
-printf "$(printf '\033[95m')%s$(printf '\033[0m')%s%s%s%s" "$dir_name" "$git_status" "$pr_part" "$model_part" "$cost_part"
+printf "$(printf '\033[95m')%s$(printf '\033[0m')%s%s%s%s%s" "$dir_name" "$git_status" "$pr_part" "$notes_part" "$model_part" "$cost_part"
