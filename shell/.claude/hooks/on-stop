@@ -26,3 +26,6 @@ if [ -n "$TMUX" ]; then
     tmux set-window-option automatic-rename on 2>/dev/null || true
   fi
 fi
+
+# Refresh notes (PR info, mtime) in the background
+(cd "$cwd" && claude-notes-update --refresh) &

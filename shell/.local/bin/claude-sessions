@@ -135,25 +135,26 @@ def human_age(age):
 
 
 def read_notes(cwd):
-    """Return (summary, prompt_line, next_line, pr_str) from .claude-notes, or ('', '', '', '') if absent."""
+    """Return (summary, prompt_line, next_line, pr_str, stage) from .claude-notes, or ('', '', '', '', '') if absent."""
     notes_path = os.path.join(cwd, ".claude-notes")
     if not os.path.isfile(notes_path):
-        return "", "", "", ""
+        return "", "", "", "", ""
     try:
         with open(notes_path) as f:
             lines = [l.strip() for l in f.readlines()]
-        summary = next((l for l in lines if not l.startswith(("prompt:", "pr:", "next:"))), "")
+        summary = next((l for l in lines if not l.startswith(("prompt:", "pr:", "next:", "stage:"))), "")
         prompt_line = next((l[7:].strip() for l in lines if l.startswith("prompt:")), "")
         next_line = next((l[5:].strip() for l in lines if l.startswith("next:")), "")
         pr_str = next((l[3:].strip() for l in lines if l.startswith("pr:")), "")
-        return summary, prompt_line, next_line, pr_str
+        stage = next((l[6:].strip() for l in lines if l.startswith("stage:")), "")
+        return summary, prompt_line, next_line, pr_str, stage
     except OSError:
-        return "", "", "", ""
+        return "", "", "", "", ""
 
 
 def pr_state_from_notes(cwd):
     """Return the PR state string from .claude-notes (e.g. 'merged'), or ''."""
-    _, _prompt, _next, pr_str = read_notes(cwd)
+    _, _prompt, _next, pr_str, _stage = read_notes(cwd)
     if pr_str:
         parts = pr_str.split()
         return parts[1].lower() if len(parts) >= 2 else ""
@@ -254,11 +255,21 @@ def gh_pr_info(cwd, branch):
 # Actual widths are computed dynamically in run() based on terminal width.
 PROJECT_W_PREF, PROJECT_W_MIN = 44, 12
 BRANCH_W_PREF,  BRANCH_W_MIN  = 60, 15
+STAGE_W_PREF,   STAGE_W_MIN   = 24, 12
 NEXT_W_PREF,    NEXT_W_MIN    = 59, 15
 
-# Fixed overhead: 2 indent + 5×2 separators + 12 STATUS + 16 PR + 11 LAST ACTIVE
-FIXED_W      = 51
+# Fixed overhead: 2 indent + 5×2 separators + 12 STATUS + 11 LAST ACTIVE
+FIXED_W      = 35
 FIXED_W_IDS  = FIXED_W + 9  # +7 ID col +2 separator
+
+# Stage label colors
+STAGE_COLORS = {
+    "setup": DIM, "context": DIM,
+    "planning": YELLOW,
+    "dev": GREEN,
+    "pr": CYAN, "review": CYAN, "human-review": CYAN,
+    "cleanup": BLUE,
+}
 
 TICKET_RE = re.compile(r'^[a-z]+-\d+', re.IGNORECASE)
 
@@ -277,19 +288,20 @@ def make_label(cwd, branch):
 
 
 def compute_widths(cols, ids):
-    """Return (project_w, branch_w, next_w) scaled to fit cols."""
+    """Return (project_w, branch_w, stage_w, next_w) scaled to fit cols."""
     fixed = FIXED_W_IDS if ids else FIXED_W
     available = cols - fixed
-    pref = PROJECT_W_PREF + BRANCH_W_PREF + NEXT_W_PREF
-    mins = PROJECT_W_MIN  + BRANCH_W_MIN  + NEXT_W_MIN
+    pref = PROJECT_W_PREF + BRANCH_W_PREF + STAGE_W_PREF + NEXT_W_PREF
+    mins = PROJECT_W_MIN  + BRANCH_W_MIN  + STAGE_W_MIN  + NEXT_W_MIN
     if available >= pref:
-        return PROJECT_W_PREF, BRANCH_W_PREF, NEXT_W_PREF
+        return PROJECT_W_PREF, BRANCH_W_PREF, STAGE_W_PREF, NEXT_W_PREF
     if available <= mins:
-        return PROJECT_W_MIN, BRANCH_W_MIN, NEXT_W_MIN
+        return PROJECT_W_MIN, BRANCH_W_MIN, STAGE_W_MIN, NEXT_W_MIN
     scale = (available - mins) / (pref - mins)
     return (
         PROJECT_W_MIN + int((PROJECT_W_PREF - PROJECT_W_MIN) * scale),
         BRANCH_W_MIN  + int((BRANCH_W_PREF  - BRANCH_W_MIN)  * scale),
+        STAGE_W_MIN   + int((STAGE_W_PREF   - STAGE_W_MIN)   * scale),
         NEXT_W_MIN    + int((NEXT_W_PREF    - NEXT_W_MIN)    * scale),
     )
 
@@ -396,7 +408,7 @@ def run():
     def fetch_project_data(item):
         cwd, (mtime, jsonl, age, branch, project_dir) = item
         dirty = git_dirty_count(cwd)
-        notes, prompt_line, next_line, pr = read_notes(cwd)
+        notes, prompt_line, next_line, pr, stage = read_notes(cwd)
         sid = os.path.basename(jsonl).replace(".jsonl", "")[:7]
         # --pr flag: use cache to avoid hammering the GitHub API every cycle
         if fetch_pr and branch:
@@ -416,7 +428,7 @@ def run():
                 PR_CACHE[key] = (time.time(), pr)
         if not pr:
             pr = "—"
-        return cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid
+        return cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(fetch_project_data, projects))
@@ -429,17 +441,17 @@ def run():
         cols = 120
 
     ID_W = 7
-    project_w, branch_w, next_w = compute_widths(cols, show_ids)
+    project_w, branch_w, stage_w, next_w = compute_widths(cols, show_ids)
 
     id_pre = f"{'ID':<{ID_W}}  " if show_ids else ""
     id_div = f"{'─' * ID_W}  " if show_ids else ""
-    header  = f"  {id_pre}{'PROJECT':<{project_w}}  {'BRANCH':<{branch_w}}  {'STATUS':<12}  {'PR':<16}  {'NEXT':<{next_w}}  LAST ACTIVE"
-    divider = f"  {id_div}{'─' * project_w}  {'─' * branch_w}  {'─' * 12}  {'─' * 16}  {'─' * next_w}  {'─' * 11}"
+    header  = f"  {id_pre}{'PROJECT':<{project_w}}  {'BRANCH':<{branch_w}}  {'STATUS':<12}  {'STAGE':<{stage_w}}  {'NEXT':<{next_w}}  LAST ACTIVE"
+    divider = f"  {id_div}{'─' * project_w}  {'─' * branch_w}  {'─' * 12}  {'─' * stage_w}  {'─' * next_w}  {'─' * 11}"
     print(c(header, BOLD))
     print(c(divider, DIM))
     print()
 
-    for cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid in results:
+    for cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage in results:
         proj, branch_display = make_label(cwd, branch)
         if len(proj) > project_w:
             proj = proj[:project_w - 1] + "…"
@@ -454,6 +466,9 @@ def run():
             status_str = c("clean", GREEN)
             status_pad = "clean"
 
+        # Build combined STAGE column: "stage · #PR state [✓]"
+        pr_part = ""
+        pr_part_plain = ""
         if pr.startswith("#"):
             parts = pr.split()
             state = parts[1].lower() if len(parts) >= 2 else ""
@@ -470,13 +485,32 @@ def run():
                 pr_color = BLUE
             else:
                 pr_color = DIM
-            pr_str = hyperlink(pr_url, c(pr_display, pr_color))
-            pr = pr_display  # use display text for padding calculation
-        elif pr == "—":
-            pr_str = ""
-            pr = ""
-        else:
-            pr_str = c(pr, DIM)
+            pr_part = hyperlink(pr_url, c(pr_display, pr_color))
+            pr_part_plain = pr_display
+        elif pr != "—":
+            pr_part = c(pr, DIM)
+            pr_part_plain = pr
+
+        # Compose stage display
+        stage_display = ""
+        stage_plain = ""
+        if stage and pr_part:
+            stage_color = STAGE_COLORS.get(stage, DIM)
+            stage_display = c(stage, stage_color) + c(" · ", DIM) + pr_part
+            stage_plain = f"{stage} · {pr_part_plain}"
+        elif stage:
+            stage_color = STAGE_COLORS.get(stage, DIM)
+            stage_display = c(stage, stage_color)
+            stage_plain = stage
+        elif pr_part:
+            stage_display = pr_part
+            stage_plain = pr_part_plain
+
+        # Truncate stage plain text if needed
+        if len(stage_plain) > stage_w:
+            # Rebuild truncated — prefer showing stage label
+            stage_plain = stage_plain[:stage_w - 1] + "…"
+            stage_display = c(stage_plain, STAGE_COLORS.get(stage, DIM) if stage else DIM)
 
         # Pad manually since color codes throw off f-string width
         next_plain   = (next_line[:next_w - 1] + "…" if len(next_line) > next_w else next_line)
@@ -484,11 +518,11 @@ def run():
         project_col  = c(proj, BOLD)             + " " * (project_w - len(proj))
         branch_col   = c(branch_display, DIM)    + " " * (branch_w - len(branch_display))
         status_col   = status_str                + " " * (12 - len(status_pad))
-        pr_col       = pr_str                    + " " * (16 - len(pr))
+        stage_col    = stage_display             + " " * (stage_w - len(stage_plain))
         next_col     = c(next_plain, CYAN)       + " " * (next_w - len(next_plain))
         notes_pad    = (" " * ID_W + "  ") if show_ids else ""
 
-        print(f"  {id_col}{project_col}  {branch_col}  {status_col}  {pr_col}  {next_col}  {c(age_str, DIM)}")
+        print(f"  {id_col}{project_col}  {branch_col}  {status_col}  {stage_col}  {next_col}  {c(age_str, DIM)}")
         # Truncate prompt to fit terminal width (4 = indent + connector + space)
         if prompt_line:
             max_prompt = max(40, cols - 4 - len(notes_pad))

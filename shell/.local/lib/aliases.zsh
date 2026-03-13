@@ -70,6 +70,7 @@ function gwo() {
 }
 
 function cc() {
+  clear
   local branch
   branch=$(git branch --show-current 2>/dev/null) || true
 

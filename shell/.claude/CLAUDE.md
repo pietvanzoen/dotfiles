@@ -1,19 +1,18 @@
 @~/.claude/CLAUDE.local.md
 
 ## Session notes
-Run `/notes` in the background after **every response** where any of the following happened:
-- a plan was presented or accepted (run notes, then begin implementation)
-- code was committed or pushed
-- a task or milestone was completed
-- a code review or PR review was run
-- project state or global config changed in any meaningful way (e.g. CLAUDE.md edits, new config files)
+Run `/notes` as the **last action in every response**. Skip only for trivial replies
+(acknowledgements, clarifications, short answers with no code changes).
 
 Run in background with a single Bash call — use `run_in_background: true` and do NOT add `&` or redirections to the command string itself:
 ```
-Bash(claude-notes-update "<done> → <next step>", run_in_background: true)
+Bash(claude-notes-update --stage dev "<done> → <next step>", run_in_background: true)
 ```
 Be detailed — include file names, ticket IDs, feature names. No trailing punctuation.
 Keep the `<next step>` part to **40 characters or fewer** where possible — it maps to a fixed-width column in the sessions dashboard.
+
+Include `--stage` only when the workflow stage changes (not on every update). Valid stages:
+`setup` · `context` · `planning` · `dev` · `pr` · `review` · `human-review` · `cleanup`
 
 ## Session start
 At the beginning of each new session, display this shortcuts reminder:
@@ -131,6 +130,11 @@ and proactively suggest the next action:
    - Once automated checks pass and comments are resolved, prompt: "Ready
      for human review. Shall I request reviewers?"
    - Wait for human approval before merging
+
+8. **Cleanup**
+   - After the PR is merged, suggest running `/revise-claude-md` to capture
+     any learnings from the session into CLAUDE.md
+   - Run `/notes` with `--stage cleanup`
 
 **At each step, Claude should:**
 - Indicate the current step in the workflow

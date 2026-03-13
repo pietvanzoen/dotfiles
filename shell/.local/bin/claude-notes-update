@@ -1,25 +1,62 @@
 #!/usr/bin/env bash
-# Update .claude-notes with an AI summary, preserving the prompt: line.
-# Usage: claude-notes-update "summary text here"
+# Update .claude-notes with an AI summary, preserving the prompt: and stage: lines.
+# Usage: claude-notes-update [--stage <name>] "summary text here"
+#        claude-notes-update --refresh   (refresh PR info only, no summary needed)
 # Fetches and refreshes PR info (number, state, approval) via gh.
 
 set -euo pipefail
 
+# Parse flags
+stage_arg=""
+refresh_mode=false
+while [[ "${1:-}" == --* ]]; do
+  case "$1" in
+    --stage)
+      stage_arg="${2:-}"
+      if [ -z "$stage_arg" ]; then
+        echo "Usage: claude-notes-update [--stage <name>] <summary>" >&2
+        exit 1
+      fi
+      shift 2
+      ;;
+    --refresh)
+      refresh_mode=true
+      shift
+      ;;
+    *)
+      echo "Unknown flag: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
 summary="${1:-}"
-if [ -z "$summary" ]; then
-  echo "Usage: claude-notes-update <summary>" >&2
+if [ "$refresh_mode" = false ] && [ -z "$summary" ]; then
+  echo "Usage: claude-notes-update [--stage <name>] <summary>" >&2
   exit 1
 fi
 
 notes_file=".claude-notes"
 
-# Preserve existing prompt: line
+# Preserve existing lines
 prompt_line=""
+stage_line=""
+summary_line=""
+next_line=""
 if [ -f "$notes_file" ]; then
   prompt_line=$(grep '^prompt:' "$notes_file" 2>/dev/null || true)
+  stage_line=$(grep '^stage:' "$notes_file" 2>/dev/null || true)
+  next_line=$(grep '^next:' "$notes_file" 2>/dev/null || true)
+  # Summary is the first non-metadata line (no key: prefix)
+  summary_line=$(grep -v '^prompt:\|^stage:\|^next:\|^pr:' "$notes_file" 2>/dev/null | head -1 || true)
 fi
 
-# Always refresh PR info
+# --stage flag overrides preserved stage
+if [ -n "$stage_arg" ]; then
+  stage_line="stage: $stage_arg"
+fi
+
+# Refresh PR info
 pr_line=""
 branch=$(git branch --show-current 2>/dev/null || true)
 if [ -n "$branch" ] && [ "$branch" != "main" ] && [ "$branch" != "master" ]; then
@@ -39,6 +76,18 @@ if [ -n "$branch" ] && [ "$branch" != "main" ] && [ "$branch" != "master" ]; the
   fi
 fi
 
+# --refresh mode: just update PR info, preserve everything else
+if [ "$refresh_mode" = true ]; then
+  {
+    [ -n "$prompt_line" ] && echo "$prompt_line" || true
+    [ -n "$stage_line" ] && echo "$stage_line" || true
+    [ -n "$summary_line" ] && echo "$summary_line" || true
+    [ -n "$next_line" ] && echo "$next_line" || true
+    [ -n "$pr_line" ] && echo "$pr_line" || true
+  } > "$notes_file"
+  exit 0
+fi
+
 # Split summary on " → " into done/next parts
 done_part="$summary"
 next_part=""
@@ -56,6 +105,7 @@ fi
 # Write notes file
 {
   [ -n "$prompt_line" ] && echo "$prompt_line" || true
+  [ -n "$stage_line" ] && echo "$stage_line" || true
   echo "$done_part"
   [ -n "$next_part" ] && echo "next: $next_part" || true
   [ -n "$pr_line" ] && echo "$pr_line" || true
