@@ -94,7 +94,7 @@ if [ -f "$notes_file" ]; then
       if [ ${#notes_next} -gt 35 ]; then
         notes_next="${notes_next:0:34}…"
       fi
-      notes_part="${notes_part} $(printf '\033[90m')› ${notes_next}$(printf '\033[0m')"
+      notes_part="${notes_part} $(printf '\033[90m')›$(printf '\033[0m') ${notes_next}"
     fi
   fi
 fi
