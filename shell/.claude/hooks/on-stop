@@ -10,7 +10,7 @@ if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
   cwd=$(pwd)
 fi
 
-dir_context=$(echo "$cwd" | sed "s|$HOME|~|" | awk -F'/' '{if (NF>=2) print $(NF-1)"/"$NF; else print $NF}')
+dir_context=$(basename "$cwd")
 
 terminal-notifier \
   -title "Claude Code - $dir_context" \
