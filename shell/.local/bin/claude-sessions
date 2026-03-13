@@ -244,7 +244,8 @@ def gh_pr_info(cwd, branch):
     return "—"
 
 
-NAME_W = 50
+PROJECT_W = 20
+BRANCH_W  = 28
 try:
     cols = os.get_terminal_size().columns
 except OSError:
@@ -253,7 +254,7 @@ except OSError:
 TICKET_RE = re.compile(r'^[a-z]+-\d+', re.IGNORECASE)
 
 def make_label(cwd, branch):
-    """Return (project, branch_suffix) for separate styling."""
+    """Return (project, display_branch) for separate column rendering."""
     project = os.path.basename(cwd)
     if branch:
         m = TICKET_RE.match(branch)
@@ -263,17 +264,11 @@ def make_label(cwd, branch):
             display_branch = branch
     else:
         display_branch = ""
-    suffix = f":{display_branch}" if display_branch else ""
-    total = len(project) + len(suffix)
-    if total > NAME_W:
-        # Truncate branch first, then project if needed
-        avail = NAME_W - len(project) - 1  # -1 for ellipsis
-        if avail >= 2:  # room for ":" + at least 1 char
-            suffix = f":{display_branch[:avail - 1]}…"
-        else:
-            suffix = ""
-            project = project[:NAME_W - 1] + "…"
-    return project, suffix
+    if len(project) > PROJECT_W:
+        project = project[:PROJECT_W - 1] + "…"
+    if len(display_branch) > BRANCH_W:
+        display_branch = display_branch[:BRANCH_W - 1] + "…"
+    return project, display_branch
 
 
 def run():
@@ -314,9 +309,10 @@ def run():
 
         if delete_id:
             if sid.startswith(delete_id) or delete_id == sid:
-                proj, suf = make_label(cwd, branch)
+                proj, branch_display = make_label(cwd, branch)
+                label = proj + (f" {branch_display}" if branch_display else "")
                 is_worktree = os.path.isdir(cwd) and find_worktree_root(cwd)
-                print(f"  Session: {proj}{suf} ({sid})")
+                print(f"  Session: {label} ({sid})")
                 print(f"  Path:    {cwd}")
                 if is_worktree:
                     print(f"  Worktree will also be removed")
@@ -325,7 +321,7 @@ def run():
                     if is_worktree:
                         if remove_worktree(cwd):
                             print(f"  Removed worktree: {cwd}")
-                    print(f"  Deleted: {proj}{suf} ({sid})")
+                    print(f"  Deleted: {label} ({sid})")
                     shutil.rmtree(entry.path)
                 else:
                     print("  Skipped.")
@@ -347,10 +343,11 @@ def run():
                 if pr_str and pr_str != "—":
                     state = pr_str.split()[1] if len(pr_str.split()) >= 2 else ""
             if state == "merged":
-                proj, suf = make_label(cwd, branch)
+                proj, branch_display = make_label(cwd, branch)
+                label = proj + (f" {branch_display}" if branch_display else "")
                 if remove_worktree(cwd):
                     print(f"  Removed worktree: {cwd}")
-                print(f"  Pruned: {proj}{suf}")
+                print(f"  Pruned: {label}")
                 shutil.rmtree(entry.path)
             continue
 
@@ -394,16 +391,14 @@ def run():
     NEXT_W = 28
     id_pre = f"{'ID':<{ID_W}}  " if show_ids else ""
     id_div = f"{'─' * ID_W}  " if show_ids else ""
-    header = f"  {id_pre}{'SESSION':<{NAME_W}}  {'STATUS':<12}  {'PR':<16}  {'NEXT':<{NEXT_W}}  LAST ACTIVE"
-    divider = f"  {id_div}{'─' * NAME_W}  {'─' * 12}  {'─' * 16}  {'─' * NEXT_W}  {'─' * 11}"
+    header = f"  {id_pre}{'PROJECT':<{PROJECT_W}}  {'BRANCH':<{BRANCH_W}}  {'STATUS':<12}  {'PR':<16}  {'NEXT':<{NEXT_W}}  LAST ACTIVE"
+    divider = f"  {id_div}{'─' * PROJECT_W}  {'─' * BRANCH_W}  {'─' * 12}  {'─' * 16}  {'─' * NEXT_W}  {'─' * 11}"
     print(c(header, BOLD))
     print(c(divider, DIM))
     print()
 
     for cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid in results:
-        proj, suf = make_label(cwd, branch)
-        label_plain = proj + suf
-        label_styled = c(proj, BOLD) + c(suf, DIM)
+        proj, branch_display = make_label(cwd, branch)
         age_str = human_age(age)
 
         if dirty:
@@ -438,15 +433,16 @@ def run():
             pr_str = c(pr, DIM)
 
         # Pad manually since color codes throw off f-string width
-        next_plain = (next_line[:NEXT_W - 1] + "…" if len(next_line) > NEXT_W else next_line)
-        id_col     = (c(sid, DIM) + " " * (ID_W - len(sid)) + "  ") if show_ids else ""
-        label_col  = label_styled         + " " * (NAME_W - len(label_plain))
-        status_col = status_str           + " " * (12 - len(status_pad))
-        pr_col     = pr_str               + " " * (16 - len(pr))
-        next_col   = c(next_plain, CYAN)  + " " * (NEXT_W - len(next_plain))
-        notes_pad  = (" " * ID_W + "  ") if show_ids else ""
+        next_plain   = (next_line[:NEXT_W - 1] + "…" if len(next_line) > NEXT_W else next_line)
+        id_col       = (c(sid, DIM) + " " * (ID_W - len(sid)) + "  ") if show_ids else ""
+        project_col  = c(proj, BOLD)             + " " * (PROJECT_W - len(proj))
+        branch_col   = c(branch_display, DIM)    + " " * (BRANCH_W - len(branch_display))
+        status_col   = status_str                + " " * (12 - len(status_pad))
+        pr_col       = pr_str                    + " " * (16 - len(pr))
+        next_col     = c(next_plain, CYAN)       + " " * (NEXT_W - len(next_plain))
+        notes_pad    = (" " * ID_W + "  ") if show_ids else ""
 
-        print(f"  {id_col}{label_col}  {status_col}  {pr_col}  {next_col}  {c(age_str, DIM)}")
+        print(f"  {id_col}{project_col}  {branch_col}  {status_col}  {pr_col}  {next_col}  {c(age_str, DIM)}")
         # Truncate prompt to fit terminal width (4 = indent + connector + space)
         if prompt_line:
             max_prompt = max(40, cols - 4 - len(notes_pad))
