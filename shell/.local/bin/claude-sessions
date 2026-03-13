@@ -244,8 +244,8 @@ def gh_pr_info(cwd, branch):
     return "—"
 
 
-PROJECT_W = 20
-BRANCH_W  = 28
+PROJECT_W = 30
+BRANCH_W  = 40
 try:
     cols = os.get_terminal_size().columns
 except OSError:
