@@ -69,6 +69,10 @@ To reply **in a review thread** (not as a general PR comment), use:
 `gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies -X POST -f body="..."`
 Note: the URL must include the PR number — `pulls/{pr}/comments/{id}/replies`, NOT `pulls/comments/{id}/replies`.
 
+**Reading inline review comments:** `gh pr view --comments` silently omits line-level (inline) code review comments —
+it only shows general PR comments. To read inline comments, use:
+`gh api repos/{owner}/{repo}/pulls/{pr}/comments`
+
 ## Linting and formatting
 Before committing code: **always run the project's linter/formatter if available**. Check for a lint command in the project (package.json, Makefile, pyproject.toml, etc.) and run it with auto-fix flags before staging commits.
 
