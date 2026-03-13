@@ -25,6 +25,13 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - Git custom commands are named `git-<command>` in `git/.local/bin/`
 - Use `*.example` suffix for files that contain placeholders for secrets
 
+## Environment
+
+- **Terminal**: iTerm2 on macOS
+- **Shell**: Zsh
+- **Multiplexer**: tmux (config in `shell/.tmux.conf`)
+- **Editor**: Neovim (Lua-based, lazy.nvim)
+
 ## Workflow
 
 After creating new files that need to be stowed (executables, configs, etc.), run:

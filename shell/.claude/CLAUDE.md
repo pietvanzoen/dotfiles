@@ -90,7 +90,8 @@ and proactively suggest the next action:
    - Ask: "Are there any Linear tickets or Sentry bugs related to this
      task?"
    - Gather and reference ticket IDs and bug reports
-   - Suggest the appropriate model based on task complexity (see Model usage)
+   - If not already on Opus, suggest switching: planning benefits from
+     Opus-level reasoning
    - Run `/notes` to document the task starting point
 
 3. **Planning**
@@ -101,6 +102,8 @@ and proactively suggest the next action:
      any existing description, add a horizontal rule (`---`), and append
      the plan below it
    - Run `/notes` after plan is accepted
+   - After plan is accepted, suggest switching to a lower model for
+     implementation (Sonnet for multi-file work, Haiku for simple edits)
 
 4. **Development**
    - Follow TDD workflow if writing tests
