@@ -250,18 +250,20 @@ def gh_pr_info(cwd, branch):
     return "—"
 
 
-PROJECT_W = 30
-BRANCH_W  = 40
-NEXT_W    = 40
-try:
-    cols = os.get_terminal_size().columns
-except OSError:
-    cols = 120
+# Preferred and minimum widths for variable columns.
+# Actual widths are computed dynamically in run() based on terminal width.
+PROJECT_W_PREF, PROJECT_W_MIN = 30, 12
+BRANCH_W_PREF,  BRANCH_W_MIN  = 40, 15
+NEXT_W_PREF,    NEXT_W_MIN    = 40, 15
+
+# Fixed overhead: 2 indent + 5×2 separators + 12 STATUS + 16 PR + 11 LAST ACTIVE
+FIXED_W      = 51
+FIXED_W_IDS  = FIXED_W + 9  # +7 ID col +2 separator
 
 TICKET_RE = re.compile(r'^[a-z]+-\d+', re.IGNORECASE)
 
 def make_label(cwd, branch):
-    """Return (project, display_branch) for separate column rendering."""
+    """Return (project, display_branch) for separate column rendering (untruncated)."""
     project = os.path.basename(cwd)
     if branch:
         m = TICKET_RE.match(branch)
@@ -271,11 +273,25 @@ def make_label(cwd, branch):
             display_branch = branch
     else:
         display_branch = ""
-    if len(project) > PROJECT_W:
-        project = project[:PROJECT_W - 1] + "…"
-    if len(display_branch) > BRANCH_W:
-        display_branch = display_branch[:BRANCH_W - 1] + "…"
     return project, display_branch
+
+
+def compute_widths(cols, ids):
+    """Return (project_w, branch_w, next_w) scaled to fit cols."""
+    fixed = FIXED_W_IDS if ids else FIXED_W
+    available = cols - fixed
+    pref = PROJECT_W_PREF + BRANCH_W_PREF + NEXT_W_PREF
+    mins = PROJECT_W_MIN  + BRANCH_W_MIN  + NEXT_W_MIN
+    if available >= pref:
+        return PROJECT_W_PREF, BRANCH_W_PREF, NEXT_W_PREF
+    if available <= mins:
+        return PROJECT_W_MIN, BRANCH_W_MIN, NEXT_W_MIN
+    scale = (available - mins) / (pref - mins)
+    return (
+        PROJECT_W_MIN + int((PROJECT_W_PREF - PROJECT_W_MIN) * scale),
+        BRANCH_W_MIN  + int((BRANCH_W_PREF  - BRANCH_W_MIN)  * scale),
+        NEXT_W_MIN    + int((NEXT_W_PREF    - NEXT_W_MIN)    * scale),
+    )
 
 
 def run():
@@ -407,17 +423,28 @@ def run():
 
     # --- Output ---
 
-    ID_W   = 7
+    try:
+        cols = os.get_terminal_size().columns
+    except OSError:
+        cols = 120
+
+    ID_W = 7
+    project_w, branch_w, next_w = compute_widths(cols, show_ids)
+
     id_pre = f"{'ID':<{ID_W}}  " if show_ids else ""
     id_div = f"{'─' * ID_W}  " if show_ids else ""
-    header = f"  {id_pre}{'PROJECT':<{PROJECT_W}}  {'BRANCH':<{BRANCH_W}}  {'STATUS':<12}  {'PR':<16}  {'NEXT':<{NEXT_W}}  LAST ACTIVE"
-    divider = f"  {id_div}{'─' * PROJECT_W}  {'─' * BRANCH_W}  {'─' * 12}  {'─' * 16}  {'─' * NEXT_W}  {'─' * 11}"
+    header  = f"  {id_pre}{'PROJECT':<{project_w}}  {'BRANCH':<{branch_w}}  {'STATUS':<12}  {'PR':<16}  {'NEXT':<{next_w}}  LAST ACTIVE"
+    divider = f"  {id_div}{'─' * project_w}  {'─' * branch_w}  {'─' * 12}  {'─' * 16}  {'─' * next_w}  {'─' * 11}"
     print(c(header, BOLD))
     print(c(divider, DIM))
     print()
 
     for cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid in results:
         proj, branch_display = make_label(cwd, branch)
+        if len(proj) > project_w:
+            proj = proj[:project_w - 1] + "…"
+        if len(branch_display) > branch_w:
+            branch_display = branch_display[:branch_w - 1] + "…"
         age_str = human_age(age)
 
         if dirty:
@@ -452,13 +479,13 @@ def run():
             pr_str = c(pr, DIM)
 
         # Pad manually since color codes throw off f-string width
-        next_plain   = (next_line[:NEXT_W - 1] + "…" if len(next_line) > NEXT_W else next_line)
+        next_plain   = (next_line[:next_w - 1] + "…" if len(next_line) > next_w else next_line)
         id_col       = (c(sid, DIM) + " " * (ID_W - len(sid)) + "  ") if show_ids else ""
-        project_col  = c(proj, BOLD)             + " " * (PROJECT_W - len(proj))
-        branch_col   = c(branch_display, DIM)    + " " * (BRANCH_W - len(branch_display))
+        project_col  = c(proj, BOLD)             + " " * (project_w - len(proj))
+        branch_col   = c(branch_display, DIM)    + " " * (branch_w - len(branch_display))
         status_col   = status_str                + " " * (12 - len(status_pad))
         pr_col       = pr_str                    + " " * (16 - len(pr))
-        next_col     = c(next_plain, CYAN)       + " " * (NEXT_W - len(next_plain))
+        next_col     = c(next_plain, CYAN)       + " " * (next_w - len(next_plain))
         notes_pad    = (" " * ID_W + "  ") if show_ids else ""
 
         print(f"  {id_col}{project_col}  {branch_col}  {status_col}  {pr_col}  {next_col}  {c(age_str, DIM)}")
