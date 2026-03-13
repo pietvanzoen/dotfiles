@@ -106,7 +106,7 @@ if [ -f "$notes_file" ]; then
       fi
       inner="${inner} ${C_DIM}›${C_RESET} ${notes_next}"
     fi
-    notes_part=" ${C_BOLD}|${C_RESET}${inner}${C_BOLD}|${C_RESET}"
+    notes_part="  ${C_BOLD}•${C_RESET} ${inner} ${C_BOLD}•${C_RESET}"
   fi
 fi
 
