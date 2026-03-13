@@ -47,6 +47,12 @@ if [[ "$summary" == *" → "* ]]; then
   next_part="${summary#* → }"
 fi
 
+# Truncate next to fit the NEXT column width in claude-sessions
+NEXT_W=40
+if [ ${#next_part} -gt $NEXT_W ]; then
+  next_part="${next_part:0:$((NEXT_W - 1))}…"
+fi
+
 # Write notes file
 {
   [ -n "$prompt_line" ] && echo "$prompt_line" || true

@@ -252,6 +252,7 @@ def gh_pr_info(cwd, branch):
 
 PROJECT_W = 30
 BRANCH_W  = 40
+NEXT_W    = 40
 try:
     cols = os.get_terminal_size().columns
 except OSError:
@@ -407,7 +408,6 @@ def run():
     # --- Output ---
 
     ID_W   = 7
-    NEXT_W = 28
     id_pre = f"{'ID':<{ID_W}}  " if show_ids else ""
     id_div = f"{'─' * ID_W}  " if show_ids else ""
     header = f"  {id_pre}{'PROJECT':<{PROJECT_W}}  {'BRANCH':<{BRANCH_W}}  {'STATUS':<12}  {'PR':<16}  {'NEXT':<{NEXT_W}}  LAST ACTIVE"
