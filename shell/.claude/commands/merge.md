@@ -1,0 +1,34 @@
+---
+name: merge
+description: Capture CLAUDE.md learnings then merge the current PR via GitHub
+allowed-tools: Bash(gh pr *), Bash(gh api *), Bash(claude-notes-update *)
+---
+
+Merge the current branch's pull request on GitHub. Follow these steps in order:
+
+## 1. Run /revise-claude-md
+
+Invoke the `/revise-claude-md` skill now to capture any session learnings into CLAUDE.md before the branch is gone.
+
+## 2. Verify PR is ready to merge
+
+Run `gh pr view --json number,title,state,mergeable,statusCheckRollup` and confirm:
+- State is `OPEN`
+- All required checks have passed (no failing checks)
+- PR is mergeable
+
+If checks are still pending, inform the user and stop — do not merge until checks pass.
+If checks are failing, inform the user and stop.
+
+## 3. Merge via GitHub
+
+Run:
+```
+gh pr merge --squash --delete-branch
+```
+
+This squash-merges on GitHub (no local git operations) and deletes the remote branch.
+
+## 4. Update notes
+
+Run `claude-notes-update --stage cleanup "<PR title> merged → post-merge cleanup"`.
