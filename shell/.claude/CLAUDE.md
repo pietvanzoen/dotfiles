@@ -97,6 +97,9 @@ and proactively suggest the next action:
    - Present a plan outlining the approach
    - Discuss possible solutions and trade-offs
    - Get user approval before implementation
+   - Update the Linear ticket description with the accepted plan: preserve
+     any existing description, add a horizontal rule (`---`), and append
+     the plan below it
    - Run `/notes` after plan is accepted
 
 4. **Development**
