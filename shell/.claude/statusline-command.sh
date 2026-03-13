@@ -89,13 +89,15 @@ if [ -f "$notes_file" ]; then
       cleanup)                stage_color='\033[34m' ;;
       *)                      stage_color='\033[90m' ;;
     esac
-    notes_part=" $(printf "$stage_color")${notes_stage}$(printf '\033[0m')"
+    dim="$(printf '\033[90m')" reset="$(printf '\033[0m')"
+    inner="$(printf "$stage_color")${notes_stage}${reset}"
     if [ -n "$notes_next" ]; then
       if [ ${#notes_next} -gt 35 ]; then
         notes_next="${notes_next:0:34}…"
       fi
-      notes_part="${notes_part} $(printf '\033[90m')›$(printf '\033[0m') ${notes_next}"
+      inner="${inner} ${dim}›${reset} ${notes_next}"
     fi
+    notes_part=" ${dim}[${reset}${inner}${dim}]${reset}"
   fi
 fi
 
