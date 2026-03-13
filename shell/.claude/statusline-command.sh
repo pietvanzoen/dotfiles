@@ -8,6 +8,16 @@ cwd=$(echo "$input" | jq -r '.workspace.current_dir')
 
 dir_name=$(basename "$cwd")
 
+# Colors
+C_RESET=$(printf '\033[0m')
+C_BOLD=$(printf '\033[1m')
+C_DIM=$(printf '\033[90m')
+C_MAGENTA=$(printf '\033[95m')
+C_YELLOW=$(printf '\033[33m')
+C_CYAN=$(printf '\033[36m')
+C_GREEN=$(printf '\033[32m')
+C_BLUE=$(printf '\033[34m')
+
 git_status=""
 pr_part=""
 
@@ -28,7 +38,7 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     [ "$behind" -gt 0 ] && remote="${remote}↓"
   fi
 
-  git_status=" $(printf '\033[33m')${branch}${dirty}${remote}$(printf '\033[0m')"
+  git_status=" ${C_YELLOW}${branch}${dirty}${remote}${C_RESET}"
 
   # PR number — served from cache; refreshed in background when stale
   if [ -n "$branch" ]; then
@@ -62,12 +72,12 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     if [ -f "$cache_file" ]; then
       cached_pr=$(cat "$cache_file" 2>/dev/null)
       if [ -n "$cached_pr" ] && [ "$cached_pr" != "none" ]; then
-        pr_part=" $(printf '\033[36m')#${cached_pr}$(printf '\033[0m')"
+        pr_part=" ${C_CYAN}#${cached_pr}${C_RESET}"
       else
         # Show "no PR" for non-trunk branches
         trunk=$(git -C "$cwd" config --get init.defaultBranch 2>/dev/null || echo "main")
         if [ "$branch" != "$trunk" ]; then
-          pr_part=" $(printf '\033[90m')no PR$(printf '\033[0m')"
+          pr_part=" ${C_DIM}no PR${C_RESET}"
         fi
       fi
     fi
@@ -82,22 +92,21 @@ if [ -f "$notes_file" ]; then
   notes_next=$(grep '^next:' "$notes_file" 2>/dev/null | head -1 | sed 's/^next: *//')
   if [ -n "$notes_stage" ]; then
     case "$notes_stage" in
-      setup|context)          stage_color='\033[90m' ;;
-      planning)               stage_color='\033[33m' ;;
-      dev)                    stage_color='\033[32m' ;;
-      pr|review|human-review) stage_color='\033[36m' ;;
-      cleanup)                stage_color='\033[34m' ;;
-      *)                      stage_color='\033[90m' ;;
+      setup|context)          stage_color="$C_DIM"    ;;
+      planning)               stage_color="$C_YELLOW" ;;
+      dev)                    stage_color="$C_GREEN"  ;;
+      pr|review|human-review) stage_color="$C_CYAN"   ;;
+      cleanup)                stage_color="$C_BLUE"   ;;
+      *)                      stage_color="$C_DIM"    ;;
     esac
-    dim="$(printf '\033[90m')" reset="$(printf '\033[0m')"
-    inner="$(printf "$stage_color")${notes_stage}${reset}"
+    inner="${stage_color}${notes_stage}${C_RESET}"
     if [ -n "$notes_next" ]; then
       if [ ${#notes_next} -gt 35 ]; then
         notes_next="${notes_next:0:34}…"
       fi
-      inner="${inner} ${dim}›${reset} ${notes_next}"
+      inner="${inner} ${C_DIM}›${C_RESET} ${notes_next}"
     fi
-    notes_part=" ${dim}|${reset}${inner}${dim}|${reset}"
+    notes_part=" ${C_BOLD}|${C_RESET}${inner}${C_BOLD}|${C_RESET}"
   fi
 fi
 
@@ -114,7 +123,7 @@ case "$model" in
   *sonnet*) model_short="sonnet" ;;
   *haiku*)  model_short="haiku" ;;
 esac
-[ -n "$model_short" ] && model_part=" $(printf '\033[90m')${model_short}$(printf '\033[0m')"
+[ -n "$model_short" ] && model_part=" ${C_DIM}${model_short}${C_RESET}"
 
 if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; then
   cost_fmt=$(printf '$%.2f' "$cost_usd")
@@ -135,7 +144,7 @@ if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; th
   # Context window usage
   ctx_used=$(echo "$input" | jq -r '[.context_window.current_usage.input_tokens // 0, .context_window.current_usage.cache_creation_input_tokens // 0, .context_window.current_usage.cache_read_input_tokens // 0] | add' | awk '{printf "%.0f", $1/1000}')
   ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // 0' | awk '{printf "%.0f", $1/1000}')
-  cost_part=" $(printf '\033[90m')${cost_fmt} ⚡${energy_wh}Wh ∿${water_ml}mL ctx:${ctx_used}k/${ctx_size}k$(printf '\033[0m')"
+  cost_part=" ${C_DIM}${cost_fmt} ⚡${energy_wh}Wh ∿${water_ml}mL ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
 fi
 
-printf "$(printf '\033[95m')%s$(printf '\033[0m')%s%s%s%s%s" "$dir_name" "$git_status" "$pr_part" "$notes_part" "$model_part" "$cost_part"
+printf '%s%s%s%s%s%s%s%s' "$C_MAGENTA" "$dir_name" "$C_RESET" "$git_status" "$pr_part" "$notes_part" "$model_part" "$cost_part"
