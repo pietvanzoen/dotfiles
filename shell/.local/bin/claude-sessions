@@ -252,9 +252,9 @@ def gh_pr_info(cwd, branch):
 
 # Preferred and minimum widths for variable columns.
 # Actual widths are computed dynamically in run() based on terminal width.
-PROJECT_W_PREF, PROJECT_W_MIN = 30, 12
-BRANCH_W_PREF,  BRANCH_W_MIN  = 40, 15
-NEXT_W_PREF,    NEXT_W_MIN    = 40, 15
+PROJECT_W_PREF, PROJECT_W_MIN = 44, 12
+BRANCH_W_PREF,  BRANCH_W_MIN  = 60, 15
+NEXT_W_PREF,    NEXT_W_MIN    = 59, 15
 
 # Fixed overhead: 2 indent + 5×2 separators + 12 STATUS + 16 PR + 11 LAST ACTIVE
 FIXED_W      = 51
