@@ -104,7 +104,7 @@ if [ -f "$notes_file" ]; then
       if [ ${#notes_next} -gt 35 ]; then
         notes_next="${notes_next:0:34}…"
       fi
-      inner="${inner} ${C_DIM}›${C_RESET} ${notes_next}"
+      inner="${inner} ${C_BOLD}›${C_RESET} ${notes_next}"
     fi
     notes_part="  ${C_BOLD}•${C_RESET} ${inner} ${C_BOLD}•${C_RESET}"
   fi
