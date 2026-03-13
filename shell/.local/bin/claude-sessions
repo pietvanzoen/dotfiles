@@ -32,7 +32,7 @@ def c(text, *codes):
 def hyperlink(url, text):
     if not USE_COLOR or not url:
         return text
-    return f"\033]8;;{url}\033\\{text}\033]8;;\033\\"
+    return f"\033]8;;{url}\a{text}\033]8;;\a"
 
 DIM    = 2
 BOLD   = 1
