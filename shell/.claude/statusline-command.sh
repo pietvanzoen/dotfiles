@@ -97,7 +97,7 @@ if [ -f "$notes_file" ]; then
       fi
       inner="${inner} ${dim}›${reset} ${notes_next}"
     fi
-    notes_part=" ${dim}[${reset}${inner}${dim}]${reset}"
+    notes_part=" ${dim}|${reset}${inner}${dim}|${reset}"
   fi
 fi
 
