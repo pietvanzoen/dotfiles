@@ -114,6 +114,12 @@ LOCKFILE = "/tmp/claude-sessions-watch.pid"
 
 now = int(time.time())
 
+# PR cache for --watch --pr: avoid hitting the GitHub API every cycle.
+# Maps (cwd, branch) -> (fetched_at, pr_str).
+# Open PRs are re-fetched after PR_CACHE_TTL seconds; merged/closed are never re-fetched.
+PR_CACHE: dict = {}
+PR_CACHE_TTL = 60  # seconds
+
 
 def human_age(age):
     if age < 60:
@@ -375,9 +381,22 @@ def run():
         dirty = git_dirty_count(cwd)
         notes, prompt_line, next_line, pr = read_notes(cwd)
         sid = os.path.basename(jsonl).replace(".jsonl", "")[:7]
-        # --pr flag overrides with a live gh lookup
+        # --pr flag: use cache to avoid hammering the GitHub API every cycle
         if fetch_pr and branch:
-            pr = gh_pr_info(cwd, branch)
+            key = (cwd, branch)
+            cached = PR_CACHE.get(key)
+            if cached:
+                fetched_at, cached_pr = cached
+                cached_state = cached_pr.split()[1].lower() if len(cached_pr.split()) >= 2 else ""
+                is_final = cached_state in ("merged", "closed")
+                if is_final or (time.time() - fetched_at < PR_CACHE_TTL):
+                    pr = cached_pr
+                else:
+                    pr = gh_pr_info(cwd, branch)
+                    PR_CACHE[key] = (time.time(), pr)
+            else:
+                pr = gh_pr_info(cwd, branch)
+                PR_CACHE[key] = (time.time(), pr)
         if not pr:
             pr = "—"
         return cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid
