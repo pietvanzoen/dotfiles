@@ -1,7 +1,14 @@
 #!/bin/bash
 # Update trunk branch and prune any merged/gone branches
+# Usage: git tidy [--all]
+#   --all  also prune worktrees and claude sessions
 
 set -e
+
+prune_all=0
+for arg in "$@"; do
+  [[ "$arg" == "--all" ]] && prune_all=1
+done
 
 TRUNK="$(git trunk)"
 
@@ -22,5 +29,8 @@ exe "git fetch --all --prune"
 exe "git pull --rebase"
 exe "git prune-merged"
 exe "git prune-gone"
-exe "git prune-worktrees"
-exe "git prune-sessions"
+
+if [[ $prune_all -eq 1 ]]; then
+  exe "git prune-worktrees"
+  exe "git prune-sessions"
+fi
