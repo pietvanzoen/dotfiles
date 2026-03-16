@@ -153,6 +153,5 @@
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "stripe@claude-plugins-official": true
-  },
-  "model": "opus[1m]"
+  }
 }
