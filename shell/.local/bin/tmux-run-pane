@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-dir="$(basename $PWD)"
-cmd="$*"
+dir="$(basename "$PWD")"
 
-tmux-set-pane-title "$dir: $cmd"
+tmux-set-pane-title "$dir: $*"
 
 clear
-sh -c "$cmd"
+"$@"

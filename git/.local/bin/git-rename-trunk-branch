@@ -6,8 +6,8 @@
 
 set -e
 
-USAGE="USAGE: $(basename $0) <new trunk branch>
-Example: $(basename $0) main"
+USAGE="USAGE: $(basename "$0") <new trunk branch>
+Example: $(basename "$0") main"
 
 main() {
   local new_default_branch="$1"
@@ -17,7 +17,7 @@ main() {
   fi
 
   echo "==> Updating local refs"
-  _exe "git fetch origin"
+  _exe git fetch origin
   local current_default_branch="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
 
   if [[ ! -z "$(git status -s)" ]]; then
@@ -31,9 +31,9 @@ main() {
   fi
 
   echo "==> Renaming '$current_default_branch' to '$new_default_branch'"
-  _exe "git branch -m $current_default_branch $new_default_branch"
-  _exe "git push -u origin $new_default_branch"
-  _exe "git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/$new_default_branch"
+  _exe git branch -m "$current_default_branch" "$new_default_branch"
+  _exe git push -u origin "$new_default_branch"
+  _exe git symbolic-ref refs/remotes/origin/HEAD "refs/remotes/origin/$new_default_branch"
 
   update_github "$(git remote get-url origin)" "$new_default_branch"
 
@@ -44,7 +44,7 @@ main() {
 
   if (_confirm "Or type DELETE to run this command now." "DELETE"); then
     sleep 1
-    _exe "git push --delete origin $current_default_branch"
+    _exe git push --delete origin "$current_default_branch"
   else
     echo "==> Not deleting $current_default_branch. Run 'git push --delete origin $current_default_branch' to delete later."
   fi
@@ -76,7 +76,7 @@ update_github() {
       read -s token
     fi
     github_request \
-      $token \
+      "$token" \
       PATCH \
       "/repos/$user/$repo" \
       "{\"default_branch\": \"$default_branch\" }"
@@ -88,7 +88,7 @@ update_github() {
       read -s token
     fi
     github_request \
-      $token \
+      "$token" \
       PUT \
       "/repos/$user/$repo/branches/$new_default_branch/protection" \
       '{"required_status_checks": null, "enforce_admins": null, "required_pull_request_reviews": null, "restrictions": null, "allow_deletions": false, "allow_force_pushes": false }'
@@ -104,24 +104,24 @@ github_request() {
 
   response=$(curl \
     --silent \
-    -o $temp_file \
+    -o "$temp_file" \
     -w "%{http_code}" \
     --header "Content-Type: application/json" \
     --header "Authorization: token $token" \
-    --request $method \
+    --request "$method" \
     --data "$data" \
-    https://api.github.com$path)
+    "https://api.github.com$path")
 
   if [[ $response != "200" ]]; then
     echo "Error: Request failed. Server returned:"
-    cat $temp_file
+    cat "$temp_file"
   else
     echo "==> Success"
   fi
 }
 
 # HELPERS
-_exe() { echo "+ $@" ; $@ ; }
+_exe() { echo "+ $*" ; "$@" ; }
 _confirm() {
   local msg="$1"
   local confirm_answer="$2"
@@ -135,4 +135,4 @@ _confirm() {
   fi
 }
 
-main $1
+main "$1"
