@@ -263,7 +263,7 @@ def gh_pr_info(cwd, branch):
 # Actual widths are computed dynamically in run() based on terminal width.
 PROJECT_W_PREF, PROJECT_W_MIN = 44, 12
 BRANCH_W_PREF,  BRANCH_W_MIN  = 60, 15
-STAGE_W_PREF,   STAGE_W_MIN   = 24, 12
+STAGE_W_PREF,   STAGE_W_MIN   = 32, 16
 NEXT_W_PREF,    NEXT_W_MIN    = 59, 15
 
 # Fixed overhead: 2 indent + 5×2 separators + 12 STATUS + 11 LAST ACTIVE
@@ -517,24 +517,6 @@ def run():
         elif pr_part:
             stage_display = pr_part
             stage_plain = pr_part_plain
-
-        # Truncate stage plain text if needed — preserve stage label and hyperlink
-        if len(stage_plain) > stage_w:
-            if stage and pr_part:
-                # Keep stage label; truncate/drop PR portion
-                separator = " · "
-                remaining = stage_w - len(stage) - len(separator)
-                stage_color = STAGE_COLORS.get(stage, DIM)
-                if remaining >= 4:
-                    pr_truncated_plain = pr_part_plain[:remaining - 1] + "…"
-                    stage_plain = f"{stage}{separator}{pr_truncated_plain}"
-                    stage_display = c(stage, stage_color) + c(separator, DIM) + c(pr_truncated_plain, DIM)
-                else:
-                    stage_plain = stage
-                    stage_display = c(stage, stage_color)
-            else:
-                stage_plain = stage_plain[:stage_w - 1] + "…"
-                stage_display = c(stage_plain, STAGE_COLORS.get(stage, DIM) if stage else DIM)
 
         # Pad manually since color codes throw off f-string width
         next_plain   = (next_line[:next_w - 1] + "…" if len(next_line) > next_w else next_line)
