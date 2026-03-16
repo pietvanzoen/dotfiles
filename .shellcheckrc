@@ -1,0 +1,5 @@
+# Default shell dialect
+shell=bash
+# SC1090: Can't follow non-constant source (we source dynamic paths)
+# SC1091: Not following sourced file (external files)
+disable=SC1090,SC1091

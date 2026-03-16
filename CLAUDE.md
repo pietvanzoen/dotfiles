@@ -32,13 +32,19 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - **Multiplexer**: tmux (config in `shell/.tmux.conf`)
 - **Editor**: Neovim (Lua-based, lazy.nvim)
 
+## Linting
+
+- Run `make lint` before committing shell script changes
+- Run `make lint FILES="path/to/script"` to check specific files
+- ShellCheck config is in `.shellcheckrc`
+
 ## Workflow
 
 After creating new files that need to be stowed (executables, configs, etc.), run:
 
 ```bash
-./update
+make update
 ```
 
 This restows all packages and creates the necessary symlinks in `$HOME`.
-Also run `./update` after renaming or moving stowed files to fix symlinks.
+Also run `make update` after renaming or moving stowed files to fix symlinks.
