@@ -91,8 +91,8 @@ function cc() {
   fi
 
   if [[ -n "$session_id" ]]; then
-    claude --resume "$session_id" "$@"
+    claude --remote-control --resume "$session_id" "$@"
   else
-    claude "$@"
+    claude --remote-control "$@"
   fi
 }

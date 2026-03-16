@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Jump to any tmux window across all sessions via fzf popup.
+tmux list-windows -a -F '#{session_name}:#{window_index}  #{b:pane_current_path}  #{pane_current_command}' \
+  | fzf-tmux -p 60%,40% -- --reverse \
+  | awk '{print $1}' \
+  | xargs -I{} tmux switch-client -t {}
