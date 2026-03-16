@@ -17,17 +17,18 @@ Run `gh pr view --json number,title,state,mergeable,statusCheckRollup` and confi
 - All required checks have passed (no failing checks)
 - PR is mergeable
 
-If checks are still pending, inform the user and stop — do not merge until checks pass.
 If checks are failing, inform the user and stop.
+Pending checks are OK — `--auto` will queue the merge to happen once they pass.
 
 ## 3. Merge via GitHub
 
 Run:
 ```
-gh pr merge --squash --delete-branch
+gh pr merge --squash --delete-branch --auto
 ```
 
 This squash-merges on GitHub (no local git operations) and deletes the remote branch.
+If checks are still pending, `--auto` enables auto-merge — GitHub will merge once all checks pass.
 
 ## 4. Update notes
 

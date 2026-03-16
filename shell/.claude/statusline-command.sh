@@ -28,10 +28,6 @@ pr_part=""
 
 if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
-  # Truncate long branch names from the right (keep ticket prefix visible, max 35 chars)
-  if [ ${#branch} -gt 35 ]; then
-    branch="${branch:0:34}…"
-  fi
 
   # Dirty / staged indicators
   dirty=""
