@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # Show status of all active Claude Code sessions across projects.
-# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--age AGE] [--prune] [--prune-merged] [--delete ID]
+# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--age AGE] [-P|--project SUBSTR] [--prune] [--prune-merged] [--delete ID]
 #   -a, --all         Show all sessions regardless of age (default: last 30 days)
 #   -i, --ids         Show session IDs (for use with --delete)
 #   -p, --pr          Fetch PR info from GitHub (slower — requires gh)
 #   -w, --watch [N]   Live-updating dashboard, refreshing every N seconds (default: 5)
 #   --age AGE         Only show sessions newer than AGE (e.g. 7d, 24h, 30m)
+#   -P, --project     Only show sessions whose project name contains SUBSTR (case-insensitive)
 #   --prune           Remove project dirs whose cwd no longer exists
 #   --prune-merged    Remove project dirs and worktrees for merged PRs
 #   --delete ID       Delete a specific session by its short ID
@@ -52,6 +53,7 @@ prune = False
 prune_merged = False
 delete_id = None
 watch_interval = None
+project_filter = None
 max_age_seconds = MAX_AGE_DAYS * 86400
 
 
@@ -89,6 +91,12 @@ while i < len(args):
             print(f"--age: invalid value '{args[i]}' (use e.g. 7d, 24h, 30m)", file=sys.stderr)
             sys.exit(1)
         max_age_seconds = parsed
+    elif arg in ("-P", "--project"):
+        i += 1
+        if i >= len(args):
+            print("-P/--project requires a substring", file=sys.stderr)
+            sys.exit(1)
+        project_filter = args[i].lower()
     elif arg == "--prune":
         prune = True
     elif arg == "--prune-merged":
@@ -102,7 +110,7 @@ while i < len(args):
         delete_id = args[i]
         show_all = True
     else:
-        print(f"Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--age AGE] [--prune] [--prune-merged] [--delete ID]", file=sys.stderr)
+        print(f"Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--age AGE] [-P|--project SUBSTR] [--prune] [--prune-merged] [--delete ID]", file=sys.stderr)
         sys.exit(1)
     i += 1
 
@@ -400,6 +408,10 @@ def run():
         print("No active Claude sessions found.")
         return
 
+    # Apply project filter
+    if project_filter:
+        best = {cwd: v for cwd, v in best.items() if project_filter in os.path.basename(cwd).lower()}
+
     # Sort by mtime descending
     projects = sorted(best.items(), key=lambda x: x[1][0], reverse=True)
 
@@ -506,11 +518,23 @@ def run():
             stage_display = pr_part
             stage_plain = pr_part_plain
 
-        # Truncate stage plain text if needed
+        # Truncate stage plain text if needed — preserve stage label and hyperlink
         if len(stage_plain) > stage_w:
-            # Rebuild truncated — prefer showing stage label
-            stage_plain = stage_plain[:stage_w - 1] + "…"
-            stage_display = c(stage_plain, STAGE_COLORS.get(stage, DIM) if stage else DIM)
+            if stage and pr_part:
+                # Keep stage label; truncate/drop PR portion
+                separator = " · "
+                remaining = stage_w - len(stage) - len(separator)
+                stage_color = STAGE_COLORS.get(stage, DIM)
+                if remaining >= 4:
+                    pr_truncated_plain = pr_part_plain[:remaining - 1] + "…"
+                    stage_plain = f"{stage}{separator}{pr_truncated_plain}"
+                    stage_display = c(stage, stage_color) + c(separator, DIM) + c(pr_truncated_plain, DIM)
+                else:
+                    stage_plain = stage
+                    stage_display = c(stage, stage_color)
+            else:
+                stage_plain = stage_plain[:stage_w - 1] + "…"
+                stage_display = c(stage_plain, STAGE_COLORS.get(stage, DIM) if stage else DIM)
 
         # Pad manually since color codes throw off f-string width
         next_plain   = (next_line[:next_w - 1] + "…" if len(next_line) > next_w else next_line)

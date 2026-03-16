@@ -17,6 +17,6 @@ if [[ ! $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   exit;
 fi
 
-echo "===> Deleting branches"
+echo "--> Deleting branches"
 
 git branch -D $branches

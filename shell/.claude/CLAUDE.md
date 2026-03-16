@@ -73,6 +73,10 @@ Note: the URL must include the PR number — `pulls/{pr}/comments/{id}/replies`,
 it only shows general PR comments. To read inline comments, use:
 `gh api repos/{owner}/{repo}/pulls/{pr}/comments`
 
+## CLI script output
+In CLI scripts (bash, python, etc.), prefix log/status lines with `==>` or `-->` rather than plain text or emoji.
+Use `==>` for major steps and `-->` for sub-steps or progress within a step.
+
 ## Linting and formatting
 Before committing code: **always run the project's linter/formatter if available**. Check for a lint command in the project (package.json, Makefile, pyproject.toml, etc.) and run it with auto-fix flags before staging commits.
 
