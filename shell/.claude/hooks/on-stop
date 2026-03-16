@@ -18,6 +18,8 @@ terminal-notifier \
   -sound Glass \
   -contentImage "$HOME/.claude/icons/claude.png"
 
+ntfy-notify "Claude Code - $dir_context" "Done"
+
 # Clear ⏺ from the current tmux window only
 if [ -n "$TMUX" ]; then
   current_name=$(tmux display-message -p '#{window_name}' 2>/dev/null)

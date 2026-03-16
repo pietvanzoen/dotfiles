@@ -26,6 +26,7 @@
       "Bash(mkdir:*)",
       "Bash(sips:*)",
       "Bash(terminal-notifier:*)",
+      "Bash(ntfy-notify:*)",
       "Bash(echo:*)",
       "Bash(jq:*)",
       "Bash(stow:*)",
