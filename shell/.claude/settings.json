@@ -53,7 +53,23 @@
       "Write(.claude-notes)",
       "Edit(.claude-notes)",
       "Bash(claude-notes-update *)",
-      "Skill(notes)"
+      "Skill(notes)",
+      "mcp__trello__list_boards",
+      "mcp__trello__list_workspaces",
+      "mcp__trello__get_lists",
+      "mcp__trello__get_cards_by_list_id",
+      "mcp__trello__get_card",
+      "mcp__trello__get_card_comments",
+      "mcp__trello__get_card_history",
+      "mcp__trello__get_board_labels",
+      "mcp__trello__get_board_members",
+      "mcp__trello__get_checklist_items",
+      "mcp__trello__get_my_cards",
+      "mcp__trello__get_recent_activity",
+      "mcp__trello__get_active_board_info",
+      "mcp__trello__set_active_board",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(slack-api *)"
     ],
     "deny": [
       "Bash(curl:*)",
@@ -137,5 +153,6 @@
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "stripe@claude-plugins-official": true
-  }
+  },
+  "model": "opus[1m]"
 }

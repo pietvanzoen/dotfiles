@@ -1,0 +1,230 @@
+#!/usr/bin/env node
+
+const https = require("https");
+const fs = require("fs");
+const path = require("path");
+
+const USER_CACHE_PATH = path.join(
+  process.env.TMPDIR || "/tmp",
+  "slack-api-users.json"
+);
+const USER_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+const USAGE = `Usage: slack-api <method> [--param=value ...] [--compact] [--resolve-users]
+
+Call the Slack Web API using GET with query parameters.
+
+Flags:
+  --compact         Condensed output for conversations.replies / conversations.history
+  --resolve-users   Resolve user IDs to display names (auto-enabled with --compact)
+
+Examples:
+  slack-api conversations.replies --channel=C03S0P6DX9P --ts=1773358256.641079
+  slack-api conversations.replies --channel=C03S0P6DX9P --ts=1773358256.641079 --compact
+  slack-api conversations.history --channel=C03S0P6DX9P --limit=10 --compact
+  slack-api users.info --user=U01234ABCDE
+
+Auth: Set SLACK_BOT_TOKEN in your environment.`;
+
+const args = process.argv.slice(2);
+
+if (args.length === 0) {
+  console.log(USAGE);
+  process.exit(0);
+}
+
+const token = process.env.SLACK_BOT_TOKEN;
+if (!token) {
+  console.error("==> Error: SLACK_BOT_TOKEN is not set");
+  process.exit(1);
+}
+
+let compact = false;
+let resolveUsers = false;
+const apiArgs = [];
+
+for (const arg of args) {
+  if (arg === "--compact") {
+    compact = true;
+  } else if (arg === "--resolve-users") {
+    resolveUsers = true;
+  } else {
+    apiArgs.push(arg);
+  }
+}
+
+// --compact implies --resolve-users
+if (compact) resolveUsers = true;
+
+const method = apiArgs[0];
+const params = {};
+
+for (let i = 1; i < apiArgs.length; i++) {
+  const match = apiArgs[i].match(/^--([^=]+)=(.*)$/);
+  if (!match) {
+    console.error(`==> Error: Invalid argument: ${apiArgs[i]}`);
+    console.error("    Expected format: --param=value");
+    process.exit(1);
+  }
+  const value = match[2];
+  params[match[1]] = /^\d+$/.test(value) ? Number(value) : value;
+}
+
+function slackGet(apiMethod, apiParams) {
+  return new Promise((resolve, reject) => {
+    const query = new URLSearchParams(apiParams).toString();
+    const reqPath = query
+      ? `/api/${apiMethod}?${query}`
+      : `/api/${apiMethod}`;
+
+    const req = https.request(
+      {
+        hostname: "slack.com",
+        path: reqPath,
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      },
+      (res) => {
+        const chunks = [];
+        res.on("data", (chunk) => chunks.push(chunk));
+        res.on("end", () => {
+          const raw = Buffer.concat(chunks).toString();
+          try {
+            resolve(JSON.parse(raw));
+          } catch {
+            reject(new Error(`Failed to parse response as JSON:\n${raw}`));
+          }
+        });
+      }
+    );
+    req.on("error", reject);
+    req.end();
+  });
+}
+
+// --- User resolution ---
+
+function loadUserCache() {
+  try {
+    const stat = fs.statSync(USER_CACHE_PATH);
+    if (Date.now() - stat.mtimeMs > USER_CACHE_TTL_MS) return {};
+    return JSON.parse(fs.readFileSync(USER_CACHE_PATH, "utf-8"));
+  } catch {
+    return {};
+  }
+}
+
+function saveUserCache(cache) {
+  try {
+    fs.writeFileSync(USER_CACHE_PATH, JSON.stringify(cache, null, 2));
+  } catch {
+    // non-fatal
+  }
+}
+
+async function resolveUser(userId, cache) {
+  if (cache[userId]) return cache[userId];
+  try {
+    const data = await slackGet("users.info", { user: userId });
+    if (data.ok && data.user) {
+      const name =
+        data.user.profile?.display_name ||
+        data.user.real_name ||
+        data.user.name ||
+        userId;
+      cache[userId] = name;
+      return name;
+    }
+  } catch {
+    // fall through
+  }
+  return userId;
+}
+
+function collectUserIds(messages) {
+  const ids = new Set();
+  for (const msg of messages) {
+    if (msg.user) ids.add(msg.user);
+  }
+  return ids;
+}
+
+async function resolveAllUsers(userIds, cache) {
+  const toResolve = [...userIds].filter((id) => !cache[id]);
+  await Promise.all(toResolve.map((id) => resolveUser(id, cache)));
+}
+
+// --- Compact formatting ---
+
+function formatTimestamp(ts) {
+  const date = new Date(parseFloat(ts) * 1000);
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  const h = String(date.getHours()).padStart(2, "0");
+  const min = String(date.getMinutes()).padStart(2, "0");
+  return `${y}-${m}-${d} ${h}:${min}`;
+}
+
+function formatMessage(msg, userCache) {
+  const time = formatTimestamp(msg.ts);
+  const name = userCache[msg.user] || msg.user || "unknown";
+  const text = (msg.text || "").replace(/\n/g, "\n    ");
+  return `[${time}] @${name}: ${text}`;
+}
+
+// --- Main ---
+
+async function main() {
+  const data = await slackGet(method, params);
+
+  if (!data.ok) {
+    console.error(JSON.stringify(data, null, 2));
+    process.exit(1);
+  }
+
+  if (!compact) {
+    // Default: full JSON output, optionally with resolved users
+    if (resolveUsers && data.messages) {
+      const cache = loadUserCache();
+      const ids = collectUserIds(data.messages);
+      await resolveAllUsers(ids, cache);
+      saveUserCache(cache);
+      for (const msg of data.messages) {
+        if (msg.user && cache[msg.user]) {
+          msg._display_name = cache[msg.user];
+        }
+      }
+    }
+    console.log(JSON.stringify(data, null, 2));
+    return;
+  }
+
+  // Compact mode — only for methods that return messages
+  const messages = data.messages;
+  if (!messages || !Array.isArray(messages)) {
+    // Fallback to JSON for non-message responses
+    console.log(JSON.stringify(data, null, 2));
+    return;
+  }
+
+  const cache = loadUserCache();
+  const ids = collectUserIds(messages);
+  await resolveAllUsers(ids, cache);
+  saveUserCache(cache);
+
+  // conversations.history returns newest-first; replies are oldest-first
+  // Sort chronologically for compact output
+  const sorted = [...messages].sort(
+    (a, b) => parseFloat(a.ts) - parseFloat(b.ts)
+  );
+
+  for (const msg of sorted) {
+    console.log(formatMessage(msg, cache));
+  }
+}
+
+main().catch((err) => {
+  console.error(`==> Error: ${err.message}`);
+  process.exit(1);
+});
