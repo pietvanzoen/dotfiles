@@ -5,3 +5,4 @@
 shell/.tmux/tmux-safekill
 .aider*
 **/.claude/settings.local.json
+__pycache__/
