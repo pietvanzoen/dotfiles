@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOGFILE="$HOME/.local/share/bin-usage.log"
+BINDIR="$HOME/.local/bin"
+DAYS="${1:-30}"
+
+usage() {
+  echo "Usage: bin-usage [days]"
+  echo "  Show usage stats for commands in ~/.local/bin"
+  echo "  Default: last 30 days"
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 0
+fi
+
+# Calculate cutoff date
+if date -v-1d +%s >/dev/null 2>&1; then
+  # macOS date
+  cutoff=$(date -v-"${DAYS}d" -u +%Y-%m-%dT%H:%M:%SZ)
+else
+  # GNU date
+  cutoff=$(date -u -d "${DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
+fi
+
+# Collect all commands in ~/.local/bin
+declare -A counts
+for cmd in "$BINDIR"/*; do
+  [[ -f "$cmd" ]] || continue
+  name="${cmd##*/}"
+  counts[$name]=0
+done
+
+# Count usage from log
+if [[ -f "$LOGFILE" ]]; then
+  while IFS=$'\t' read -r timestamp name; do
+    [[ "$timestamp" > "$cutoff" || "$timestamp" == "$cutoff" ]] || continue
+    if [[ -v "counts[$name]" ]]; then
+      counts[$name]=$(( counts[$name] + 1 ))
+    fi
+  done < "$LOGFILE"
+fi
+
+# Sort and display
+echo "==> Command usage (last ${DAYS} days)"
+{
+  for name in "${!counts[@]}"; do
+    printf '%d\t%s\n' "${counts[$name]}" "$name"
+  done
+} | sort -rn | while IFS=$'\t' read -r count name; do
+  if [[ "$count" -eq 0 ]]; then
+    printf '  %4d  %s  ← never used\n' "$count" "$name"
+  else
+    printf '  %4d  %s\n' "$count" "$name"
+  fi
+done
