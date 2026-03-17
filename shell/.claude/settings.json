@@ -68,6 +68,7 @@
       "Edit(.claude-notes)",
       "Bash(claude-notes-update *)",
       "Skill(notes)",
+      "Skill(commit-commands:commit)",
       "mcp__trello__list_boards",
       "mcp__trello__list_workspaces",
       "mcp__trello__get_lists",
