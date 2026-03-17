@@ -61,7 +61,7 @@ mark_done() {
     exit 1
   fi
 
-  sed -i '' -e "${line_num}s/^- \[ \]/- [x]/" "$file"
+  sed -i'' -e "${line_num}s/^- \[ \]/- [x]/" "$file"
   echo "==> Marked item #$num as done in $file"
 }
 
