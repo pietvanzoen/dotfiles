@@ -82,3 +82,8 @@ Also run `make update` after renaming or moving stowed files to fix symlinks.
 
 - `#{session_name}` inside `#()` shell commands gets expanded to the *current* session name before the shell runs — use `##{session_name}` to pass it literally
 - Custom escape sequences for key bindings: use `set -s user-keys[N] "\e[seq"` + `bind-key -n UserN action` rather than relying on tmux recognising the sequence as a named key (e.g. `C-Tab`)
+
+## Ghostty gotchas
+
+- `command` config requires full binary paths (e.g. `/opt/homebrew/bin/tmux`) — shell PATH isn't set up when Ghostty runs it, so aliases and PATH-relative names fail
+- With tmux `mouse on`: Cmd+Click is captured by tmux; use Shift+Cmd+Click to open URLs (Shift is Ghostty's mouse bypass modifier)
