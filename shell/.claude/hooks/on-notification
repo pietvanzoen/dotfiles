@@ -15,11 +15,11 @@ fi
 dir_context=$(basename "$cwd")
 
 terminal-notifier \
-  -title "Claude Code - $dir_context" \
+  -title "$dir_context - Claude Code" \
   -message "$message" \
   -sound "$sound" \
   -contentImage "$HOME/.claude/icons/claude.png"
 
 json_msg=$(echo "$input" | jq -r '.message // ""')
 ntfy_msg="${json_msg:-$message}"
-ntfy-notify --away-only --topic claude --tags robot "Claude Code - $dir_context" "$ntfy_msg"
+ntfy-notify --away-only --topic claude --tags robot "$dir_context - Claude Code" "$ntfy_msg"
