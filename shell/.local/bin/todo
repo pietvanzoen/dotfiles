@@ -26,21 +26,45 @@ add_item() {
   echo "==> Added to $(basename "$(dirname "$file")")/.todo.md"
 }
 
+relative_date() {
+  local date_str="$1" today epoch_date epoch_today diff_days
+  today=$(date +%Y-%m-%d)
+  [ "$date_str" = "$today" ] && { echo "today"; return; }
+  epoch_date=$(date -j -f "%Y-%m-%d" "$date_str" "+%s" 2>/dev/null) || { echo "$date_str"; return; }
+  epoch_today=$(date +%s)
+  diff_days=$(( (epoch_today - epoch_date) / 86400 ))
+  if   [ "$diff_days" -eq 1 ];   then echo "yesterday"
+  elif [ "$diff_days" -lt 7 ];   then echo "${diff_days}d ago"
+  elif [ "$diff_days" -lt 30 ];  then echo "$((diff_days / 7))w ago"
+  else echo "$date_str"
+  fi
+}
+
+print_items() {
+  local file="$1"
+  grep -n '^- \[ \]' "$file" | while IFS= read -r line; do
+    local num date_str text rel
+    num=$(echo "$line" | cut -d: -f1)
+    date_str=$(echo "$line" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+    text="${line#*- \[ \] ????-??-?? }"
+    rel=$(relative_date "$date_str")
+    printf "  ${YELLOW}%s.${RESET} ${DIM}%s${RESET} %s\n" "$num" "$rel" "$text"
+  done
+}
+
 list_items() {
   local project_file global_file shown=false
 
   if project_file=$(get_project_todo) && [ -f "$project_file" ]; then
     echo "${CYAN}==> Project: $(basename "$(dirname "$project_file")")${RESET}"
-    grep -n '^- \[ \]' "$project_file" \
-      | sed "s/^\([0-9]*\):- \[ \] \([-0-9]*\) \(.*\)$/  ${YELLOW}\1.${RESET} ${DIM}\2${RESET} \3/" || true
+    print_items "$project_file" || true
     shown=true
   fi
 
   global_file="$GLOBAL_TODO"
   if [ -f "$global_file" ]; then
     echo "${CYAN}==> Global${RESET}"
-    grep -n '^- \[ \]' "$global_file" \
-      | sed "s/^\([0-9]*\):- \[ \] \([-0-9]*\) \(.*\)$/  ${YELLOW}\1.${RESET} ${DIM}\2${RESET} \3/" || true
+    print_items "$global_file" || true
     shown=true
   fi
 
@@ -80,6 +104,12 @@ mark_done() {
 # Parse arguments
 global=false
 done_num=""
+
+# Support shorthand: todo done N
+if [[ "${1:-}" == "done" && "${2:-}" =~ ^[0-9]+$ ]]; then
+  mark_done "$2"
+  exit 0
+fi
 
 while [[ "${1:-}" == --* ]]; do
   case "$1" in
