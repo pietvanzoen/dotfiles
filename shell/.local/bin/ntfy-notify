@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Send a push notification via ntfy.sh (or self-hosted ntfy server).
-# Usage: ntfy-notify [--away-only] [--topic <topic>] <title> <message>
+# Usage: ntfy-notify [--away-only] [--topic <topic>] [--tags <tag1,tag2>] <title> <message>
 #
 # Options:
-#   --away-only      Only send if screensaver is running or display is sleeping
-#   --topic <topic>  Override the ntfy topic (overrides env var and config file)
+#   --away-only        Only send if screensaver is running or display is sleeping
+#   --topic <topic>    Override the ntfy topic (overrides env var and config file)
+#   --tags <tag1,...>  Comma-separated list of ntfy tags (emoji shortcuts supported)
 #
 # Config (pick one):
 #   - Set NTFY_TOPIC env var to your topic name
@@ -18,10 +19,12 @@
 
 away_only=0
 topic_arg=""
+tags_arg=""
 while true; do
   case "$1" in
     --away-only) away_only=1; shift ;;
     --topic) topic_arg="${2:?topic value required}"; shift 2 ;;
+    --tags) tags_arg="$2"; shift 2 ;;
     *) break ;;
   esac
 done
@@ -29,7 +32,7 @@ done
 title="${1:?title required}"
 message="${2:?message required}"
 
-topic="${topic_arg:-${NTFY_TOPIC:-$(cat ~/.config/ntfy/topic 2>/dev/null | tr -d '[:space:]')}}"
+topic="${topic_arg:-${NTFY_TOPIC:-$(tr -d '[:space:]' < ~/.config/ntfy/topic 2>/dev/null)}}"
 [ -z "$topic" ] && exit 0
 
 if [ "$away_only" = "1" ]; then
@@ -49,11 +52,17 @@ if [ -n "$NTFY_TOKEN" ]; then
   auth_args=(-H "Authorization: Bearer $NTFY_TOKEN")
 fi
 
+tags_header=()
+if [ -n "$tags_arg" ]; then
+  tags_header=(-H "Tags: $tags_arg")
+fi
+
 title="${title//$'\r'/}"
 title="${title//$'\n'/}"
 
 curl -s -o /dev/null \
   "${auth_args[@]}" \
+  "${tags_header[@]}" \
   -H "Title: $title" \
   --data-raw "$message" \
   "$url" &
