@@ -38,6 +38,11 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - Run `make lint FILES="path/to/script"` to check specific files
 - ShellCheck config is in `.shellcheckrc`
 
+## macOS shell scripting gotchas
+
+- `sed -i '' -e 'expr' file` exits 2 with "can't read : No such file" on macOS even when the edit succeeds — use `sed -i''` (no space) instead
+- Check `shell/.local/lib/aliases.sh` for alias conflicts before naming new scripts in `~/.local/bin/`
+
 ## Workflow
 
 After creating new files that need to be stowed (executables, configs, etc.), run:
