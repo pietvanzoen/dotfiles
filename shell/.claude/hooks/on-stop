@@ -12,13 +12,42 @@ fi
 
 dir_context=$(basename "$cwd")
 
+# Extract last response for notification
+last_msg="Done"
+session_id=$(echo "$input" | jq -r '.session_id // ""')
+if [ -n "$session_id" ] && [ "$session_id" != "null" ] && [ -n "$cwd" ]; then
+  encoded_cwd="${cwd//\//-}"
+  jsonl_file="$HOME/.claude/projects/${encoded_cwd}/${session_id}.jsonl"
+  if [ -f "$jsonl_file" ]; then
+    extracted=$(python3 - "$jsonl_file" <<'PYEOF'
+import json, sys
+last_text = None
+with open(sys.argv[1]) as f:
+    for line in f:
+        try:
+            entry = json.loads(line)
+            if entry.get("type") == "assistant":
+                content = entry.get("message", {}).get("content", [])
+                texts = [b["text"] for b in content if b.get("type") == "text"]
+                if texts:
+                    last_text = "\n\n".join(texts)
+        except Exception:
+            continue
+if last_text:
+    print(last_text[:500].strip(), end="")
+PYEOF
+    )
+    [ -n "$extracted" ] && last_msg="$extracted"
+  fi
+fi
+
 terminal-notifier \
   -title "Claude Code - $dir_context" \
   -message "Done" \
   -sound Glass \
   -contentImage "$HOME/.claude/icons/claude.png"
 
-ntfy-notify --away-only --topic claude --tags robot "Claude Code - $dir_context" "Done"
+ntfy-notify --away-only --topic claude --tags robot "Claude Code - $dir_context" "$last_msg"
 
 # Clear ⏺ from the current tmux window only
 if [ -n "$TMUX" ]; then
@@ -30,7 +59,6 @@ if [ -n "$TMUX" ]; then
 fi
 
 # Save last assistant response text for /copy skill
-session_id=$(echo "$input" | jq -r '.session_id // ""')
 if [ -n "$session_id" ] && [ "$session_id" != "null" ] && [ -n "$cwd" ]; then
   encoded_cwd="${cwd//\//-}"
   jsonl_file="$HOME/.claude/projects/${encoded_cwd}/${session_id}.jsonl"
