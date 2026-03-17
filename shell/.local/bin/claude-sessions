@@ -22,8 +22,13 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-# ANSI colors — disabled when not a tty
-USE_COLOR = sys.stdout.isatty()
+# ANSI colors — enabled when tty, FORCE_COLOR, or running inside tmux/screen
+USE_COLOR = (
+    sys.stdout.isatty()
+    or os.environ.get("FORCE_COLOR") == "1"
+    or "TMUX" in os.environ
+    or os.environ.get("TERM_PROGRAM") in ("tmux", "screen")
+)
 
 def c(text, *codes):
     if not USE_COLOR:

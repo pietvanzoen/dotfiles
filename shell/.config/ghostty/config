@@ -40,6 +40,8 @@ macos-option-as-alt = left
 scrollback-limit = 10000
 confirm-close-surface = false
 auto-update = download
+link-url = true
+link-previews = true
 
 # ── Shell ────────────────────────────────────────────────────────────
 shell-integration = zsh

@@ -27,7 +27,7 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 
 ## Environment
 
-- **Terminal**: iTerm2 on macOS
+- **Terminal**: Ghostty on macOS (config in `shell/.config/ghostty/config`)
 - **Shell**: Zsh
 - **Multiplexer**: tmux (config in `shell/.tmux.conf`)
 - **Editor**: Neovim (Lua-based, lazy.nvim)
@@ -71,3 +71,14 @@ make update
 
 This restows all packages and creates the necessary symlinks in `$HOME`.
 Also run `make update` after renaming or moving stowed files to fix symlinks.
+- New stow packages need an entry in `.installed_packages` (git-ignored) before `make update` will stow them
+
+## Nerd Font glyphs
+
+- Write/Edit tools silently drop Nerd Font glyphs (U+E0A0, U+E0B4, U+E0B6, etc.) — inject via Python: `python3 -c "f='path'; c=open(f).read(); c=c.replace('X', '\ue0b6'); open(f,'w').write(c)"`
+- Avoid Nerd Font glyphs in `window-status-current-format` — Ghostty renders them at wrong cell width causing tab shifting; ok in status-left/right (fixed width)
+
+## tmux gotchas
+
+- `#{session_name}` inside `#()` shell commands gets expanded to the *current* session name before the shell runs — use `##{session_name}` to pass it literally
+- Custom escape sequences for key bindings: use `set -s user-keys[N] "\e[seq"` + `bind-key -n UserN action` rather than relying on tmux recognising the sequence as a named key (e.g. `C-Tab`)
