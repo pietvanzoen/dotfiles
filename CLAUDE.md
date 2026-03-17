@@ -55,6 +55,12 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - **Python**: only for existing scripts (e.g. `claude-sessions`); don't start new scripts in Python
 - **Deno/Bun/zx**: don't introduce new runtimes without discussion
 
+## ntfy testing
+- `curl` is blocked by the permission system — use `node -e "fetch(...)"` to call the ntfy API
+- `NTFY_TOKEN` and `NTFY_URL` env vars are set; server requires `Authorization: Bearer $NTFY_TOKEN`
+- Poll latest message: `GET $NTFY_URL/claude/json?poll=1&since=latest` with auth header
+- Hooks use `--away-only` so they won't fire while screen is active — test by posting to the API directly
+
 ## Workflow
 
 After creating new files that need to be stowed (executables, configs, etc.), run:
