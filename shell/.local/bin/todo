@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+GLOBAL_TODO="$HOME/.claude/todo.md"
+
+get_project_todo() {
+  local root
+  root=$(git rev-parse --show-toplevel 2>/dev/null) || return 1
+  echo "$root/.todo.md"
+}
+
+add_item() {
+  local file="$1" text="$2"
+  mkdir -p "$(dirname "$file")"
+  echo "- [ ] $(date +%Y-%m-%d) $text" >> "$file"
+  echo "==> Added to $file"
+}
+
+list_items() {
+  local project_file global_file shown=false
+
+  if project_file=$(get_project_todo) && [ -f "$project_file" ]; then
+    echo "==> Project: $project_file"
+    grep -n '^- \[ \]' "$project_file" | sed 's/^\([0-9]*\):- \[ \] /  \1. /' || true
+    shown=true
+  fi
+
+  global_file="$GLOBAL_TODO"
+  if [ -f "$global_file" ]; then
+    echo "==> Global: $global_file"
+    grep -n '^- \[ \]' "$global_file" | sed 's/^\([0-9]*\):- \[ \] /  \1. /' || true
+    shown=true
+  fi
+
+  if [ "$shown" = false ]; then
+    echo "==> No todo files found"
+  fi
+}
+
+mark_done() {
+  local num="$1"
+  local file
+
+  if file=$(get_project_todo) && [ -f "$file" ]; then
+    : # use project file
+  else
+    file="$GLOBAL_TODO"
+  fi
+
+  if [ ! -f "$file" ]; then
+    echo "==> No todo file found" >&2
+    exit 1
+  fi
+
+  # Find the Nth open item (1-based)
+  local line_num
+  line_num=$(grep -n '^- \[ \]' "$file" | sed -n "${num}p" | cut -d: -f1) || true
+
+  if [ -z "$line_num" ]; then
+    echo "==> No open item #$num in $file" >&2
+    exit 1
+  fi
+
+  sed -i '' -e "${line_num}s/^- \[ \]/- [x]/" "$file"
+  echo "==> Marked item #$num as done in $file"
+}
+
+# Parse arguments
+global=false
+done_num=""
+
+while [[ "${1:-}" == --* ]]; do
+  case "$1" in
+    --global)
+      global=true
+      shift
+      ;;
+    --done)
+      done_num="${2:-}"
+      if [ -z "$done_num" ]; then
+        echo "Usage: todo --done <number>" >&2
+        exit 1
+      fi
+      shift 2
+      ;;
+    *)
+      echo "Unknown flag: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+text="${1:-}"
+
+if [ -n "$done_num" ]; then
+  mark_done "$done_num"
+elif [ -n "$text" ]; then
+  if [ "$global" = true ]; then
+    add_item "$GLOBAL_TODO" "$text"
+  elif project_file=$(get_project_todo); then
+    add_item "$project_file" "$text"
+  else
+    add_item "$GLOBAL_TODO" "$text"
+  fi
+else
+  list_items
+fi

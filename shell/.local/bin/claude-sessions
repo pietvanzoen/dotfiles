@@ -518,6 +518,13 @@ def run():
             stage_display = pr_part
             stage_plain = pr_part_plain
 
+        # Truncate stage column if content overflows (hyperlink must stay within column bounds)
+        if len(stage_plain) > stage_w:
+            truncated = stage_plain[:stage_w - 1] + "…"
+            combined_color = STAGE_COLORS.get(stage, DIM) if stage else DIM
+            stage_display = c(truncated, combined_color)
+            stage_plain = truncated
+
         # Pad manually since color codes throw off f-string width
         next_plain   = (next_line[:next_w - 1] + "…" if len(next_line) > next_w else next_line)
         id_col       = (c(sid, DIM) + " " * (ID_W - len(sid)) + "  ") if show_ids else ""
