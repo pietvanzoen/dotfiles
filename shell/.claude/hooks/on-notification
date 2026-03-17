@@ -20,4 +20,4 @@ terminal-notifier \
   -sound "$sound" \
   -contentImage "$HOME/.claude/icons/claude.png"
 
-ntfy-notify "Claude Code - $dir_context" "$message"
+ntfy-notify --away-only "Claude Code - $dir_context" "$message"
