@@ -5,7 +5,7 @@
 # Options:
 #   --away-only        Only send if screensaver is running or display is sleeping
 #   --topic <topic>    Override the ntfy topic (overrides env var and config file)
-#   --tags <tag1,...>  Comma-separated list of ntfy tags (emoji shortcuts supported)
+#   --tag|--tags <tag1,...>  Comma-separated list of ntfy tags (emoji shortcuts supported)
 #   --debug            Print resolved config and curl command without sending
 #
 # Config:
@@ -26,7 +26,7 @@ while true; do
     --away-only) away_only=1; shift ;;
     --debug) debug=1; shift ;;
     --topic) topic_arg="${2:?topic value required}"; shift 2 ;;
-    --tags) tags_arg="$2"; shift 2 ;;
+    --tag|--tags) tags_arg="$2"; shift 2 ;;
     *) break ;;
   esac
 done
