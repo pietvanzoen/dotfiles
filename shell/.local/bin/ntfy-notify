@@ -44,8 +44,11 @@ if [ -n "$NTFY_TOKEN" ]; then
   auth_args=(-H "Authorization: Bearer $NTFY_TOKEN")
 fi
 
+title="${title//$'\r'/}"
+title="${title//$'\n'/}"
+
 curl -s -o /dev/null \
   "${auth_args[@]}" \
   -H "Title: $title" \
-  -d "$message" \
+  --data-raw "$message" \
   "$url" &
