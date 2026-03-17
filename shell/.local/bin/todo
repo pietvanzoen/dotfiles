@@ -23,7 +23,7 @@ add_item() {
   local file="$1" text="$2"
   mkdir -p "$(dirname "$file")"
   echo "- [ ] $(date +%Y-%m-%d) $text" >> "$file"
-  echo "==> Added to $file"
+  echo "==> Added to $(basename "$(dirname "$file")")/.todo.md"
 }
 
 list_items() {
@@ -74,7 +74,7 @@ mark_done() {
   fi
 
   sed -i'' -e "${line_num}s/^- \[ \]/- [x]/" "$file"
-  echo "==> Marked item #$num as done in $file"
+  echo "==> Marked item #$num as done in $(basename "$(dirname "$file")")/.todo.md"
 }
 
 # Parse arguments
