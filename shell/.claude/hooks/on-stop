@@ -27,5 +27,31 @@ if [ -n "$TMUX" ]; then
   fi
 fi
 
+# Save last assistant response text for /copy skill
+session_id=$(echo "$input" | jq -r '.session_id // ""')
+if [ -n "$session_id" ] && [ "$session_id" != "null" ] && [ -n "$cwd" ]; then
+  encoded_cwd="${cwd//\//-}"
+  jsonl_file="$HOME/.claude/projects/${encoded_cwd}/${session_id}.jsonl"
+  if [ -f "$jsonl_file" ]; then
+    python3 - "$jsonl_file" > "$HOME/.claude/last-response.txt" <<'PYEOF'
+import json, sys
+last_text = None
+with open(sys.argv[1]) as f:
+    for line in f:
+        try:
+            entry = json.loads(line)
+            if entry.get("type") == "assistant":
+                content = entry.get("message", {}).get("content", [])
+                texts = [b["text"] for b in content if b.get("type") == "text"]
+                if texts:
+                    last_text = "\n\n".join(texts)
+        except Exception:
+            continue
+if last_text:
+    print(last_text, end="")
+PYEOF
+  fi
+fi
+
 # Refresh notes (PR info, mtime) in the background
 (cd "$cwd" && claude-notes-update --refresh) &

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Copy the last saved Claude response to clipboard
+
+last_response_file="$HOME/.claude/last-response.txt"
+
+if [ ! -f "$last_response_file" ]; then
+  echo "==> No saved response found. Try again after Claude finishes a response." >&2
+  exit 1
+fi
+
+pbcopy < "$last_response_file"
+char_count=$(wc -c < "$last_response_file" | tr -d ' ')
+echo "==> Copied $char_count characters to clipboard"
