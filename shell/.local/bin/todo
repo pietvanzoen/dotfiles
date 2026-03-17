@@ -58,14 +58,13 @@ print_items() {
   local file="$1"
   local count=0
   while IFS= read -r line; do
-    local num date_str text rel
-    num=$(echo "$line" | cut -d: -f1)
+    local date_str text rel
     date_str=$(echo "$line" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
     text="${line#*- \[ \] ????-??-?? }"
     rel=$(relative_date "$date_str")
-    printf "  ${YELLOW}%s.${RESET} ${DIM}%s${RESET} %s\n" "$num" "$rel" "$text"
     count=$(( count + 1 ))
-  done < <(grep -n '^- \[ \]' "$file")
+    printf "  ${YELLOW}%s.${RESET} ${DIM}%-10s${RESET} %s\n" "$count" "$rel" "$text"
+  done < <(grep '^- \[ \]' "$file")
   [ "$count" -eq 0 ] && empty_state
 }
 
