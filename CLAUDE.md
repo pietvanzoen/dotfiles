@@ -42,6 +42,7 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 
 - `sed -i '' -e 'expr' file` exits 2 with "can't read : No such file" on macOS even when the edit succeeds — use `sed -i''` (no space) instead
 - Check `shell/.local/lib/aliases.sh` for alias conflicts before naming new scripts in `~/.local/bin/`
+- If a newly stowed command isn't found, ask the user to reload their shell (`source ~/.zshrc`) — don't work around it by using the full `~/.local/bin/` path
 
 ## Workflow
 
