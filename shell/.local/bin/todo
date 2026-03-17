@@ -5,10 +5,10 @@ GLOBAL_TODO="$HOME/.claude/todo.md"
 
 # Colors (when writing to a terminal or FORCE_COLOR is set)
 if [ -t 1 ] || [ "${FORCE_COLOR:-0}" != "0" ]; then
-  CYAN='\033[1;36m'
-  YELLOW='\033[1;33m'
-  DIM='\033[2m'
-  RESET='\033[0m'
+  CYAN=$'\033[1;36m'
+  YELLOW=$'\033[1;33m'
+  DIM=$'\033[2m'
+  RESET=$'\033[0m'
 else
   CYAN='' YELLOW='' DIM='' RESET=''
 fi
@@ -30,7 +30,7 @@ list_items() {
   local project_file global_file shown=false
 
   if project_file=$(get_project_todo) && [ -f "$project_file" ]; then
-    echo -e "${CYAN}==> Project: $(basename "$(dirname "$project_file")")${RESET}"
+    echo "${CYAN}==> Project: $(basename "$(dirname "$project_file")")${RESET}"
     grep -n '^- \[ \]' "$project_file" \
       | sed "s/^\([0-9]*\):- \[ \] \([-0-9]*\) \(.*\)$/  ${YELLOW}\1.${RESET} ${DIM}\2${RESET} \3/" || true
     shown=true
@@ -38,14 +38,14 @@ list_items() {
 
   global_file="$GLOBAL_TODO"
   if [ -f "$global_file" ]; then
-    echo -e "${CYAN}==> Global${RESET}"
+    echo "${CYAN}==> Global${RESET}"
     grep -n '^- \[ \]' "$global_file" \
       | sed "s/^\([0-9]*\):- \[ \] \([-0-9]*\) \(.*\)$/  ${YELLOW}\1.${RESET} ${DIM}\2${RESET} \3/" || true
     shown=true
   fi
 
   if [ "$shown" = false ]; then
-    echo -e "${DIM}==> No todo files found${RESET}"
+    echo "${DIM}==> No todo files found${RESET}"
   fi
 }
 
