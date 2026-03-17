@@ -102,7 +102,7 @@ while [[ "${1:-}" == --* ]]; do
   esac
 done
 
-text="${1:-}"
+text="${*:-}"
 
 if [ -n "$done_num" ]; then
   mark_done "$done_num"
