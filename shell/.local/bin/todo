@@ -20,7 +20,7 @@ list_items() {
   local project_file global_file shown=false
 
   if project_file=$(get_project_todo) && [ -f "$project_file" ]; then
-    echo "==> Project: $project_file"
+    echo "==> Project: $(basename "$(dirname "$project_file")")"
     grep -n '^- \[ \]' "$project_file" | sed 's/^\([0-9]*\):- \[ \] /  \1. /' || true
     shown=true
   fi
