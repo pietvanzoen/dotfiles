@@ -32,7 +32,8 @@ done
 title="${1:?title required}"
 message="${2:?message required}"
 
-topic="${topic_arg:-${NTFY_TOPIC:-$(tr -d '[:space:]' < ~/.config/ntfy/topic 2>/dev/null)}}"
+# shellcheck disable=SC2002
+topic="${topic_arg:-${NTFY_TOPIC:-$(cat ~/.config/ntfy/topic 2>/dev/null | tr -d '[:space:]')}}"
 [ -z "$topic" ] && exit 0
 
 if [ "$away_only" = "1" ]; then
