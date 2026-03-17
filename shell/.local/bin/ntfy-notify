@@ -39,7 +39,13 @@ fi
 
 url="${NTFY_URL:-https://ntfy.sh}/$topic"
 
+auth_args=()
+if [ -n "$NTFY_TOKEN" ]; then
+  auth_args=(-H "Authorization: Bearer $NTFY_TOKEN")
+fi
+
 curl -s -o /dev/null \
+  "${auth_args[@]}" \
   -H "Title: $title" \
   -d "$message" \
   "$url" &
