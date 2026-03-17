@@ -40,16 +40,33 @@ relative_date() {
   fi
 }
 
+HHGTTG_QUOTES=(
+  "I love deadlines. I love the whooshing noise they make as they go by."
+  "Time is an illusion. Lunchtime doubly so."
+  "Nothing travels faster than the speed of light, with the possible exception of bad news."
+  "The knack of flying is learning how to throw yourself at the ground and miss."
+  "In the beginning the Universe was created. This has made a lot of people very angry and been widely regarded as a bad move."
+  "For a moment, nothing happened. Then, after a second or so, nothing continued to happen."
+)
+
+empty_state() {
+  local idx=$(( RANDOM % ${#HHGTTG_QUOTES[@]} ))
+  printf "  %s%s%s\n" "$DIM" "${HHGTTG_QUOTES[$idx]}" "$RESET"
+}
+
 print_items() {
   local file="$1"
-  grep -n '^- \[ \]' "$file" | while IFS= read -r line; do
+  local count=0
+  while IFS= read -r line; do
     local num date_str text rel
     num=$(echo "$line" | cut -d: -f1)
     date_str=$(echo "$line" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
     text="${line#*- \[ \] ????-??-?? }"
     rel=$(relative_date "$date_str")
     printf "  ${YELLOW}%s.${RESET} ${DIM}%s${RESET} %s\n" "$num" "$rel" "$text"
-  done
+    count=$(( count + 1 ))
+  done < <(grep -n '^- \[ \]' "$file")
+  [ "$count" -eq 0 ] && empty_state
 }
 
 list_items() {
