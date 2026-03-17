@@ -69,7 +69,9 @@
       "mcp__trello__get_active_board_info",
       "mcp__trello__set_active_board",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(slack-api *)"
+      "Bash(slack-api *)",
+      "Bash(todo *)",
+      "Bash(todo)"
     ],
     "deny": [
       "Bash(curl:*)",
