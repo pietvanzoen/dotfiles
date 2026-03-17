@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Send a push notification via ntfy.sh (or self-hosted ntfy server).
-# Usage: ntfy-notify [--away-only] <title> <message>
+# Usage: ntfy-notify [--away-only] [--topic <topic>] <title> <message>
 #
 # Options:
-#   --away-only   Only send if screensaver is running or display is sleeping
+#   --away-only      Only send if screensaver is running or display is sleeping
+#   --topic <topic>  Override the ntfy topic (overrides env var and config file)
 #
 # Config (pick one):
 #   - Set NTFY_TOPIC env var to your topic name
@@ -16,15 +17,19 @@
 # and replace the placeholder with your ntfy topic name.
 
 away_only=0
-if [ "$1" = "--away-only" ]; then
-  away_only=1
-  shift
-fi
+topic_arg=""
+while true; do
+  case "$1" in
+    --away-only) away_only=1; shift ;;
+    --topic) topic_arg="${2:?topic value required}"; shift 2 ;;
+    *) break ;;
+  esac
+done
 
 title="${1:?title required}"
 message="${2:?message required}"
 
-topic="${NTFY_TOPIC:-$(cat ~/.config/ntfy/topic 2>/dev/null | tr -d '[:space:]')}"
+topic="${topic_arg:-${NTFY_TOPIC:-$(cat ~/.config/ntfy/topic 2>/dev/null | tr -d '[:space:]')}}"
 [ -z "$topic" ] && exit 0
 
 if [ "$away_only" = "1" ]; then
