@@ -8,8 +8,7 @@
 #   --tags <tag1,...>  Comma-separated list of ntfy tags (emoji shortcuts supported)
 #   --debug            Print the curl command instead of running it
 #
-# Config (pick one):
-#   - Set NTFY_TOPIC env var to your topic name
+# Config:
 #   - Write your topic name to ~/.config/ntfy/topic
 #
 # Optional:
