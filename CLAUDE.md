@@ -44,6 +44,16 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - Check `shell/.local/lib/aliases.sh` for alias conflicts before naming new scripts in `~/.local/bin/`
 - If a newly stowed command isn't found, ask the user to reload their shell (`exec zsh`) — don't work around it by using the full `~/.local/bin/` path
 
+## Script language selection
+
+- **Bash**: simple glue — invoking commands, file ops, < ~50 lines, no structured data
+- **Node.js**: complex logic — HTTP, JSON, async, structured data, anything > ~50 lines of bash
+  - Shebang: `#!/usr/bin/env node` (CommonJS `require`, no build step)
+  - Avoid `node_modules` where possible; prefer built-in `fetch`/`fs`/`readline` (Node ≥ 18)
+  - `node` is available in all shells via `~/.zshenv` PATH fix
+- **Python**: only for existing scripts (e.g. `claude-sessions`); don't start new scripts in Python
+- **Deno/Bun/zx**: don't introduce new runtimes without discussion
+
 ## Workflow
 
 After creating new files that need to be stowed (executables, configs, etc.), run:
