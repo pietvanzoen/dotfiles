@@ -104,6 +104,8 @@ and proactively suggest the next action:
 3. **Planning**
    - Present a plan outlining the approach
    - Discuss possible solutions and trade-offs
+   - **Always end plans with a bold recommended model**, e.g.:
+     **> Recommended model for implementation: Sonnet (Opt+P)**
    - Get user approval before implementation
    - Update the Linear ticket description with the accepted plan: preserve
      any existing description, add a horizontal rule (`---`), and append
