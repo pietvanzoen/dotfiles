@@ -19,3 +19,5 @@ terminal-notifier \
   -message "$message" \
   -sound "$sound" \
   -contentImage "$HOME/.claude/icons/claude.png"
+
+ntfy-notify --away-only --topic claude --tags robot "Claude Code - $dir_context" "$message"

@@ -41,6 +41,7 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 ## macOS shell scripting gotchas
 
 - `sed -i '' -e 'expr' file` exits 2 with "can't read : No such file" on macOS even when the edit succeeds — use `sed -i''` (no space) instead
+- `cmd < file 2>/dev/null` does NOT suppress bash's "no such file" error for the redirect — use `cat file 2>/dev/null | cmd` instead (add `# shellcheck disable=SC2002`)
 - Check `shell/.local/lib/aliases.sh` for alias conflicts before naming new scripts in `~/.local/bin/`
 - If a newly stowed command isn't found, ask the user to reload their shell (`exec zsh`) — don't work around it by using the full `~/.local/bin/` path
 

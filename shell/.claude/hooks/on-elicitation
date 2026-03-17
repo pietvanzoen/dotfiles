@@ -18,4 +18,6 @@ terminal-notifier \
   -sound Purr \
   -contentImage "$HOME/.claude/icons/claude.png"
 
+ntfy-notify --away-only --topic claude "Claude Code - $dir_context" "Has a question for you"
+
 [ -n "$TMUX" ] && tmux rename-window "⏸ $(basename "${cwd:-$PWD}")"
