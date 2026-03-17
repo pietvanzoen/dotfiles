@@ -93,6 +93,9 @@ function cc() {
   if [[ -n "$session_id" ]]; then
     claude --remote-control --resume "$session_id" "$@"
   else
+    local colors=(red orange yellow green teal cyan blue purple pink magenta)
+    local color="${colors[$((RANDOM % ${#colors[@]}))]}"
+    { sleep 2 && tmux send-keys -t "$TMUX_PANE" "/color $color" Enter; } &
     claude --remote-control "$@"
   fi
 }
