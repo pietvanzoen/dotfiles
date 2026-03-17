@@ -39,7 +39,13 @@ macos-titlebar-style = hidden
 macos-option-as-alt = left
 scrollback-limit = 10000
 confirm-close-surface = false
-auto-update = off
+auto-update = on
 
 # ── Shell ────────────────────────────────────────────────────────────
 shell-integration = zsh
+
+# ── Keybindings ──────────────────────────────────────────────────────
+# Pass Ctrl+Tab / Shift+Ctrl+Tab through to tmux for window navigation
+# tmux: C-Tab=next-window, User0(\e[1;6Z)=previous-window
+keybind = ctrl+tab=send_text:\x1b[1;5I
+keybind = shift+ctrl+tab=send_text:\x1b[1;6Z
