@@ -1,5 +1,10 @@
 source $HOME/.local/setup_env.sh
 
+# Ghostty shell integration (only injected when running directly in Ghostty, not via tmux)
+if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+  source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+fi
+
 setopt autocd # cd without cd
 setopt globdots # match dotfiles in globs by default
 setopt extendedglob # more globbing
