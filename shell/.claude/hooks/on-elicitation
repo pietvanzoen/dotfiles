@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 # Hook: Notification (elicitation_dialog)
 # - Fires terminal-notifier asking for input
-# - Renames tmux window to ⏸ <basename> to signal Claude is waiting
+# - Sets @claude-needs-input window option for tmux status indicator
 
 input=$(cat)
+
+set_claude_state() {  # args: thinking needs_input done
+  [ -n "$TMUX" ] || return
+  tmux set-window-option @claude-thinking "${1}" 2>/dev/null || true
+  tmux set-window-option @claude-needs-input "${2}" 2>/dev/null || true
+  tmux set-window-option @claude-done "${3}" 2>/dev/null || true
+}
+set_claude_state 0 1 0
 
 cwd=$(echo "$input" | jq -r '.cwd // ""')
 if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
@@ -22,4 +30,3 @@ question=$(echo "$input" | jq -r '.message // ""')
 ntfy_msg="${question:-Has a question for you}"
 ntfy-notify --away-only --topic claude --tags robot "Claude Code - $dir_context" "$ntfy_msg"
 
-[ -n "$TMUX" ] && tmux rename-window "⏸ $(basename "${cwd:-$PWD}")"

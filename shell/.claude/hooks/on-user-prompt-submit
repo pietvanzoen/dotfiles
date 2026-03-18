@@ -4,6 +4,14 @@
 
 input=$(cat)
 
+set_claude_state() {  # args: thinking needs_input done
+  [ -n "$TMUX" ] || return
+  tmux set-window-option @claude-thinking "${1}" 2>/dev/null || true
+  tmux set-window-option @claude-needs-input "${2}" 2>/dev/null || true
+  tmux set-window-option @claude-done "${3}" 2>/dev/null || true
+}
+set_claude_state 1 0 0
+
 completed=$(echo "$input" | jq -r '.todos[]? | select(.status == "completed") | .content' 2>/dev/null | wc -l | xargs)
 cwd=$(echo "$input" | jq -r '.cwd // ""')
 
