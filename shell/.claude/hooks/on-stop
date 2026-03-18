@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Hook: Stop
 # - Fires terminal-notifier "Done"
-# - Renames tmux window back to basename (removes ⏺ indicator)
 
 input=$(cat)
 
@@ -42,21 +41,12 @@ PYEOF
 fi
 
 terminal-notifier \
-  -title "Claude Code - $dir_context" \
+  -title "$dir_context - Claude Code" \
   -message "Done" \
   -sound Glass \
   -contentImage "$HOME/.claude/icons/claude.png"
 
-ntfy-notify --away-only --topic claude --tags robot "Claude Code - $dir_context" "$last_msg"
-
-# Clear ⏺ from the current tmux window only
-if [ -n "$TMUX" ]; then
-  current_name=$(tmux display-message -p '#{window_name}' 2>/dev/null)
-  if [[ "$current_name" == "⏺ "* ]]; then
-    tmux rename-window "${current_name#⏺ }" 2>/dev/null || true
-    tmux set-window-option automatic-rename on 2>/dev/null || true
-  fi
-fi
+ntfy-notify --away-only --topic claude --tags robot "$dir_context - Claude Code" "$last_msg"
 
 # Save last assistant response text for /copy skill
 if [ -n "$session_id" ] && [ "$session_id" != "null" ] && [ -n "$cwd" ]; then
@@ -84,4 +74,4 @@ PYEOF
 fi
 
 # Refresh notes (PR info, mtime) in the background
-(cd "$cwd" && claude-notes-update --refresh) &
+(cd "$cwd" && claude-notes-update --refresh) >/dev/null 2>&1 &

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Hook: UserPromptSubmit
 # - Fires terminal-notifier if any todos were completed
-# - Renames tmux window to ⏺ <basename>
 
 input=$(cat)
 
@@ -16,15 +15,10 @@ fi
 
 if [ "$completed" -gt 0 ]; then
   terminal-notifier \
-    -title "Claude Code - $dir_context" \
+    -title "$dir_context - Claude Code" \
     -message "Completed $completed task(s)" \
     -sound Glass \
     -contentImage "$HOME/.claude/icons/claude.png"
-fi
-
-if [ -n "$TMUX" ]; then
-  current_name=$(tmux display-message -p '#{window_name}' 2>/dev/null)
-  [[ "$current_name" != "⏺ "* ]] && tmux rename-window "⏺ $current_name"
 fi
 
 # Update prompt: line in .claude-notes (create file if absent)
