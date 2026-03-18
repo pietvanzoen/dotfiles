@@ -83,6 +83,7 @@ Also run `make update` after renaming or moving stowed files to fix symlinks.
 - `#{session_name}` inside `#()` shell commands gets expanded to the *current* session name before the shell runs — use `##{session_name}` to pass it literally
 - Custom escape sequences for key bindings: use `set -s user-keys[N] "\e[seq"` + `bind-key -n UserN action` rather than relying on tmux recognising the sequence as a named key (e.g. `C-Tab`)
 - `set-window-option @foo "0"` does NOT clear the option for `#{?#{@foo},...}` conditionals — `"0"` is non-empty and truthy; use `set-window-option -u @foo` to unset
+- `set-window-option` without `-t` targets the **active client window**, not the window of the running process — always pass `-t "$TMUX_PANE"` in hook scripts to target the correct window
 - `done` is a bash reserved word — avoid using it as a shell argument or `case` label without quoting
 
 ## Ghostty gotchas
