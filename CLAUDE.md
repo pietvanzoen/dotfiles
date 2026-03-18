@@ -75,13 +75,15 @@ Also run `make update` after renaming or moving stowed files to fix symlinks.
 
 ## Nerd Font glyphs
 
-- Write/Edit tools silently drop Nerd Font glyphs (U+E0A0, U+E0B4, U+E0B6, etc.) — inject via Python: `python3 -c "f='path'; c=open(f).read(); c=c.replace('X', '\ue0b6'); open(f,'w').write(c)"`
+- Write/Edit tools silently drop Nerd Font glyphs **and may also fail to match lines containing other non-ASCII Unicode** (e.g. ◎, ●) — use Python for any file edits involving Unicode symbols: `python3 -c "f='path'; c=open(f).read(); c=c.replace('X', '\ue0b6'); open(f,'w').write(c)"`
 - Avoid Nerd Font glyphs in `window-status-current-format` — Ghostty renders them at wrong cell width causing tab shifting; ok in status-left/right (fixed width)
 
 ## tmux gotchas
 
 - `#{session_name}` inside `#()` shell commands gets expanded to the *current* session name before the shell runs — use `##{session_name}` to pass it literally
 - Custom escape sequences for key bindings: use `set -s user-keys[N] "\e[seq"` + `bind-key -n UserN action` rather than relying on tmux recognising the sequence as a named key (e.g. `C-Tab`)
+- `set-window-option @foo "0"` does NOT clear the option for `#{?#{@foo},...}` conditionals — `"0"` is non-empty and truthy; use `set-window-option -u @foo` to unset
+- `done` is a bash reserved word — avoid using it as a shell argument or `case` label without quoting
 
 ## Ghostty gotchas
 
