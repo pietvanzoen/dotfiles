@@ -45,7 +45,7 @@ link-previews = true
 
 # ── Shell ────────────────────────────────────────────────────────────
 shell-integration = zsh
-command = /opt/homebrew/bin/tmux new-session -A -s dev
+# command = /opt/homebrew/bin/tmux new-session -A -s dev
 
 # ── Keybindings ──────────────────────────────────────────────────────
 # Pass Ctrl+Tab / Shift+Ctrl+Tab through to tmux for window navigation
