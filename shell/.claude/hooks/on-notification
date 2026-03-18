@@ -7,13 +7,18 @@ sound="${2:?sound required}"
 
 input=$(cat)
 
-set_claude_state() {  # args: thinking needs_input done
+set_claude_state() {  # arg: thinking|needs_input|done|idle
   [ -n "$TMUX" ] || return
-  tmux set-window-option @claude-thinking "${1}" 2>/dev/null || true
-  tmux set-window-option @claude-needs-input "${2}" 2>/dev/null || true
-  tmux set-window-option @claude-done "${3}" 2>/dev/null || true
+  tmux set-window-option -u @claude-thinking 2>/dev/null || true
+  tmux set-window-option -u @claude-needs-input 2>/dev/null || true
+  tmux set-window-option -u @claude-done 2>/dev/null || true
+  case "$1" in
+    thinking)    tmux set-window-option @claude-thinking 1 2>/dev/null || true ;;
+    needs_input) tmux set-window-option @claude-needs-input 1 2>/dev/null || true ;;
+    finished)    tmux set-window-option @claude-done 1 2>/dev/null || true ;;
+  esac
 }
-set_claude_state 0 1 0
+set_claude_state needs_input
 
 cwd=$(echo "$input" | jq -r '.cwd // ""')
 if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
