@@ -1,3 +1,13 @@
+# Claude Code — reset tmux window state indicators on session exit
+claude() {
+  command claude "$@"
+  if [ -n "$TMUX" ] && [ -n "$TMUX_PANE" ]; then
+    tmux set-window-option -t "$TMUX_PANE" -u @claude-thinking 2>/dev/null || true
+    tmux set-window-option -t "$TMUX_PANE" -u @claude-needs-input 2>/dev/null || true
+    tmux set-window-option -t "$TMUX_PANE" -u @claude-done 2>/dev/null || true
+  fi
+}
+
 # GENERAL
 alias xn="exe-notify"
 alias date-iso="date -u +'%Y-%m-%dT%H:%M:%SZ'"
