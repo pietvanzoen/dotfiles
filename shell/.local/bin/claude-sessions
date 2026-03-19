@@ -592,7 +592,7 @@ def interactive():
             # Header
             header = "  PROJECT              BRANCH                   STATUS        STAGE                NEXT                        LAST ACTIVE"
             try:
-                stdscr.addstr(0, 0, header[:cols], curses.A_BOLD | curses.color_pair(5))
+                stdscr.addstr(0, 0, header[:cols], curses.A_BOLD)
             except curses.error:
                 pass
             divider = "  " + ("─" * min(cols - 4, 200))
@@ -672,7 +672,9 @@ def interactive():
                 branch_display = branch_display[:25] if len(branch_display) > 25 else branch_display
                 next_line_trunc = next_line[:27] if len(next_line) > 27 else next_line
 
-                line = f"  {proj:<20} {branch_display:<25} {status_str:<14} {stage:<20} {next_line_trunc:<27} {age_str}"
+                # Add caret indicator for selected row
+                indicator = ">" if idx == selected else " "
+                line = f"{indicator} {proj:<20} {branch_display:<25} {status_str:<14} {stage:<20} {next_line_trunc:<27} {age_str}"
 
                 # Highlight selected row (subtle: just bold instead of reverse)
                 attr = curses.A_BOLD if idx == selected else 0
