@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Search DuckDuckGo from the command line
+# Usage: ddg <query>
+
+query="$*"
+if [ -z "$query" ]; then
+  echo "Usage: ddg <query>" >&2
+  exit 1
+fi
+
+encoded=$(node -e "process.stdout.write(encodeURIComponent(process.argv[1]))" -- "$query")
+open "https://duckduckgo.com/?q=$encoded"
