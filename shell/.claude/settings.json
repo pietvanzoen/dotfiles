@@ -102,6 +102,7 @@
       "Write(./.env*)"
     ]
   },
+  "model": "haiku",
   "hooks": {
     "UserPromptSubmit": [
       {

@@ -83,6 +83,8 @@ Before committing code: **always run the project's linter/formatter if available
 ## Git commands
 Run git commands as separate tool calls, one at a time. Never chain them with `&&` or `;` in a single Bash call. This keeps the activity history clear and readable in the output, and makes it easier to see the progression of changes.
 
+Never use `git -C /absolute/path` when the shell's cwd is already the correct directory — use plain `git add`, `git commit`, etc. instead. Explicit paths trigger extra permission prompts for no benefit.
+
 ## Task Workflow
 When starting a new task, Claude should guide the user through these steps
 and proactively suggest the next action:
