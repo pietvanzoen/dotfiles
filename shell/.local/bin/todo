@@ -113,8 +113,10 @@ mark_done() {
     exit 1
   fi
 
+  local item_text
+  item_text=$(sed -n "${line_num}p" "$file" | sed 's/^- \[ \] [0-9-]* //')
   sed -i'' -e "${line_num}s/^- \[ \]/- [x]/" "$file"
-  echo "==> Marked item #$num as done in $(basename "$(dirname "$file")")/.todo.md"
+  echo "==> Marked item #$num as done in $(basename "$(dirname "$file")")/.todo.md: $item_text"
 }
 
 # Parse arguments
