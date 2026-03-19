@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # Show status of all active Claude Code sessions across projects.
-# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--age AGE] [-P|--project SUBSTR] [--prune] [--prune-merged] [--delete ID]
+# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [-I|--interactive] [--age AGE] [-P|--project SUBSTR] [--prune] [--prune-merged] [--delete ID]
 #   -a, --all         Show all sessions regardless of age (default: last 30 days)
 #   -i, --ids         Show session IDs (for use with --delete)
 #   -p, --pr          Fetch PR info from GitHub (slower — requires gh)
 #   -w, --watch [N]   Live-updating dashboard, refreshing every N seconds (default: 5)
+#   -I, --interactive Interactive curses-based TUI with navigation and actions
 #   --age AGE         Only show sessions newer than AGE (e.g. 7d, 24h, 30m)
 #   -P, --project     Only show sessions whose project name contains SUBSTR (case-insensitive)
 #   --prune           Remove project dirs whose cwd no longer exists
@@ -12,7 +13,9 @@
 #   --delete ID       Delete a specific session by its short ID
 
 import atexit
+import curses
 import json
+import locale
 import os
 import re
 import signal
@@ -58,6 +61,7 @@ prune = False
 prune_merged = False
 delete_id = None
 watch_interval = None
+interactive_mode = False
 project_filter = None
 max_age_seconds = MAX_AGE_DAYS * 86400
 
@@ -81,6 +85,8 @@ while i < len(args):
         show_ids = True
     elif arg in ("-p", "--pr"):
         fetch_pr = True
+    elif arg in ("-I", "--interactive"):
+        interactive_mode = True
     elif arg in ("-w", "--watch"):
         watch_interval = 5
         if i + 1 < len(args) and args[i + 1].isdigit():
@@ -115,12 +121,12 @@ while i < len(args):
         delete_id = args[i]
         show_all = True
     else:
-        print(f"Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [--age AGE] [-P|--project SUBSTR] [--prune] [--prune-merged] [--delete ID]", file=sys.stderr)
+        print(f"Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [-I|--interactive] [--age AGE] [-P|--project SUBSTR] [--prune] [--prune-merged] [--delete ID]", file=sys.stderr)
         sys.exit(1)
     i += 1
 
-if watch_interval is not None and (delete_id or prune or prune_merged):
-    print("--watch cannot be combined with --delete, --prune, or --prune-merged", file=sys.stderr)
+if sum([watch_interval is not None, interactive_mode, delete_id is not None, prune, prune_merged]) > 1:
+    print("--watch, --interactive, --delete, --prune, and --prune-merged are mutually exclusive", file=sys.stderr)
     sys.exit(1)
 
 LOCKFILE = "/tmp/claude-sessions-watch.pid"
@@ -286,6 +292,90 @@ STAGE_COLORS = {
 
 TICKET_RE = re.compile(r'^[a-z]+-\d+', re.IGNORECASE)
 
+
+def collect_data():
+    """Collect session data and return list of result tuples.
+    Each tuple: (cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage, project_dir)
+    """
+    global now
+    now = int(time.time())
+
+    # Map cwd -> (mtime, jsonl_path, age, branch, project_dir)
+    best = {}
+
+    for entry in os.scandir(PROJECTS_DIR):
+        if not entry.is_dir():
+            continue
+        latest_jsonl = None
+        latest_mtime = 0
+        for f in os.scandir(entry.path):
+            if not f.name.endswith(".jsonl"):
+                continue
+            mtime = int(f.stat().st_mtime)
+            if mtime > latest_mtime:
+                latest_mtime = mtime
+                latest_jsonl = f.path
+
+        if not latest_jsonl:
+            continue
+
+        age = now - latest_mtime
+        if not show_all and age > max_age_seconds:
+            continue
+
+        cwd, branch = read_session(latest_jsonl)
+        if not cwd:
+            continue
+
+        if not os.path.isdir(cwd):
+            continue
+
+        # Keep only the most recent session per cwd
+        if cwd not in best or latest_mtime > best[cwd][0]:
+            best[cwd] = (latest_mtime, latest_jsonl, age, branch, entry.path)
+
+    if not best:
+        return []
+
+    # Apply project filter
+    if project_filter:
+        best = {cwd: v for cwd, v in best.items() if project_filter in os.path.basename(cwd).lower()}
+
+    # Sort by mtime descending
+    projects = sorted(best.items(), key=lambda x: x[1][0], reverse=True)
+
+    # Fetch git status and (optionally) PR info in parallel
+    def fetch_project_data(item):
+        cwd, (mtime, jsonl, age, branch, project_dir) = item
+        dirty = git_dirty_count(cwd)
+        notes, prompt_line, next_line, pr, stage = read_notes(cwd)
+        sid = os.path.basename(jsonl).replace(".jsonl", "")[:7]
+        # --pr flag: use cache to avoid hammering the GitHub API every cycle
+        if fetch_pr and branch:
+            key = (cwd, branch)
+            cached = PR_CACHE.get(key)
+            if cached:
+                fetched_at, cached_pr = cached
+                cached_state = cached_pr.split()[1].lower() if len(cached_pr.split()) >= 2 else ""
+                is_final = cached_state in ("merged", "closed")
+                if is_final or (time.time() - fetched_at < PR_CACHE_TTL):
+                    pr = cached_pr
+                else:
+                    pr = gh_pr_info(cwd, branch)
+                    PR_CACHE[key] = (time.time(), pr)
+            else:
+                pr = gh_pr_info(cwd, branch)
+                PR_CACHE[key] = (time.time(), pr)
+        if not pr:
+            pr = "—"
+        return cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage, project_dir
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        results = list(pool.map(fetch_project_data, projects))
+
+    return results
+
+
 def make_label(cwd, branch):
     """Return (project, display_branch) for separate column rendering (untruncated)."""
     project = os.path.basename(cwd)
@@ -320,135 +410,15 @@ def compute_widths(cols, ids):
 
 
 def run():
-    global now
-    now = int(time.time())
-
-    # --- Collect projects ---
-
-    # Map cwd -> (mtime, jsonl_path, age, branch, project_dir) — keep most recent session per cwd
-    best = {}
-
-    for entry in os.scandir(PROJECTS_DIR):
-        if not entry.is_dir():
-            continue
-        latest_jsonl = None
-        latest_mtime = 0
-        for f in os.scandir(entry.path):
-            if not f.name.endswith(".jsonl"):
-                continue
-            mtime = int(f.stat().st_mtime)
-            if mtime > latest_mtime:
-                latest_mtime = mtime
-                latest_jsonl = f.path
-
-        if not latest_jsonl:
-            continue
-
-        age = now - latest_mtime
-        if not show_all and age > max_age_seconds:
-            continue
-
-        cwd, branch = read_session(latest_jsonl)
-        if not cwd:
-            continue
-
-        # Short ID: first 7 chars of the most recent session UUID
-        sid = os.path.basename(latest_jsonl).replace(".jsonl", "")[:7]
-
-        if delete_id:
-            if sid.startswith(delete_id) or delete_id == sid:
-                proj, branch_display = make_label(cwd, branch)
-                label = proj + (f" {branch_display}" if branch_display else "")
-                is_worktree = os.path.isdir(cwd) and find_worktree_root(cwd)
-                print(f"  Session: {label} ({sid})")
-                print(f"  Path:    {cwd}")
-                if is_worktree:
-                    print(f"  Worktree will also be removed")
-                answer = input("\n  Delete this session? [y/N] ")
-                if answer.lower() in ("y", "yes"):
-                    if is_worktree:
-                        if remove_worktree(cwd):
-                            print(f"  Removed worktree: {cwd}")
-                    print(f"  Deleted: {label} ({sid})")
-                    shutil.rmtree(entry.path)
-                else:
-                    print("  Skipped.")
-            continue
-
-        if prune:
-            if not os.path.isdir(cwd):
-                print(f"Pruning: {entry.path}")
-                shutil.rmtree(entry.path)
-            continue
-
-        if prune_merged:
-            if not os.path.isdir(cwd):
-                continue
-            state = pr_state_from_notes(cwd)
-            # Fall back to gh if notes don't have PR state
-            if not state and branch:
-                pr_str = gh_pr_info(cwd, branch)
-                if pr_str and pr_str != "—":
-                    state = pr_str.split()[1] if len(pr_str.split()) >= 2 else ""
-            if state == "merged":
-                proj, branch_display = make_label(cwd, branch)
-                label = proj + (f" {branch_display}" if branch_display else "")
-                if remove_worktree(cwd):
-                    print(f"  Removed worktree: {cwd}")
-                print(f"  Pruned: {label}")
-                shutil.rmtree(entry.path)
-            continue
-
-        if not os.path.isdir(cwd):
-            continue
-
-        # Keep only the most recent session per cwd
-        if cwd not in best or latest_mtime > best[cwd][0]:
-            best[cwd] = (latest_mtime, latest_jsonl, age, branch, entry.path)
+    """Display session data in non-interactive mode."""
+    results = collect_data()
 
     if delete_id or prune or prune_merged:
         sys.exit(0)
 
-    if not best:
+    if not results:
         print("No active Claude sessions found.")
         return
-
-    # Apply project filter
-    if project_filter:
-        best = {cwd: v for cwd, v in best.items() if project_filter in os.path.basename(cwd).lower()}
-
-    # Sort by mtime descending
-    projects = sorted(best.items(), key=lambda x: x[1][0], reverse=True)
-
-    # --- Fetch git status and (optionally) PR info in parallel ---
-
-    def fetch_project_data(item):
-        cwd, (mtime, jsonl, age, branch, project_dir) = item
-        dirty = git_dirty_count(cwd)
-        notes, prompt_line, next_line, pr, stage = read_notes(cwd)
-        sid = os.path.basename(jsonl).replace(".jsonl", "")[:7]
-        # --pr flag: use cache to avoid hammering the GitHub API every cycle
-        if fetch_pr and branch:
-            key = (cwd, branch)
-            cached = PR_CACHE.get(key)
-            if cached:
-                fetched_at, cached_pr = cached
-                cached_state = cached_pr.split()[1].lower() if len(cached_pr.split()) >= 2 else ""
-                is_final = cached_state in ("merged", "closed")
-                if is_final or (time.time() - fetched_at < PR_CACHE_TTL):
-                    pr = cached_pr
-                else:
-                    pr = gh_pr_info(cwd, branch)
-                    PR_CACHE[key] = (time.time(), pr)
-            else:
-                pr = gh_pr_info(cwd, branch)
-                PR_CACHE[key] = (time.time(), pr)
-        if not pr:
-            pr = "—"
-        return cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage
-
-    with ThreadPoolExecutor(max_workers=8) as pool:
-        results = list(pool.map(fetch_project_data, projects))
 
     # --- Output ---
 
@@ -468,7 +438,7 @@ def run():
     print(c(divider, DIM))
     print()
 
-    for cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage in results:
+    for cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage, project_dir in results:
         proj, branch_display = make_label(cwd, branch)
         if len(proj) > project_w:
             proj = proj[:project_w - 1] + "…"
@@ -543,7 +513,11 @@ def run():
         print(f"  {id_col}{project_col}  {branch_col}  {status_col}  {stage_col}  {next_col}  {c(age_str, DIM)}")
         # Truncate prompt to fit terminal width (4 = indent + connector + space)
         if prompt_line:
-            max_prompt = max(40, cols - 4 - len(notes_pad))
+            try:
+                cols_val = os.get_terminal_size().columns
+            except OSError:
+                cols_val = 120
+            max_prompt = max(40, cols_val - 4 - len(notes_pad))
             truncated = prompt_line[:max_prompt - 1] + "…" if len(prompt_line) > max_prompt else prompt_line
             prompt_display = c(f"> {truncated}", DIM)
         else:
@@ -556,6 +530,209 @@ def run():
             print()
 
 
+def tmux_attach(cwd):
+    """Attach to or create a tmux window for the given cwd."""
+    name = os.path.basename(cwd)
+    try:
+        result = subprocess.run(
+            ['tmux', 'list-windows', '-t', 'dev', '-F', '#{window_name}'],
+            capture_output=True, text=True, timeout=5
+        )
+        existing = result.stdout.strip().splitlines()
+        if name in existing:
+            subprocess.run(['tmux', 'select-window', '-t', f'dev:{name}'], timeout=5)
+        else:
+            subprocess.run(['tmux', 'new-window', '-t', 'dev', '-c', cwd, '-n', name], timeout=5)
+        subprocess.run(['tmux', 'switch-client', '-t', 'dev'], timeout=5)
+        return True
+    except subprocess.TimeoutExpired:
+        return False
+    except FileNotFoundError:
+        return False
+
+
+def interactive():
+    """Run interactive curses-based TUI."""
+    locale.setlocale(locale.LC_ALL, '')
+
+    def ui(stdscr):
+        curses.curs_set(0)
+        stdscr.nodelay(True)
+
+        # Initialize color pairs
+        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)    # green
+        curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)   # yellow
+        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)     # cyan
+        curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)     # blue
+        curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_BLACK)    # white/dim
+
+        selected = 0
+        scroll_offset = 0
+        results = collect_data()
+        deletion_prompt = None  # If not None, this is the index being deleted
+
+        while True:
+            try:
+                rows, cols = stdscr.getmaxyx()
+            except:
+                continue
+
+            stdscr.erase()
+
+            # Header
+            header = "  PROJECT    BRANCH   STATUS   STAGE   NEXT   LAST ACTIVE"
+            try:
+                stdscr.addstr(0, 0, header[:cols], curses.A_BOLD)
+            except curses.error:
+                pass
+            divider = "  " + ("─" * min(cols - 4, 100))
+            try:
+                stdscr.addstr(1, 0, divider[:cols])
+            except curses.error:
+                pass
+
+            # Data rows
+            data_start = 3
+            visible_rows = rows - data_start - 3  # reserve 3 for bottom bar
+
+            # Ensure selected is in visible range
+            if selected < scroll_offset:
+                scroll_offset = selected
+            elif selected >= scroll_offset + visible_rows:
+                scroll_offset = selected - visible_rows + 1
+
+            for i, idx in enumerate(range(scroll_offset, min(scroll_offset + visible_rows, len(results)))):
+                if idx >= len(results):
+                    break
+                row_y = data_start + i
+                row_num = idx
+
+                result = results[idx]
+                cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage, project_dir = result
+
+                proj, branch_display = make_label(cwd, branch)
+                age_str = human_age(age)
+
+                # Status
+                if dirty:
+                    status_str = f"dirty({dirty})"
+                else:
+                    status_str = "clean"
+
+                # Truncate to fit
+                proj = proj[:12] if len(proj) > 12 else proj
+                branch_display = branch_display[:10] if len(branch_display) > 10 else branch_display
+                next_line_trunc = next_line[:15] if len(next_line) > 15 else next_line
+
+                line = f"  {proj:<12} {branch_display:<10} {status_str:<10} {stage:<12} {next_line_trunc:<15} {age_str}"
+
+                # Highlight selected row
+                attr = curses.A_REVERSE if row_num == selected else 0
+                if row_num == selected:
+                    attr |= curses.A_BOLD
+
+                try:
+                    stdscr.addstr(row_y, 0, line[:cols], attr)
+                except curses.error:
+                    pass
+
+                # Show prompt line below selected row
+                if row_num == selected and prompt_line:
+                    prompt_display = f"  └ > {prompt_line[:max(0, cols-8)]}"
+                    try:
+                        stdscr.addstr(row_y + 1, 0, prompt_display[:cols])
+                    except curses.error:
+                        pass
+
+            # Bottom divider and keybindings
+            bottom_y = rows - 2
+            divider = "  " + ("─" * min(cols - 4, 100))
+            try:
+                stdscr.addstr(bottom_y, 0, divider[:cols])
+            except curses.error:
+                pass
+
+            keybindings = "↑↓ navigate   Enter attach   d delete   r refresh   q quit"
+            bottom_text = keybindings
+            if deletion_prompt is not None and deletion_prompt == selected and selected < len(results):
+                proj_name = os.path.basename(results[selected][0])
+                bottom_text = f"Delete '{proj_name}'? [y/N] "
+
+            try:
+                stdscr.addstr(rows - 1, 0, bottom_text[:cols])
+            except curses.error:
+                pass
+
+            stdscr.refresh()
+
+            # Handle input
+            try:
+                ch = stdscr.getch()
+            except:
+                ch = -1
+
+            if ch == -1:
+                time.sleep(0.01)
+                continue
+
+            # Handle deletion confirmation
+            if deletion_prompt is not None and deletion_prompt == selected:
+                if ch == ord('y') or ch == ord('Y'):
+                    # Perform deletion
+                    try:
+                        if selected < len(results):
+                            shutil.rmtree(results[selected][-1])
+                            results.pop(selected)
+                            deletion_prompt = None
+                            if selected >= len(results) and selected > 0:
+                                selected -= 1
+                    except Exception:
+                        deletion_prompt = None
+                else:
+                    deletion_prompt = None
+                continue
+
+            # Navigation and actions
+            if ch == ord('q') or ch == 27:  # q or ESC
+                break
+            elif ch == ord('j') or ch == curses.KEY_DOWN:
+                if selected < len(results) - 1:
+                    selected += 1
+            elif ch == ord('k') or ch == curses.KEY_UP:
+                if selected > 0:
+                    selected -= 1
+            elif ch == 10 or ch == ord('\n'):  # Enter (10 is \n on macOS)
+                if results and selected < len(results):
+                    cwd = results[selected][0]
+                    if not os.environ.get('TMUX'):
+                        # Show error message for 1 second
+                        try:
+                            bottom_y = rows - 1
+                            error_msg = "Error: Not inside tmux — cannot attach"
+                            stdscr.addstr(bottom_y, 0, error_msg[:cols], curses.A_REVERSE)
+                            stdscr.refresh()
+                        except curses.error:
+                            pass
+                        time.sleep(1)
+                        continue
+                    curses.endwin()
+                    tmux_attach(cwd)
+                    return
+            elif ch == ord('d'):
+                if results and selected < len(results):
+                    deletion_prompt = selected
+            elif ch == ord('r'):
+                results = collect_data()
+                selected = 0
+                scroll_offset = 0
+                deletion_prompt = None
+
+    try:
+        curses.wrapper(ui)
+    except KeyboardInterrupt:
+        pass
+
+
 def cleanup_lockfile():
     try:
         os.unlink(LOCKFILE)
@@ -563,7 +740,59 @@ def cleanup_lockfile():
         pass
 
 
-if watch_interval is not None:
+# Handle delete/prune/prune-merged before interactive mode
+if delete_id or prune or prune_merged:
+    results = collect_data()
+    # Handle deletion and pruning
+    for cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage, project_dir in results:
+        if delete_id:
+            if sid.startswith(delete_id) or delete_id == sid:
+                proj, branch_display = make_label(cwd, branch)
+                label = proj + (f" {branch_display}" if branch_display else "")
+                is_worktree = os.path.isdir(cwd) and find_worktree_root(cwd)
+                print(f"  Session: {label} ({sid})")
+                print(f"  Path:    {cwd}")
+                if is_worktree:
+                    print(f"  Worktree will also be removed")
+                answer = input("\n  Delete this session? [y/N] ")
+                if answer.lower() in ("y", "yes"):
+                    if is_worktree:
+                        if remove_worktree(cwd):
+                            print(f"  Removed worktree: {cwd}")
+                    print(f"  Deleted: {label} ({sid})")
+                    shutil.rmtree(project_dir)
+                else:
+                    print("  Skipped.")
+            continue
+
+        if prune:
+            if not os.path.isdir(cwd):
+                print(f"Pruning: {project_dir}")
+                shutil.rmtree(project_dir)
+            continue
+
+        if prune_merged:
+            if not os.path.isdir(cwd):
+                continue
+            state = pr_state_from_notes(cwd)
+            # Fall back to gh if notes don't have PR state
+            if not state and branch:
+                pr_str = gh_pr_info(cwd, branch)
+                if pr_str and pr_str != "—":
+                    state = pr_str.split()[1] if len(pr_str.split()) >= 2 else ""
+            if state == "merged":
+                proj, branch_display = make_label(cwd, branch)
+                label = proj + (f" {branch_display}" if branch_display else "")
+                if remove_worktree(cwd):
+                    print(f"  Removed worktree: {cwd}")
+                print(f"  Pruned: {label}")
+                shutil.rmtree(project_dir)
+            continue
+    sys.exit(0)
+
+if interactive_mode:
+    interactive()
+elif watch_interval is not None:
     # Single-instance check
     try:
         with open(LOCKFILE) as f:
