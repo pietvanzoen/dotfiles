@@ -125,8 +125,11 @@ while i < len(args):
         sys.exit(1)
     i += 1
 
-if sum([watch_interval is not None, interactive_mode, delete_id is not None, prune, prune_merged]) > 1:
-    print("--watch, --interactive, --delete, --prune, and --prune-merged are mutually exclusive", file=sys.stderr)
+if sum([delete_id is not None, prune, prune_merged]) > 1:
+    print("--delete, --prune, and --prune-merged are mutually exclusive", file=sys.stderr)
+    sys.exit(1)
+if (watch_interval is not None or interactive_mode) and (delete_id is not None or prune or prune_merged):
+    print("--watch/--interactive cannot be combined with --delete, --prune, or --prune-merged", file=sys.stderr)
     sys.exit(1)
 
 LOCKFILE = "/tmp/claude-sessions-watch.pid"
@@ -559,17 +562,18 @@ def interactive():
         curses.curs_set(0)
         stdscr.nodelay(True)
 
-        # Initialize color pairs
-        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)    # green
-        curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)   # yellow
-        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)     # cyan
-        curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)     # blue
-        curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_BLACK)    # white/dim
+        # Initialize color pairs (matching ANSI colors from run())
+        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)     # clean, dev
+        curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)    # dirty, planning, open PR
+        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)      # pr/review/human-review
+        curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)      # cleanup, merged
+        curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_BLACK)     # bold text
 
         selected = 0
         scroll_offset = 0
         results = collect_data()
-        deletion_prompt = None  # If not None, this is the index being deleted
+        deletion_prompt = None
+        last_refresh = time.time()
 
         while True:
             try:
@@ -577,86 +581,149 @@ def interactive():
             except:
                 continue
 
+            # Auto-refresh if watch interval is set
+            if watch_interval is not None:
+                if time.time() - last_refresh >= watch_interval:
+                    results = collect_data()
+                    last_refresh = time.time()
+
             stdscr.erase()
 
             # Header
-            header = "  PROJECT    BRANCH   STATUS   STAGE   NEXT   LAST ACTIVE"
+            header = "  PROJECT              BRANCH                   STATUS        STAGE                NEXT                        LAST ACTIVE"
             try:
-                stdscr.addstr(0, 0, header[:cols], curses.A_BOLD)
+                stdscr.addstr(0, 0, header[:cols], curses.A_BOLD | curses.color_pair(5))
             except curses.error:
                 pass
-            divider = "  " + ("─" * min(cols - 4, 100))
+            divider = "  " + ("─" * min(cols - 4, 200))
             try:
                 stdscr.addstr(1, 0, divider[:cols])
             except curses.error:
                 pass
 
-            # Data rows
+            # Data rows with notes
             data_start = 3
-            visible_rows = rows - data_start - 3  # reserve 3 for bottom bar
+            visible_rows = rows - data_start - 2  # reserve 2 for bottom bar
+
+            # Calculate which results are visible
+            current_y = data_start
+            visible_indices = []
+
+            for idx in range(len(results)):
+                result = results[idx]
+                cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage, project_dir = result
+
+                # Calculate how many lines this row needs (1 for main + lines for notes)
+                sub_lines = []
+                if prompt_line:
+                    sub_lines.append(prompt_line)
+                if notes:
+                    sub_lines.append(notes)
+
+                lines_needed = 1 + len(sub_lines)  # main row + sub lines
+                if current_y + lines_needed > data_start + visible_rows:
+                    break
+
+                visible_indices.append(idx)
+                current_y += lines_needed
 
             # Ensure selected is in visible range
-            if selected < scroll_offset:
-                scroll_offset = selected
-            elif selected >= scroll_offset + visible_rows:
-                scroll_offset = selected - visible_rows + 1
+            if visible_indices:
+                if selected not in visible_indices:
+                    if selected < visible_indices[0]:
+                        selected = visible_indices[0]
+                    else:
+                        selected = visible_indices[-1]
 
-            for i, idx in enumerate(range(scroll_offset, min(scroll_offset + visible_rows, len(results)))):
-                if idx >= len(results):
-                    break
-                row_y = data_start + i
-                row_num = idx
+            current_y = data_start
 
+            for idx in visible_indices:
                 result = results[idx]
                 cwd, branch, age, dirty, pr, notes, prompt_line, next_line, sid, stage, project_dir = result
 
                 proj, branch_display = make_label(cwd, branch)
                 age_str = human_age(age)
 
-                # Status
+                # Status color
                 if dirty:
-                    status_str = f"dirty({dirty})"
+                    status_str = f"dirty ({dirty})"
+                    status_color = curses.color_pair(2)
                 else:
                     status_str = "clean"
+                    status_color = curses.color_pair(1)
+
+                # Stage color
+                stage_color_code = STAGE_COLORS.get(stage, curses.A_DIM)
+                if stage_color_code == DIM:
+                    stage_color = curses.A_DIM
+                elif stage_color_code == YELLOW:
+                    stage_color = curses.color_pair(2)
+                elif stage_color_code == GREEN:
+                    stage_color = curses.color_pair(1)
+                elif stage_color_code == CYAN:
+                    stage_color = curses.color_pair(3)
+                elif stage_color_code == BLUE:
+                    stage_color = curses.color_pair(4)
+                else:
+                    stage_color = curses.A_DIM
 
                 # Truncate to fit
-                proj = proj[:12] if len(proj) > 12 else proj
-                branch_display = branch_display[:10] if len(branch_display) > 10 else branch_display
-                next_line_trunc = next_line[:15] if len(next_line) > 15 else next_line
+                proj = proj[:20] if len(proj) > 20 else proj
+                branch_display = branch_display[:25] if len(branch_display) > 25 else branch_display
+                next_line_trunc = next_line[:27] if len(next_line) > 27 else next_line
 
-                line = f"  {proj:<12} {branch_display:<10} {status_str:<10} {stage:<12} {next_line_trunc:<15} {age_str}"
+                line = f"  {proj:<20} {branch_display:<25} {status_str:<14} {stage:<20} {next_line_trunc:<27} {age_str}"
 
                 # Highlight selected row
-                attr = curses.A_REVERSE if row_num == selected else 0
-                if row_num == selected:
-                    attr |= curses.A_BOLD
+                attr = curses.A_REVERSE if idx == selected else 0
 
                 try:
-                    stdscr.addstr(row_y, 0, line[:cols], attr)
+                    stdscr.addstr(current_y, 0, line[:cols], attr | status_color if status_str else attr)
                 except curses.error:
                     pass
 
-                # Show prompt line below selected row
-                if row_num == selected and prompt_line:
-                    prompt_display = f"  └ > {prompt_line[:max(0, cols-8)]}"
+                current_y += 1
+
+                # Show sub-lines (prompt and notes)
+                sub_lines = []
+                if prompt_line:
+                    sub_lines.append((f"> {prompt_line}", True))  # True = is prompt
+                if notes:
+                    sub_lines.append((notes, False))  # False = is notes
+
+                for i, (line_text, is_prompt) in enumerate(sub_lines):
+                    connector = "└" if i == len(sub_lines) - 1 else "├"
+                    line_display = f"  {connector} {line_text[:cols-5]}"
+
+                    attr = curses.A_REVERSE | curses.A_DIM if idx == selected else curses.A_DIM
+
                     try:
-                        stdscr.addstr(row_y + 1, 0, prompt_display[:cols])
+                        stdscr.addstr(current_y, 0, line_display[:cols], attr)
                     except curses.error:
                         pass
 
+                    current_y += 1
+
+                # Blank line between entries
+                if idx != visible_indices[-1]:
+                    current_y += 0  # no blank line for now
+
             # Bottom divider and keybindings
             bottom_y = rows - 2
-            divider = "  " + ("─" * min(cols - 4, 100))
+            divider = "  " + ("─" * min(cols - 4, 200))
             try:
-                stdscr.addstr(bottom_y, 0, divider[:cols])
+                stdscr.addstr(bottom_y, 0, divider[:cols], curses.A_DIM)
             except curses.error:
                 pass
 
-            keybindings = "↑↓ navigate   Enter attach   d delete   r refresh   q quit"
-            bottom_text = keybindings
             if deletion_prompt is not None and deletion_prompt == selected and selected < len(results):
                 proj_name = os.path.basename(results[selected][0])
                 bottom_text = f"Delete '{proj_name}'? [y/N] "
+            else:
+                if watch_interval is not None:
+                    bottom_text = f"↑↓ navigate   Enter attach   d delete   r refresh   q quit   [auto-refresh: {watch_interval}s]"
+                else:
+                    bottom_text = "↑↓ navigate   Enter attach   d delete   r refresh   q quit"
 
             try:
                 stdscr.addstr(rows - 1, 0, bottom_text[:cols])
@@ -665,20 +732,20 @@ def interactive():
 
             stdscr.refresh()
 
-            # Handle input
+            # Handle input with timeout for auto-refresh
+            timeout_ms = 100 if watch_interval is not None else -1
+            stdscr.timeout(timeout_ms)
             try:
                 ch = stdscr.getch()
             except:
                 ch = -1
 
             if ch == -1:
-                time.sleep(0.01)
                 continue
 
             # Handle deletion confirmation
             if deletion_prompt is not None and deletion_prompt == selected:
                 if ch == ord('y') or ch == ord('Y'):
-                    # Perform deletion
                     try:
                         if selected < len(results):
                             shutil.rmtree(results[selected][-1])
@@ -705,7 +772,6 @@ def interactive():
                 if results and selected < len(results):
                     cwd = results[selected][0]
                     if not os.environ.get('TMUX'):
-                        # Show error message for 1 second
                         try:
                             bottom_y = rows - 1
                             error_msg = "Error: Not inside tmux — cannot attach"
@@ -724,8 +790,8 @@ def interactive():
             elif ch == ord('r'):
                 results = collect_data()
                 selected = 0
-                scroll_offset = 0
                 deletion_prompt = None
+                last_refresh = time.time()
 
     try:
         curses.wrapper(ui)
