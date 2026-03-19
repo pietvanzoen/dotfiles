@@ -5,6 +5,11 @@ function help() {
   bash -c "help $*"
 }
 
+function cc() {
+  clear
+  claude --continue "$@" 2>/dev/null || claude "$@"
+}
+
 function gwo() {
   git rev-parse --is-inside-work-tree > /dev/null 2>&1 \
     || { echo "Error: not in a git repo" >&2; return 1; }
