@@ -30,7 +30,7 @@ set -g status-left "\
 
 # ── Status right — git branch + other sessions ──────────────────────
 set -g status-right "\
-#[fg=colour12,bg=colour8]#(cd #{pane_current_path} && git rev-parse --abbrev-ref HEAD 2>/dev/null | sed 's/.*/  &/')\
+#[fg=colour12,bg=colour8]#(tmux-git-branch #{pane_current_path})\
  #(tmux list-sessions -F '##{session_name}' | grep -vF '#S' | while read -r s; do printf '#[fg=colour12,bg=colour8]#[fg=colour8,bg=colour12] %%s #[fg=colour12,bg=colour8]' "\$s"; done)"
 
 # ── Window status ────────────────────────────────────────────────────

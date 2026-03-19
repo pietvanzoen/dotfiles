@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Print git branch with icon, truncated to 20 chars
+cd "${1:-.}" 2>/dev/null || exit 0
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+[ ${#branch} -gt 20 ] && branch="${branch:0:20}..."
+printf ' \xee\x9c\xa5 %s' "$branch"
