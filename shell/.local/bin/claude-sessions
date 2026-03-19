@@ -284,11 +284,8 @@ NEXT_W_PREF,    NEXT_W_MIN    = 59, 15
 FIXED_W      = 35
 FIXED_W_IDS  = FIXED_W + 9  # +7 ID col +2 separator
 
-# Interactive TUI column widths (fixed, compact layout)
-INTERACTIVE_PROJECT_W = 20
-INTERACTIVE_BRANCH_W = 25
-INTERACTIVE_STAGE_W = 20
-INTERACTIVE_NEXT_W = 35
+# Interactive TUI assumed terminal width for computing column widths
+INTERACTIVE_COLS = 150  # Assumed width for calculating interactive view column sizes
 
 # Stage label colors
 STAGE_COLORS = {
@@ -695,15 +692,18 @@ def interactive():
                 else:
                     stage_color = curses.A_DIM
 
+                # Compute column widths using same logic as standard view
+                project_w, branch_w, stage_w, next_w = compute_widths(INTERACTIVE_COLS, False)
+
                 # Truncate to fit
-                proj = proj[:INTERACTIVE_PROJECT_W] if len(proj) > INTERACTIVE_PROJECT_W else proj
-                branch_display = branch_display[:INTERACTIVE_BRANCH_W] if len(branch_display) > INTERACTIVE_BRANCH_W else branch_display
-                next_line_trunc = next_line[:INTERACTIVE_NEXT_W] if len(next_line) > INTERACTIVE_NEXT_W else next_line
-                stage_display_trunc = stage_display[:INTERACTIVE_STAGE_W] if len(stage_display) > INTERACTIVE_STAGE_W else stage_display
+                proj = proj[:project_w] if len(proj) > project_w else proj
+                branch_display = branch_display[:branch_w] if len(branch_display) > branch_w else branch_display
+                next_line_trunc = next_line[:next_w] if len(next_line) > next_w else next_line
+                stage_display_trunc = stage_display[:stage_w] if len(stage_display) > stage_w else stage_display
 
                 # Add caret indicator for selected row
                 indicator = ">" if idx == selected else " "
-                line = f"{indicator} {proj:<{INTERACTIVE_PROJECT_W}} {branch_display:<{INTERACTIVE_BRANCH_W}} {status_str:<14} {stage_display_trunc:<{INTERACTIVE_STAGE_W}} {next_line_trunc:<{INTERACTIVE_NEXT_W}} {age_str}"
+                line = f"{indicator} {proj:<{project_w}} {branch_display:<{branch_w}} {status_str:<14} {stage_display_trunc:<{stage_w}} {next_line_trunc:<{next_w}} {age_str}"
 
                 # Highlight selected row (subtle: just bold instead of reverse)
                 attr = curses.A_BOLD if idx == selected else 0
