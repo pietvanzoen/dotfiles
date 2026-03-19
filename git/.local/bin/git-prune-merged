@@ -9,5 +9,5 @@ if [[ -z "$merged_branches" ]]; then
 fi
 
 for branch in $merged_branches; do
-  git branch -d "$branch"
+  git branch -d "$branch" || echo "--> skipped '$branch' (checked out in a worktree?)"
 done
