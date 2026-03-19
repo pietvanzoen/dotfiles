@@ -652,6 +652,28 @@ def interactive():
                     status_str = "clean"
                     status_color = curses.color_pair(1)
 
+                # Build combined stage + PR display (like in standard view)
+                pr_part_plain = ""
+                if pr.startswith("#"):
+                    parts = pr.split()
+                    pr_state = parts[1].lower() if len(parts) >= 2 else ""
+                    pr_display = f"{parts[0]} {pr_state}"
+                    if "approved" in parts:
+                        pr_display += " ✓"
+                    pr_part_plain = pr_display
+                elif pr != "—":
+                    pr_part_plain = pr
+
+                # Combine stage and PR info
+                if stage and pr_part_plain:
+                    stage_display = f"{stage} · {pr_part_plain}"
+                elif stage:
+                    stage_display = stage
+                elif pr_part_plain:
+                    stage_display = pr_part_plain
+                else:
+                    stage_display = ""
+
                 # Stage color
                 stage_color_code = STAGE_COLORS.get(stage, curses.A_DIM)
                 if stage_color_code == DIM:
@@ -671,10 +693,11 @@ def interactive():
                 proj = proj[:20] if len(proj) > 20 else proj
                 branch_display = branch_display[:25] if len(branch_display) > 25 else branch_display
                 next_line_trunc = next_line[:27] if len(next_line) > 27 else next_line
+                stage_display_trunc = stage_display[:20] if len(stage_display) > 20 else stage_display
 
                 # Add caret indicator for selected row
                 indicator = ">" if idx == selected else " "
-                line = f"{indicator} {proj:<20} {branch_display:<25} {status_str:<14} {stage:<20} {next_line_trunc:<27} {age_str}"
+                line = f"{indicator} {proj:<20} {branch_display:<25} {status_str:<14} {stage_display_trunc:<20} {next_line_trunc:<27} {age_str}"
 
                 # Highlight selected row (subtle: just bold instead of reverse)
                 attr = curses.A_BOLD if idx == selected else 0
