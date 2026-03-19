@@ -745,9 +745,9 @@ def interactive():
                 bottom_text = f"Delete '{proj_name}'? [y/N] "
             else:
                 if watch_interval is not None:
-                    bottom_text = f"↑↓ navigate   Enter attach   d delete   r refresh   q quit   [auto-refresh: {watch_interval}s]"
+                    bottom_text = f"↑↓ navigate   Enter attach   d delete   o open PR   r refresh   q quit   [auto-refresh: {watch_interval}s]"
                 else:
-                    bottom_text = "↑↓ navigate   Enter attach   d delete   r refresh   q quit"
+                    bottom_text = "↑↓ navigate   Enter attach   d delete   o open PR   r refresh   q quit"
 
             try:
                 stdscr.addstr(rows - 1, 0, bottom_text[:cols])
@@ -814,6 +814,19 @@ def interactive():
             elif ch == ord('d'):
                 if results and selected < len(results):
                     deletion_prompt = selected
+            elif ch == ord('o'):
+                # Open PR in browser
+                if results and selected < len(results):
+                    pr = results[selected][4]  # pr is at index 4 in result tuple
+                    if pr.startswith("#"):
+                        # Extract URL from PR string (format: "#1234 open https://...")
+                        parts = pr.split()
+                        pr_url = next((p for p in parts if p.startswith("http")), None)
+                        if pr_url:
+                            try:
+                                subprocess.run(['open', pr_url], check=False)
+                            except Exception:
+                                pass
             elif ch == ord('r'):
                 results = collect_data()
                 selected = 0
