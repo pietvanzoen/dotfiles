@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Update lock screen with workday progress (8am-4pm)
+
+WORKDAY_START=8
+WORKDAY_END=16
+TOTAL_HOURS=$((WORKDAY_END - WORKDAY_START))
+BAR_WIDTH=8
+
+current_hour=$(date +%H | sed 's/^0//')  # Remove leading zero for comparison
+current_min=$(date +%M)
+
+# Outside work hours - clear message
+if (( current_hour < WORKDAY_START || current_hour >= WORKDAY_END )); then
+  defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText ""
+  exit 0
+fi
+
+# Calculate progress
+hours_elapsed=$((current_hour - WORKDAY_START))
+progress_pct=$((hours_elapsed * 100 / TOTAL_HOURS + current_min * 100 / TOTAL_HOURS / 60))
+filled=$((progress_pct * BAR_WIDTH / 100))
+empty=$((BAR_WIDTH - filled))
+
+# Build bar
+bar=""
+for ((i = 0; i < filled; i++)); do bar+="█"; done
+for ((i = 0; i < empty; i++)); do bar+="░"; done
+
+# Update lock screen
+message="$bar $progress_pct%"
+/usr/bin/defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "$message"
