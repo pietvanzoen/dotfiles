@@ -674,8 +674,8 @@ def interactive():
 
                 line = f"  {proj:<20} {branch_display:<25} {status_str:<14} {stage:<20} {next_line_trunc:<27} {age_str}"
 
-                # Highlight selected row
-                attr = curses.A_REVERSE if idx == selected else 0
+                # Highlight selected row (subtle: just bold instead of reverse)
+                attr = curses.A_BOLD if idx == selected else 0
 
                 try:
                     stdscr.addstr(current_y, 0, line[:cols], attr | status_color if status_str else attr)
@@ -695,7 +695,7 @@ def interactive():
                     connector = "└" if i == len(sub_lines) - 1 else "├"
                     line_display = f"  {connector} {line_text[:cols-5]}"
 
-                    attr = curses.A_REVERSE | curses.A_DIM if idx == selected else curses.A_DIM
+                    attr = curses.A_BOLD | curses.A_DIM if idx == selected else curses.A_DIM
 
                     try:
                         stdscr.addstr(current_y, 0, line_display[:cols], attr)
@@ -705,8 +705,7 @@ def interactive():
                     current_y += 1
 
                 # Blank line between entries
-                if idx != visible_indices[-1]:
-                    current_y += 0  # no blank line for now
+                current_y += 1
 
             # Bottom divider and keybindings
             bottom_y = rows - 2
@@ -781,9 +780,12 @@ def interactive():
                             pass
                         time.sleep(1)
                         continue
+                    # Suspend curses and attach to tmux, then resume
                     curses.endwin()
                     tmux_attach(cwd)
-                    return
+                    # Resume curses after returning from tmux
+                    stdscr.clear()
+                    stdscr.refresh()
             elif ch == ord('d'):
                 if results and selected < len(results):
                     deletion_prompt = selected
