@@ -285,7 +285,7 @@ FIXED_W      = 35
 FIXED_W_IDS  = FIXED_W + 9  # +7 ID col +2 separator
 
 # Interactive TUI assumed terminal width for computing column widths
-INTERACTIVE_COLS = 150  # Assumed width for calculating interactive view column sizes
+INTERACTIVE_COLS = 200  # Assumed width for calculating interactive view column sizes
 
 # Stage label colors
 STAGE_COLORS = {
@@ -592,8 +592,12 @@ def interactive():
 
             stdscr.erase()
 
+            # Compute column widths once, use for header and all rows
+            project_w, branch_w, stage_w, next_w = compute_widths(INTERACTIVE_COLS, False)
+
             # Header
-            header = "  PROJECT              BRANCH                   STATUS        STAGE                NEXT                              LAST ACTIVE"
+            indicator_col = "  "
+            header = f"{indicator_col}{('PROJECT'):<{project_w}} {('BRANCH'):<{branch_w}} {'STATUS':<14} {('STAGE'):<{stage_w}} {('NEXT'):<{next_w}} LAST ACTIVE"
             try:
                 stdscr.addstr(0, 0, header[:cols], curses.A_BOLD)
             except curses.error:
@@ -691,9 +695,6 @@ def interactive():
                     stage_color = curses.color_pair(4)
                 else:
                     stage_color = curses.A_DIM
-
-                # Compute column widths using same logic as standard view
-                project_w, branch_w, stage_w, next_w = compute_widths(INTERACTIVE_COLS, False)
 
                 # Truncate to fit
                 proj = proj[:project_w] if len(proj) > project_w else proj
