@@ -38,12 +38,12 @@ setw -g window-status-separator "  "
 
 # Inactive windows — muted text, no background
 setw -g window-status-style "fg=colour12,bg=colour8"
-setw -g window-status-format " #I #W#{?#{@claude-thinking}, ◎,}#{?#{@claude-needs-input}, ?,}#{?#{@claude-done}, ●,} "
+setw -g window-status-format " #I #{=|25|…:window_name}#{?#{@claude-thinking}, ◎,}#{?#{@claude-needs-input}, ?,}#{?#{@claude-done}, ●,} "
 
 # Active window — cyan pill
 setw -g window-status-current-format "\
 #[fg=colour6,bg=colour8]\
-#[fg=colour15,bg=colour6,bold] #I #W#{?#{@claude-thinking}, ◎,}#{?#{@claude-needs-input}, ?,}#{?#{@claude-done}, ●,} \
+#[fg=colour15,bg=colour6,bold] #I #{=|25|…:window_name}#{?#{@claude-thinking}, ◎,}#{?#{@claude-needs-input}, ?,}#{?#{@claude-done}, ●,} \
 #[fg=colour6,bg=colour8,nobold]"
 
 # Bell/activity — orange text
