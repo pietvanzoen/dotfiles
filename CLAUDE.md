@@ -85,6 +85,7 @@ Also run `make update` after renaming or moving stowed files to fix symlinks.
 - `set-window-option @foo "0"` does NOT clear the option for `#{?#{@foo},...}` conditionals — `"0"` is non-empty and truthy; use `set-window-option -u @foo` to unset
 - `set-window-option` without `-t` targets the **active client window**, not the window of the running process — always pass `-t "$TMUX_PANE"` in hook scripts to target the correct window
 - `done` is a bash reserved word — avoid using it as a shell argument or `case` label without quoting
+- Truncate a format string with marker: `#{=|N|…:variable}` — appends `…` only when truncated; e.g. `#{=|25|…:window_name}` in window-status-format
 
 ## Ghostty gotchas
 
