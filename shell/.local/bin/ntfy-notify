@@ -44,9 +44,14 @@ fi
 if [ "$away_only" = "1" ]; then
   _is_away() {
     pgrep -x ScreenSaverEngine > /dev/null 2>&1 && return 0
-    local power_state
-    power_state=$(ioreg -n IODisplayWrangler -r 2>/dev/null | grep '"CurrentPowerState"' | awk -F= '{print $2}' | tr -d ' ')
-    [ -n "$power_state" ] && [ "$power_state" != "4" ]
+    # CGDisplayIsAsleep works on Apple Silicon (IODisplayWrangler unavailable)
+    local is_asleep
+    is_asleep=$(swift - 2>/dev/null <<'SWIFT'
+import CoreGraphics
+print(CGDisplayIsAsleep(CGMainDisplayID()))
+SWIFT
+    )
+    [ "$is_asleep" = "1" ]
   }
   if ! _is_away; then
     [ "$debug" = "1" ] && echo "--> screen active, skipping (--away-only)"
