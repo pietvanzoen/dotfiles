@@ -61,6 +61,13 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - Poll latest message: `GET $NTFY_URL/claude/json?poll=1&since=latest` with auth header
 - Hooks use `--away-only` so they won't fire while screen is active — test by posting to the API directly
 
+## Committing code
+
+Never auto-commit without prompting. Always stage changes and wait for user to run `/commit` before finalizing.
+- Propose changes and ask if they should be committed
+- Wait for explicit `/commit` command — don't proceed without it
+- This ensures changes are intentional and reviewed
+
 ## Workflow
 
 After creating new files that need to be stowed (executables, configs, etc.), run:
