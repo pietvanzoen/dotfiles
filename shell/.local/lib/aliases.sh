@@ -42,12 +42,14 @@ if command -v bat >/dev/null; then
 fi
 
 # SCREEN
+# shellcheck disable=SC2154
 alias sl="screen -ls | sed '1d;\$d' | sed '\$d' | sed 's/[[:space:]]/ /g' | sed 's/\./ /' | column -s \" \" -t | sort -k 2,2"
 alias sr="screen -r"
 alias ss="screen -S"
 sc() {
-  local name="$(basename $PWD): $*"
-  screen -S "$name" $@
+  local name
+  name="$(basename "$PWD"): $*"
+  screen -S "$name" "$@"
 }
 
 flushdnscache() {
