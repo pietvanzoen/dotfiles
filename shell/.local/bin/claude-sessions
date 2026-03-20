@@ -576,11 +576,12 @@ def interactive():
         stdscr.nodelay(True)
 
         # Initialize color pairs (matching ANSI colors from run())
-        curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)     # clean, dev
-        curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)    # dirty, planning, open PR
-        curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)      # pr/review/human-review
-        curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)      # cleanup, merged
-        curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_BLACK)     # bold text
+        curses.use_default_colors()
+        curses.init_pair(1, curses.COLOR_GREEN, -1)     # clean, dev
+        curses.init_pair(2, curses.COLOR_YELLOW, -1)    # dirty, planning, open PR
+        curses.init_pair(3, curses.COLOR_CYAN, -1)      # pr/review/human-review
+        curses.init_pair(4, curses.COLOR_BLUE, -1)      # cleanup, merged
+        curses.init_pair(5, curses.COLOR_WHITE, -1)     # bold text
 
         selected = 0
         scroll_offset = 0
@@ -714,15 +715,44 @@ def interactive():
                 next_line_trunc = next_line[:next_w] if len(next_line) > next_w else next_line
                 stage_display_trunc = stage_display[:stage_w] if len(stage_display) > stage_w else stage_display
 
-                # Add caret indicator for selected row
+                # Render row with per-column coloring (matching standard view)
+                # indicator + project (bold) + branch (dim) + status (status_color) + stage (stage_color) + next (cyan) + age (dim)
                 indicator = ">" if idx == selected else " "
-                line = f"{indicator} {proj:<{project_w}} {branch_display:<{branch_w}} {status_str:<16} {stage_display_trunc:<{stage_w}} {next_line_trunc:<{next_w}} {age_str}"
+                sel_attr = curses.A_BOLD if idx == selected else 0
 
-                # Highlight selected row (subtle: just bold instead of reverse)
-                attr = curses.A_BOLD if idx == selected else 0
-
+                col_x = 0
                 try:
-                    stdscr.addstr(current_y, 0, line[:cols], attr | status_color if status_str else attr)
+                    # Indicator
+                    stdscr.addstr(current_y, col_x, indicator + " ", sel_attr)
+                    col_x += 2
+                    
+                    # Project (bold)
+                    proj_display = proj[:project_w].ljust(project_w)
+                    stdscr.addstr(current_y, col_x, proj_display, sel_attr | curses.A_BOLD)
+                    col_x += project_w + 1
+                    
+                    # Branch (dim)
+                    branch_display_padded = branch_display[:branch_w].ljust(branch_w)
+                    stdscr.addstr(current_y, col_x, branch_display_padded + " ", sel_attr | curses.A_DIM)
+                    col_x += branch_w + 2
+                    
+                    # Status (status_color)
+                    status_display = status_str[:16].ljust(16)
+                    stdscr.addstr(current_y, col_x, status_display + "  ", sel_attr | status_color)
+                    col_x += 18
+                    
+                    # Stage (stage_color)
+                    stage_display_padded = stage_display_trunc[:stage_w].ljust(stage_w)
+                    stdscr.addstr(current_y, col_x, stage_display_padded + "  ", sel_attr | stage_color)
+                    col_x += stage_w + 2
+                    
+                    # Next (cyan)
+                    next_display = next_line_trunc[:next_w].ljust(next_w)
+                    stdscr.addstr(current_y, col_x, next_display + "  ", sel_attr | curses.color_pair(3))
+                    col_x += next_w + 2
+                    
+                    # Age (dim)
+                    stdscr.addstr(current_y, col_x, age_str[:cols-col_x], sel_attr | curses.A_DIM)
                 except curses.error:
                     pass
 
