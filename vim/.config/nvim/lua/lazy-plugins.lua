@@ -397,6 +397,15 @@ require("lazy").setup({
 
       local servers = {
         ts_ls    = {
+          root_dir = function(fname)
+            local node_root = require("lspconfig.util").root_pattern("package.json", "tsconfig.json")(fname)
+            if node_root then return node_root end
+            local first_line = (vim.fn.readfile(fname, "", 1) or {})[1] or ""
+            if first_line:match("node") then
+              return vim.fs.dirname(fname)
+            end
+          end,
+          single_file_support = false,
           init_options = {
             plugins = {
               {
@@ -462,6 +471,20 @@ require("lazy").setup({
         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
         vim.lsp.config(server_name, server)
       end
+
+      -- Deno LSP (uses system deno, not mason-managed)
+      vim.lsp.config("denols", {
+        capabilities = vim.tbl_deep_extend("force", {}, capabilities),
+        root_dir = function(fname)
+          local deno_root = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc", "deno.lock")(fname)
+          if deno_root then return deno_root end
+          local first_line = (vim.fn.readfile(fname, "", 1) or {})[1] or ""
+          if first_line:match("deno") then
+            return vim.fs.dirname(fname)
+          end
+        end,
+      })
+      vim.lsp.enable("denols")
     end,
   },
 
