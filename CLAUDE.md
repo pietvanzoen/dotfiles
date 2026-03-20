@@ -40,6 +40,9 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - Run `make lint FILES="path/to/script"` to check specific files
 - ShellCheck config is in `.shellcheckrc`
 
+## Shell aliases
+- `cp` is aliased to `cp -vi` (interactive + verbose) — use `/bin/cp -f` to bypass when overwriting files non-interactively
+
 ## macOS shell scripting gotchas
 
 - `sed -i '' -e 'expr' file` exits 2 with "can't read : No such file" on macOS even when the edit succeeds — use `sed -i''` (no space) instead
@@ -55,7 +58,9 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
   - Avoid `node_modules` where possible; prefer built-in `fetch`/`fs`/`readline` (Node ≥ 18)
   - `node` is available in all shells via `~/.zshenv` PATH fix
 - **Python**: only for existing scripts (e.g. `claude-sessions`); don't start new scripts in Python
-- **Deno/Bun/zx**: don't introduce new runtimes without discussion
+- **Deno**: acceptable for scripts that benefit from TypeScript or explicit permission flags; use scoped permissions (e.g. `--allow-net=api.example.com`) over broad ones
+  - Shebang: `#!/usr/bin/env -S deno run --allow-...`
+  - Use `deno check` for type checking
 
 ## ntfy testing
 - `curl` is blocked by the permission system — use `node -e "fetch(...)"` to call the ntfy API
@@ -82,9 +87,13 @@ This restows all packages and creates the necessary symlinks in `$HOME`.
 Also run `make update` after renaming or moving stowed files to fix symlinks.
 - New stow packages need an entry in `.installed_packages` (git-ignored) before `make update` will stow them
 
+## Neovim LSP gotchas
+- `root_dir` functions receive a buffer number (not a path) during session restore — always guard `vim.fn.readfile(fname)` with `if vim.fn.filereadable(fname) ~= 1 then return end`
+
 ## Nerd Font glyphs
 
-- Write/Edit tools silently drop Nerd Font glyphs **and may also fail to match lines containing other non-ASCII Unicode** (e.g. ◎, ●) — use Python for any file edits involving Unicode symbols: `python3 -c "f='path'; c=open(f).read(); c=c.replace('X', '\ue0b6'); open(f,'w').write(c)"`
+- Write/Edit tools silently drop **Nerd Font private-use-area glyphs and box-drawing characters** — fall back to Python file I/O only when editing files that contain these (e.g. `claude-sessions`): `python3 -c "f='path'; c=open(f).read(); c=c.replace('old', 'new'); open(f,'w').write(c)"`
+- Common typographic Unicode (em dash, ellipsis, etc.) is fine with Edit/Write
 - Avoid Nerd Font glyphs in `window-status-current-format` — Ghostty renders them at wrong cell width causing tab shifting; ok in status-left/right (fixed width)
 
 ## tmux gotchas
