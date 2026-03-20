@@ -400,6 +400,7 @@ require("lazy").setup({
           root_dir = function(fname)
             local node_root = require("lspconfig.util").root_pattern("package.json", "tsconfig.json")(fname)
             if node_root then return node_root end
+            if vim.fn.filereadable(fname) ~= 1 then return end
             local first_line = (vim.fn.readfile(fname, "", 1) or {})[1] or ""
             if first_line:match("node") then
               return vim.fs.dirname(fname)
@@ -478,6 +479,7 @@ require("lazy").setup({
         root_dir = function(fname)
           local deno_root = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc", "deno.lock")(fname)
           if deno_root then return deno_root end
+          if vim.fn.filereadable(fname) ~= 1 then return end
           local first_line = (vim.fn.readfile(fname, "", 1) or {})[1] or ""
           if first_line:match("deno") then
             return vim.fs.dirname(fname)

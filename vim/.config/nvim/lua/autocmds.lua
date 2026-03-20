@@ -29,4 +29,19 @@ vim.api.nvim_create_autocmd({ "InsertEnter" }, {
   command = "set number norelativenumber",
 })
 
+-- Set filetype for extensionless scripts based on shebang
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufReadPost" }, {
+  desc = "Detect javascript filetype from node/deno shebang",
+  group = vim.api.nvim_create_augroup("shebang-filetype", { clear = true }),
+  callback = function()
+    if vim.bo.filetype ~= "" then return end
+    local first_line = (vim.fn.getline(1) or "")
+    if first_line:match("deno") then
+      vim.bo.filetype = "typescript"
+    elseif first_line:match("node") then
+      vim.bo.filetype = "javascript"
+    end
+  end,
+})
+
 -- vim: ts=2 sts=2 sw=2 et
