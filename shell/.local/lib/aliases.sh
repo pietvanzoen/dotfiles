@@ -22,8 +22,8 @@ alias ..="cd .."
 alias ...="cd ../.."
 
 # base commands
-if command -v exa >/dev/null; then
-  alias ls="exa --group-directories-first --ignore-glob='.DS_Store'"
+if command -v eza >/dev/null; then
+  alias ls="eza --group-directories-first --ignore-glob='.DS_Store'"
   alias ll="ls -lah --git --group"
   alias llt="ll --tree"
 else
