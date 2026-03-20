@@ -88,7 +88,7 @@ while i < len(args):
     elif arg in ("-I", "--interactive"):
         interactive_mode = True
     elif arg in ("-w", "--watch"):
-        watch_interval = 5
+        watch_interval = 10
         if i + 1 < len(args) and args[i + 1].isdigit():
             i += 1
             watch_interval = int(args[i])
@@ -281,7 +281,7 @@ STAGE_W_PREF,   STAGE_W_MIN   = 32, 16
 NEXT_W_PREF,    NEXT_W_MIN    = 59, 15
 
 # Fixed overhead: 2 indent + 5×2 separators + 12 STATUS + 11 LAST ACTIVE
-FIXED_W      = 35
+FIXED_W      = 37
 FIXED_W_IDS  = FIXED_W + 9  # +7 ID col +2 separator
 
 # Interactive TUI assumed terminal width for computing column widths
@@ -294,6 +294,14 @@ STAGE_COLORS = {
     "dev": GREEN,
     "pr": CYAN, "review": CYAN, "human-review": CYAN,
     "cleanup": BLUE,
+}
+
+STAGE_ICONS = {
+    "setup": "·", "context": "·",
+    "planning": "~",
+    "dev": "▸",
+    "pr": "↑", "review": "↑", "human-review": "↑",
+    "cleanup": "★",
 }
 
 TICKET_RE = re.compile(r'^[a-z]+-\d+', re.IGNORECASE)
@@ -438,8 +446,8 @@ def run():
 
     id_pre = f"{'ID':<{ID_W}}  " if show_ids else ""
     id_div = f"{'─' * ID_W}  " if show_ids else ""
-    header  = f"  {id_pre}{'PROJECT':<{project_w}}  {'BRANCH':<{branch_w}}  {'STATUS':<12}  {'STAGE':<{stage_w}}  {'NEXT':<{next_w}}  LAST ACTIVE"
-    divider = f"  {id_div}{'─' * project_w}  {'─' * branch_w}  {'─' * 12}  {'─' * stage_w}  {'─' * next_w}  {'─' * 11}"
+    header  = f"  {id_pre}{'PROJECT':<{project_w}}  {'BRANCH':<{branch_w}}  {'STATUS':<14}  {'STAGE':<{stage_w}}  {'NEXT':<{next_w}}  LAST ACTIVE"
+    divider = f"  {id_div}{'─' * project_w}  {'─' * branch_w}  {'─' * 14}  {'─' * stage_w}  {'─' * next_w}  {'─' * 11}"
     print(c(header, BOLD))
     print(c(divider, DIM))
     print()
@@ -453,11 +461,11 @@ def run():
         age_str = human_age(age)
 
         if dirty:
-            status_str = c(f"dirty ({dirty})", YELLOW)
-            status_pad = f"dirty ({dirty})"
+            status_str = c(f"✗ dirty ({dirty})", YELLOW)
+            status_pad = f"✗ dirty ({dirty})"
         else:
-            status_str = c("clean", GREEN)
-            status_pad = "clean"
+            status_str = c("✓ clean", GREEN)
+            status_pad = "✓ clean"
 
         # Build combined STAGE column: "stage · #PR state [✓]"
         pr_part = ""
@@ -489,12 +497,14 @@ def run():
         stage_plain = ""
         if stage and pr_part:
             stage_color = STAGE_COLORS.get(stage, DIM)
-            stage_display = c(stage, stage_color) + c(" · ", DIM) + pr_part
-            stage_plain = f"{stage} · {pr_part_plain}"
+            stage_icon = STAGE_ICONS.get(stage, "·")
+            stage_display = c(f"{stage_icon} {stage}", stage_color) + c(" · ", DIM) + pr_part
+            stage_plain = f"{stage_icon} {stage} · {pr_part_plain}"
         elif stage:
             stage_color = STAGE_COLORS.get(stage, DIM)
-            stage_display = c(stage, stage_color)
-            stage_plain = stage
+            stage_icon = STAGE_ICONS.get(stage, "·")
+            stage_display = c(f"{stage_icon} {stage}", stage_color)
+            stage_plain = f"{stage_icon} {stage}"
         elif pr_part:
             stage_display = pr_part
             stage_plain = pr_part_plain
@@ -511,7 +521,7 @@ def run():
         id_col       = (c(sid, DIM) + " " * (ID_W - len(sid)) + "  ") if show_ids else ""
         project_col  = c(proj, BOLD)             + " " * (project_w - len(proj))
         branch_col   = c(branch_display, DIM)    + " " * (branch_w - len(branch_display))
-        status_col   = status_str                + " " * (12 - len(status_pad))
+        status_col   = status_str                + " " * (14 - len(status_pad))
         stage_col    = stage_display             + " " * (stage_w - len(stage_plain))
         next_col     = c(next_plain, CYAN)       + " " * (next_w - len(next_plain))
         notes_pad    = (" " * ID_W + "  ") if show_ids else ""
@@ -597,7 +607,7 @@ def interactive():
 
             # Header
             indicator_col = "  "
-            header = f"{indicator_col}{('PROJECT'):<{project_w}} {('BRANCH'):<{branch_w}} {'STATUS':<14} {('STAGE'):<{stage_w}} {('NEXT'):<{next_w}} LAST ACTIVE"
+            header = f"{indicator_col}{('PROJECT'):<{project_w}} {('BRANCH'):<{branch_w}} {'STATUS':<16} {('STAGE'):<{stage_w}} {('NEXT'):<{next_w}} LAST ACTIVE"
             try:
                 stdscr.addstr(0, 0, header[:cols], curses.A_BOLD)
             except curses.error:
@@ -653,10 +663,10 @@ def interactive():
 
                 # Status color
                 if dirty:
-                    status_str = f"dirty ({dirty})"
+                    status_str = f"✗ dirty ({dirty})"
                     status_color = curses.color_pair(2)
                 else:
-                    status_str = "clean"
+                    status_str = "✓ clean"
                     status_color = curses.color_pair(1)
 
                 # Build combined stage + PR display (like in standard view)
@@ -673,9 +683,11 @@ def interactive():
 
                 # Combine stage and PR info
                 if stage and pr_part_plain:
-                    stage_display = f"{stage} · {pr_part_plain}"
+                    stage_icon = STAGE_ICONS.get(stage, "·")
+                    stage_display = f"{stage_icon} {stage} · {pr_part_plain}"
                 elif stage:
-                    stage_display = stage
+                    stage_icon = STAGE_ICONS.get(stage, "·")
+                    stage_display = f"{stage_icon} {stage}"
                 elif pr_part_plain:
                     stage_display = pr_part_plain
                 else:
@@ -704,7 +716,7 @@ def interactive():
 
                 # Add caret indicator for selected row
                 indicator = ">" if idx == selected else " "
-                line = f"{indicator} {proj:<{project_w}} {branch_display:<{branch_w}} {status_str:<14} {stage_display_trunc:<{stage_w}} {next_line_trunc:<{next_w}} {age_str}"
+                line = f"{indicator} {proj:<{project_w}} {branch_display:<{branch_w}} {status_str:<16} {stage_display_trunc:<{stage_w}} {next_line_trunc:<{next_w}} {age_str}"
 
                 # Highlight selected row (subtle: just bold instead of reverse)
                 attr = curses.A_BOLD if idx == selected else 0

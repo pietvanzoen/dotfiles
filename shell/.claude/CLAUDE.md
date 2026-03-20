@@ -1,4 +1,4 @@
-@~/.claude/CLAUDE.local.md
+@~/.claude/CLAUDE.cutr.md
 
 ## Session notes
 Run `/notes` as the **last action in every response**. Skip only for trivial replies
