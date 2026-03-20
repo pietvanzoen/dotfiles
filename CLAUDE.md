@@ -92,7 +92,10 @@ Also run `make update` after renaming or moving stowed files to fix symlinks.
 
 ## Nerd Font glyphs
 
-- Write/Edit tools silently drop **Nerd Font private-use-area glyphs and box-drawing characters** — fall back to Python file I/O only when editing files that contain these (e.g. `claude-sessions`): `python3 -c "f='path'; c=open(f).read(); c=c.replace('old', 'new'); open(f,'w').write(c)"`
+- Write/Edit tools silently drop **Nerd Font private-use-area glyphs and box-drawing characters** — use Python file I/O for these specific files:
+  - `shell/.local/bin/claude-sessions` — contains Nerd Font glyphs and box-drawing chars
+  - Add to this list when a new file causes silent glyph loss
+  - Python pattern: `python3 -c "f='path'; c=open(f).read(); c=c.replace('old', 'new'); open(f,'w').write(c)"`
 - Common typographic Unicode (em dash, ellipsis, etc.) is fine with Edit/Write
 - Avoid Nerd Font glyphs in `window-status-current-format` — Ghostty renders them at wrong cell width causing tab shifting; ok in status-left/right (fixed width)
 
