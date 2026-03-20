@@ -3,6 +3,7 @@
 !.local/
 .installed_packages
 shell/.tmux/tmux-safekill
+CLAUDE.local.md
 .aider*
 **/.claude/settings.local.json
 __pycache__/

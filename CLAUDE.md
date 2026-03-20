@@ -1,3 +1,5 @@
+@./CLAUDE.local.md
+
 # Dotfiles
 
 ## Security
