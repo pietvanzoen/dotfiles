@@ -43,24 +43,8 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 ## Shell aliases
 - `cp` is aliased to `cp -vi` (interactive + verbose) — use `/bin/cp -f` to bypass when overwriting files non-interactively
 
-## macOS shell scripting gotchas
-
-- `sed -i '' -e 'expr' file` exits 2 with "can't read : No such file" on macOS even when the edit succeeds — use `sed -i''` (no space) instead
-- `cmd < file 2>/dev/null` does NOT suppress bash's "no such file" error for the redirect — use `cat file 2>/dev/null | cmd` instead (add `# shellcheck disable=SC2002`)
-- Check `shell/.local/lib/aliases.sh` for alias conflicts before naming new scripts in `~/.local/bin/`
-- If a newly stowed command isn't found, ask the user to reload their shell (`exec zsh`) — don't work around it by using the full `~/.local/bin/` path
-
-## Script language selection
-
-- **Bash**: simple glue — invoking commands, file ops, < ~50 lines, no structured data
-- **Node.js**: complex logic — HTTP, JSON, async, structured data, anything > ~50 lines of bash
-  - Shebang: `#!/usr/bin/env node` (CommonJS `require`, no build step)
-  - Avoid `node_modules` where possible; prefer built-in `fetch`/`fs`/`readline` (Node ≥ 18)
-  - `node` is available in all shells via `~/.zshenv` PATH fix
-- **Python**: only for existing scripts (e.g. `claude-sessions`); don't start new scripts in Python
-- **Deno**: acceptable for scripts that benefit from TypeScript or explicit permission flags; use scoped permissions (e.g. `--allow-net=api.example.com`) over broad ones
-  - Shebang: `#!/usr/bin/env -S deno run --allow-...`
-  - Use `deno check` for type checking
+## Script language selection / macOS gotchas
+Use the `shell-scripting` agent when writing scripts or hitting macOS sed/redirect/stow quirks.
 
 ## ntfy testing
 - `curl` is blocked by the permission system — use `node -e "fetch(...)"` to call the ntfy API
@@ -90,26 +74,5 @@ Also run `make update` after renaming or moving stowed files to fix symlinks.
 ## Neovim LSP gotchas
 - `root_dir` functions receive a buffer number (not a path) during session restore — always guard `vim.fn.readfile(fname)` with `if vim.fn.filereadable(fname) ~= 1 then return end`
 
-## Nerd Font glyphs
-
-- Write/Edit tools silently drop **Nerd Font private-use-area glyphs and box-drawing characters** — use Python file I/O for these specific files:
-  - `shell/.local/bin/claude-sessions` — contains Nerd Font glyphs and box-drawing chars
-  - Add to this list when a new file causes silent glyph loss
-  - Python pattern: `python3 -c "f='path'; c=open(f).read(); c=c.replace('old', 'new'); open(f,'w').write(c)"`
-- Common typographic Unicode (em dash, ellipsis, etc.) is fine with Edit/Write
-- Avoid Nerd Font glyphs in `window-status-current-format` — Ghostty renders them at wrong cell width causing tab shifting; ok in status-left/right (fixed width)
-
-## tmux gotchas
-
-- `#{session_name}` inside `#()` shell commands gets expanded to the *current* session name before the shell runs — use `##{session_name}` to pass it literally
-- Custom escape sequences for key bindings: use `set -s user-keys[N] "\e[seq"` + `bind-key -n UserN action` rather than relying on tmux recognising the sequence as a named key (e.g. `C-Tab`)
-- `set-window-option @foo "0"` does NOT clear the option for `#{?#{@foo},...}` conditionals — `"0"` is non-empty and truthy; use `set-window-option -u @foo` to unset
-- `set-window-option` without `-t` targets the **active client window**, not the window of the running process — always pass `-t "$TMUX_PANE"` in hook scripts to target the correct window
-- `done` is a bash reserved word — avoid using it as a shell argument or `case` label without quoting
-- Avoid double quotes inside `#()` in `set -g status-*` values — they terminate the surrounding tmux string; extract complex shell logic to a helper script instead
-- Truncate a format string with marker: `#{=|N|…:variable}` — appends `…` only when truncated; e.g. `#{=|25|…:window_name}` in window-status-format
-
-## Ghostty gotchas
-
-- `command` config requires full binary paths (e.g. `/opt/homebrew/bin/tmux`) — shell PATH isn't set up when Ghostty runs it, so aliases and PATH-relative names fail
-- With tmux `mouse on`: Cmd+Click is captured by tmux; use Shift+Cmd+Click to open URLs (Shift is Ghostty's mouse bypass modifier)
+## tmux / Ghostty gotchas
+Use the `tmux-config` agent when editing `.tmux.conf`, format strings, key bindings, or Ghostty config.
