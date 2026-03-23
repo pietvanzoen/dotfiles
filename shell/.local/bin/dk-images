@@ -15,11 +15,11 @@ if [[ -z "$selected_images" ]]; then
   exit
 fi
 
-echo $selected_images
+echo "$selected_images"
 
 echo -n "==> Enter command to run: "
-read cmd
+read -r cmd
 for id in $selected_images; do
   echo "==> $cmd $id"
-  $cmd $id || true
+  $cmd "$id" || true
 done

@@ -2,12 +2,12 @@
 
 set -eu
 
-processes="$(ps | grep node | grep cutr-server | cut -d' ' -f1 | xargs)"
+processes="$(pgrep -f 'node.*cutr-server' | xargs || true)"
 
-if [[ -z $processes ]]; then
+if [[ -z "$processes" ]]; then
   exit
 fi
 
 echo "==> Killing $processes"
 
-kill $processes
+kill "$processes"

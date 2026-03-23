@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-exe() { echo "==> $@"; $@; }
+exe() { echo "==> $*"; "$@"; }
 
 exe "apt-get update"
 exe "apt-get upgrade -y"

@@ -13,16 +13,17 @@ if [[ ! -f "$INSTALLED_INDEX" ]]; then
 fi
 
 HAS_ERROR=""
-while read package; do
+while read -r package; do
   echo -n "==> Restowing package $package..."
-  if stow --target=$HOME --restow --verbose=0 $package >/dev/null 2>&1; then
+  if stow --target="$HOME" --restow --verbose=0 "$package" >/dev/null 2>&1; then
     echo -n " done"
   else
     HAS_ERROR=1
+    # shellcheck disable=SC2154
     echo -en " ${__red}error$__color_off"
   fi
   echo
-done < $INSTALLED_INDEX
+done < "$INSTALLED_INDEX"
 
 if [[ $HAS_ERROR ]] ; then
   echo

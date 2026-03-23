@@ -11,7 +11,7 @@ if [[ -n "$SUDO_USER" ]]; then
   export HOME="/home/$SUDO_USER"
 fi
 
-files="$(ls -A "$HOME" | xargs readlink -f)"
+files="$(find "$HOME" -maxdepth 1 ! -name '.' -exec readlink -f {} \; | sort)"
 GROUP=$(id -gn "$USER")
 owner="$USER:$GROUP"
 

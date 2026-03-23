@@ -10,9 +10,9 @@ awk '{ print $1 }'
 
 COMMIT_MESSAGE="Revert $(echo "$REVERT_COMMITS" | wc -l) commits\n"
 
-for commit in ${REVERT_COMMITS[@]} ; do
-  COMMIT_MESSAGE="$COMMIT_MESSAGE\n* $(git show --pretty='%h %s' -s $commit)"
-  git revert --no-commit $commit
+for commit in "${REVERT_COMMITS[@]}" ; do
+  COMMIT_MESSAGE="$COMMIT_MESSAGE\n* $(git show --pretty='%h %s' -s "$commit")"
+  git revert --no-commit "$commit"
 done
 
-git commit -v --edit --message="$(echo -e $COMMIT_MESSAGE)"
+git commit -v --edit --message="$(echo -e "$COMMIT_MESSAGE")"

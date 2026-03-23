@@ -1,1 +1,1 @@
-safe_source $HOME/.cargo/env
+safe_source "$HOME/.cargo/env"

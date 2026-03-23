@@ -6,7 +6,7 @@ LENGTH=${1:-64}
 
 chars=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
 string=""
-for i in $(seq 1 $LENGTH); do
+for _ in $(seq 1 "$LENGTH"); do
      string+="${chars:RANDOM%${#chars}:1}"
 done
-echo $string
+echo "$string"

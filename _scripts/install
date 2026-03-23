@@ -7,7 +7,7 @@ source "$(dirname "$0")/_helpers.sh"
 INSTALLED_INDEX_TMP="$(mktemp)"
 INSTALLED_INDEX="$DOTFILES_DIR/.installed_packages"
 
-stowable="$(ls -d */ | grep -v _ | grep -v stow | tr -d /)"
+stowable="$(find . -maxdepth 1 -type d ! -name '_*' ! -name 'stow' ! -name '.' | sed 's|^\./||')"
 
 cd "$DOTFILES_DIR"
 
@@ -15,26 +15,26 @@ install_package() {
   local package=$1
   (
   cd "$package"
-  examples="$( (ls -a | grep example) || echo)"
-  for example in $examples; do
-    cp -vn "$example" "$(echo $example | sed 's/.example//')"
+  for example in ./*.example; do
+    [[ -e "$example" ]] || continue
+    cp -vn "$example" "${example%.example}"
   done
   )
-  [[ -e "$package/_install" ]] && $package/_install
-  stow --target=$HOME --restow --verbose $package
+  [[ -e "$package/_install" ]] && "$package/_install"
+  stow --target="$HOME" --restow --verbose "$package"
 }
 
 _info "Creating directories"
-mkdir -vp $HOME/.config
-mkdir -vp $HOME/.local/bin
-mkdir -vp $HOME/.local/lib
-mkdir -vp $HOME/.local/share
-mkdir -vp $HOME/.local/etc
-mkdir -vp $HOME/.gnupg
+mkdir -vp "$HOME/.config"
+mkdir -vp "$HOME/.local/bin"
+mkdir -vp "$HOME/.local/lib"
+mkdir -vp "$HOME/.local/share"
+mkdir -vp "$HOME/.local/etc"
+mkdir -vp "$HOME/.gnupg"
 
 _info "Initializing stow"
 echo "stow" >> "$INSTALLED_INDEX_TMP"
-stow --target=$HOME --restow --verbose stow
+stow --target="$HOME" --restow --verbose stow
 
 _info "Installing npm packages"
 npm install random-words
@@ -43,7 +43,7 @@ for package in $stowable; do
   if _confirm "Install $package?"; then
     _info "Installing $package"
     echo "$package" >> "$INSTALLED_INDEX_TMP"
-    install_package $package
+    install_package "$package"
   fi
 done
 

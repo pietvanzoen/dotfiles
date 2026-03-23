@@ -79,11 +79,12 @@ fi
 # --refresh mode: just update PR info, preserve everything else
 if [ "$refresh_mode" = true ]; then
   {
-    [ -n "$prompt_line" ] && echo "$prompt_line" || true
-    [ -n "$stage_line" ] && echo "$stage_line" || true
-    [ -n "$summary_line" ] && echo "$summary_line" || true
-    [ -n "$next_line" ] && echo "$next_line" || true
-    [ -n "$pr_line" ] && echo "$pr_line" || true
+    [ -n "$prompt_line" ] && echo "$prompt_line"
+    [ -n "$stage_line" ] && echo "$stage_line"
+    [ -n "$summary_line" ] && echo "$summary_line"
+    [ -n "$next_line" ] && echo "$next_line"
+    [ -n "$pr_line" ] && echo "$pr_line"
+    true
   } > "$notes_file"
   exit 0
 fi
@@ -104,9 +105,10 @@ fi
 
 # Write notes file
 {
-  [ -n "$prompt_line" ] && echo "$prompt_line" || true
-  [ -n "$stage_line" ] && echo "$stage_line" || true
+  [ -n "$prompt_line" ] && echo "$prompt_line"
+  [ -n "$stage_line" ] && echo "$stage_line"
   echo "$done_part"
-  [ -n "$next_part" ] && echo "next: $next_part" || true
-  [ -n "$pr_line" ] && echo "$pr_line" || true
+  [ -n "$next_part" ] && echo "next: $next_part"
+  [ -n "$pr_line" ] && echo "$pr_line"
+  true
 } > "$notes_file"

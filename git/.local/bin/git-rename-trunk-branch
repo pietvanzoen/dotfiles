@@ -18,9 +18,10 @@ main() {
 
   echo "==> Updating local refs"
   _exe git fetch origin
-  local current_default_branch="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
+  local current_default_branch
+  current_default_branch="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
 
-  if [[ ! -z "$(git status -s)" ]]; then
+  if [[ -n "$(git status -s)" ]]; then
     echo "Commit and push changes before renaming branches."
     exit 1
   fi
@@ -73,7 +74,7 @@ update_github() {
   if (_confirm "Update the GitHub default branch? [y/n]" "y"); then
     if [[ -z "$token" ]]; then
       echo -e "Enter github private token to make github repo changes: "
-      read -s token
+      read -r -s token
     fi
     github_request \
       "$token" \
@@ -85,7 +86,7 @@ update_github() {
   if (_confirm "Setup GitHub branch protection? [y/n]" "y"); then
     if [[ -z "$token" ]]; then
       echo -e "Enter github private token to make github repo changes: "
-      read -s token
+      read -r -s token
     fi
     github_request \
       "$token" \
@@ -126,7 +127,7 @@ _confirm() {
   local msg="$1"
   local confirm_answer="$2"
   echo -en "==> $msg "
-  read answer
+  read -r answer
   echo
   if [ "$answer" == "$confirm_answer" ]; then
     return 0

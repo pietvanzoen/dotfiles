@@ -2,16 +2,17 @@
 
 git status -s
 
-remote=$(git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)
-ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+# shellcheck disable=SC2154
+remote=$(git rev-parse --verify "${hook_com[branch]}@{upstream}" --symbolic-full-name 2>/dev/null)
+ahead=$(git rev-list "${hook_com[branch]}@{upstream}"..HEAD 2>/dev/null | wc -l)
+behind=$(git rev-list "HEAD..${hook_com[branch]}@{upstream}" 2>/dev/null | wc -l)
 
 if [[ -z "$remote" ]]; then
     echo "$(tput setaf 1)u?$(tput sgr0)"
 else
     upstream="u"
-    (( $ahead )) && upstream="$upstream+$ahead"
-    (( $behind )) && upstream="$upstream-$behind"
+    (( ahead )) && upstream="$upstream+$ahead"
+    (( behind )) && upstream="$upstream-$behind"
     [[ "$ahead" == 0 ]] && [[ "$behind" == 0 ]] && upstream="$upstream="
     if [[ "$upstream" == *'u=' ]]; then
         echo "$(tput setaf 2)$upstream$(tput sgr0)"

@@ -1,6 +1,6 @@
 # test if a command is available in current shell
 is_executable() {
-  if hash $1 >/dev/null 2>&1; then
+  if hash "$1" >/dev/null 2>&1; then
     return 0
   else
     return 1
@@ -45,6 +45,6 @@ add_manpath() {
 safe_source() {
   local file="$1"
   if [ -e "$file" ]; then
-    source $file
+    source "$file"
   fi
 }

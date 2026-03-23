@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 set -e
-SCRIPTS_DIR="$(dirname $0)"
+SCRIPTS_DIR="$(dirname "$0")"
 
 FAILED=()
 attempt_script() {
   _info "$1"
-  if ! $SCRIPTS_DIR/$1; then
+  if ! "$SCRIPTS_DIR/$1"; then
     _error "$1 failed"
-    FAILED+=($1)
+    FAILED+=("$1")
   fi
 }
 
@@ -17,38 +17,39 @@ if [[ -n "$SUDO_USER" ]]; then
   export HOME="/home/$SUDO_USER"
 fi
 
-source $SCRIPTS_DIR/_helpers.sh
+# shellcheck source=_helpers.sh
+source "$SCRIPTS_DIR/_helpers.sh"
 
 echo "==> creating directories"
-mkdir -vp $HOME/repos
+mkdir -vp "$HOME/repos"
 
 if is_executable apt-get; then
   if _confirm "Run linux install scripts?"; then
-    $SCRIPTS_DIR/install-linux
+    "$SCRIPTS_DIR/install-linux"
   fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if _confirm "Run MacOS install scripts?"; then
-    $SCRIPTS_DIR/install-macos
+    "$SCRIPTS_DIR/install-macos"
   fi
 fi
 
-if [[ ! -d $HOME/.autojump ]]; then
+if [[ ! -d "$HOME/.autojump" ]]; then
   attempt_script "install-autojump"
 fi
 
-if [[ ! -d $HOME/.zplug ]]; then
+if [[ ! -d "$HOME/.zplug" ]]; then
   attempt_script "install-zplug"
 fi
 
-if [[ ! -d $HOME/.fzf ]]; then
+if [[ ! -d "$HOME/.fzf" ]]; then
   attempt_script "install-fzf"
 fi
 
-if [[ ! -e $HOME/.local/bin/git-get ]]; then
+if [[ ! -e "$HOME/.local/bin/git-get" ]]; then
   attempt_script "install-git-get"
 fi
 
-if [[ ! -e $HOME/.local/bin/secrets ]]; then
+if [[ ! -e "$HOME/.local/bin/secrets" ]]; then
   attempt_script "install-secrets"
 fi
 
@@ -69,9 +70,9 @@ fi
 
 echo "==> Bootstrapping finished"
 
-if [[ -n "$FAILED" ]]; then
+if [[ -n "${FAILED[*]}" ]]; then
   _error "The following install scripts failed to complete:"
-  for fail in ${FAILED[*]}; do
+  for fail in "${FAILED[@]}"; do
     _error "- $fail"
   done
 fi

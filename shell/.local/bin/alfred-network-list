@@ -6,7 +6,7 @@ NETWORKS="$(/usr/sbin/networksetup -listnetworkserviceorder | grep -E '\([0-9]\)
 
 echo '{ "items": ['
 for n in ${NETWORKS}; do
-  net=$(echo $n | tr '_' ' ')
+  net=$(echo "$n" | tr '_' ' ')
 cat <<EOB
 {
   "title": "${net}",

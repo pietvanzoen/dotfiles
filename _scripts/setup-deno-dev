@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-exe() { echo "==> $@"; $@; }
+exe() { echo "==> $*"; "$@"; }
 
 if [[ ! -d "$HOME/.cargo" ]]; then
   exe "curl https://sh.rustup.rs -sSf | sh"

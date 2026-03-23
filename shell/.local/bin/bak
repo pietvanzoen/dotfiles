@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-USAGE="Usage: $(basename $0) [path...]
+USAGE="Usage: $(basename "$0") [path...]
 Backup or restore files by adding or removing ~ from the end of the path."
 
 if [ $# -lt 1 ]; then
@@ -8,13 +8,13 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 
-for path in "$@"; do
-  path="$(echo $path | sed 's/\/$//')"
-  if [[ "$path" == *~ ]]; then
-    new_path="$(echo "$path" | sed -E 's/~$//')"
+for p in "$@"; do
+  p="$(echo "$p" | sed 's/\/$//')"
+  if [[ "$p" == *~ ]]; then
+    new_path="${p%\~}"
   else
-    new_path="$path~"
+    new_path="$p~"
   fi
 
-  mv -vi "$path" "$new_path"
+  mv -vi "$p" "$new_path"
 done

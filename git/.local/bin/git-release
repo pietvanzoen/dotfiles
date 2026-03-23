@@ -34,9 +34,9 @@ function get_latest_tag_version() {
 
 function get_changelog() {
   echo
-  changelog="$(git log --pretty="* %ad - %s [%h]" --date=short "$latest_tag_version"..origin/$TRUNK)"
+  changelog="$(git log --pretty="* %ad - %s [%h]" --date=short "$latest_tag_version"..origin/"$TRUNK")"
 
-  change_count="$(git rev-list --count "$latest_tag_version"..origin/$TRUNK)"
+  change_count="$(git rev-list --count "$latest_tag_version"..origin/"$TRUNK")"
   if [[ "$change_count" -lt 1 ]]; then
     echo "No commits since $latest_tag_version"
     exit

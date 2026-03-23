@@ -2,7 +2,7 @@
 
 set -e
 
-exe() { echo "==> $@"; $@; }
+exe() { echo "==> $*"; "$@"; }
 
 if [[ "$(which brew)" ]]; then
   INSTALLER_CMD="brew install"

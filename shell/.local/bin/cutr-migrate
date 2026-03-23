@@ -21,7 +21,7 @@ echo "$pending_migrations"
 echo
 
 echo "==> Run migrations? [y/n] "
-read answer
+read -r answer
 if [ "$answer" = 'y' ]; then
   yarn sequelize db:migrate
 else

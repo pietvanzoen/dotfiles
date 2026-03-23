@@ -9,7 +9,7 @@ current_branch="$(git symbolic-ref --short HEAD)"
 FIXUP_COMMIT="$1"
 if [[ -z "$FIXUP_COMMIT" ]]; then
   FIXUP_COMMIT="$(
-    git log --oneline --color $trunk..$current_branch |
+    git log --oneline --color "$trunk".."$current_branch" |
       fzf --header 'Chose a commit to fixup:' --ansi +m --preview="git show --color \$(echo {} | awk '{ print \$1 }')" |
       awk '{ print $1 }'
   )"

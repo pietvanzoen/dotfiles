@@ -1,1 +1,1 @@
-safe_source $HOME/.travis/travis.sh
+safe_source "$HOME/.travis/travis.sh"

@@ -3,9 +3,11 @@ export LC_ALL=en_US.UTF-8
 
 # EDITOR
 if [[ -e $(which nvim) ]]; then
-  export EDITOR=$(which nvim)
+  EDITOR=$(which nvim)
+export EDITOR
 else
-  export EDITOR=$(which vim)
+  EDITOR=$(which vim)
+export EDITOR
 fi
 
 # COLORS

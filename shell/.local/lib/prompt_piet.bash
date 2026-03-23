@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# shellcheck disable=SC2034
 BASE_USER="piet"
+# shellcheck disable=SC2034
 BASE_HOST="finn"
 CONNECTION_TYPE=""
-if [[ -n "$(pstree -ps $$ | grep mosh-server)" ]]; then
+if pstree -ps $$ | grep -q mosh-server; then
   CONNECTION_TYPE="mosh"
 elif [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
   CONNECTION_TYPE="ssh"
@@ -12,7 +14,9 @@ fi
 
 __ps1_main() {
   local EXIT="$?"
-  export PS1="$(__exit_caret $EXIT) $(__context) $(__cwd)$(__git_info)$(__node)$(__job_info) "
+  local ps1_val
+  ps1_val="$(__exit_caret "$EXIT") $(__context) $(__cwd)$(__git_info)$(__node)$(__job_info) "
+  export PS1="$ps1_val"
 }
 if [[ "$PROMPT_COMMAND" != *'__ps1_main'* ]]; then
   export PROMPT_COMMAND="__ps1_main; ${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
@@ -21,7 +25,9 @@ fi
 __exit_caret() {
   [[ -z "$TMUX" ]] && [[ -n "$ITERM_PROFILE" ]] && return
   local exit_code=$1
-  if [ $EXIT != 0 ]; then
+  # shellcheck disable=SC2034
+  local _unused="$exit_code"
+  if [ "$EXIT" != 0 ]; then
     echo -n "${__red}λ$__reset_color"
   else
     echo -n "${__green}λ$__reset_color"
@@ -66,16 +72,24 @@ __node() {
   echo -n " ${__dark}⬢ $(node -v)$__reset_color"
 }
 
-source $HOME/lib/git-prompt.sh
+# shellcheck source=/dev/null
+source "$HOME/lib/git-prompt.sh"
+# shellcheck disable=SC2034
 GIT_PS1_SHOWDIRTYSTATE=1
+# shellcheck disable=SC2034
 GIT_PS1_SHOWUNTRACKEDFILES=1
+# shellcheck disable=SC2034
 GIT_PS1_STATESEPARATOR="|"
+# shellcheck disable=SC2034
 GIT_PS1_SHOWUPSTREAM="auto"
 __git_info() {
-  local info=$(__git_ps1 | sed -E 's/\(|\)//g' | xargs)
+  local info
+  info=$(__git_ps1 | sed -E 's/\(|\)//g' | xargs)
   [[ -z $info ]] && return;
-  local branch="$(echo $info | cut -d '|' -f 1)"
-  local status="$(echo $info | cut -d '|' -f 2,3)"
+  local branch
+  local status
+  branch="$(echo "$info" | cut -d '|' -f 1)"
+  status="$(echo "$info" | cut -d '|' -f 2,3)"
 
   echo -n "$__dark("
   echo -n "$__red$(truncate-string 30 "$branch")"
@@ -84,9 +98,10 @@ __git_info() {
 }
 
 __job_info() {
-  local count="$(jobs | grep -v autojump | wc -l)"
+  local count
+  count="$(jobs | grep -c -v autojump || true)"
   [[ "$count" == "0" ]] && return
-  echo -n " $__dark[$count]$__reset_color"
+  echo -n " ${__dark}[$count]${__reset_color}"
 }
 
 export __black="\[\e[0;30m\]"

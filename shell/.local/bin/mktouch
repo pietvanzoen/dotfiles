@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-USAGE="Usage: $(basename $0) [filepath...]
+USAGE="Usage: $(basename "$0") [filepath...]
 Create a file and the parent folders if they don't exist"
 
 if [ $# -lt 1 ]; then

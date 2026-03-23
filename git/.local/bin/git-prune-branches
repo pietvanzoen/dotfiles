@@ -3,9 +3,10 @@
 set -e
 
 prefilter=$1
-branches=$(git branch -a --color | grep -v "remotes/origin/HEAD" | grep -v '^*' | tr -d ' ')
+branches=$(git branch -a --color | grep -v "remotes/origin/HEAD" | grep -v '^\*' | tr -d ' ')
 trunk=$(git trunk)
 preview_cmd="echo $trunk..{}; echo; git log --graph --oneline --color origin/$trunk..{}"
+header="Select branches to delete:"
 branches=$(echo "$branches" | fzf --query "$prefilter" --header "$header" --ansi +s -m -0 --preview "$preview_cmd")
 
 echo "==> Selected branches:"
@@ -19,4 +20,5 @@ fi
 
 echo "--> Deleting branches"
 
+# shellcheck disable=SC2086
 git branch -D $branches

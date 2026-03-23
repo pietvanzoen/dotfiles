@@ -4,7 +4,7 @@ set -e
 
 function main() {
   local branch
-  local merge_branch
+  local target_branch
 
   branch=$(git symbolic-ref --short HEAD)
   target_branch="$(git trunk)"
@@ -24,7 +24,7 @@ function main() {
 }
 
 function assert_not_current() {
-  if [[ $branch == $target_branch ]]; then
+  if [[ $branch == "$target_branch" ]]; then
     echo "Error: Current branch is $target_branch."
     exit 1
   fi
@@ -32,13 +32,13 @@ function assert_not_current() {
 
 function update_target() {
   echo "==> updating $target_branch"
-  git checkout $target_branch --quiet
+  git checkout "$target_branch" --quiet
   git pull
 }
 
 function confirm_merge() {
   echo -n "==> Are you sure you want to merge '$branch' into '$target_branch'? (y/n) "
-  read -n 1 confirm
+  read -r -n 1 confirm
   echo
   if [ "$confirm" = "y" ]; then
     return
@@ -50,7 +50,7 @@ function confirm_merge() {
 
 function assert_feature_up_to_date() {
   local missing_commits
-  missing_commits="$(git log $target_branch --pretty="* %h - %s [%an]" --not "$branch")"
+  missing_commits="$(git log "$target_branch" --pretty="* %h - %s [%an]" --not "$branch")"
 
   if [[ $missing_commits ]]; then
     echo "Error: Branch $branch is missing the following commits from $target_branch. Rebase and try again."
@@ -73,4 +73,4 @@ function cleanup() {
   git push origin --delete "$branch" --no-verify
 }
 
-main $1
+main "$1"

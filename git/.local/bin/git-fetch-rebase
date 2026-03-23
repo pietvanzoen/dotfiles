@@ -4,12 +4,12 @@ set -e
 
 branchname="$1"
 
-USAGE="USAGE: $(basename $0) <branchname>"
+USAGE="USAGE: $(basename "$0") <branchname>"
 
 if [[ -z "$branchname" ]]; then
   echo "$USAGE"
   exit 1
 fi
 
-git fetch origin $branchname
-git rebase --autosquash -i origin/$branchname
+git fetch origin "$branchname"
+git rebase --autosquash -i "origin/$branchname"

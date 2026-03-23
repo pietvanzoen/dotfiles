@@ -6,4 +6,5 @@ if [[ -z "$dangling_images" ]]; then
   (>&2 echo "No dangling images to remove.")
   exit 0
 fi
+# shellcheck disable=SC2046
 docker rmi $(docker images -f "dangling=true" -q)
