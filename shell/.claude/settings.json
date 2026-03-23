@@ -171,5 +171,5 @@
     "playwright@claude-plugins-official": true,
     "stripe@claude-plugins-official": true
   },
-  "model": "opus[1m]"
+  "model": "sonnet"
 }
