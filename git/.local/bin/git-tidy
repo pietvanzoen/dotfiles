@@ -23,14 +23,14 @@ if [[ -n "$(git status -s)" ]]; then
 fi
 
 if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$TRUNK" ]]; then
-  exe "git checkout $TRUNK"
+  exe git checkout "$TRUNK"
 fi
-exe "git fetch --all --prune"
-exe "git pull --rebase"
-exe "git prune-merged"
-exe "git prune-gone"
+exe git fetch --all --prune
+exe git pull --rebase
+exe git prune-merged
+exe git prune-gone
 
 if [[ $prune_all -eq 1 ]]; then
-  exe "git prune-worktrees"
-  exe "git prune-sessions"
+  exe git prune-worktrees
+  exe git prune-sessions
 fi

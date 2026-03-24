@@ -12,7 +12,7 @@ if [[ -n "$(git status -s)" ]]; then
 fi
 
 if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$trunk" ]]; then
-  exe "git checkout $trunk"
+  exe git checkout "$trunk"
 fi
 
 function delete_branch() {
@@ -20,8 +20,8 @@ function delete_branch() {
   echo
 
   git checkout "$b"
-  exe "git status"
-  exe "git lb $b"
+  exe git status
+  exe git lb "$b"
   git checkout -q "$trunk"
 
   echo
