@@ -5,7 +5,7 @@ require("lazy").setup({
   { "tpope/vim-obsession", cmd = "Obsession" },
   { -- Git commands in vim
     "tpope/vim-fugitive",
-    cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Ggrep", "Gblame" },
+    cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Ggrep", "Gblame", "GBrowse" },
     dependencies = {
       "tpope/vim-rhubarb", -- Github extension for fugitive
     },
