@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Claude Code status line script
-# Displays: dirname (magenta) + git branch/dirty/ahead/behind (yellow) + PR number (cyan, if any)
+# Displays: dirname (magenta) + git branch/dirty/ahead/behind (yellow) + PR link (cyan, OSC 8 hyperlink, if any)
 # PR lookup is cached in /tmp to avoid slowing down the status line.
 
 input=$(cat)
@@ -63,9 +63,9 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     if [ "$cache_fresh" -eq 0 ]; then
       # Refresh in the background so the status line is never blocked
       (
-        pr_num=$(GH_NO_UPDATE_NOTIFIER=1 timeout 5 gh pr view --json number -q '.number' 2>/dev/null)
-        if [ -n "$pr_num" ] && [ "$pr_num" != "null" ]; then
-          printf '%s' "$pr_num" > "$cache_file"
+        pr_url=$(GH_NO_UPDATE_NOTIFIER=1 timeout 5 gh pr view --json url -q '.url' 2>/dev/null)
+        if [ -n "$pr_url" ] && [ "$pr_url" != "null" ]; then
+          printf '%s' "$pr_url" > "$cache_file"
         else
           printf 'none' > "$cache_file"
         fi
@@ -77,7 +77,15 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     if [ -f "$cache_file" ]; then
       cached_pr=$(cat "$cache_file" 2>/dev/null)
       if [ -n "$cached_pr" ] && [ "$cached_pr" != "none" ]; then
-        pr_part=" ${C_CYAN}#${cached_pr}${C_RESET}"
+        if [[ "$cached_pr" == http* ]]; then
+          pr_num=$(basename "$cached_pr")
+          esc=$'\033'
+          pr_link="${esc}]8;;${cached_pr}${esc}\\#${pr_num}${esc}]8;;${esc}\\"
+          pr_part=" ${C_CYAN}${pr_link}${C_RESET}"
+        else
+          # Legacy cache: plain number (no hyperlink)
+          pr_part=" ${C_CYAN}#${cached_pr}${C_RESET}"
+        fi
       else
         # Show "no PR" for non-trunk branches
         trunk=$(git -C "$cwd" config --get init.defaultBranch 2>/dev/null || echo "main")
@@ -128,7 +136,11 @@ case "$model" in
   *sonnet*) model_short="sonnet" ;;
   *haiku*)  model_short="haiku" ;;
 esac
-[ -n "$model_short" ] && model_part=" ${C_DIM}${model_short}${C_RESET}"
+if [ -n "$model_short" ]; then
+  model_color="$C_DIM"
+  [ "$model_short" = "opus" ] && model_color=$(printf '\033[31m')  # red
+  model_part=" ${model_color}${model_short}${C_RESET}"
+fi
 
 if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; then
   cost_fmt=$(printf '$%.2f' "$cost_usd")
