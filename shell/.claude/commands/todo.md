@@ -1,3 +1,10 @@
+---
+name: todo
+description: Manage tasks
+allowed-tools: Bash(todo *)
+disable-model-invocation: true
+---
+
 Run the following shell command in the background and respond with a single brief confirmation line:
 
 ```bash

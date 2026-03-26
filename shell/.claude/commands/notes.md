@@ -2,6 +2,7 @@
 name: notes
 description: Update .claude-notes — run as the last action in every non-trivial response
 allowed-tools: Bash(claude-notes-update *)
+disable-model-invocation: true
 ---
 
 Write a one-line summary of what was just done and what comes next, then run:

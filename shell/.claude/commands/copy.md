@@ -1,8 +1,8 @@
 ---
 name: copy
 description: Copy the last Claude response to clipboard
-disable-model-invocation: true
 allowed-tools: Bash(claude-copy-response)
+disable-model-invocation: true
 ---
 
 Copy the last response to clipboard:

@@ -2,6 +2,7 @@
 name: merge
 description: Capture CLAUDE.md learnings then merge the current PR via GitHub
 allowed-tools: Bash(gh pr *), Bash(gh api *), Bash(claude-notes-update *)
+model: opus
 ---
 
 Merge the current branch's pull request on GitHub. Follow these steps in order:
