@@ -46,10 +46,7 @@
       "Bash(readlink:*)",
       "Bash(git config:*)",
       "WebSearch",
-      "Bash(gh pr view:*)",
-      "Bash(gh run view:*)",
-      "Bash(gh issue view:*)",
-      "Bash(gh save-me-copilot:*)",
+      "Bash(gh:*)",
       "mcp__linear-server__get_issue",
       "mcp__linear-server__get_issue_status",
       "Bash(tmux send-keys:*)",
@@ -170,5 +167,6 @@
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "stripe@claude-plugins-official": true
-  }
+  },
+  "model": "sonnet[1m]"
 }

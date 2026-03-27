@@ -27,15 +27,11 @@ model: haiku
 !`git diff main..HEAD --stat`
 </diff_stat>
 
-<existing_pr>
-!`gh pr view --json number,title,state,url --jq '"PR #\(.number): \(.title) [\(.state)]\nURL: \(.url)"' 2>/dev/null || echo "No PR exists for this branch"`
-</existing_pr>
-
 ## Pre-flight checks
 
 1. **Uncommitted changes** — if `branch_status` is non-empty, stop and ask the user to commit first
 2. **Not on main** — if `current_branch` is `main` or `master`, stop and inform the user
-3. **Existing PR** — if `existing_pr` shows a PR, show the URL and stop
+3. **Existing PR** — run `gh pr view --json number,title,state,url` to check; if a PR exists, show the URL and stop
 
 ## Write the title
 
