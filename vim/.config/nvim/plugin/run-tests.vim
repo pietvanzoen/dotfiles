@@ -22,6 +22,7 @@ function! RunTests(test_command) abort
   let l:cmd = ' clear && (' . l:tcmd . ')'
 
   exec ':wall'
+  lua require('lazy').load({plugins = {'vimux'}})
   if exists(':VimuxRunCommand')
     call VimuxSendKeys("C-c")
     call VimuxRunCommand(l:cmd)
@@ -86,6 +87,7 @@ function RunFile() abort
   let l:cmd = ' clear && echo && time (' . l:program . ' ' . l:file . ') && echo'
 
   exec ':wall'
+  lua require('lazy').load({plugins = {'vimux'}})
   if exists(':VimuxRunCommand')
     call VimuxRunCommand(l:cmd)
   else
