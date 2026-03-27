@@ -1,6 +1,9 @@
 # Fix locale
 export LC_ALL=en_US.UTF-8
 
+# Timezone
+export TZ=America/Los_Angeles
+
 # EDITOR
 if [[ -e $(which nvim) ]]; then
   EDITOR=$(which nvim)
