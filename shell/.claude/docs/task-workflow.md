@@ -1,10 +1,4 @@
----
-name: task-workflow
-description: Use this agent when starting or managing a development task — branch setup,
-  context gathering, planning, development, PR creation, review response, human review,
-  and cleanup. Invoke at the start of any new task or when the user asks what to do next
-  in the workflow.
----
+# Task Workflow
 
 When starting a new task, guide the user through these steps and proactively suggest
 the next action:
@@ -16,7 +10,7 @@ the next action:
    - Create/checkout the appropriate branch
 
 2. **Context gathering**
-   - Ask: "Are there any Linear tickets or Sentry bugs related to this task?"
+   - Ask: "Are there any tickets or bugs related to this task?"
    - Gather and reference ticket IDs and bug reports
    - If not already on Opus, suggest switching: planning benefits from Opus-level reasoning
    - Run `/notes` to document the task starting point
@@ -27,8 +21,8 @@ the next action:
    - **Always end plans with a bold recommended model**, e.g.:
      **> Recommended model for implementation: Sonnet (Opt+P)**
    - Get user approval before implementation
-   - Update the Linear ticket description with the accepted plan: preserve any existing
-     description, add a horizontal rule (`---`), and append the plan below it
+   - If a Linear ticket exists, update its description with the accepted plan: preserve any
+     existing description, add a horizontal rule (`---`), and append the plan below it
    - Run `/notes` after plan is accepted
    - After plan is accepted, suggest switching to a lower model for implementation
      (Sonnet for multi-file work, Haiku for simple edits)
