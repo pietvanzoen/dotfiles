@@ -137,8 +137,12 @@ case "$model" in
   *haiku*)  model_short="haiku" ;;
 esac
 if [ -n "$model_short" ]; then
-  model_color="$C_DIM"
-  [ "$model_short" = "opus" ] && model_color=$(printf '\033[31m')  # red
+  case "$model_short" in
+    opus)   model_color=$(printf '\033[31m')  ;;  # red
+    sonnet) model_color="$C_YELLOW"           ;;  # yellow
+    haiku)  model_color="$C_GREEN"            ;;  # green
+    *)      model_color="$C_DIM"              ;;
+  esac
   model_part=" ${model_color}${model_short}${C_RESET}"
 fi
 
