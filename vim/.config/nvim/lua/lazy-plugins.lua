@@ -290,10 +290,10 @@ require("lazy").setup({
           filetypes = {
             gitcommit = true,
             sh = function()
-              if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), "^%.env.*") then
-                -- disable for .env files
-                return false
-              end
+              local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
+              -- disable for .env files, but allow .env.sh
+              if filename == ".env" then return false end
+              if string.match(filename, "^%.env%.") and not string.match(filename, "%.sh$") then return false end
               return true
             end,
           },
