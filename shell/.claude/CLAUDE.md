@@ -54,6 +54,27 @@ Include a prominent model suggestion, e.g.:
 - Do NOT write multiple tests at once or implement ahead of the current test
 - Never use "should" at the beginning of test descriptions. E.g. BAD it('should return wibble'). GOOD it('returns wibble')
 
+## Fixes and debugging
+
+When fixing a failing test or build error, always explain the root cause before
+proposing a fix. Do NOT apply workarounds that suppress symptoms without explicit
+user approval, including:
+- Increasing memory or timeout limits
+- Adding @ts-ignore, eslint-disable, or @SuppressWarnings
+- Commenting out or skipping failing assertions or tests
+- Catching and swallowing exceptions
+
+If the correct fix is unclear, say so and ask rather than patching around the problem.
+
+## Context management
+
+When a session grows long or the task scope shifts significantly, suggest running
+/compact or starting a fresh session. Long accumulating context degrades output
+quality — prefer shorter focused sessions over one long running one.
+
+Do not load large files or entire codebases into context unless directly needed for
+the current step. Include relevant modules only.
+
 ## Tmux/Neovim
 - Neovim runs in the `dev` tmux session. The window is named after the project directory.
 - The current project's window name matches the basename of the working directory. Use that window, not just any nvim pane.

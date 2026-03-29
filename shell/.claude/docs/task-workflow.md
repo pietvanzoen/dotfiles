@@ -21,6 +21,10 @@ the next action:
    - **Always end plans with a bold recommended model**, e.g.:
      **> Recommended model for implementation: Sonnet (Opt+P)**
    - Get user approval before implementation
+   - Plans must include an explicit **Out of scope** section listing files, APIs, and
+     behaviours that must not be changed.
+   - Plans must include a **Rollback plan**: how to revert the change if needed. This
+     should inform design choices — prefer reversible changes.
    - If a Linear ticket exists, update its description with the accepted plan: preserve any
      existing description, add a horizontal rule (`---`), and append the plan below it
    - Run `/notes` after plan is accepted
@@ -32,6 +36,14 @@ the next action:
    - Make changes incrementally
    - Run linter/formatter before committing
    - Run tests to verify functionality
+   - **Never accept "tests pass" on trust** — always verify actual runner output. If
+     tests are skipped, pending, or erroring in setup, treat this as a failing gate.
+   - Do not proceed to the next step if any gate has been bypassed (e.g. --force,
+     skipped tests, or @ignore annotations added during this session).
+   - When starting each plan step, explicitly list the files in scope: "Implement only
+     step N. Files allowed: [list]. Do not modify anything outside this list."
+   - If a change requires touching out-of-scope files, stop and flag it rather than
+     proceeding.
    - Commit work with clear messages
    - Run `/notes` after commits
 
