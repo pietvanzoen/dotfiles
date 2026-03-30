@@ -57,6 +57,7 @@
       "Read(~/.zshrc)",
       "Read(~/.bashrc)",
       "Read(~/.config/**)",
+      "Read(~/.claude/docs/**)",
       "Read(package.json)",
       "Read(tsconfig.json)",
       "Read(*.md)",
@@ -99,7 +100,6 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opus[1m]",
   "hooks": {
     "UserPromptSubmit": [
       {
