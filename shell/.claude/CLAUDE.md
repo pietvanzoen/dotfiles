@@ -56,10 +56,11 @@ Include a prominent model suggestion, e.g.:
 
 ## Tmux/Neovim
 - Neovim runs in the `dev` tmux session. The window is named after the project directory.
-- The current project's window name matches the basename of the working directory. Use that window, not just any nvim pane.
-- Find the nvim pane for the current project: `tmux list-panes -t dev:<window_name> -F '#{session_name}:#{window_name}.#{pane_index} #{pane_current_command}' | grep nvim | head -1 | cut -d' ' -f1`
-- To open files: `tmux send-keys -t <pane> ':e <path>' Enter`
-- To open in vertical split: `tmux send-keys -t <pane> ':vs <path>' Enter`
+- The current project's window name matches the basename of the working directory.
+- To open files: `nvim-open /absolute/path/to/file`
+- To open in a vertical split: `nvim-open --vsplit /absolute/path/to/file`
+- To open in a new tab: `nvim-open --tab /absolute/path/to/file`
+- Auto-discovers the Neovim RPC socket whose cwd matches the project; falls back to a new tmux split pane in `dev:<window>`
 
 ## Pull requests
 Use `/pr` to create a pull request. It handles push, title/description generation, and Copilot review assignment.

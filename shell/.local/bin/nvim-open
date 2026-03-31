@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+# nvim-open — Open a file in the running Neovim instance for the current project.
+#
+# Usage: nvim-open [--vsplit | --tab] <file>
+#
+# Discovers the Neovim RPC socket whose CWD matches $PWD. Falls back to
+# spawning a new Neovim in a tmux split pane if no matching socket is found.
+
+set -euo pipefail
+
+MODE="edit"
+FILE=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --vsplit) MODE="vsplit" ;;
+    --tab)    MODE="tab" ;;
+    -*)       echo "Usage: nvim-open [--vsplit | --tab] <file>" >&2; exit 1 ;;
+    *)        FILE="$arg" ;;
+  esac
+done
+
+if [[ -z "$FILE" ]]; then
+  echo "Usage: nvim-open [--vsplit | --tab] <file>" >&2
+  exit 1
+fi
+
+# ── Socket discovery ─────────────────────────────────────────────────────────
+
+_get_pid_cwd() {
+  local pid=$1
+  lsof -a -p "$pid" -d cwd -Fn 2>/dev/null | grep '^n/' | head -1 | cut -c2- || true
+}
+
+_pid_from_socket() {
+  local socket=$1
+  basename "$socket" | grep -oE '[0-9]+' | head -1 || true
+}
+
+_is_live_socket() {
+  local socket=$1
+  local pid
+  [[ -S "$socket" ]] || return 1
+  pid="$(_pid_from_socket "$socket")"
+  [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null
+}
+
+find_matching_socket() {
+  local project_cwd="${1:-}"
+  local first_live="" pid cwd socket
+
+  # 1. Explicit env var
+  if [[ -n "${NVIM_LISTEN_ADDRESS:-}" ]] && [[ -S "$NVIM_LISTEN_ADDRESS" ]]; then
+    echo "$NVIM_LISTEN_ADDRESS"
+    return 0
+  fi
+
+  # Collect candidates from all platforms
+  local candidates=()
+  local _oldopts
+  _oldopts="$(set +o)"
+  set +e +o pipefail
+
+  local glob_out line
+  glob_out="$(compgen -G '/var/folders/*/*/T/nvim.*/*/nvim.*.0' 2>/dev/null)" || true
+  if [[ -n "$glob_out" ]]; then
+    while IFS= read -r line; do candidates+=("$line"); done <<< "$glob_out"
+  fi
+
+  glob_out="$(compgen -G '/tmp/nvim.*/0' 2>/dev/null)" || true
+  if [[ -n "$glob_out" ]]; then
+    while IFS= read -r line; do candidates+=("$line"); done <<< "$glob_out"
+  fi
+
+  local xdg_dir="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+  glob_out="$(compgen -G "$xdg_dir/nvim.*.0" 2>/dev/null)" || true
+  if [[ -n "$glob_out" ]]; then
+    while IFS= read -r line; do candidates+=("$line"); done <<< "$glob_out"
+  fi
+
+  eval "$_oldopts"
+
+  for socket in "${candidates[@]+"${candidates[@]}"}"; do
+    _is_live_socket "$socket" || continue
+    [[ -z "$first_live" ]] && first_live="$socket"
+
+    if [[ -n "$project_cwd" ]]; then
+      pid="$(_pid_from_socket "$socket")"
+      cwd="$(_get_pid_cwd "$pid")"
+      if [[ -n "$cwd" ]] && { [[ "$project_cwd" == "$cwd" ]] || [[ "$project_cwd" == "$cwd/"* ]]; }; then
+        echo "$socket"
+        return 0
+      fi
+    fi
+  done
+
+  # No CWD match — return empty (caller decides fallback)
+  echo ""
+  return 0
+}
+
+# ── Open via RPC ─────────────────────────────────────────────────────────────
+
+open_via_socket() {
+  local socket="$1" file="$2" mode="$3"
+  case "$mode" in
+    vsplit) nvim --headless --server "$socket" --remote-send ":vsplit ${file}<CR>" ;;
+    tab)    nvim --headless --server "$socket" --remote-send ":tabnew ${file}<CR>" ;;
+    *)      nvim --headless --server "$socket" --remote-send ":edit ${file}<CR>" ;;
+  esac
+}
+
+# ── Tmux fallback ─────────────────────────────────────────────────────────────
+
+open_via_tmux() {
+  local file="$1"
+  local window_name
+  window_name="$(basename "$PWD")"
+
+  if tmux list-windows -t dev -F '#{window_name}' 2>/dev/null | grep -qxF "$window_name"; then
+    tmux split-window -t "dev:${window_name}" -h "nvim '$file'"
+  else
+    echo "==> nvim-open: no matching dev:${window_name} window; opening nvim in current shell" >&2
+    nvim "$file"
+  fi
+}
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+
+SOCKET="$(find_matching_socket "$PWD")"
+
+if [[ -n "$SOCKET" ]]; then
+  open_via_socket "$SOCKET" "$FILE" "$MODE"
+else
+  echo "==> nvim-open: no matching Neovim socket for $PWD; opening in tmux split" >&2
+  open_via_tmux "$FILE"
+fi
