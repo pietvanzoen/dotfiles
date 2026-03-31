@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# tmux-golden-ratio — resize active pane to golden ratio proportions.
+# Called via pane-focus-in and window-resized hooks.
+# Toggle: prefix+G
+
+if [[ "${1}" == "toggle" ]]; then
+  current="$(tmux show-option -qv '@golden-ratio' 2>/dev/null)"
+  if [[ "${current}" == "on" ]]; then
+    tmux set '@golden-ratio' off
+    tmux display-message "Golden ratio: OFF"
+  else
+    tmux set '@golden-ratio' on
+    tmux display-message "Golden ratio: ON"
+  fi
+  exit 0
+fi
+
+[[ "$(tmux show-option -qv '@golden-ratio' 2>/dev/null)" == "on" ]] || exit 0
+[[ "$(tmux display-message -p '#{window_zoomed_flag}')" == "0" ]] || exit 0
+[[ "$(tmux display-message -p '#{window_panes}')" -gt 1 ]] || exit 0
+
+win_w="$(tmux display-message -p '#{window_width}')"
+win_h="$(tmux display-message -p '#{window_height}')"
+
+target_w=$(( win_w * 618 / 1000 ))
+target_h=$(( win_h * 618 / 1000 ))
+
+tmux resize-pane -x "${target_w}" 2>/dev/null || true
+tmux resize-pane -y "${target_h}" 2>/dev/null || true
