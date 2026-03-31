@@ -24,6 +24,7 @@ Files are stowed relative to `$HOME`, so `git/.gitconfig` becomes `~/.gitconfig`
 - Custom shell scripts go in `<package>/.local/bin/` (stowed to `~/.local/bin/`)
 - Shell libraries go in `<package>/.local/lib/` (stowed to `~/.local/lib/`)
 - Neovim plugin configs go in `vim/.config/nvim/lua/plugins/`
+- After adding/removing Neovim plugins, commit `vim/.config/nvim/lazy-lock.json` alongside the plugin config change
 - Git custom commands are named `git-<command>` in `git/.local/bin/`
 - Use `*.example` suffix for files that contain placeholders for secrets
 
