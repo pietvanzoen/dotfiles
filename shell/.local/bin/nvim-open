@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-MODE="edit"
+MODE="vsplit"
 FILE=""
 
 for arg in "$@"; do

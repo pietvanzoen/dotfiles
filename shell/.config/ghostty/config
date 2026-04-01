@@ -19,7 +19,7 @@ palette = 2=#859900
 palette = 3=#b58900
 palette = 4=#268bd2
 palette = 5=#d33682
-palette = 6=#d33682
+palette = 6=#2aa198
 palette = 7=#eee8d5
 palette = 8=#274351
 palette = 9=#cb4b16
@@ -52,3 +52,4 @@ shell-integration = zsh
 # tmux: C-Tab=next-window, User0(\e[1;6Z)=previous-window
 keybind = ctrl+tab=text:\x1b[1;5I
 keybind = shift+ctrl+tab=text:\x1b[1;6Z
+keybind = opt+l=text:clear\n

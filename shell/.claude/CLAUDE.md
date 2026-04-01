@@ -14,15 +14,6 @@ Keep the `<next step>` part to **40 characters or fewer** where possible — it 
 Include `--stage` only when the workflow stage changes (not on every update). Valid stages:
 `setup` · `context` · `planning` · `dev` · `pr` · `review` · `human-review` · `cleanup`
 
-## Session start
-At the beginning of each new session, display this shortcuts reminder:
-
-```
-Shortcuts: !cmd (shell) | @file (mention) | Ctrl+R (history) | Shift+Tab (mode) | Ctrl+B (background)
-           Opt+P (model) | Opt+T (thinking)
-Commands:  /vim | /cost | /diff | /status | /compact | /help
-```
-
 ## Text width
 Wrap prose text at 120 characters per line. Apply this to explanations, plans,
 and any multi-sentence text output. Do not wrap code blocks or tool output.
@@ -55,8 +46,7 @@ Include a prominent model suggestion, e.g.:
 ## Tmux/Neovim
 - Neovim runs in the `dev` tmux session. The window is named after the project directory.
 - The current project's window name matches the basename of the working directory.
-- To open files: `nvim-open /absolute/path/to/file`
-- To open in a vertical split: `nvim-open --vsplit /absolute/path/to/file`
+- To open files: `nvim-open /absolute/path/to/file` (defaults to vsplit)
 - To open in a new tab: `nvim-open --tab /absolute/path/to/file`
 - Auto-discovers the Neovim RPC socket whose cwd matches the project; falls back to a new tmux split pane in `dev:<window>`
 
