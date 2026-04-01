@@ -8,7 +8,36 @@ function help() {
 
 function cc() {
   clear
-  claude --continue "$@" 2>/dev/null || claude "$@"
+  # Auto-detect claudecode.nvim IDE integration for the current workspace
+  local ide_port=""
+  local lock_dir="$HOME/.claude/ide"
+  if [[ -d "$lock_dir" ]]; then
+    local cwd="$PWD"
+    for lock_file in "$lock_dir"/*.lock; do
+      [[ -f "$lock_file" ]] || continue
+      # Check if any workspaceFolder is a prefix of cwd
+      local folders
+      folders=$(node -e "
+        try {
+          const d = JSON.parse(require('fs').readFileSync('$lock_file','utf8'));
+          (d.workspaceFolders||[]).forEach(f => console.log(f));
+        } catch(e) {}
+      " 2>/dev/null)
+      while IFS= read -r folder; do
+        if [[ "$cwd" == "$folder" || "$cwd" == "$folder/"* ]]; then
+          ide_port="${lock_file:t:r}"  # filename without .lock extension
+          break 2
+        fi
+      done <<< "$folders"
+    done
+  fi
+
+  if [[ -n "$ide_port" ]]; then
+    CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude --continue "$@" 2>/dev/null \
+      || CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude "$@"
+  else
+    claude --continue "$@" 2>/dev/null || claude "$@"
+  fi
 }
 
 function gwo() {
@@ -29,7 +58,7 @@ function gwo() {
       } | fzf --prompt="branch > " --height=40% --reverse --ansi +s -0 \
           --header "$header" --preview "$preview_cmd"
     ) || return 0
-    branch=$(sed 's|^refs/remotes/[^/]*/||' <<< "$selected")
+    branch="${selected#refs/remotes/*/}"
   else
     branch="$1"
   fi
