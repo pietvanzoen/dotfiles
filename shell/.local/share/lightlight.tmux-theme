@@ -19,9 +19,8 @@ set -g message-style "fg=colour8,bg=colour3"
 set -g message-command-style "fg=colour8,bg=colour3"
 
 # ── Pane borders ─────────────────────────────────────────────────────
-set -g pane-active-border-style "fg=colour4"
+set -g pane-active-border-style "fg=colour6"
 set -g pane-border-style "fg=colour10"
-set -g pane-border-format " #{pane_current_command} "
 
 # ── Status left — session pill (turns orange on prefix) ──────────────
 set -g status-left "\
