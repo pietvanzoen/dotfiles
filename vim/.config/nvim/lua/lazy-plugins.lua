@@ -1,8 +1,8 @@
 -- luacheck: globals vim MiniStatusline
 require("lazy").setup({
-  { import = "plugins" },     -- custom plugins folder
+  { import = "plugins" }, -- custom plugins folder
   { "roman/golden-ratio", event = "WinNew" },
-  { "tpope/vim-obsession", cmd = "Obsession" },
+  { "tpope/vim-obsession" },
   { -- Git commands in vim
     "tpope/vim-fugitive",
     cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Ggrep", "Gblame", "GBrowse" },
@@ -19,7 +19,6 @@ require("lazy").setup({
       vim.keymap.set({ "n", "v" }, "<leader>xe", require("nvim-emmet").wrap_with_abbreviation)
     end,
   },
-
 
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     "lewis6991/gitsigns.nvim",
@@ -120,12 +119,19 @@ require("lazy").setup({
   { -- Quickly switch between files
     "smoka7/hop.nvim",
     keys = {
-      { "s", function() require("hop").hint_char1({}) end, mode = "", desc = "Hop" },
+      {
+        "s",
+        function()
+          require("hop").hint_char1({})
+        end,
+        mode = "",
+        desc = "Hop",
+      },
     },
     opts = {},
   },
 
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     "folke/which-key.nvim",
     event = "VeryLazy",
     config = function()
@@ -138,34 +144,118 @@ require("lazy").setup({
     cmd = "Telescope",
     branch = "master",
     keys = {
-      { "<leader>sh", function() require("telescope.builtin").help_tags() end, desc = "[S]earch [H]elp" },
-      { "<leader>sk", function() require("telescope.builtin").keymaps() end, desc = "[S]earch [K]eymaps" },
-      { "<leader>sf", function() require("telescope.builtin").find_files() end, desc = "[S]earch [F]iles" },
-      { "<c-p>", function() require("telescope.builtin").find_files() end, desc = "[S]earch [F]iles" },
-      { "<leader>ss", function() require("telescope.builtin").lsp_document_symbols() end, desc = "[S]earch [S]ymbols" },
-      { "<leader>sws", function() require("telescope.builtin").lsp_workspace_symbols() end, desc = "[S]earch [W]orkspace [S]ymbols" },
-      { "<leader>sw", function() require("telescope.builtin").grep_string() end, desc = "[S]earch current [W]ord" },
-      { "<leader>sg", function() require("telescope.builtin").live_grep() end, desc = "[S]earch by [G]rep" },
-      { "<leader>sd", function() require("telescope.builtin").diagnostics() end, desc = "[S]earch [D]iagnostics" },
-      { "<leader>sr", function() require("telescope.builtin").resume() end, desc = "[S]earch [R]esume" },
-      { "<leader>s.", function() require("telescope.builtin").oldfiles() end, desc = '[S]earch Recent Files ("." for repeat)' },
-      { "<leader><leader>", function() require("telescope.builtin").buffers() end, desc = "[ ] Find existing buffers" },
+      {
+        "<leader>sh",
+        function()
+          require("telescope.builtin").help_tags()
+        end,
+        desc = "[S]earch [H]elp",
+      },
+      {
+        "<leader>sk",
+        function()
+          require("telescope.builtin").keymaps()
+        end,
+        desc = "[S]earch [K]eymaps",
+      },
+      {
+        "<leader>sf",
+        function()
+          require("telescope.builtin").find_files()
+        end,
+        desc = "[S]earch [F]iles",
+      },
+      {
+        "<c-p>",
+        function()
+          require("telescope.builtin").find_files()
+        end,
+        desc = "[S]earch [F]iles",
+      },
+      {
+        "<leader>ss",
+        function()
+          require("telescope.builtin").lsp_document_symbols()
+        end,
+        desc = "[S]earch [S]ymbols",
+      },
+      {
+        "<leader>sws",
+        function()
+          require("telescope.builtin").lsp_workspace_symbols()
+        end,
+        desc = "[S]earch [W]orkspace [S]ymbols",
+      },
+      {
+        "<leader>sw",
+        function()
+          require("telescope.builtin").grep_string()
+        end,
+        desc = "[S]earch current [W]ord",
+      },
+      {
+        "<leader>sg",
+        function()
+          require("telescope.builtin").live_grep()
+        end,
+        desc = "[S]earch by [G]rep",
+      },
+      {
+        "<leader>sd",
+        function()
+          require("telescope.builtin").diagnostics()
+        end,
+        desc = "[S]earch [D]iagnostics",
+      },
+      {
+        "<leader>sr",
+        function()
+          require("telescope.builtin").resume()
+        end,
+        desc = "[S]earch [R]esume",
+      },
+      {
+        "<leader>s.",
+        function()
+          require("telescope.builtin").oldfiles()
+        end,
+        desc = '[S]earch Recent Files ("." for repeat)',
+      },
+      {
+        "<leader><leader>",
+        function()
+          require("telescope.builtin").buffers()
+        end,
+        desc = "[ ] Find existing buffers",
+      },
       { "<leader>su", "<cmd>Telescope undo<cr>", desc = "[S]earch [U]ndo Tree" },
-      { "<leader>/", function()
-        require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-          winblend = 10,
-          previewer = false,
-        }))
-      end, desc = "[/] Fuzzily search in current buffer" },
-      { "<leader>s/", function()
-        require("telescope.builtin").live_grep({
-          grep_open_files = true,
-          prompt_title = "Live Grep in Open Files",
-        })
-      end, desc = "[S]earch [/] in Open Files" },
-      { "<leader>sn", function()
-        require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
-      end, desc = "[S]earch [N]eovim files" },
+      {
+        "<leader>/",
+        function()
+          require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
+            winblend = 10,
+            previewer = false,
+          }))
+        end,
+        desc = "[/] Fuzzily search in current buffer",
+      },
+      {
+        "<leader>s/",
+        function()
+          require("telescope.builtin").live_grep({
+            grep_open_files = true,
+            prompt_title = "Live Grep in Open Files",
+          })
+        end,
+        desc = "[S]earch [/] in Open Files",
+      },
+      {
+        "<leader>sn",
+        function()
+          require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
+        end,
+        desc = "[S]earch [N]eovim files",
+      },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -185,7 +275,7 @@ require("lazy").setup({
       { "nvim-telescope/telescope-ui-select.nvim" },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
+      { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
       "debugloop/telescope-undo.nvim",
     },
     config = function()
@@ -255,17 +345,17 @@ require("lazy").setup({
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { "mason-org/mason.nvim" },
-      { "mason-org/mason-lspconfig.nvim" },           -- same here
-      { "j-hui/fidget.nvim",             opts = {} }, -- Useful status updates for LSP.
+      { "mason-org/mason-lspconfig.nvim" }, -- same here
+      { "j-hui/fidget.nvim", opts = {} }, -- Useful status updates for LSP.
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
-      { "folke/neodev.nvim",             opts = {} },
+      { "folke/neodev.nvim", opts = {} },
 
       { -- Github Copilot integration
         "zbirenbaum/copilot.lua",
         dependencies = {
-          "copilotlsp-nvim/copilot-lsp"
+          "copilotlsp-nvim/copilot-lsp",
         },
         opts = {
           panel = {
@@ -292,8 +382,12 @@ require("lazy").setup({
             sh = function()
               local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
               -- disable for .env files, but allow .env.sh
-              if filename == ".env" then return false end
-              if string.match(filename, "^%.env%.") and not string.match(filename, "%.sh$") then return false end
+              if filename == ".env" then
+                return false
+              end
+              if string.match(filename, "^%.env%.") and not string.match(filename, "%.sh$") then
+                return false
+              end
               return true
             end,
           },
@@ -382,7 +476,6 @@ require("lazy").setup({
               end,
             })
           end
-
         end,
       })
 
@@ -392,20 +485,11 @@ require("lazy").setup({
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
-      local vue_language_server_path = vim.fn.stdpath 'data' ..
-          '/mason/packages/vue-language-server/node_modules/@vue/language-server'
+      local vue_language_server_path = vim.fn.stdpath("data")
+        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
 
       local servers = {
-        ts_ls    = {
-          root_dir = function(fname)
-            local node_root = require("lspconfig.util").root_pattern("package.json", "tsconfig.json")(fname)
-            if node_root then return node_root end
-            if vim.fn.filereadable(fname) ~= 1 then return end
-            local first_line = (vim.fn.readfile(fname, "", 1) or {})[1] or ""
-            if first_line:match("node") then
-              return vim.fs.dirname(fname)
-            end
-          end,
+        ts_ls = {
           single_file_support = false,
           init_options = {
             plugins = {
@@ -421,7 +505,7 @@ require("lazy").setup({
 
         emmet_ls = {},
 
-        eslint   = {
+        eslint = {
           codeAction = {
             disableRuleComment = {
               enable = true,
@@ -433,15 +517,15 @@ require("lazy").setup({
           },
         },
 
-        html     = {
+        html = {
           filetypes = { "html" },
         },
 
-        cssls    = {
+        cssls = {
           filetypes = { "css", "scss", "less" },
         },
 
-        lua_ls   = {
+        lua_ls = {
           settings = {
             Lua = {
               completion = {
@@ -455,7 +539,7 @@ require("lazy").setup({
             },
           },
         },
-        vale_ls  = {
+        vale_ls = {
           filetypes = { "markdown" },
         },
       }
@@ -476,13 +560,10 @@ require("lazy").setup({
       -- Deno LSP (uses system deno, not mason-managed)
       vim.lsp.config("denols", {
         capabilities = vim.tbl_deep_extend("force", {}, capabilities),
-        root_dir = function(fname)
-          local deno_root = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc", "deno.lock")(fname)
-          if deno_root then return deno_root end
-          if vim.fn.filereadable(fname) ~= 1 then return end
-          local first_line = (vim.fn.readfile(fname, "", 1) or {})[1] or ""
-          if first_line:match("deno") then
-            return vim.fs.dirname(fname)
+        root_dir = function(bufnr, on_dir)
+          local root = vim.fs.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" })
+          if root then
+            on_dir(root)
           end
         end,
       })
@@ -574,7 +655,7 @@ require("lazy").setup({
               { hl = "MiniStatuslineFilename", strings = { pathname } },
               "%=", -- End left alignment
               { hl = "MiniStatuslineFileinfo", strings = { filetype, diagnostics } },
-              { hl = mode_hl,                  strings = { search .. location } },
+              { hl = mode_hl, strings = { search .. location } },
             })
             -- stylua: ignore end
           end,
@@ -751,6 +832,7 @@ require("lazy").setup({
     config = function()
       vim.opt.termguicolors = true
       vim.cmd.colorscheme("solarized")
+      vim.api.nvim_set_hl(0, "Cursor", { bg = "#d33682", fg = "#073642" })
     end,
   },
 
@@ -825,10 +907,10 @@ require("lazy").setup({
     },
     opts = {
       enable = true,
-      max_lines = 0,        -- Disable max lines limit
+      max_lines = 0, -- Disable max lines limit
       trim_scope = "inner", -- Show only the inner scope
-      mode = "cursor",      -- Show context at cursor position
-    }
+      mode = "cursor", -- Show context at cursor position
+    },
   },
 }, {
   change_detection = {
