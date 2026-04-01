@@ -30,9 +30,7 @@ and any multi-sentence text output. Do not wrap code blocks or tool output.
 ## Response status
 End each response with a one-line status summary so the user can quickly regain context when switching between sessions:
 
-> **[current task] → [next step]** `HH:MM`
-
-Include the current time in HH:MM format (24-hour) to track when work was done.
+> **[current task] → [next step]**
 
 ## Model usage
 After reviewing any tickets/bugs in context gathering (step 2 of Task Workflow), suggest switching to an appropriate model based on task complexity:

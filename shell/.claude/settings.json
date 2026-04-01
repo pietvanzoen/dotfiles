@@ -66,6 +66,8 @@
       "Read(.claude-notes)",
       "Write(.claude-notes)",
       "Edit(.claude-notes)",
+      "Edit(~/.claude/plans/*.md)",
+      "Write(~/.claude/plans/*.md)",
       "Bash(claude-notes-update *)",
       "Skill(notes)",
       "Skill(commit-commands:commit)",
@@ -170,5 +172,6 @@
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "stripe@claude-plugins-official": true
-  }
+  },
+  "model": "opus[1m]"
 }

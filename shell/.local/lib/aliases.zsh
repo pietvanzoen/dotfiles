@@ -1,5 +1,6 @@
 alias '\-'='cd -'
 alias '..'='cd ..'
+alias cl='clear'
 
 function help() {
   bash -c "help $*"

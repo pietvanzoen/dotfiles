@@ -7,7 +7,7 @@ font-size = 16
 # ── Colors ───────────────────────────────────────────────────────────
 background = #002b36
 foreground = #839496
-cursor-color = #839496
+cursor-color = #d33682
 cursor-text  = #073642
 selection-background = #073642
 selection-foreground = #93a1a1
@@ -19,7 +19,7 @@ palette = 2=#859900
 palette = 3=#b58900
 palette = 4=#268bd2
 palette = 5=#d33682
-palette = 6=#2aa198
+palette = 6=#d33682
 palette = 7=#eee8d5
 palette = 8=#274351
 palette = 9=#cb4b16
