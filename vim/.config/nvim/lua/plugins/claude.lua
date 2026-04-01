@@ -1,29 +1,27 @@
 -- luacheck: globals vim
--- Claude Code integration: keybinding + diff preview plugin
-function open_claude_with_buffers()
-  vim.cmd("VimuxRunCommand 'cc'")
-end
+-- claudecode.nvim keybindings (plugin config lives in lazy-plugins.lua)
+vim.api.nvim_set_keymap("n", "<leader>oc", ":VimuxRunCommand 'cc'<CR>", { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap("n", "<leader>oc", ":lua open_claude_with_buffers()<CR>", { noremap = true, silent = true })
+-- Close the stray [No Name] window left by claudecode.nvim's inline diff + open_in_new_tab.
+-- The inline diff creates a vsplit for the diff buffer but leaves the original [No Name]
+-- window open. Detect this when entering the diff buffer and close that window.
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    if not vim.b.claudecode_inline_diff then return end
+    local diff_win = vim.api.nvim_get_current_win()
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      if win ~= diff_win then
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.api.nvim_buf_get_name(buf) == ""
+          and not vim.api.nvim_buf_get_option(buf, "modified")
+          and vim.api.nvim_buf_line_count(buf) <= 1
+        then
+          pcall(vim.api.nvim_win_close, win, false)
+          break
+        end
+      end
+    end
+  end,
+})
 
-return {
-  {
-    "Cannon07/claude-preview.nvim",
-    config = function()
-      require("claude-preview").setup({
-        diff = {
-          layout = "inline",
-          auto_close = true,
-        },
-        highlights = {
-          inline = {
-            added = { bg = "#0d2a1a" },
-            removed = { bg = "#2a0d0d" },
-            added_text = { bg = "#2d6e2d", fg = "#e0f0e0" },
-            removed_text = { bg = "#6e2d2d", fg = "#f0e0e0" },
-          },
-        },
-      })
-    end,
-  },
-}
+return {}

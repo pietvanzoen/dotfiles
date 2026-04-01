@@ -3,6 +3,30 @@ require("lazy").setup({
   { import = "plugins" }, -- custom plugins folder
   { "roman/golden-ratio", event = "WinNew" },
   { "tpope/vim-obsession" },
+
+  { -- Claude Code IDE integration — gives Claude real-time buffer/cursor/selection context
+    -- Uses "none" terminal provider: no terminal opens inside Neovim; Claude Code runs in tmux
+    -- Using zhao-tong/claudecode.nvim fork (PR #195: inline diff layout)
+    "zhao-tong/claudecode.nvim",
+    event = "VimEnter",
+    dependencies = { "folke/snacks.nvim" },
+    opts = {
+      terminal = { provider = "none" },
+      diff_opts = { open_in_new_tab = true, layout = "inline", hide_terminal_in_new_tab = true },
+    },
+    keys = {
+      { "<leader>a", nil, desc = "AI/Claude Code" },
+      { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+      { "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+      { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+      { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+    },
+  },
+
+  { -- Unified diff review for multi-file changes
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
+  },
   { -- Git commands in vim
     "tpope/vim-fugitive",
     cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Ggrep", "Gblame", "GBrowse" },
@@ -108,6 +132,8 @@ require("lazy").setup({
     cmd = { "VimuxRunCommand", "VimuxPromptCommand", "VimuxOpenRunner" },
     config = function()
       vim.g.VimuxOrientation = "h"
+      vim.g.VimuxOpenExtraArgs = "-b" -- open pane to the left
+      vim.g.VimuxCloseOnExit = 1
       local function update_vimux_height()
         vim.g.VimuxHeight = vim.o.columns > 200 and "80" or "60"
       end
@@ -820,6 +846,9 @@ require("lazy").setup({
 
       -- Commenting out lines or blocks of code
       require("mini.comment").setup()
+
+      -- Diff signs in the gutter and inline diff highlighting
+      require("mini.diff").setup()
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
