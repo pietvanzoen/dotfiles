@@ -4,18 +4,18 @@
 # Toggle: prefix+G
 
 if [[ "${1}" == "toggle" ]]; then
-  current="$(tmux show-option -wqv '@golden-ratio' 2>/dev/null)"
+  current="$(tmux show-option -qv '@golden-ratio' 2>/dev/null)"
   if [[ "${current}" == "on" ]]; then
-    tmux set -w '@golden-ratio' off
+    tmux set '@golden-ratio' off
     tmux display-message "Golden ratio: OFF"
   else
-    tmux set -w '@golden-ratio' on
+    tmux set '@golden-ratio' on
     tmux display-message "Golden ratio: ON"
   fi
   exit 0
 fi
 
-[[ "$(tmux show-option -wqv '@golden-ratio' 2>/dev/null)" == "on" ]] || exit 0
+[[ "$(tmux show-option -qv '@golden-ratio' 2>/dev/null)" == "on" ]] || exit 0
 [[ "$(tmux display-message -p '#{window_zoomed_flag}')" == "0" ]] || exit 0
 [[ "$(tmux display-message -p '#{window_panes}')" -gt 1 ]] || exit 0
 
