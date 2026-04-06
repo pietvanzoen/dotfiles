@@ -34,6 +34,8 @@ GNU Stow-based: each top-level directory (except `_*` prefixes) is a stow packag
 - Neovim plugins → `vim/.config/nvim/lua/plugins/`
 - Git custom commands → `git/.local/bin/git-<command>`
 - Secrets/local overrides → `*.example` suffix (copied without suffix during install)
+- Claude Code commands → `shell/.claude/commands/` (symlinked to `shell/.opencode/commands/` for OpenCode compatibility)
+- Skills → `shell/.claude/skills/<name>/SKILL.md` (works in both Claude Code and OpenCode)
 
 ## Known gotchas
 
