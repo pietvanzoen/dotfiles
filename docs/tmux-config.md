@@ -1,9 +1,6 @@
----
-name: tmux-config
-description: Use this agent when editing .tmux.conf, writing tmux format strings,
-  status-line expressions, key bindings, window-option logic, or hook scripts. Also
-  covers Ghostty terminal gotchas.
----
+# tmux & Ghostty Configuration Guide
+
+This guide covers tmux configuration gotchas and Ghostty terminal quirks. Consult this before editing `.tmux.conf`, writing tmux format strings, or configuring Ghostty.
 
 ## tmux gotchas
 

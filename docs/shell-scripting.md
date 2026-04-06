@@ -1,9 +1,6 @@
----
-name: shell-scripting
-description: Use this agent when writing shell scripts, choosing a scripting language
-  (Bash vs Node.js vs Deno), or hitting macOS-specific gotchas with sed, redirects,
-  or stow commands.
----
+# Shell Scripting Guide
+
+This guide covers script language selection and macOS-specific gotchas. Consult this before writing shell scripts or debugging macOS shell/stow issues.
 
 ## Script language selection
 
