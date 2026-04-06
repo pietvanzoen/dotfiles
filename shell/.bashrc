@@ -13,3 +13,8 @@ export HISTIGNORE="cd:cd -:pwd:exit:date:*secrets set*";
 if [ -f /usr/local/share/bash-completion/bash_completion ]; then
   . /usr/local/share/bash-completion/bash_completion
 fi
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/piet/.lmstudio/bin"
+# End of LM Studio CLI section
+

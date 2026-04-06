@@ -168,3 +168,8 @@ if [ -f '/Users/piet/.local/lib/google-cloud-sdk/path.zsh.inc' ]; then . '/Users
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/piet/.local/lib/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/piet/.local/lib/google-cloud-sdk/completion.zsh.inc'; fi
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/piet/.lmstudio/bin"
+# End of LM Studio CLI section
+

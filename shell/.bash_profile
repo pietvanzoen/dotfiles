@@ -3,3 +3,8 @@ if [ -f ~/.bashrc ]; then
 else
   echo "Could not find ~/.bashrc. Did you stow?"
 fi
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/piet/.lmstudio/bin"
+# End of LM Studio CLI section
+
