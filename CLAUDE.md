@@ -37,6 +37,10 @@ GNU Stow-based: each top-level directory (except `_*` prefixes) is a stow packag
 - Claude Code commands → `shell/.claude/commands/` (symlinked to `shell/.opencode/commands/` for OpenCode compatibility)
 - Skills → `shell/.claude/skills/<name>/SKILL.md` (works in both Claude Code and OpenCode)
 
+## Code search
+
+When searching for structural code patterns (not simple text), prefer the ast-grep skill over regex-based grep.
+
 ## Known gotchas
 
 **Shell aliases**: `cp` is aliased to `cp -vi` (interactive) — use `/bin/cp -f` for non-interactive overwrites
