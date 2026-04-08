@@ -32,11 +32,18 @@ function cc() {
     done
   fi
 
+  # Check if there's an existing session to continue
+  local cc_args=("$@")
+  local project_key="${PWD//\//-}"
+  if [[ -d "$HOME/.claude/projects/$project_key" ]] \
+    && ls "$HOME/.claude/projects/$project_key"/*.jsonl &>/dev/null; then
+    cc_args=("--continue" "$@")
+  fi
+
   if [[ -n "$ide_port" ]]; then
-    CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude --continue "$@" 2>/dev/null \
-      || CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude "$@"
+    CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude "${cc_args[@]}"
   else
-    claude --continue "$@" 2>/dev/null || claude "$@"
+    claude "${cc_args[@]}"
   fi
 }
 
