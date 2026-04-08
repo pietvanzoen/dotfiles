@@ -15,13 +15,13 @@ fi
 
 # Colors
 C_RESET=$(printf '\033[0m')
-C_BOLD=$(printf '\033[1m')
+# C_BOLD=$(printf '\033[1m')  # only used by notes (disabled)
 C_DIM=$(printf '\033[90m')
 C_MAGENTA=$(printf '\033[95m')
 C_YELLOW=$(printf '\033[33m')
 C_CYAN=$(printf '\033[36m')
 C_GREEN=$(printf '\033[32m')
-C_BLUE=$(printf '\033[34m')
+# C_BLUE=$(printf '\033[34m')  # only used by notes (disabled)
 
 git_status=""
 pr_part=""
@@ -97,31 +97,31 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   fi
 fi
 
-# Notes: stage + next step from .claude-notes (local file read, no blocking)
-notes_part=""
-notes_file="$cwd/.claude-notes"
-if [ -f "$notes_file" ]; then
-  notes_stage=$(grep '^stage:' "$notes_file" 2>/dev/null | head -1 | sed 's/^stage: *//')
-  notes_next=$(grep '^next:' "$notes_file" 2>/dev/null | head -1 | sed 's/^next: *//')
-  if [ -n "$notes_stage" ]; then
-    case "$notes_stage" in
-      setup|context)          stage_color="$C_DIM"    ;;
-      planning)               stage_color="$C_YELLOW" ;;
-      dev)                    stage_color="$C_GREEN"  ;;
-      pr|review|human-review) stage_color="$C_CYAN"   ;;
-      cleanup)                stage_color="$C_BLUE"   ;;
-      *)                      stage_color="$C_DIM"    ;;
-    esac
-    inner="${stage_color}${notes_stage}${C_RESET}"
-    if [ -n "$notes_next" ]; then
-      if [ ${#notes_next} -gt 35 ]; then
-        notes_next="${notes_next:0:34}…"
-      fi
-      inner="${inner} ${C_BOLD}›${C_RESET} ${notes_next}"
-    fi
-    notes_part="  ${C_BOLD}•${C_RESET} ${inner} ${C_BOLD}•${C_RESET}"
-  fi
-fi
+# Notes: disabled — claude-notes no longer used
+# notes_part=""
+# notes_file="$cwd/.claude-notes"
+# if [ -f "$notes_file" ]; then
+#   notes_stage=$(grep '^stage:' "$notes_file" 2>/dev/null | head -1 | sed 's/^stage: *//')
+#   notes_next=$(grep '^next:' "$notes_file" 2>/dev/null | head -1 | sed 's/^next: *//')
+#   if [ -n "$notes_stage" ]; then
+#     case "$notes_stage" in
+#       setup|context)          stage_color="$C_DIM"    ;;
+#       planning)               stage_color="$C_YELLOW" ;;
+#       dev)                    stage_color="$C_GREEN"  ;;
+#       pr|review|human-review) stage_color="$C_CYAN"   ;;
+#       cleanup)                stage_color="$C_BLUE"   ;;
+#       *)                      stage_color="$C_DIM"    ;;
+#     esac
+#     inner="${stage_color}${notes_stage}${C_RESET}"
+#     if [ -n "$notes_next" ]; then
+#       if [ ${#notes_next} -gt 35 ]; then
+#         notes_next="${notes_next:0:34}…"
+#       fi
+#       inner="${inner} ${C_BOLD}›${C_RESET} ${notes_next}"
+#     fi
+#     notes_part="  ${C_BOLD}•${C_RESET} ${inner} ${C_BOLD}•${C_RESET}"
+#   fi
+# fi
 
 # Session cost & energy range estimate
 cost_part=""
@@ -168,4 +168,4 @@ if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; th
   cost_part=" ${C_DIM}${cost_fmt} ⚡${energy_wh}Wh ∿${water_ml}mL ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
 fi
 
-printf '%s%s%s%s%s%s%s%s' "$C_MAGENTA" "$dir_name" "$C_RESET" "$git_status" "$pr_part" "$notes_part" "$model_part" "$cost_part"
+printf '%s%s%s%s%s%s%s' "$C_MAGENTA" "$dir_name" "$C_RESET" "$git_status" "$pr_part" "$model_part" "$cost_part"

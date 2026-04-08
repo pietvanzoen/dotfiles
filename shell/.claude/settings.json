@@ -63,13 +63,8 @@
       "Read(package.json)",
       "Read(tsconfig.json)",
       "Read(*.md)",
-      "Read(.claude-notes)",
-      "Write(.claude-notes)",
-      "Edit(.claude-notes)",
       "Edit(~/.claude/plans/*.md)",
       "Write(~/.claude/plans/*.md)",
-      "Bash(claude-notes-update *)",
-      "Skill(notes)",
       "Skill(commit-commands:commit)",
       "mcp__trello__list_boards",
       "mcp__trello__list_workspaces",
@@ -104,6 +99,7 @@
       "Write(./.env*)"
     ]
   },
+  "model": "opus[1m]",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -172,5 +168,13 @@
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "stripe@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "ast-grep-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "ast-grep/agent-skill"
+      }
+    }
   }
 }

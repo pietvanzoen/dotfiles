@@ -6,6 +6,9 @@
 
 set -euo pipefail
 
+# Disabled — claude-notes no longer used. Script kept as no-op so callers don't break.
+exit 0
+
 # Parse flags
 stage_arg=""
 refresh_mode=false

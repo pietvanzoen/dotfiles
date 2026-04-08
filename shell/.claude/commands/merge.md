@@ -1,7 +1,7 @@
 ---
 name: merge
 description: Capture CLAUDE.md learnings then merge the current PR via GitHub
-allowed-tools: Bash(gh pr *), Bash(gh api *), Bash(claude-notes-update *)
+allowed-tools: Bash(gh pr *), Bash(gh api *)
 model: opus
 ---
 
@@ -31,6 +31,3 @@ gh pr merge --squash --delete-branch --auto
 This squash-merges on GitHub (no local git operations) and deletes the remote branch.
 If checks are still pending, `--auto` enables auto-merge — GitHub will merge once all checks pass.
 
-## 4. Update notes
-
-Run `claude-notes-update --stage cleanup "<PR title> merged → post-merge cleanup"`.

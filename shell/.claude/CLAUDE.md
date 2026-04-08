@@ -1,19 +1,5 @@
 @~/.claude/CLAUDE.cutr.md
 
-## Session notes
-Run `/notes` as the **last action in every response**. Skip only for trivial replies
-(acknowledgements, clarifications, short answers with no code changes).
-
-Run in background with a single Bash call — use `run_in_background: true` and do NOT add `&` or redirections to the command string itself:
-```
-Bash(claude-notes-update --stage dev "<done> → <next step>", run_in_background: true)
-```
-Be detailed — include file names, ticket IDs, feature names. No trailing punctuation.
-Keep the `<next step>` part to **40 characters or fewer** where possible — it maps to a fixed-width column in the sessions dashboard.
-
-Include `--stage` only when the workflow stage changes (not on every update). Valid stages:
-`setup` · `context` · `planning` · `dev` · `pr` · `review` · `human-review` · `cleanup`
-
 ## Text width
 Wrap prose text at 120 characters per line. Apply this to explanations, plans,
 and any multi-sentence text output. Do not wrap code blocks or tool output.
