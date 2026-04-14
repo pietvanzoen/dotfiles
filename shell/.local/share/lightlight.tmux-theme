@@ -27,17 +27,16 @@ set -g status-left "\
 #[fg=colour15,bg=#{?client_prefix,colour9,colour4},bold] #S \
 #[fg=#{?client_prefix,colour9,colour4},bg=colour8,nobold]"
 
-# ── Status right — git branch + other sessions ──────────────────────
+# ── Status right — other sessions ──────────────────────
 set -g status-right "\
-#[fg=colour12,bg=colour8]#(tmux-git-branch #{pane_current_path})\
- #(tmux list-sessions -F '##{session_name}' | grep -vF '#S' | while read -r s; do printf '#[fg=colour12,bg=colour8]#[fg=colour8,bg=colour12] %%s #[fg=colour12,bg=colour8]' "\$s"; done)"
+#(tmux list-sessions -F '##{session_name}' | grep -vF '#S' | while read -r s; do printf '#[fg=colour12,bg=colour8]#[fg=colour8,bg=colour12] %%s #[fg=colour12,bg=colour8]' "\$s"; done)"
 
 # ── Window status ────────────────────────────────────────────────────
 setw -g window-status-separator "  "
 
 # Inactive windows — muted text, no background
 setw -g window-status-style "fg=colour12,bg=colour8"
-setw -g window-status-format " #I #{=|35|…:window_name}#{?#{@claude-thinking}, ◎,}#{?#{@claude-needs-input}, ?,}#{?#{@claude-done}, ●,} "
+setw -g window-status-format " #I #{=|25|…:window_name}#{?#{@claude-thinking}, ◎,}#{?#{@claude-needs-input}, ?,}#{?#{@claude-done}, ●,} "
 
 # Active window — cyan pill
 setw -g window-status-current-format "\
