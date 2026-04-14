@@ -30,3 +30,15 @@ if [[ $HAS_ERROR ]] ; then
   _error "One or more packages could not be stowed. Manually run stow and fix."
   exit 1
 fi
+
+_info "Installing git hooks"
+hooks_dir="$DOTFILES_DIR/_scripts/hooks"
+if [[ -d "$hooks_dir" ]]; then
+  for hook in "$hooks_dir"/*; do
+    name="$(basename "$hook")"
+    dest="$DOTFILES_DIR/.git/hooks/$name"
+    cp "$hook" "$dest"
+    chmod +x "$dest"
+    echo "==> Installed hook: $name"
+  done
+fi

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -e
+
+# Lint staged shell scripts with shellcheck before committing.
+# Uses make lint FILES=... to respect the project's existing exclusion rules.
+
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+
+shell_files=""
+for f in $staged; do
+  [[ ! -f "$f" ]] && continue
+  if [[ "$f" == *.sh ]] || head -1 "$f" 2>/dev/null | grep -qE '^#!.*(bash|sh)'; then
+    shell_files="$shell_files $f"
+  fi
+done
+
+shell_files="${shell_files# }"
+[[ -z "$shell_files" ]] && exit 0
+
+echo "==> Linting staged shell files..."
+# shellcheck disable=SC2086
+make lint FILES="$shell_files"
