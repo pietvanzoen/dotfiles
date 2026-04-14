@@ -38,7 +38,7 @@ else
 		| grep -v 'shell/.local/bin/imgls$$' \
 		| grep -v 'shell/.local/bin/it2')"; \
 	echo "==> Checking $$(echo $$scripts | wc -w | tr -d ' ') shell scripts..."; \
-	shellcheck $$scripts
+	shellcheck $$scripts && echo "==> All shell scripts passed linting!"
 endif
 
 update: ## Restow packages (symlinks)
