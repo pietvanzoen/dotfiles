@@ -10,7 +10,7 @@ End each response with a one-line status summary so the user can quickly regain 
 > **[current task] → [next step]**
 
 ## Model usage
-After reviewing any tickets/bugs in context gathering (step 2 of Task Workflow), suggest switching to an appropriate model based on task complexity:
+After reviewing any tickets/bugs during planning (step 1 of Task Workflow), suggest switching to an appropriate model based on task complexity:
 - **Sonnet** is sufficient for: reading/explaining code, simple edits, git operations, writing docs, answering questions
 - **Haiku** is sufficient for: quick lookups, single-file edits, running commands, short Q&A
 - **Opus** is warranted for: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning

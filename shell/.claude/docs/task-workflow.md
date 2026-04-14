@@ -3,45 +3,38 @@
 When starting a new task, guide the user through these steps and proactively suggest
 the next action:
 
-1. **Branch setup**
-   - Check current branch status
-   - If not on a task-specific branch, prompt: "Should I create a new branch
-     for this task, or switch to an existing one?"
-   - Create/checkout the appropriate branch
-
-2. **Context gathering**
-   - Ask: "Are there any tickets or bugs related to this task?"
+1. **Planning**
+   - Check the current branch name for a Linear ticket ID (e.g. `feat/ENG-123-some-description`)
+   - If no ticket is apparent, ask: "Are there any tickets or bugs related to this task?"
    - Gather and reference ticket IDs and bug reports
-   - If not already on Opus, suggest switching: planning benefits from Opus-level reasoning
-   - Run `/notes` to document the task starting point
-
-3. **Planning**
-   - Present a plan outlining the approach
-   - Discuss possible solutions and trade-offs
+   - Present **three solution options** with tradeoffs:
+     - **Option A — Pragmatic**: fastest path; acceptable shortcuts, known tradeoffs
+     - **Option B — Balanced**: reasonable effort, good correctness
+     - **Option C — Correct**: proper solution; more work but fewest future problems
+   - Each option gets a one-line tradeoff summary. End with a **recommended option** and rationale
    - **Always end plans with a bold recommended model**, e.g.:
      **> Recommended model for implementation: Sonnet (Opt+P)**
-   - Get user approval before implementation
    - If a Linear ticket exists, update its description with the accepted plan: preserve any
      existing description, add a horizontal rule (`---`), and append the plan below it
-   - Run `/notes` after plan is accepted
    - After plan is accepted, suggest switching to a lower model for implementation
      (Sonnet for multi-file work, Haiku for simple edits)
+   - Ensure the plan file contains enough detail (file paths, function signatures, key decisions)
+     that a lower model can execute complex implementation without re-deriving context
 
-4. **Development**
+2. **Development**
    - Follow TDD workflow if writing tests
    - Make changes incrementally
    - Run linter/formatter before committing
    - Run tests to verify functionality
    - Commit work with clear messages
-   - Run `/notes` after commits
 
-5. **PR creation**
+3. **PR creation**
    - Prompt: "Development is complete. Should I open a pull request?"
    - Open the PR with descriptive title and body (include ticket references)
-   - Use Claude's built-in PR review skill to review the changes
-   - Run `/notes` after PR is opened
+   - After the PR is pushed, run `/review-pr` (pr-review-toolkit) to do a comprehensive
+     review of the changes
 
-6. **PR review response**
+4. **PR review response**
    - Wait for Copilot's automatic review
    - Assess review comments and suggest fixes
    - Make necessary changes
@@ -49,15 +42,14 @@ the next action:
    - Do NOT resolve comments — the user resolves them in the GitHub UI
    - Prompt: "All comments addressed. Push updates?"
 
-7. **Human review**
+5. **Human review**
    - Once automated checks pass and comments are resolved, prompt: "Ready for human
      review. Shall I request reviewers?"
    - Wait for human approval before merging
 
-8. **Cleanup**
+6. **Cleanup**
    - After the PR is merged, suggest running `/revise-claude-md` to capture any
      learnings from the session into CLAUDE.md
-   - Run `/notes` with `--stage cleanup`
 
 **At each step:**
 - Indicate the current step in the workflow
