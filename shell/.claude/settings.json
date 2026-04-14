@@ -7,9 +7,6 @@
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
-      "Bash(npm run lint)",
-      "Bash(npm run test:*)",
-      "Bash(npm run :*)",
       "Bash(git status)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
@@ -32,12 +29,8 @@
       "Bash(ls:*)",
       "Bash(pwd)",
       "Bash(which:*)",
-      "Bash(node:*)",
-      "Bash(npx:*)",
       "Bash(yarn:*)",
-      "Bash(pnpm:*)",
       "Bash(mkdir:*)",
-      "Bash(sips:*)",
       "Bash(terminal-notifier:*)",
       "Bash(ntfy-notify:*)",
       "Bash(echo:*)",
@@ -46,7 +39,6 @@
       "Bash(readlink:*)",
       "Bash(git config:*)",
       "WebSearch",
-      "Bash(gh:*)",
       "mcp__linear-server__get_issue",
       "mcp__linear-server__get_issue_status",
       "Bash(nvim-open:*)",
@@ -81,7 +73,6 @@
       "mcp__trello__get_active_board_info",
       "mcp__trello__set_active_board",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(slack-api *)",
       "Bash(todo *)",
       "Bash(todo)"
     ],
@@ -99,7 +90,6 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opus[1m]",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -175,6 +165,52 @@
         "source": "github",
         "repo": "ast-grep/agent-skill"
       }
+    }
+  },
+  "model": "opus[1m]",
+  "skipAutoPermissionPrompt": true,
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": false,
+    "allowUnsandboxedCommands": false,
+    "excludedCommands": ["git", "git *", "gh", "gh *"],
+    "filesystem": {
+      "denyRead": ["~/"],
+      "allowRead": [
+        "~/.local/bin",
+        "~/.claude",
+        "~/.nvm",
+        "~/Library/Caches/fnm_multishells",
+        "~/Library/Application Support/fnm",
+        "~/.gitconfig",
+        "~/.config/git",
+        "~/.yarnrc",
+        "~/.config/yarn",
+        "~/.config/gh",
+        "~/.npmrc",
+        "~/.cache/yarn",
+        "~/package.json"
+      ],
+      "allowWrite": [
+        "~/.cache/yarn"
+      ]
+    },
+    "network": {
+      "allowedDomains": [
+        "localhost",
+        "api.anthropic.com",
+        "github.com",
+        "api.github.com",
+        "raw.githubusercontent.com",
+        "*.npmjs.org",
+        "registry.yarnpkg.com",
+        "api.linear.app",
+        "api.slack.com",
+        "api.trello.com",
+        "*.sentry.io",
+        "oauth2.googleapis.com",
+        "storage.googleapis.com"
+      ]
     }
   }
 }
