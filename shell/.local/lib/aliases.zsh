@@ -32,10 +32,17 @@ function cc() {
     done
   fi
 
-  if [[ -n "$ide_port" ]]; then
-    CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude --resume --enable-auto-mode
+  local args=(--enable-auto-mode)
+  if [[ "$1" == "new" ]]; then
+    shift
   else
-    claude --resume --enable-auto-mode
+    args+=(--resume)
+  fi
+
+  if [[ -n "$ide_port" ]]; then
+    CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude "${args[@]}" "$@"
+  else
+    claude "${args[@]}" "$@"
   fi
 }
 
