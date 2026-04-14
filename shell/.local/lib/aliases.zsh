@@ -32,18 +32,10 @@ function cc() {
     done
   fi
 
-  # Check if there's an existing session to continue
-  local cc_args=("$@")
-  local project_key="${PWD//\//-}"
-  if [[ -d "$HOME/.claude/projects/$project_key" ]] \
-    && ls "$HOME/.claude/projects/$project_key"/*.jsonl &>/dev/null; then
-    cc_args=("--continue" "$@")
-  fi
-
   if [[ -n "$ide_port" ]]; then
-    CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude "${cc_args[@]}"
+    CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude --resume --enable-auto-mode
   else
-    claude "${cc_args[@]}"
+    claude --resume --enable-auto-mode
   fi
 }
 
@@ -86,20 +78,22 @@ function gwo() {
     local existing_wt
     existing_wt=$(git worktree list --porcelain 2>/dev/null \
       | awk -v b="refs/heads/$branch" '/^worktree/{wt=$2} $0=="branch "b{print wt}')
-    [[ -n "$existing_wt" ]] && { echo "Error: branch already open at $existing_wt" >&2; return 1; }
-
-    echo "==> Creating worktree at $worktree_dir"
-    if git show-ref --verify --quiet "refs/heads/$branch"; then
-      git worktree add "$worktree_dir" "$branch"
-    elif git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
-      git worktree add --track -b "$branch" "$worktree_dir" "origin/$branch"
+    if [[ -n "$existing_wt" ]]; then
+      worktree_dir="$existing_wt"
     else
-      local current_branch
-      current_branch=$(git rev-parse --abbrev-ref HEAD)
-      echo "==> Creating new branch $branch from $current_branch"
-      git worktree add -b "$branch" "$worktree_dir" "$current_branch"
+      echo "==> Creating worktree at $worktree_dir"
+      if git show-ref --verify --quiet "refs/heads/$branch"; then
+        git worktree add "$worktree_dir" "$branch"
+      elif git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+        git worktree add --track -b "$branch" "$worktree_dir" "origin/$branch"
+      else
+        local current_branch
+        current_branch=$(git rev-parse --abbrev-ref HEAD)
+        echo "==> Creating new branch $branch from $current_branch"
+        git worktree add -b "$branch" "$worktree_dir" "$current_branch"
+      fi
+      is_new_worktree=1
     fi
-    is_new_worktree=1
   fi
 
   cd "$worktree_dir" || return 1
