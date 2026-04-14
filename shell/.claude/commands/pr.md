@@ -75,13 +75,13 @@ commits tell the story.>
 **Single-commit branch** — use `--fill-first` to auto-populate from the commit:
 ```bash
 git push -u --force-with-lease
-gh pr create --fill-first
+gh pr create --draft --fill-first
 ```
 
 **Multi-commit branch** — craft title and body manually:
 ```bash
 git push -u --force-with-lease
-gh pr create --title "<title>" --body "$(cat <<'EOF'
+gh pr create --draft --title "<title>" --body "$(cat <<'EOF'
 <body>
 EOF
 )"
@@ -95,7 +95,3 @@ gh save-me-copilot "$REPO" "$PR_NUMBER"
 ```
 
 Print the PR URL.
-
-## After
-
-Run `/notes` to update session state.

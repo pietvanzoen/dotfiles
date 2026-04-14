@@ -28,26 +28,24 @@ the next action:
    - Run tests to verify functionality
    - Commit work with clear messages
 
-3. **PR creation**
-   - Prompt: "Development is complete. Should I open a pull request?"
-   - Open the PR with descriptive title and body (include ticket references)
-   - After the PR is pushed, run `/review-pr` (pr-review-toolkit) to do a comprehensive
-     review of the changes
+3. **PR + review**
+   - Open a **draft PR** via `/pr` (creates draft, requests Copilot review)
+   - Run `/review-pr` (pr-review-toolkit) for self-review; fix any issues found, push
+   - Use `/loop` to poll for Copilot review (~270s interval, stays in prompt cache):
+     - Check: `gh api repos/{owner}/{repo}/pulls/{pr}/reviews` for a completed review
+     - When review lands: assess comments, implement fixes, push
+     - Reply to comments per CLAUDE.md format (prefixed with `> _Posted by Claude Code_`)
+     - Do NOT resolve comments — the user resolves them in the GitHub UI
+   - After fixes pushed, poll for CI checks:
+     - Check: `gh pr view --json statusCheckRollup`
+     - If checks fail, diagnose and fix
 
-4. **PR review response**
-   - Wait for Copilot's automatic review
-   - Assess review comments and suggest fixes
-   - Make necessary changes
-   - Reply to comments using proper format (see PR review comments in CLAUDE.md)
-   - Do NOT resolve comments — the user resolves them in the GitHub UI
-   - Prompt: "All comments addressed. Push updates?"
+4. **Human review**
+   - Mark the PR as ready for review: `gh pr ready`
+   - Request reviewers
+   - **Stop and wait** — do not merge without human approval
 
-5. **Human review**
-   - Once automated checks pass and comments are resolved, prompt: "Ready for human
-     review. Shall I request reviewers?"
-   - Wait for human approval before merging
-
-6. **Cleanup**
+5. **Cleanup**
    - After the PR is merged, suggest running `/revise-claude-md` to capture any
      learnings from the session into CLAUDE.md
 
@@ -55,4 +53,4 @@ the next action:
 - Indicate the current step in the workflow
 - Complete the current step's actions
 - Explicitly suggest the next step
-- Wait for user confirmation before major actions (creating branches, opening PRs, merging)
+- Only merge requires user confirmation — other steps proceed autonomously in auto-mode
