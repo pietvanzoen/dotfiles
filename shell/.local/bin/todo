@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-GLOBAL_TODO="$HOME/.claude/todo.md"
+PROJECT_ROOT=$(GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1 git rev-parse --show-toplevel 2>/dev/null) || PROJECT_ROOT=""
+TODO_FILE="${PROJECT_ROOT:+$PROJECT_ROOT/.todo.md}"
 
 # Colors (when writing to a terminal or FORCE_COLOR is set)
 if [ -t 1 ] || [ "${FORCE_COLOR:-0}" != "0" ]; then
@@ -13,17 +14,18 @@ else
   CYAN='' YELLOW='' DIM='' RESET=''
 fi
 
-get_project_todo() {
-  local root
-  root=$(git rev-parse --show-toplevel 2>/dev/null) || return 1
-  echo "$root/.todo.md"
+require_project() {
+  if [ -z "$TODO_FILE" ]; then
+    echo "==> Not in a git repository" >&2
+    exit 1
+  fi
 }
 
 add_item() {
-  local file="$1" text="$2"
-  mkdir -p "$(dirname "$file")"
-  echo "- [ ] $(date +%Y-%m-%d) $text" >> "$file"
-  echo "==> Added to $(basename "$(dirname "$file")")/.todo.md"
+  local text="$1"
+  require_project
+  echo "- [ ] $(date +%Y-%m-%d) $text" >> "$TODO_FILE"
+  echo "==> Added to $(basename "$PROJECT_ROOT")/.todo.md"
 }
 
 relative_date() {
@@ -69,58 +71,41 @@ print_items() {
 }
 
 list_items() {
-  local project_file global_file shown=false
-
-  if project_file=$(get_project_todo) && [ -f "$project_file" ]; then
-    echo "${CYAN}==> Project: $(basename "$(dirname "$project_file")")${RESET}"
-    print_items "$project_file" || true
-    shown=true
-  fi
-
-  global_file="$GLOBAL_TODO"
-  if [ -f "$global_file" ]; then
-    echo "${CYAN}==> Global${RESET}"
-    print_items "$global_file" || true
-    shown=true
-  fi
-
-  if [ "$shown" = false ]; then
-    echo "${DIM}==> No todo files found${RESET}"
+  require_project
+  if [ -f "$TODO_FILE" ]; then
+    echo "${CYAN}==> Project: $(basename "$PROJECT_ROOT")${RESET}"
+    print_items "$TODO_FILE" || true
+  else
+    echo "${DIM}==> No todo file found${RESET}"
+    empty_state
   fi
 }
 
 mark_done() {
   local num="$1"
-  local file
+  require_project
 
-  if file=$(get_project_todo) && [ -f "$file" ]; then
-    : # use project file
-  else
-    file="$GLOBAL_TODO"
-  fi
-
-  if [ ! -f "$file" ]; then
+  if [ ! -f "$TODO_FILE" ]; then
     echo "==> No todo file found" >&2
     exit 1
   fi
 
   # Find the Nth open item (1-based)
   local line_num
-  line_num=$(grep -n '^- \[ \]' "$file" | sed -n "${num}p" | cut -d: -f1) || true
+  line_num=$(grep -n '^- \[ \]' "$TODO_FILE" | sed -n "${num}p" | cut -d: -f1) || true
 
   if [ -z "$line_num" ]; then
-    echo "==> No open item #$num in $file" >&2
+    echo "==> No open item #$num" >&2
     exit 1
   fi
 
   local item_text
-  item_text=$(sed -n "${line_num}p" "$file" | sed 's/^- \[ \] [0-9-]* //')
-  sed -i'' -e "${line_num}s/^- \[ \]/- [x]/" "$file"
-  echo "==> Marked item #$num as done in $(basename "$(dirname "$file")")/.todo.md: $item_text"
+  item_text=$(sed -n "${line_num}p" "$TODO_FILE" | sed 's/^- \[ \] [0-9-]* //')
+  sed -i'' -e "${line_num}s/^- \[ \]/- [x]/" "$TODO_FILE"
+  echo "==> Marked item #$num as done: $item_text"
 }
 
 # Parse arguments
-global=false
 done_num=""
 
 # Support shorthand: todo done N
@@ -131,10 +116,6 @@ fi
 
 while [[ "${1:-}" == --* ]]; do
   case "$1" in
-    --global)
-      global=true
-      shift
-      ;;
     --done)
       done_num="${2:-}"
       if [ -z "$done_num" ]; then
@@ -155,13 +136,7 @@ text="${*:-}"
 if [ -n "$done_num" ]; then
   mark_done "$done_num"
 elif [ -n "$text" ]; then
-  if [ "$global" = true ]; then
-    add_item "$GLOBAL_TODO" "$text"
-  elif project_file=$(get_project_todo); then
-    add_item "$project_file" "$text"
-  else
-    add_item "$GLOBAL_TODO" "$text"
-  fi
+  add_item "$text"
 else
   list_items
 fi
