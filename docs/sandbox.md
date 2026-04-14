@@ -1,6 +1,6 @@
 # Sandbox Guide
 
-Claude Code sandbox provides OS-level isolation (Seatbelt on macOS, bubblewrap on Linux). Commands run inside a filesystem/network boundary — reads and writes are restricted to the project directory by default, network access is limited to an allowlist, and all child processes inherit the same restrictions. Projects opt in to additional access via `settings.local.json`.
+Claude Code sandbox provides OS-level isolation (Seatbelt on macOS, bubblewrap on Linux). **All tools** — Edit, Write, Read, and Bash — run inside a filesystem/network boundary. Reads and writes are restricted to the project directory by default, network access is limited to an allowlist, and all child processes inherit the same restrictions. Projects opt in to additional access via `settings.local.json`.
 
 ## Common errors and fixes
 
