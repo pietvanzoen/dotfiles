@@ -10,31 +10,20 @@ End each response with a one-line status summary so the user can quickly regain 
 > **[current task] → [next step]**
 
 ## Model usage
-After reviewing any tickets/bugs during planning (step 1 of Task Workflow), suggest switching to an appropriate model based on task complexity:
-- **Sonnet** is sufficient for: reading/explaining code, simple edits, git operations, writing docs, answering questions
-- **Haiku** is sufficient for: quick lookups, single-file edits, running commands, short Q&A
-- **Opus** is warranted for: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
-
-Include a prominent model suggestion, e.g.:
-**> Switch to Haiku (Opt+P) — this task doesn't need Sonnet.**
+After reviewing tickets/bugs during planning, suggest an appropriate model:
+- **Haiku**: quick lookups, single-file edits, running commands, short Q&A
+- **Sonnet**: reading/explaining code, simple edits, git operations, writing docs
+- **Opus**: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
 
 ## TDD
-- Follow TDD when writing tests: one test at a time, red-green-refactor
-  1. Write a single failing test
-  2. Run it — confirm it fails for the expected reason
-  3. Write the minimum implementation to make it pass
-  4. Run it — confirm it passes
-  5. Repeat from step 1 for the next test
-- Once all tests pass, suggest refactoring improvements to remove duplication in both tests and implementation
-- Do NOT write multiple tests at once or implement ahead of the current test
-- Never use "should" at the beginning of test descriptions. E.g. BAD it('should return wibble'). GOOD it('returns wibble')
+- Follow TDD: one test at a time, red-green-refactor. Do NOT write multiple tests at once or implement ahead of the
+  current test.
+- Once all tests pass, suggest refactoring to remove duplication in tests and implementation.
+- Never use "should" in test descriptions. BAD `it('should return wibble')`. GOOD `it('returns wibble')`.
 
 ## Tmux/Neovim
-- Neovim runs in the `dev` tmux session. The window is named after the project directory.
-- The current project's window name matches the basename of the working directory.
-- To open files: `nvim-open /absolute/path/to/file` (defaults to vsplit)
-- To open in a new tab: `nvim-open --tab /absolute/path/to/file`
-- Auto-discovers the Neovim RPC socket whose cwd matches the project; falls back to a new tmux split pane in `dev:<window>`
+- Neovim runs in the `dev` tmux session. Window name matches the project directory basename.
+- Open files: `nvim-open /absolute/path/to/file` (defaults to vsplit; `--tab` for new tab)
 
 ## Pull requests
 Use `/pr` to create a pull request. It handles push, title/description generation, and Copilot review assignment.
@@ -42,14 +31,12 @@ Use `/pr` to create a pull request. It handles push, title/description generatio
 When asked to merge a PR: **ALWAYS wait for checks to pass**. Do not use admin override unless specifically instructed.
 
 ## PR review comments
-When posting replies to GitHub PR review comments, always prefix the message with `> _Posted by Claude Code_` on its own line, followed by a blank line, before the reply body. This makes it clear the comment was AI-generated and not written by the user.
+Prefix all PR comment replies with `> _Posted by Claude Code_\n\n` before the body.
 
-To reply **in a review thread** (not as a general PR comment), use:
+Reply in a review thread (not general PR comment):
 `gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies -X POST -f body="..."`
-Note: the URL must include the PR number — `pulls/{pr}/comments/{id}/replies`, NOT `pulls/comments/{id}/replies`.
 
-**Reading inline review comments:** `gh pr view --comments` silently omits line-level (inline) code review comments —
-it only shows general PR comments. To read inline comments, use:
+Read inline comments (`gh pr view --comments` omits them):
 `gh api repos/{owner}/{repo}/pulls/{pr}/comments`
 
 ## CLI script output
@@ -57,12 +44,17 @@ In CLI scripts (bash, python, etc.), prefix log/status lines with `==>` or `-->`
 Use `==>` for major steps and `-->` for sub-steps or progress within a step.
 
 ## Linting and formatting
-Before committing code: **always run the project's linter/formatter if available**. Check for a lint command in the project (package.json, Makefile, pyproject.toml, etc.) and run it with auto-fix flags before staging commits.
+Before committing: always run the project's linter/formatter (if available) with auto-fix before staging.
 
 ## Git commands
-Run git commands as separate tool calls, one at a time. Never chain them with `&&` or `;` in a single Bash call. This keeps the activity history clear and readable in the output, and makes it easier to see the progression of changes.
+Run git commands as separate tool calls, one at a time. Never chain with `&&` or `;`.
+Never use `git -C <path>` when cwd is already correct — triggers extra permission prompts.
 
-Never use `git -C /absolute/path` when the shell's cwd is already the correct directory — use plain `git add`, `git commit`, etc. instead. Explicit paths trigger extra permission prompts for no benefit.
+## Commit signing
+Commits are signed via 1Password, which requires interactive authentication and blocks when the user is away.
+If `git commit` fails due to signing (op-ssh-sign error, exit code 1), retry with `--no-gpg-sign` **only when on
+a feature branch**. Never skip signing on main/master. Squash merges replace branch commits, so branch signatures
+are disposable.
 
 ## Task Workflow
 When starting a new task, read `~/.claude/docs/task-workflow.md` for the workflow steps.
