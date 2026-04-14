@@ -18,6 +18,7 @@ git open [remote] [branch]
   Available options are
 c,commit!     open current commit
 i,issue!      open issues page
+r,pr!         open current pull request
 s,suffix=     append this suffix
 p,print!      just print the url
 "
@@ -29,6 +30,7 @@ SUBDIRECTORY_OK='Yes' . "$(git --exec-path)/git-sh-setup"
 # Defaults
 is_commit=0
 is_issue=0
+is_pr=0
 protocol="https"
 print_only=0
 suffix_flag=""
@@ -37,12 +39,18 @@ while test $# != 0; do
   case "$1" in
   --commit) is_commit=1;;
   --issue) is_issue=1;;
+  --pr) is_pr=1;;
   --suffix=*) suffix_flag="$1";;
   --print) print_only=1;;
   --) shift; break ;;
   esac
   shift
 done
+
+# Open current PR via gh and exit early
+if (( is_pr )); then
+  exec gh pr view --web
+fi
 
 # parse suffix from suffix=value
 IFS='=' read -ra suffix_flag <<< "$suffix_flag"
