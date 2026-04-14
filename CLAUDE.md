@@ -56,6 +56,8 @@ When searching for structural code patterns (not simple text), prefer the ast-gr
 
 **tmux/Ghostty config**: Before editing `.tmux.conf` or Ghostty config, read `docs/tmux-config.md`
 
+**Sandbox errors**: When commands fail with "Operation not permitted", read `docs/sandbox.md`
+
 ## Install flow
 
 1. `_scripts/bootstrap` — installs dependencies
