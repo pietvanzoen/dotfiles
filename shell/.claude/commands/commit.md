@@ -42,7 +42,7 @@ If `working_tree_status` is empty, stop and inform the user there's nothing to c
    a. Stage only the relevant files (prefer specific files over `git add -A`)
    b. Write a concise commit message that focuses on the "why" not the "what"
    c. Create the commit using a HEREDOC for the message
-4. Run `git status` to verify
+4. Run `git status --short` to verify
 
 ## Rules
 
