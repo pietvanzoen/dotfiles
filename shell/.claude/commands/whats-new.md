@@ -1,6 +1,7 @@
 ---
 name: whats-new
 description: Show recent Claude Code changelog highlights from the last weekly check
+model: haiku
 allowed-tools: Bash(cat *), Read
 ---
 

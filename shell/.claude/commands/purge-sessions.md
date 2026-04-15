@@ -1,6 +1,7 @@
 ---
 name: purge-sessions
 description: Delete stale Claude Code sessions for the current project and branch, keeping the active session
+model: haiku
 allowed-tools: Bash(claude-sessions-purge*)
 ---
 
