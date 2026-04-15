@@ -8,3 +8,5 @@ CLAUDE.local.md
 **/.claude/settings.local.json
 **/.claude/worktrees/
 __pycache__/
+shell/.local/state/*
+!shell/.local/state/.gitkeep

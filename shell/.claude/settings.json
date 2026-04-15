@@ -2,7 +2,8 @@
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
     "USE_BUILTIN_RIPGREP": "0",
-    "FORCE_COLOR": "1"
+    "FORCE_COLOR": "1",
+    "ENABLE_PROMPT_CACHING_1H": "1"
   },
   "includeCoAuthoredBy": false,
   "permissions": {
@@ -90,6 +91,7 @@
       "Write(./.env*)"
     ]
   },
+  "model": "opus[1m]",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -167,34 +169,10 @@
       }
     }
   },
-  "model": "opus[1m]",
-  "skipAutoPermissionPrompt": true,
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": false,
     "allowUnsandboxedCommands": false,
-    "excludedCommands": ["git", "git *", "gh", "gh *"],
-    "filesystem": {
-      "denyRead": ["~/"],
-      "allowRead": [
-        "~/.local/bin",
-        "~/.claude",
-        "~/.nvm",
-        "~/Library/Caches/fnm_multishells",
-        "~/Library/Application Support/fnm",
-        "~/.gitconfig",
-        "~/.config/git",
-        "~/.yarnrc",
-        "~/.config/yarn",
-        "~/.config/gh",
-        "~/.npmrc",
-        "~/.cache/yarn",
-        "~/package.json"
-      ],
-      "allowWrite": [
-        "~/.cache/yarn"
-      ]
-    },
     "network": {
       "allowedDomains": [
         "localhost",
@@ -211,6 +189,38 @@
         "oauth2.googleapis.com",
         "storage.googleapis.com"
       ]
-    }
-  }
+    },
+    "filesystem": {
+      "allowWrite": [
+        "~/.cache/yarn",
+        "~/.local/state"
+      ],
+      "denyRead": [
+        "~/"
+      ],
+      "allowRead": [
+        "~/.local/bin",
+        "~/.claude",
+        "~/.nvm",
+        "~/Library/Caches/fnm_multishells",
+        "~/Library/Application Support/fnm",
+        "~/.gitconfig",
+        "~/.config/git",
+        "~/.yarnrc",
+        "~/.config/yarn",
+        "~/.config/gh",
+        "~/.npmrc",
+        "~/.cache/yarn",
+        "~/package.json",
+        "~/.local/state"
+      ]
+    },
+    "excludedCommands": [
+      "git",
+      "git *",
+      "gh",
+      "gh *"
+    ]
+  },
+  "skipAutoPermissionPrompt": true
 }

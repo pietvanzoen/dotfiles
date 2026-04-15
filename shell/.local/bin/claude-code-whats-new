@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+# claude-code-whats-new — check for new Claude Code changelog entries and highlight interesting changes
+#
+# Usage: claude-code-whats-new [--notify] [--mark-seen] [--force] [--no-ai]
+#
+#   --notify     Send an ntfy push notification with the summary
+#   --mark-seen  Update the state file to the current version after displaying
+#   --force      Run even if already up to date (re-summarizes last 3 versions)
+#   --no-ai      Skip Claude summarization; show raw changelog sections
+set -euo pipefail
+
+STATE_DIR="${HOME}/.local/state"
+STATE_FILE="${STATE_DIR}/claude-code-whats-new"
+LOG_FILE="${STATE_DIR}/claude-code-whats-new.log"
+
+do_notify=0
+do_mark_seen=0
+force=0
+no_ai=0
+
+for arg in "$@"; do
+  case "$arg" in
+    --notify)    do_notify=1 ;;
+    --mark-seen) do_mark_seen=1 ;;
+    --force)     force=1 ;;
+    --no-ai)     no_ai=1 ;;
+    --help|-h)
+      echo "Usage: claude-code-whats-new [--notify] [--mark-seen] [--force] [--no-ai]"
+      exit 0 ;;
+    *)
+      echo "Unknown option: $arg" >&2
+      exit 1 ;;
+  esac
+done
+
+log() { printf '%s\n' "$@" >&2; }
+
+# Read last-seen version
+last_seen=""
+# shellcheck disable=SC2002
+[ -f "$STATE_FILE" ] && last_seen=$(cat "$STATE_FILE" | tr -d '[:space:]')
+
+log "==> Fetching Claude Code changelog..."
+
+# Fetch and parse changelog using node's native fetch.
+# Outputs either:
+#   UP_TO_DATE:<latest>
+#   NEW:<latest>:<version-list>
+#   <changelog sections...>
+result=$(CLAUDE_CC_LAST_SEEN="$last_seen" CLAUDE_CC_FORCE="$force" node << 'NODESCRIPT'
+const LAST_SEEN = process.env.CLAUDE_CC_LAST_SEEN || '';
+const FORCE = process.env.CLAUDE_CC_FORCE === '1';
+const N = 3;
+
+(async () => {
+  const url = 'https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md';
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+  const text = await res.text();
+
+  // Parse "## [x.y.z]" or "## x.y.z" headers
+  const re = /^## \[?(\d+\.\d+\.\d+)\]?/gm;
+  const versions = [];
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    versions.push({ version: m[1], pos: m.index });
+  }
+  if (versions.length === 0) throw new Error('No versions found in changelog');
+
+  const latest = versions[0].version;
+  process.stderr.write(`--> Latest: ${latest}${LAST_SEEN ? ', last seen: ' + LAST_SEEN : ' (first run)'}\n`);
+
+  if (!FORCE && LAST_SEEN === latest) {
+    process.stdout.write('UP_TO_DATE:' + latest + '\n');
+    return;
+  }
+
+  // Determine which versions are new
+  let newVersions;
+  if (LAST_SEEN) {
+    const lastIdx = versions.findIndex(v => v.version === LAST_SEEN);
+    newVersions = (lastIdx <= 0) ? versions.slice(0, N) : versions.slice(0, lastIdx);
+  } else {
+    newVersions = versions.slice(0, N);
+  }
+
+  const versionList = newVersions.map(v => v.version).join(', ');
+  process.stdout.write('NEW:' + latest + ':' + versionList + '\n');
+
+  // Extract changelog sections
+  const sections = newVersions.map(v => {
+    const idx = versions.indexOf(v);
+    const start = v.pos;
+    const end = versions[idx + 1]?.pos ?? text.length;
+    return text.slice(start, end).trim();
+  });
+  process.stdout.write(sections.join('\n\n'));
+})().catch(e => {
+  const cause = e.cause ? ': ' + e.cause.message : '';
+  process.stderr.write('--> Error: ' + e.message + cause + '\n');
+  process.exit(1);
+});
+NODESCRIPT
+)
+
+# Check if already up to date
+if [[ "$result" == UP_TO_DATE:* ]]; then
+  current="${result#UP_TO_DATE:}"
+  echo "==> Already up to date at ${current}"
+  exit 0
+fi
+
+# Parse header line and content
+header=$(printf '%s' "$result" | head -1)
+content=$(printf '%s' "$result" | tail -n +2)
+
+# header format: NEW:<latest>:<version-list>
+tmp="${header#NEW:}"
+latest="${tmp%%:*}"
+version_list="${tmp#*:}"
+
+log "--> New versions: $version_list"
+
+# Summarize with claude
+if [ "$no_ai" = "1" ]; then
+  summary="$content"
+else
+  log "--> Asking Claude to summarize highlights..."
+  ai_prompt="Summarize the most interesting new features, commands, hooks, and behaviors in this Claude Code changelog. Be concise — 3-5 bullet points, each one sentence. Focus on things that change how users interact with Claude Code. Skip minor patch fixes unless they fix something notable.
+
+Always highlight changes that affect API costs — new env vars, caching options, token usage optimizations, or anything that could reduce spend. The reader is an API key user paying per token.
+
+${content}"
+  if summary=$(claude --print "$ai_prompt" 2>/dev/null); then
+    : # success
+  else
+    log "--> Claude summarization failed, showing raw changelog"
+    summary="$content"
+  fi
+fi
+
+# Build output and write to both stdout and log file
+output=$(printf '==> Claude Code updates since %s (%s):\n\n%s\n' "${last_seen:-last check}" "$version_list" "$summary")
+mkdir -p "$STATE_DIR"
+printf '%s\n' "$output" > "$LOG_FILE"
+
+printf '\n%s\n\n' "$output"
+
+if [ -z "$last_seen" ]; then
+  printf "Hint: run \`claude-code-whats-new --mark-seen\` to save %s as seen.\n" "$latest"
+fi
+
+if [ "$do_notify" = "1" ]; then
+  notify_title="Claude Code ${latest}"
+  notify_body=$(printf '%s' "$summary" | head -c 500)
+  ntfy-notify --tags newspaper "$notify_title" "$notify_body"
+  log "--> Notification sent"
+fi
+
+if [ "$do_mark_seen" = "1" ]; then
+  mkdir -p "$STATE_DIR"
+  printf '%s' "$latest" > "$STATE_FILE"
+  log "--> Marked ${latest} as seen"
+fi
