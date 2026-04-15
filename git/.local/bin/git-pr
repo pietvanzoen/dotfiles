@@ -25,9 +25,43 @@ if [ -z "$TARGET_BRANCH" ]; then
   TARGET_BRANCH="$TRUNK_BRANCH"
 fi
 
-CHANGELOG=$(git log --pretty='* %s' --date=short "origin/$TARGET_BRANCH..HEAD")
+COMMIT_LOG=$(git log --pretty="### %s%n%n%b%n---" "origin/$TARGET_BRANCH..HEAD")
+DIFF_STAT=$(git diff "origin/$TARGET_BRANCH..HEAD" --stat)
+TICKET=$(echo "$CURRENT_BRANCH" | grep -ioE '[A-Z]+-[0-9]+' | head -n 1 | tr '[:lower:]' '[:upper:]' || true)
 
-DESCRIPTION="$CHANGELOG"
+echo "==> Generating PR title and description"
+PR_CONTENT=$(apfel --quiet --permissive \
+  -s "You are a PR description generator. Output ONLY valid JSON with 'type', 'description', and 'body' fields. No markdown code blocks, no extra text." \
+  "Generate a GitHub PR title and description.
+
+Commits:
+$COMMIT_LOG
+
+Diff stats:
+$DIFF_STAT
+
+Rules:
+- type: one of feat, fix, docs, refactor, chore, perf, test, ci
+- description: imperative mood, all lowercase, max 60 characters, outcome not implementation
+- body: 1-3 sentences on motivation; empty string if obvious from commits
+
+Example output format:
+{\"type\": \"feat\", \"description\": \"auto-assign conversation tickets to owner\", \"body\": \"\"}
+
+Output only the JSON object.")
+
+PR_TYPE=$(echo "$PR_CONTENT" | sed '/^```/d' | jq -r '.type')
+PR_DESC=$(echo "$PR_CONTENT" | sed '/^```/d' | jq -r '.description')
+PR_BODY=$(echo "$PR_CONTENT" | sed '/^```/d' | jq -r '.body')
+
+if [ -n "$TICKET" ]; then
+  PR_TITLE="${PR_TYPE}(${TICKET}): ${PR_DESC}"
+else
+  PR_TITLE="${PR_TYPE}: ${PR_DESC}"
+fi
+
+echo "--> Title: $PR_TITLE"
+echo "--> Body: $PR_BODY"
 
 echo "==> Pushing changes to $CURRENT_BRANCH"
 git push -u --force-with-lease
@@ -40,18 +74,18 @@ repo="$(gh repo view --json 'nameWithOwner' | jq -r '.nameWithOwner')"
 
 if [[ -z "$pr_number" || "$pr_state" == "CLOSED" ]]; then
   echo "==> Creating new PR"
-  gh pr create --fill --body "$DESCRIPTION" --base "$TARGET_BRANCH" --draft
+  gh pr create --draft --title "$PR_TITLE" --body "$PR_BODY" --base "$TARGET_BRANCH"
 
   echo "==> Requesting Copilot review"
   pr_number="$(gh pr view --json 'number' | jq -r '.number')"
   gh save-me-copilot "$repo" "$pr_number" > /dev/null # suppress output
+
+  gh pr view --json 'url' | jq -r '.url'
   exit 0
 fi
 
 echo
 echo "==> Updating PR #$pr_number"
-gh pr edit "$pr_number" --base "$TARGET_BRANCH"
+gh pr edit "$pr_number" --base "$TARGET_BRANCH" --title "$PR_TITLE" --body "$PR_BODY"
 
-echo
-echo "==> Commits not updated to avoid conflicts. (Copied to clipboard)"
-echo "$DESCRIPTION"
+gh pr view --json 'url' | jq -r '.url'
