@@ -1,4 +1,5 @@
 {
+  "availableModels": ["sonnet", "haiku"],
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
     "USE_BUILTIN_RIPGREP": "0",
