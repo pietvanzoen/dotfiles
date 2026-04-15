@@ -1,5 +1,4 @@
 {
-  "availableModels": ["sonnet", "haiku"],
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
     "USE_BUILTIN_RIPGREP": "0",
@@ -79,6 +78,11 @@
       "Write(./.env*)"
     ]
   },
+  "availableModels": [
+    "sonnet",
+    "haiku",
+    "opusplan"
+  ],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -206,5 +210,6 @@
       "gh *"
     ]
   },
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "opusplan"
 }
