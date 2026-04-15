@@ -628,7 +628,8 @@ require("lazy").setup({
         html = { "prettier" },
         css = { "prettier" },
         scss = { "prettier" },
-        json = { "prettier" },
+        json = { "jq" },
+        jsonc = { "prettier" },
       },
     },
   },
@@ -892,6 +893,8 @@ require("lazy").setup({
         "typescript",
         "css",
         "scss",
+        "json",
+        "jsonc",
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
