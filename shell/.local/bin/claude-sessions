@@ -208,8 +208,8 @@ def remove_worktree(cwd):
 
 
 def read_session(jsonl_path):
-    """Return (cwd, branch) from the last meaningful line of a jsonl file."""
-    cwd = branch = ""
+    """Return (cwd, branch, away_summary) from a jsonl file."""
+    cwd = branch = away_summary = ""
     try:
         with open(jsonl_path) as f:
             for raw in f:
@@ -219,11 +219,16 @@ def read_session(jsonl_path):
                         cwd = d["cwd"]
                     if d.get("gitBranch"):
                         branch = d["gitBranch"]
+                    if d.get("type") == "system" and d.get("subtype") == "away_summary":
+                        content = d.get("content", "")
+                        content = re.sub(r'\s*\(disable recaps in /config\)\s*$', '', content).strip()
+                        if content:
+                            away_summary = content
                 except (json.JSONDecodeError, TypeError):
                     pass
     except OSError:
         pass
-    return cwd, branch
+    return cwd, branch, away_summary
 
 
 def git_dirty_count(cwd):
@@ -242,7 +247,7 @@ def gh_pr_info(cwd, branch):
     try:
         out = subprocess.check_output(
             ["gh", "pr", "list", "--head", branch, "--state", "all",
-             "--limit", "1", "--json", "number,state,url,reviews"],
+             "--limit", "1", "--json", "number,state,url,reviews,isDraft"],
             cwd=cwd,
             stderr=subprocess.DEVNULL,
             timeout=10,
@@ -252,6 +257,8 @@ def gh_pr_info(cwd, branch):
             item = items[0]
             approved = any(r.get("state") == "APPROVED" for r in item.get("reviews", []))
             parts = [f"#{item['number']}", item['state'].lower()]
+            if item.get("isDraft"):
+                parts.append("draft")
             if approved:
                 parts.append("approved")
             parts.append(item['url'])
@@ -314,7 +321,7 @@ def collect_data():
         if not show_all and age > max_age_seconds:
             continue
 
-        cwd, branch = read_session(latest_jsonl)
+        cwd, branch, away_summary = read_session(latest_jsonl)
         if not cwd:
             continue
 
@@ -323,7 +330,7 @@ def collect_data():
 
         # Keep only the most recent session per cwd
         if cwd not in best or latest_mtime > best[cwd][0]:
-            best[cwd] = (latest_mtime, latest_jsonl, age, branch, entry.path)
+            best[cwd] = (latest_mtime, latest_jsonl, age, branch, entry.path, away_summary)
 
     if not best:
         return []
@@ -337,7 +344,7 @@ def collect_data():
 
     # Fetch git status and (optionally) PR info in parallel
     def fetch_project_data(item):
-        cwd, (mtime, jsonl, age, branch, project_dir) = item
+        cwd, (mtime, jsonl, age, branch, project_dir, away_summary) = item
         dirty = git_dirty_count(cwd)
         prompt = read_prompt(cwd)
         pr = ""
@@ -360,7 +367,7 @@ def collect_data():
                 PR_CACHE[key] = (time.time(), pr)
         if not pr:
             pr = "—"
-        return cwd, branch, age, dirty, pr, prompt, sid, project_dir
+        return cwd, branch, age, dirty, pr, prompt, away_summary, sid, project_dir
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(fetch_project_data, projects))
@@ -429,7 +436,7 @@ def run():
     print(c(divider, DIM))
     print()
 
-    for cwd, branch, age, dirty, pr, prompt, sid, project_dir in results:
+    for cwd, branch, age, dirty, pr, prompt, away_summary, sid, project_dir in results:
         proj, branch_display = make_label(cwd, branch)
         if len(proj) > project_w:
             proj = proj[:project_w - 1] + "…"
@@ -451,12 +458,15 @@ def run():
             parts = pr.split()
             state = parts[1].lower() if len(parts) >= 2 else ""
             approved = "approved" in parts
+            draft = "draft" in parts
             pr_url = next((p for p in parts if p.startswith("http")), "")
-            label = f"{parts[0]} {state}"
+            label = f"{parts[0]} {'draft' if draft else state}"
             if approved:
                 label += " ✓"
-            if state == "open" and approved:
+            if state == "open" and approved and not draft:
                 pr_color = GREEN
+            elif state == "open" and draft:
+                pr_color = DIM
             elif state == "open":
                 pr_color = YELLOW
             elif state == "merged":
@@ -484,15 +494,19 @@ def run():
 
         print(f"  {id_col}{project_col}  {branch_col}  {status_col}  {pr_col}  {c(age_str, DIM)}")
 
-        if prompt:
+        if prompt or away_summary:
             try:
                 cols_val = os.get_terminal_size().columns
             except OSError:
                 cols_val = 120
             pad = (" " * ID_W + "  ") if show_ids else ""
-            max_prompt = max(40, cols_val - 4 - len(pad))
-            truncated = prompt[:max_prompt - 1] + "…" if len(prompt) > max_prompt else prompt
-            print(f"  {pad}{c('└', DIM)} {c(f'> {truncated}', DIM)}")
+            max_line = max(40, cols_val - 4 - len(pad))
+            if prompt:
+                truncated = prompt[:max_line - 1] + "…" if len(prompt) > max_line else prompt
+                print(f"  {pad}{c('└', DIM)} {c(f'> {truncated}', DIM)}")
+            if away_summary:
+                truncated = away_summary[:max_line - 1] + "…" if len(away_summary) > max_line else away_summary
+                print(f"  {pad}{c('└', DIM)} {c(truncated, DIM)}")
             print()
 
 
@@ -579,7 +593,8 @@ def interactive():
 
             for idx in range(len(results)):
                 prompt = results[idx][5]
-                lines_needed = 2 + (1 if prompt else 0)  # main row + prompt + blank separator
+                away_summary = results[idx][6]
+                lines_needed = 2 + (1 if prompt else 0) + (1 if away_summary else 0)  # main row + sub-lines + blank
                 if current_y + lines_needed > data_start + visible_rows:
                     break
 
@@ -598,7 +613,7 @@ def interactive():
 
             for idx in visible_indices:
                 result = results[idx]
-                cwd, branch, age, dirty, pr, prompt, sid, project_dir = result
+                cwd, branch, age, dirty, pr, prompt, away_summary, sid, project_dir = result
 
                 proj, branch_display = make_label(cwd, branch)
                 age_str = human_age(age)
@@ -614,18 +629,22 @@ def interactive():
                 # Build PR display
                 pr_display = ""
                 pr_state = ""
+                pr_draft = False
                 if pr.startswith("#"):
                     parts = pr.split()
                     pr_state = parts[1].lower() if len(parts) >= 2 else ""
-                    pr_display = f"{parts[0]} {pr_state}"
+                    pr_draft = "draft" in parts
+                    pr_display = f"{parts[0]} {'draft' if pr_draft else pr_state}"
                     if "approved" in parts:
                         pr_display += " ✓"
                 elif pr and pr != "—":
                     pr_display = pr
 
                 # PR color
-                if pr_state == "open" and "approved" in (pr or ""):
+                if pr_state == "open" and "approved" in (pr or "") and not pr_draft:
                     pr_color = curses.color_pair(1)  # green
+                elif pr_state == "open" and pr_draft:
+                    pr_color = curses.A_DIM
                 elif pr_state == "open":
                     pr_color = curses.color_pair(2)  # yellow
                 elif pr_state == "merged":
@@ -679,6 +698,16 @@ def interactive():
                 # Prompt sub-line
                 if prompt:
                     line_display = f"  └ > {prompt[:cols-7]}"
+                    attr = curses.A_BOLD | curses.A_DIM if idx == selected else curses.A_DIM
+                    try:
+                        stdscr.addstr(current_y, 0, line_display[:cols], attr)
+                    except curses.error:
+                        pass
+                    current_y += 1
+
+                # Away summary sub-line
+                if away_summary:
+                    line_display = f"  └ {away_summary[:cols-5]}"
                     attr = curses.A_BOLD | curses.A_DIM if idx == selected else curses.A_DIM
                     try:
                         stdscr.addstr(current_y, 0, line_display[:cols], attr)
@@ -807,7 +836,7 @@ def cleanup_lockfile():
 if delete_id or prune or prune_merged:
     results = collect_data()
     # Handle deletion and pruning
-    for cwd, branch, age, dirty, pr, prompt, sid, project_dir in results:
+    for cwd, branch, age, dirty, pr, prompt, away_summary, sid, project_dir in results:
         if delete_id:
             if sid.startswith(delete_id) or delete_id == sid:
                 proj, branch_display = make_label(cwd, branch)
