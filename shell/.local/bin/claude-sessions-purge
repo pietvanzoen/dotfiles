@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+# Purge stale Claude Code sessions for the current project and branch.
+#
+# Usage: claude-sessions-purge [--all-branches] [--dry-run]
+#
+#   --all-branches  Purge sessions on all branches, not just the current one
+#   --dry-run       Show what would be deleted without deleting
+#
+# Keeps the most recent session (assumed to be the active one).
+set -euo pipefail
+
+PROJECTS_DIR="${HOME}/.claude/projects"
+
+all_branches=0
+dry_run=0
+
+for arg in "$@"; do
+  case "$arg" in
+    --all-branches) all_branches=1 ;;
+    --dry-run)      dry_run=1 ;;
+    --help|-h)
+      sed -n '2,/^set /{ /^#/s/^# \?//p }' "$0"
+      exit 0 ;;
+    *)
+      echo "Unknown option: $arg" >&2
+      exit 1 ;;
+  esac
+done
+
+cwd=$(pwd)
+basename="${cwd//\//-}"
+
+# Find matching project dirs
+project_dirs=()
+if [ -d "$PROJECTS_DIR" ]; then
+  for d in "$PROJECTS_DIR"/*/; do
+    [ -d "$d" ] || continue
+    case "$d" in
+      *"$basename"/) project_dirs+=("${d%/}") ;;
+    esac
+  done
+fi
+
+if [ ${#project_dirs[@]} -eq 0 ]; then
+  echo "==> No Claude project directory found for $cwd" >&2
+  exit 1
+fi
+
+# Get current branch
+branch=""
+if [ "$all_branches" = "0" ]; then
+  branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || true
+  if [ -z "$branch" ]; then
+    echo "==> Could not determine git branch; use --all-branches to purge all" >&2
+    exit 1
+  fi
+fi
+
+# Collect sessions: find all .jsonl files, extract branch from each
+# Build list of "mtime uuid jsonl_path project_dir branch"
+sessions=()
+for pdir in "${project_dirs[@]}"; do
+  for jsonl in "$pdir"/*.jsonl; do
+    [ -f "$jsonl" ] || continue
+    uuid=$(basename "$jsonl" .jsonl)
+    mtime=$(stat -f '%m' "$jsonl" 2>/dev/null || stat -c '%Y' "$jsonl" 2>/dev/null || echo 0)
+    # Extract last gitBranch value from jsonl
+    sbranch=$(grep -o '"gitBranch":"[^"]*"' "$jsonl" 2>/dev/null | tail -1 | sed 's/"gitBranch":"//;s/"//g') || true
+    sessions+=("$mtime $uuid $jsonl $pdir $sbranch")
+  done
+done
+
+if [ ${#sessions[@]} -le 1 ]; then
+  echo "==> Only ${#sessions[@]} session found, nothing to purge"
+  exit 0
+fi
+
+# Sort newest first
+mapfile -t sorted < <(printf '%s\n' "${sessions[@]}" | sort -rn)
+
+# Active session is the newest
+active_line="${sorted[0]}"
+active_uuid=$(echo "$active_line" | cut -d' ' -f2)
+
+# Filter candidates
+candidates=()
+for line in "${sorted[@]:1}"; do
+  uuid=$(echo "$line" | cut -d' ' -f2)
+  sbranch=$(echo "$line" | cut -d' ' -f5-)
+  if [ "$all_branches" = "0" ] && [ "$sbranch" != "$branch" ]; then
+    continue
+  fi
+  candidates+=("$line")
+done
+
+if [ ${#candidates[@]} -eq 0 ]; then
+  scope="any branch"
+  [ "$all_branches" = "0" ] && scope="branch '$branch'"
+  echo "==> No stale sessions on $scope (keeping active: ${active_uuid:0:7})"
+  exit 0
+fi
+
+# Show what will be deleted
+scope="all branches"
+[ "$all_branches" = "0" ] && scope="branch '$branch'"
+echo "==> Found ${#candidates[@]} stale session(s) on $scope:"
+for line in "${candidates[@]}"; do
+  uuid=$(echo "$line" | cut -d' ' -f2)
+  sbranch=$(echo "$line" | cut -d' ' -f5-)
+  echo "  --> ${uuid:0:7} (${sbranch:-unknown branch})"
+done
+echo "  Keeping active: ${active_uuid:0:7}"
+
+if [ "$dry_run" = "1" ]; then
+  echo "==> Dry run, nothing deleted"
+  exit 0
+fi
+
+# Delete
+deleted=0
+for line in "${candidates[@]}"; do
+  uuid=$(echo "$line" | cut -d' ' -f2)
+  jsonl=$(echo "$line" | cut -d' ' -f3)
+  pdir=$(echo "$line" | cut -d' ' -f4)
+  rm -f "$jsonl"
+  rm -rf "${pdir:?}/${uuid:?}"
+  ((deleted++))
+done
+
+echo "==> Purged $deleted session(s)"

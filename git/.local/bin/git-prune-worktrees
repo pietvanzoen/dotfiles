@@ -17,7 +17,14 @@ fi
 pruned=0
 while IFS='|' read -r wt_path branch_ref; do
   branch="${branch_ref#refs/heads/}"
-  if ! git show-ref --verify --quiet "refs/heads/$branch"; then
+  # Remove if branch is deleted, merged into trunk, or its upstream is gone
+  trunk=$(git trunk 2>/dev/null || echo main)
+  is_merged=$(git branch --merged "$trunk" | sed 's/^[*+ ]*//' | grep -qx "$branch" && echo 1 || echo 0)
+  is_gone=$(git branch -lvv | grep "^ *$branch " | grep -q ": gone]" && echo 1 || echo 0)
+  is_deleted=0
+  git show-ref --verify --quiet "refs/heads/$branch" || is_deleted=1
+
+  if [[ "$is_deleted" -eq 1 || "$is_merged" -eq 1 || "$is_gone" -eq 1 ]]; then
     echo "==> Removing worktree for deleted branch '$branch': $wt_path"
     git worktree remove "$wt_path" 2>/dev/null \
       || echo "    warning: could not remove $wt_path (may have uncommitted changes)"

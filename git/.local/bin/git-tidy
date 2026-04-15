@@ -27,10 +27,13 @@ if [[ "$(git rev-parse --abbrev-ref HEAD)" != "$TRUNK" ]]; then
 fi
 exe git fetch --all --prune
 exe git pull --rebase
+if [[ $prune_all -eq 1 ]]; then
+  exe git prune-worktrees
+fi
 exe git prune-merged
 exe git prune-gone
 
+
 if [[ $prune_all -eq 1 ]]; then
-  exe git prune-worktrees
   exe git prune-sessions
 fi
