@@ -14,6 +14,14 @@ After reviewing tickets/bugs during planning, suggest an appropriate model:
 - **Haiku**: quick lookups, single-file edits, running commands, short Q&A
 - **Sonnet**: reading/explaining code, simple edits, git operations, writing docs
 - **Opus**: complex multi-file refactors, architectural decisions, hard bugs, nuanced reasoning
+- **Default**: start with Haiku or Sonnet. Only escalate to Opus when explicitly stuck or when
+  the task clearly requires deep multi-step reasoning across many files.
+
+## Context management
+- Run `/compact` at natural breakpoints: after planning is accepted, before switching models,
+  after a major subtask completes. A compacted context costs less on every subsequent message.
+- Before handing off to a lower model for implementation, always compact first — the lower model
+  starts with lean context rather than full planning history.
 
 ## TDD
 - Follow TDD: one test at a time, red-green-refactor. Do NOT write multiple tests at once or implement ahead of the

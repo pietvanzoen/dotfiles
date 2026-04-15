@@ -123,7 +123,7 @@ fi
 #   fi
 # fi
 
-# Session cost & energy range estimate
+# Session cost & token usage
 cost_part=""
 cost_usd=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 total_input=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0')
@@ -146,26 +146,26 @@ if [ -n "$model_short" ]; then
   model_part=" ${model_color}${model_short}${C_RESET}"
 fi
 
+format_tokens() {
+  local val=${1:-0}
+  if [ "$val" -ge 1000000 ]; then
+    awk "BEGIN { printf \"%.1fM\", $val/1000000 }"
+  elif [ "$val" -ge 1000 ]; then
+    awk "BEGIN { printf \"%.0fk\", $val/1000 }"
+  else
+    printf '%s' "$val"
+  fi
+}
+
 if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; then
   cost_fmt=$(printf '$%.2f' "$cost_usd")
-
-  # Energy estimate based on current model. Wh per output token:
-  #   opus: 0.003, sonnet: 0.0005, haiku: 0.0001. Input: 0.25× output.
-  # Sources: TokenPowerBench (2024), Ren et al. (2025), vLLM benchmarks (2025).
-  case "$model" in
-    *opus*)  out_rate=0.003;   in_rate=0.00075  ;;
-    *haiku*) out_rate=0.0001;  in_rate=0.000025 ;;
-    *)       out_rate=0.0005;  in_rate=0.000125 ;;
-  esac
-  energy_wh=$(awk "BEGIN { printf \"%.0f\", ($total_output * $out_rate) + ($total_input * $in_rate) }")
-
-  # Water: ~0.5 mL per Wh (evaporative cooling). Source: Ren, "Making AI Less Thirsty" (2023).
-  water_ml=$(awk "BEGIN { printf \"%.0f\", $energy_wh * 0.5 }")
+  in_fmt=$(format_tokens "$total_input")
+  out_fmt=$(format_tokens "$total_output")
 
   # Context window usage
   ctx_used=$(echo "$input" | jq -r '[.context_window.current_usage.input_tokens // 0, .context_window.current_usage.cache_creation_input_tokens // 0, .context_window.current_usage.cache_read_input_tokens // 0] | add' | awk '{printf "%.0f", $1/1000}')
   ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // 0' | awk '{printf "%.0f", $1/1000}')
-  cost_part=" ${C_DIM}${cost_fmt} ⚡${energy_wh}Wh ∿${water_ml}mL ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
+  cost_part=" ${C_DIM}${cost_fmt} in:${in_fmt} out:${out_fmt} ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
 fi
 
 printf '%s%s%s%s%s%s%s' "$C_MAGENTA" "$dir_name" "$C_RESET" "$git_status" "$pr_part" "$model_part" "$cost_part"

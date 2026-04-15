@@ -18,6 +18,8 @@ the next action:
      existing description, add a horizontal rule (`---`), and append the plan below it
    - After plan is accepted, suggest switching to a lower model for implementation
      (Sonnet for multi-file work, Haiku for simple edits)
+   - Before switching, run `/compact` to compress the planning session — the implementation model
+     starts with lean context rather than full planning history
    - Ensure the plan file contains enough detail (file paths, function signatures, key decisions)
      that a lower model can execute complex implementation without re-deriving context
 
