@@ -506,7 +506,7 @@ def run():
                 print(f"  {pad}{c('└', DIM)} {c(f'> {truncated}', DIM)}")
             if away_summary:
                 truncated = away_summary[:max_line - 1] + "…" if len(away_summary) > max_line else away_summary
-                print(f"  {pad}{c('└', DIM)} {c(truncated, DIM)}")
+                print(f"  {pad}{c('└', DIM)} {c(f'※ {truncated}', DIM)}")
             print()
 
 
@@ -707,7 +707,7 @@ def interactive():
 
                 # Away summary sub-line
                 if away_summary:
-                    line_display = f"  └ {away_summary[:cols-5]}"
+                    line_display = f"  └ ※ {away_summary[:cols-7]}"
                     attr = curses.A_BOLD | curses.A_DIM if idx == selected else curses.A_DIM
                     try:
                         stdscr.addstr(current_y, 0, line_display[:cols], attr)
