@@ -143,7 +143,21 @@ if [ -n "$model_short" ]; then
     haiku)  model_color="$C_GREEN"            ;;  # green
     *)      model_color="$C_DIM"              ;;
   esac
-  model_part=" ${model_color}${model_short}${C_RESET}"
+
+  effort=$(echo "$input" | jq -r '.session.effort_level // .effortLevel // .effort // ""')
+  effort_part=""
+  if [ -n "$effort" ] && [ "$effort" != "auto" ]; then
+    case "$effort" in
+      low)    effort_color="$C_GREEN"              ;;  # green — cheap
+      medium) effort_color="$C_YELLOW"             ;;  # yellow — moderate
+      high)   effort_color=$(printf '\033[31m')    ;;  # red — thinking on
+      max)    effort_color=$(printf '\033[91m')    ;;  # bright red — max thinking
+      *)      effort_color="$C_DIM"               ;;
+    esac
+    effort_part="${C_DIM}:${C_RESET}${effort_color}${effort}${C_RESET}"
+  fi
+
+  model_part=" ${model_color}${model_short}${C_RESET}${effort_part}"
 fi
 
 format_tokens() {

@@ -23,6 +23,11 @@ After reviewing tickets/bugs during planning, suggest an appropriate model:
 - Before handing off to a lower model for implementation, always compact first — the lower model
   starts with lean context rather than full planning history.
 
+## After plan approval
+- When plan is approved (ExitPlanMode), ask "Ready to proceed with implementation?" before starting work
+- This gives you a moment to run `/compact` if desired
+- Answer "yes" when ready; continue with a leaner context
+
 ## TDD
 - Follow TDD: one test at a time, red-green-refactor. Do NOT write multiple tests at once or implement ahead of the
   current test.
