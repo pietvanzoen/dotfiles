@@ -32,7 +32,7 @@ function cc() {
     done
   fi
 
-  local args=(--enable-auto-mode)
+  local args=(--enable-auto-mode --model=opusplan)
   if [[ "$1" == "new" ]]; then
     shift
   else

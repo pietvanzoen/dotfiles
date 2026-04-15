@@ -211,6 +211,6 @@
       "gh *"
     ]
   },
-  "effortLevel": "medium",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "opusplan"
 }
