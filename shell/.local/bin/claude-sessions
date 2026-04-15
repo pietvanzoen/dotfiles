@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # Show status of all active Claude Code sessions across projects.
-# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [-I|--interactive] [--age AGE] [-P|--project SUBSTR] [--prune] [--prune-merged] [--delete ID]
+# Usage: claude-sessions [-a|--all] [-i|--ids] [-p|--pr] [-w|--watch [SECS]] [-I|--interactive] [-F|--float] [--age AGE] [-P|--project SUBSTR] [--prune] [--prune-merged] [--delete ID]
 #   -a, --all         Show all sessions regardless of age (default: last 30 days)
 #   -i, --ids         Show session IDs (for use with --delete)
 #   -p, --pr          Fetch PR info from GitHub (slower — requires gh)
 #   -w, --watch [N]   Live-updating dashboard, refreshing every N seconds (default: 5)
 #   -I, --interactive Interactive curses-based TUI with navigation and actions
+#   -F, --float       Open interactive TUI in a tmux floating popup (implies -I)
 #   --age AGE         Only show sessions newer than AGE (e.g. 7d, 24h, 30m)
 #   -P, --project     Only show sessions whose project name contains SUBSTR (case-insensitive)
 #   --prune           Remove project dirs whose cwd no longer exists
@@ -62,6 +63,7 @@ prune_merged = False
 delete_id = None
 watch_interval = None
 interactive_mode = False
+float_mode = False
 project_filter = None
 max_age_seconds = MAX_AGE_DAYS * 86400
 
@@ -86,6 +88,9 @@ while i < len(args):
     elif arg in ("-p", "--pr"):
         fetch_pr = True
     elif arg in ("-I", "--interactive"):
+        interactive_mode = True
+    elif arg in ("-F", "--float"):
+        float_mode = True
         interactive_mode = True
     elif arg in ("-w", "--watch"):
         watch_interval = 10
@@ -271,7 +276,7 @@ def gh_pr_info(cwd, branch):
 # Preferred and minimum widths for variable columns (standard view).
 # Actual widths are computed dynamically in run() based on terminal width.
 PROJECT_W_PREF, PROJECT_W_MIN = 44, 12
-BRANCH_W_PREF,  BRANCH_W_MIN  = 60, 15
+BRANCH_W_PREF,  BRANCH_W_MIN  = 50, 15
 PR_W_PREF,      PR_W_MIN      = 24, 12
 
 # Fixed overhead: 2 indent + 4×2 separators + 12 STATUS + 11 LAST ACTIVE
@@ -794,7 +799,9 @@ def interactive():
                     # Suspend curses and attach to tmux, then resume
                     curses.endwin()
                     tmux_attach(cwd)
-                    # Resume curses after returning from tmux
+                    # Close popup after switching; otherwise resume the TUI
+                    if os.environ.get("CLAUDE_SESSIONS_POPUP"):
+                        sys.exit(0)
                     stdscr.clear()
                     stdscr.refresh()
             elif ch == ord('d'):
@@ -880,6 +887,15 @@ if delete_id or prune or prune_merged:
                 shutil.rmtree(project_dir)
             continue
     sys.exit(0)
+
+if float_mode and not os.environ.get("CLAUDE_SESSIONS_POPUP"):
+    if not os.environ.get("TMUX"):
+        print("--float requires a tmux session", file=sys.stderr)
+        sys.exit(1)
+    # Re-exec inside a tmux floating popup; strip -F/--float to avoid recursion
+    inner_args = [a for a in sys.argv[1:] if a not in ("-F", "--float")]
+    inner_cmd = f"env CLAUDE_SESSIONS_POPUP=1 {sys.argv[0]} -I {' '.join(inner_args)}"
+    os.execlp("tmux", "tmux", "display-popup", "-E", "-w", "80%", "-h", "80%", inner_cmd)
 
 if interactive_mode:
     interactive()
