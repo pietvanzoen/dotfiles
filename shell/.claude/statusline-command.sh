@@ -177,9 +177,22 @@ if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; th
   out_fmt=$(format_tokens "$total_output")
 
   # Context window usage
-  ctx_used=$(echo "$input" | jq -r '[.context_window.current_usage.input_tokens // 0, .context_window.current_usage.cache_creation_input_tokens // 0, .context_window.current_usage.cache_read_input_tokens // 0] | add' | awk '{printf "%.0f", $1/1000}')
-  ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // 0' | awk '{printf "%.0f", $1/1000}')
-  cost_part=" ${C_DIM}${cost_fmt} in:${in_fmt} out:${out_fmt} ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
+  ctx_used_raw=$(echo "$input" | jq -r '[.context_window.current_usage.input_tokens // 0, .context_window.current_usage.cache_creation_input_tokens // 0, .context_window.current_usage.cache_read_input_tokens // 0] | add')
+  ctx_size_raw=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
+  ctx_used=$(awk "BEGIN { printf \"%.0f\", $ctx_used_raw/1000 }")
+  ctx_size=$(awk "BEGIN { printf \"%.0f\", $ctx_size_raw/1000 }")
+  ctx_pct=$(awk "BEGIN { printf \"%.0f\", ($ctx_used_raw / ($ctx_size_raw == 0 ? 1 : $ctx_size_raw)) * 100 }")
+  # Auto-compact fires at ~70%; warn before that threshold
+  if [ "$ctx_pct" -ge 65 ]; then
+    ctx_color=$(printf '\033[91m')   # bright red — approaching auto-compact threshold
+  elif [ "$ctx_pct" -ge 55 ]; then
+    ctx_color=$(printf '\033[31m')   # red — getting full
+  elif [ "$ctx_pct" -ge 40 ]; then
+    ctx_color="$C_YELLOW"            # yellow — heads up
+  else
+    ctx_color="$C_DIM"               # dim — normal
+  fi
+  cost_part=" ${C_DIM}${cost_fmt} in:${in_fmt} out:${out_fmt}${C_RESET} ${ctx_color}ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
 fi
 
 printf '%s%s%s%s%s%s%s' "$C_MAGENTA" "$dir_name" "$C_RESET" "$git_status" "$pr_part" "$model_part" "$cost_part"
