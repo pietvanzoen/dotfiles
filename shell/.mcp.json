@@ -1,12 +1,3 @@
 {
-  "mcpServers": {
-    "trello": {
-      "command": "npx",
-      "args": ["@delorenj/mcp-server-trello"],
-      "env": {
-        "TRELLO_API_KEY": "${TRELLO_API_KEY}",
-        "TRELLO_TOKEN": "${TRELLO_TOKEN}"
-      }
-    }
-  }
+  "mcpServers": {}
 }

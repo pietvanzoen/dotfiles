@@ -3,7 +3,8 @@
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
     "USE_BUILTIN_RIPGREP": "0",
     "FORCE_COLOR": "1",
-    "ENABLE_PROMPT_CACHING_1H": "1"
+    "ENABLE_PROMPT_CACHING_1H": "1",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70"
   },
   "includeCoAuthoredBy": false,
   "permissions": {
@@ -59,20 +60,6 @@
       "Edit(~/.claude/plans/*.md)",
       "Write(~/.claude/plans/*.md)",
       "Skill(commit-commands:commit)",
-      "mcp__trello__list_boards",
-      "mcp__trello__list_workspaces",
-      "mcp__trello__get_lists",
-      "mcp__trello__get_cards_by_list_id",
-      "mcp__trello__get_card",
-      "mcp__trello__get_card_comments",
-      "mcp__trello__get_card_history",
-      "mcp__trello__get_board_labels",
-      "mcp__trello__get_board_members",
-      "mcp__trello__get_checklist_items",
-      "mcp__trello__get_my_cards",
-      "mcp__trello__get_recent_activity",
-      "mcp__trello__get_active_board_info",
-      "mcp__trello__set_active_board",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(todo *)",
       "Bash(todo)"
@@ -91,7 +78,6 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opus[1m]",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -184,7 +170,6 @@
         "registry.yarnpkg.com",
         "api.linear.app",
         "api.slack.com",
-        "api.trello.com",
         "*.sentry.io",
         "oauth2.googleapis.com",
         "storage.googleapis.com"
