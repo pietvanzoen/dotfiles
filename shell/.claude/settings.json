@@ -4,7 +4,8 @@
     "USE_BUILTIN_RIPGREP": "0",
     "FORCE_COLOR": "1",
     "ENABLE_PROMPT_CACHING_1H": "1",
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70"
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
   },
   "includeCoAuthoredBy": false,
   "permissions": {
@@ -210,6 +211,6 @@
       "gh *"
     ]
   },
-  "skipAutoPermissionPrompt": true,
-  "model": "opusplan"
+  "effortLevel": "medium",
+  "skipAutoPermissionPrompt": true
 }
