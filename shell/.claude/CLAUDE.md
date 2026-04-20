@@ -1,14 +1,5 @@
 @~/.claude/CLAUDE.cutr.md
 
-## Text width
-Wrap prose text at 120 characters per line. Apply this to explanations, plans,
-and any multi-sentence text output. Do not wrap code blocks or tool output.
-
-## Response status
-End each response with a one-line status summary so the user can quickly regain context when switching between sessions:
-
-> **[current task] → [next step]**
-
 ## Model usage
 After reviewing tickets/bugs during planning, suggest an appropriate model:
 - **Haiku**: quick lookups, single-file edits, running commands, short Q&A
@@ -17,40 +8,11 @@ After reviewing tickets/bugs during planning, suggest an appropriate model:
 - **Default**: start with Haiku or Sonnet. Only escalate to Opus when explicitly stuck or when
   the task clearly requires deep multi-step reasoning across many files.
 
-## Context management
-- Run `/compact` at natural breakpoints: after planning is accepted, before switching models,
-  after a major subtask completes. A compacted context costs less on every subsequent message.
-- Before handing off to a lower model for implementation, always compact first — the lower model
-  starts with lean context rather than full planning history.
-
-## After plan approval
-- When plan is approved (ExitPlanMode), ask "Ready to proceed with implementation?" before starting work
-- This gives you a moment to run `/compact` if desired
-- Answer "yes" when ready; continue with a leaner context
-
-## TDD
-- Follow TDD: one test at a time, red-green-refactor. Do NOT write multiple tests at once or implement ahead of the
+## Testing
+- Follow red/green TDD. Do NOT write multiple tests at once or implement ahead of the
   current test.
 - Once all tests pass, suggest refactoring to remove duplication in tests and implementation.
 - Never use "should" in test descriptions. BAD `it('should return wibble')`. GOOD `it('returns wibble')`.
-
-## Tmux/Neovim
-- Neovim runs in the `dev` tmux session. Window name matches the project directory basename.
-- Open files: `nvim-open /absolute/path/to/file` (defaults to vsplit; `--tab` for new tab)
-
-## Pull requests
-Use `/pr` to create a pull request. It handles push, title/description generation, and Copilot review assignment.
-
-When asked to merge a PR: **ALWAYS wait for checks to pass**. Do not use admin override unless specifically instructed.
-
-## PR review comments
-Prefix all PR comment replies with `> _Posted by Claude Code_\n\n` before the body.
-
-Reply in a review thread (not general PR comment):
-`gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies -X POST -f body="..."`
-
-Read inline comments (`gh pr view --comments` omits them):
-`gh api repos/{owner}/{repo}/pulls/{pr}/comments`
 
 ## CLI script output
 In CLI scripts (bash, python, etc.), prefix log/status lines with `==>` or `-->` rather than plain text or emoji.
@@ -71,3 +33,16 @@ are disposable.
 
 ## Task Workflow
 When starting a new task, read `~/.claude/docs/task-workflow.md` for the workflow steps.
+
+## Sandbox (always enabled)
+
+Every session runs inside the OS sandbox. Plan around these constraints from the start:
+
+- **`rm`** — blocked; tell the user to run `! rm <path>` from the prompt instead
+- **`curl` / `wget`** — denied globally; use `node -e "fetch(...)"` for HTTP calls
+- **Unix sockets** — blocked; use TCP (`localhost:<port>`) for Postgres, Docker, etc.
+- **Temporary files** — always use `$TMPDIR`, never `/tmp` directly
+- **`getcwd()` failures** (`Operation not permitted`) — first check if adding the required path to
+  `sandbox.filesystem.allowRead` in `settings.local.json` resolves it; only add the command to
+  `sandbox.excludedCommands` as a last resort (it runs fully unsandboxed). Or tell the user to run
+  it manually with `! cmd`
