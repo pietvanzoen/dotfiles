@@ -126,8 +126,6 @@ fi
 # Session cost & token usage
 cost_part=""
 cost_usd=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
-total_input=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0')
-total_output=$(echo "$input" | jq -r '.context_window.total_output_tokens // 0')
 
 model=$(echo "$input" | jq -r '.model // ""')
 model_short=""
@@ -173,8 +171,6 @@ format_tokens() {
 
 if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; then
   cost_fmt=$(printf '$%.2f' "$cost_usd")
-  in_fmt=$(format_tokens "$total_input")
-  out_fmt=$(format_tokens "$total_output")
 
   # Context window usage
   ctx_used_raw=$(echo "$input" | jq -r '[.context_window.current_usage.input_tokens // 0, .context_window.current_usage.cache_creation_input_tokens // 0, .context_window.current_usage.cache_read_input_tokens // 0] | add')
@@ -192,7 +188,7 @@ if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; th
   else
     ctx_color="$C_DIM"               # dim — normal
   fi
-  cost_part=" ${C_DIM}${cost_fmt} in:${in_fmt} out:${out_fmt}${C_RESET} ${ctx_color}ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
+  cost_part=" ${C_DIM}${cost_fmt}${C_RESET} ${ctx_color}ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
 fi
 
 printf '%s%s%s%s%s%s%s' "$C_MAGENTA" "$dir_name" "$C_RESET" "$git_status" "$pr_part" "$model_part" "$cost_part"
