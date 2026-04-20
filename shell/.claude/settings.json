@@ -211,7 +211,6 @@
       "gh *"
     ]
   },
-  "effortLevel": "high",
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
   "skipAutoPermissionPrompt": true,

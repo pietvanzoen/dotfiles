@@ -9,7 +9,7 @@ After reviewing tickets/bugs during planning, suggest an appropriate model:
   the task clearly requires deep multi-step reasoning across many files.
 
 ## Testing
-- Follow red/green TDD. Do NOT write multiple tests at once or implement ahead of the
+- ALWAYS follow red/green TDD. Do NOT write multiple tests at once or implement ahead of the
   current test.
 - Once all tests pass, suggest refactoring to remove duplication in tests and implementation.
 - Never use "should" in test descriptions. BAD `it('should return wibble')`. GOOD `it('returns wibble')`.
