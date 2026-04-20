@@ -4,7 +4,6 @@
     "USE_BUILTIN_RIPGREP": "0",
     "FORCE_COLOR": "1",
     "ENABLE_PROMPT_CACHING_1H": "1",
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70",
     "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
   },
   "includeCoAuthoredBy": false,
@@ -190,6 +189,7 @@
       "allowRead": [
         "~/.local/bin",
         "~/.claude",
+        "~/dotfiles",
         "~/.nvm",
         "~/Library/Caches/fnm_multishells",
         "~/Library/Application Support/fnm",
@@ -211,6 +211,9 @@
       "gh *"
     ]
   },
+  "effortLevel": "high",
+  "showClearContextOnPlanAccept": true,
+  "tui": "fullscreen",
   "skipAutoPermissionPrompt": true,
   "model": "opusplan"
 }
