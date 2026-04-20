@@ -1,8 +1,9 @@
 ---
 name: commit
 description: Create a Git commit
-disable-model-invocation: true
 allowed-tools: Bash(git *), Bash(gh pr view *)
+model: haiku
+effort: low
 ---
 
 # Create Git Commit
