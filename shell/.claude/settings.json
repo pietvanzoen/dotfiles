@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
     "USE_BUILTIN_RIPGREP": "0",
@@ -78,11 +79,8 @@
       "Write(./.env*)"
     ]
   },
-  "availableModels": [
-    "sonnet",
-    "haiku",
-    "opusplan"
-  ],
+  "model": "opusplan",
+  "availableModels": ["sonnet", "haiku", "opus", "opusplan"],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -179,13 +177,8 @@
       ]
     },
     "filesystem": {
-      "allowWrite": [
-        "~/.cache/yarn",
-        "~/.local/state"
-      ],
-      "denyRead": [
-        "~/"
-      ],
+      "allowWrite": ["~/.cache/yarn", "~/.local/state"],
+      "denyRead": ["~/"],
       "allowRead": [
         "~/.local/bin",
         "~/.claude",
@@ -204,15 +197,9 @@
         "~/.local/state"
       ]
     },
-    "excludedCommands": [
-      "git",
-      "git *",
-      "gh",
-      "gh *"
-    ]
+    "excludedCommands": ["git", "git *", "gh", "gh *"]
   },
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
-  "skipAutoPermissionPrompt": true,
-  "model": "opusplan"
+  "skipAutoPermissionPrompt": true
 }
