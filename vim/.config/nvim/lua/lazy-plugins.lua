@@ -377,6 +377,7 @@ require("lazy").setup({
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
       { "folke/neodev.nvim", opts = {} },
+      { "b0o/schemastore.nvim" },
 
       { -- Github Copilot integration
         "zbirenbaum/copilot.lua",
@@ -568,6 +569,15 @@ require("lazy").setup({
         vale_ls = {
           filetypes = { "markdown" },
         },
+
+        jsonls = {
+          settings = {
+            json = {
+              schemas = require("schemastore").json.schemas(),
+              validate = { enable = true },
+            },
+          },
+        },
       }
 
       local mason = require("mason")
@@ -628,7 +638,7 @@ require("lazy").setup({
         html = { "prettier" },
         css = { "prettier" },
         scss = { "prettier" },
-        json = { "jq" },
+        json = { "prettier" },
         jsonc = { "prettier" },
       },
     },
