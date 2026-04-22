@@ -7,7 +7,10 @@
     "ENABLE_PROMPT_CACHING_1H": "1",
     "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
   },
-  "includeCoAuthoredBy": false,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash(git status)",
