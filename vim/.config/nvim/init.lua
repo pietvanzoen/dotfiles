@@ -1,7 +1,3 @@
--- Ensure Homebrew and fnm tools are on PATH (macOS GUI apps don't inherit shell PATH)
-local fnm_default = vim.fn.expand("~/Library/Application Support/fnm/aliases/default/bin")
-vim.env.PATH = "/opt/homebrew/bin:/opt/homebrew/sbin:" .. fnm_default .. ":" .. vim.env.PATH
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 vim.g.mapleader = " "
