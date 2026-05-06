@@ -218,9 +218,7 @@
       "git",
       "git *",
       "gh",
-      "gh *",
-      "slack-api",
-      "slack-api *"
+      "gh *"
     ]
   },
   "effortLevel": "medium",
