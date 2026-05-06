@@ -73,6 +73,9 @@
       "Bash(wget:*)",
       "Bash(rm -rf:*)",
       "Bash(sudo:*)",
+      "Bash(printenv:*)",
+      "Bash(printenv)",
+      "Bash(env)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
@@ -82,8 +85,12 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opusplan",
-  "availableModels": ["sonnet", "haiku", "opus", "opusplan"],
+  "availableModels": [
+    "sonnet",
+    "haiku",
+    "opus",
+    "opusplan"
+  ],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -149,7 +156,8 @@
     "linear@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true
+    "playwright@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "ast-grep-marketplace": {
@@ -174,14 +182,20 @@
         "registry.yarnpkg.com",
         "api.linear.app",
         "api.slack.com",
+        "slack.com",
         "*.sentry.io",
         "oauth2.googleapis.com",
         "storage.googleapis.com"
       ]
     },
     "filesystem": {
-      "allowWrite": ["~/.cache/yarn", "~/.local/state"],
-      "denyRead": ["~/"],
+      "allowWrite": [
+        "~/.cache/yarn",
+        "~/.local/state"
+      ],
+      "denyRead": [
+        "~/"
+      ],
       "allowRead": [
         "~/.local/bin",
         "~/.claude",
@@ -200,9 +214,19 @@
         "~/.local/state"
       ]
     },
-    "excludedCommands": ["git", "git *", "gh", "gh *"]
+    "excludedCommands": [
+      "git",
+      "git *",
+      "gh",
+      "gh *",
+      "slack-api",
+      "slack-api *"
+    ]
   },
+  "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
+  "editorMode": "vim",
+  "preferredNotifChannel": "ghostty",
   "skipAutoPermissionPrompt": true
 }

@@ -1,6 +1,94 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "linear": {
+      "type": "remote",
+      "url": "https://mcp.linear.app/mcp",
+      "enabled": true
+    }
+  },
   "permission": {
-    "edit": "ask"
+    "bash": {
+      "*": "ask",
+      "git status": "allow",
+      "git diff *": "allow",
+      "git log *": "allow",
+      "git branch *": "allow",
+      "git add *": "allow",
+      "git commit *": "allow",
+      "git fetch *": "allow",
+      "git rebase *": "allow",
+      "git checkout *": "allow",
+      "git cherry-pick *": "allow",
+      "git merge *": "allow",
+      "git pull *": "allow",
+      "git push *": "allow",
+      "git remote *": "allow",
+      "git rev-parse *": "allow",
+      "git show *": "allow",
+      "git stash *": "allow",
+      "git switch *": "allow",
+      "git tag *": "allow",
+      "git config *": "allow",
+      "git lb": "allow",
+      "git lb *": "allow",
+      "git rev-list *": "allow",
+      "ls *": "allow",
+      "ls": "allow",
+      "pwd": "allow",
+      "which *": "allow",
+      "yarn *": "allow",
+      "mkdir *": "allow",
+      "terminal-notifier *": "allow",
+      "ntfy-notify *": "allow",
+      "echo *": "allow",
+      "jq *": "allow",
+      "stow *": "allow",
+      "readlink *": "allow",
+      "nvim-open *": "allow",
+      "tmux send-keys *": "allow",
+      "tmux list-panes *": "allow",
+      "tmux list-windows *": "allow",
+      "tmux split-window *": "allow",
+      "tmux rename-window *": "allow",
+      "tmux set-window-option *": "allow",
+      "todo": "allow",
+      "todo *": "allow",
+      "printenv": "deny",
+      "printenv *": "deny",
+      "env": "deny",
+      "curl *": "deny",
+      "wget *": "deny",
+      "rm -rf *": "deny",
+      "sudo *": "deny"
+    },
+    "edit": "ask",
+    "read": {
+      "*": "deny",
+      "**": "allow",
+      "~/.local/bin/**": "allow",
+      "~/.claude/**": "allow",
+      "~/dotfiles/**": "allow",
+      "~/.nvm/**": "allow",
+      "~/.gitconfig": "allow",
+      "~/.config/git/**": "allow",
+      "~/.config/gh/**": "allow",
+      "~/.yarnrc": "allow",
+      "~/.npmrc": "allow",
+      "~/.config/yarn/**": "allow",
+      "~/.cache/yarn/**": "allow",
+      "~/.local/state/**": "allow",
+      "**/.env": "deny",
+      "**/.env.*": "deny",
+      "**/secrets/**": "deny"
+    }
+  },
+  "agent": {
+    "plan": {
+      "model": "anthropic/claude-opus-4-6"
+    },
+    "build": {
+      "model": "anthropic/claude-sonnet-4-6"
+    }
   }
 }

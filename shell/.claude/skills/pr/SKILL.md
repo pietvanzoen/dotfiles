@@ -32,6 +32,10 @@ model: haiku
 1. **Uncommitted changes** — if `branch_status` is non-empty, stop and ask the user to commit first
 2. **Not on main** — if `current_branch` is `main` or `master`, stop and inform the user
 3. **Existing PR** — run `gh pr view --json number,title,state,url` to check; if a PR exists, show the URL and stop
+4. **Lint and format** — detect and run the project's linter/formatter with auto-fix if available:
+   - Check `package.json` for scripts named `lint`, `lint:fix`, `format`, or `fmt`; prefer `lint:fix` and `format` (auto-fixing variants)
+   - Fall back to well-known binaries: `make lint`, `eslint --fix`, `prettier --write`, `biome check --write`, `ruff check --fix && ruff format`, `black .`, `golangci-lint run`
+   - If auto-fix runs and produces changes, stop and ask the user to review and commit the fixes before continuing
 
 ## Write the title
 
@@ -91,7 +95,7 @@ Then request Copilot review:
 ```bash
 PR_NUMBER=$(gh pr view --json number | jq -r '.number')
 REPO=$(gh repo view --json nameWithOwner | jq -r '.nameWithOwner')
-gh save-me-copilot "$REPO" "$PR_NUMBER"
+gh save-me-copilot "$REPO" "$PR_NUMBER" > /dev/null 2>&1
 ```
 
 Print the PR URL.

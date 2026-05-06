@@ -142,7 +142,7 @@ if [ -n "$model_short" ]; then
     *)      model_color="$C_DIM"              ;;
   esac
 
-  effort=$(echo "$input" | jq -r '.session.effort_level // .effortLevel // .effort // ""')
+  effort=$(echo "$input" | jq -r '.session.effort_level // .effortLevel // .effort.level // .effort // ""')
   effort_part=""
   if [ -n "$effort" ] && [ "$effort" != "auto" ]; then
     case "$effort" in
