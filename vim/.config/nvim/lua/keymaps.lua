@@ -33,4 +33,21 @@ vim.keymap.set("n", "<leader>z", "1z=", { desc = "Replace bad spelling with firs
 
 vim.keymap.set("v", "//", 'y/<C-R>"<CR>', { desc = "Search for currently selected text" })
 
+local function yank_path(with_lines)
+  local git_root = vim.trim(vim.fn.system("git rev-parse --show-toplevel"))
+  local file = vim.fn.expand("%:p")
+  local relative = file:sub(#git_root + 2)
+  if with_lines then
+    local start_line = vim.fn.line("v")
+    local end_line = vim.fn.line(".")
+    if start_line > end_line then start_line, end_line = end_line, start_line end
+    relative = start_line == end_line and (relative .. "#L" .. start_line) or (relative .. "#L" .. start_line .. "-" .. end_line)
+  end
+  vim.fn.setreg("+", relative)
+  vim.notify("Copied: " .. relative)
+end
+
+vim.keymap.set("n", "<leader>yp", function() yank_path(false) end, { desc = "Copy file path relative to git root" })
+vim.keymap.set("v", "<leader>yp", function() yank_path(true) end, { desc = "Copy file path with line numbers relative to git root" })
+
 -- vim: ts=2 sts=2 sw=2 et

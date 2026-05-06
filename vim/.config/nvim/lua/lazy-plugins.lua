@@ -133,7 +133,7 @@ require("lazy").setup({
     config = function()
       vim.g.VimuxOrientation = "h"
       vim.g.VimuxOpenExtraArgs = "-b" -- open pane to the left
-      vim.g.VimuxCloseOnExit = 1
+      vim.g.VimuxCloseOnExit = 0
       local function update_vimux_height()
         vim.g.VimuxHeight = vim.o.columns > 200 and "80" or "60"
       end
@@ -312,6 +312,9 @@ require("lazy").setup({
           },
           live_grep = {
             additional_args = { "--hidden" },
+            mappings = {
+              i = { ["<C-f>"] = require("telescope.actions").to_fuzzy_refine },
+            },
           },
         },
         extensions = {
@@ -422,6 +425,8 @@ require("lazy").setup({
       },
     },
     config = function()
+      vim.lsp.set_log_level("ERROR")
+
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -518,6 +523,11 @@ require("lazy").setup({
       local servers = {
         ts_ls = {
           single_file_support = false,
+          capabilities = {
+            workspace = {
+              didChangeWatchedFiles = { dynamicRegistration = false },
+            },
+          },
           init_options = {
             plugins = {
               {
