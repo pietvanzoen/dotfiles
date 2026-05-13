@@ -93,7 +93,7 @@ async function buildPayload(env) {
     return { title: name, count: items.length, items };
   });
 
-  return { merge_variables: { lists, updated_at: formatTimestamp(new Date(), env.TZ) } };
+  return { lists, updated_at: formatTimestamp(new Date(), env.TZ) };
 }
 
 export default {
