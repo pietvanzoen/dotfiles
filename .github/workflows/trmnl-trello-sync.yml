@@ -1,0 +1,26 @@
+name: TRMNL Trello Sync
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run sync
+        run: node shell/.local/bin/trmnl-trello-sync
+        env:
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+          TRELLO_LIST_IDS: ${{ secrets.TRELLO_LIST_IDS }}
+          TRMNL_WEBHOOK_URL: ${{ secrets.TRMNL_WEBHOOK_URL }}
+          TRELLO_MAX_CARDS: ${{ vars.TRELLO_MAX_CARDS }}
+          TZ: ${{ vars.TZ }}

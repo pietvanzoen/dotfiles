@@ -1,0 +1,172 @@
+#!/usr/bin/env node
+
+/**
+ * TRMNL Trello Sync
+ *
+ * Fetches cards from configured Trello lists and posts them
+ * to a TRMNL private plugin webhook.
+ *
+ * Required environment variables:
+ * - TRELLO_API_KEY
+ * - TRELLO_TOKEN
+ * - TRELLO_LIST_IDS    — comma-separated Trello list IDs
+ * - TRMNL_WEBHOOK_URL
+ *
+ * Optional environment variables:
+ * - TRELLO_MAX_CARDS — max cards per list (default: 6)
+ * - TZ              — IANA timezone for updated_at display (default: America/Los_Angeles)
+ */
+
+const REQUIRED_ENV_VARS = [
+  'TRELLO_API_KEY',
+  'TRELLO_TOKEN',
+  'TRELLO_LIST_IDS',
+  'TRMNL_WEBHOOK_URL'
+];
+
+const MAX_TITLE_LENGTH = 60;
+const DEFAULT_MAX_CARDS = 6;
+
+function validateEnv() {
+  const missing = REQUIRED_ENV_VARS.filter(varName => !process.env[varName]);
+
+  if (missing.length > 0) {
+    console.error('==> Error: Missing required environment variables:');
+    missing.forEach(varName => {
+      console.error(`    - ${varName}`);
+    });
+    console.error('\n==> See shell/.zshenv.example for configuration details');
+    process.exit(1);
+  }
+}
+
+function parseListConfigs() {
+  const ids = process.env.TRELLO_LIST_IDS.split(',').map(s => s.trim());
+  const max = parseInt(process.env.TRELLO_MAX_CARDS, 10) || DEFAULT_MAX_CARDS;
+  return ids.map(id => ({ id, max }));
+}
+
+async function fetchList(listId) {
+  const { TRELLO_API_KEY: key, TRELLO_TOKEN: token } = process.env;
+  const url = `https://api.trello.com/1/lists/${listId}?key=${key}&token=${token}&fields=name&cards=open&card_fields=name,labels,pos`;
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Trello authentication failed. Check TRELLO_API_KEY and TRELLO_TOKEN.');
+      }
+      if (response.status === 404) {
+        throw new Error(`Trello list not found: ${listId}. Check list IDs in environment variables.`);
+      }
+      throw new Error(`Trello API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return {
+      name: data.name,
+      cards: data.cards.sort((a, b) => a.pos - b.pos)
+    };
+
+  } catch (error) {
+    if (error.message.includes('fetch failed')) {
+      throw new Error('Network error: Unable to connect to Trello API');
+    }
+    throw error;
+  }
+}
+
+function transformCard(card) {
+  const emoji = card.labels?.[0]?.name.replace(/\s+[A-Za-z].*$/, '').trim() ?? '';
+
+  let title = card.name;
+  if (title.length > MAX_TITLE_LENGTH) {
+    title = title.substring(0, MAX_TITLE_LENGTH - 3) + '...';
+  }
+
+  return { title, emoji };
+}
+
+function deduplicateCards(cards) {
+  const seen = new Set();
+  return cards.filter(card => {
+    if (seen.has(card.name)) return false;
+    seen.add(card.name);
+    return true;
+  });
+}
+
+function formatTimestamp(date) {
+  const tz = process.env.TZ || 'America/Los_Angeles';
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false, timeZoneName: 'short' }).formatToParts(date);
+  const get = type => parts.find(p => p.type === type)?.value ?? '';
+  return `${get('hour')}:${get('minute')} ${get('timeZoneName')}`;
+}
+
+async function postToTRMNL(data) {
+  const webhookUrl = process.env.TRMNL_WEBHOOK_URL;
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ merge_variables: data })
+    });
+
+    if (!response.ok) {
+      if (response.status === 429) {
+        console.error('==> Warning: TRMNL rate limit reached. Skipping this update.');
+        return false;
+      }
+      throw new Error(`TRMNL API error: ${response.status} ${response.statusText}`);
+    }
+
+    return true;
+
+  } catch (error) {
+    if (error.message.includes('fetch failed')) {
+      throw new Error('Network error: Unable to connect to TRMNL webhook');
+    }
+    throw error;
+  }
+}
+
+async function main() {
+  console.log('==> TRMNL Trello Sync');
+  console.log(`--> Started at ${new Date().toISOString()}`);
+
+  validateEnv();
+  console.log('--> Environment validated');
+
+  try {
+    const listConfigs = parseListConfigs();
+
+    console.log('--> Fetching lists from Trello...');
+    const listData = await Promise.all(listConfigs.map(cfg => fetchList(cfg.id)));
+
+    const lists = listConfigs.map((cfg, i) => {
+      const { name, cards } = listData[i];
+      const deduped = deduplicateCards(cards);
+      const removed = cards.length - deduped.length;
+      if (removed > 0) console.log(`--> Removed ${removed} duplicate cards from "${name}"`);
+
+      const items = deduped.slice(0, cfg.max).map(transformCard);
+      console.log(`--> "${name}": ${items.length} cards`);
+      return { title: name, count: items.length, items };
+    });
+
+    console.log('--> Posting to TRMNL webhook...');
+    const success = await postToTRMNL({ lists, updated_at: formatTimestamp(new Date()) });
+
+    if (success) {
+      console.log('==> Success! TRMNL updated.');
+    }
+
+  } catch (error) {
+    console.error(`==> Error: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+main();

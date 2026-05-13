@@ -1,0 +1,27 @@
+<!-- TRMNL Trello Plugin - Half Vertical Layout -->
+<!-- Uses TRMNL Framework 3.1 design system -->
+<!-- Data structure: lists array with title, count, and items -->
+
+<div class="layout layout--col layout--stretch gap">
+  <div class="flex flex--col gap--2 stretch-y">
+  {% for list in lists %}
+    {% if list.count > 0 %}
+    <span class="label label--medium lg:label--base group-header">{{ list.title }} ({{ list.count }})</span>
+    <div class="divider"></div>
+    {% for card in list.items %}
+    <div class="item">
+      <div class="meta"></div>
+      <div class="icon" style="justify-content:center; line-height: 1;"><span>{{ card.emoji }}</span></div>
+      <div class="content"><span class="title title--small">{{ card.title }}</span></div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">Trello</span>
+  <span class="instance">Updated: {{ updated_at }}</span>
+</div>
+
