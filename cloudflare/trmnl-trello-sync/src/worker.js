@@ -106,8 +106,11 @@ export default {
 
     try {
       const payload = await buildPayload(env);
+      const cardCount = payload.lists.reduce((sum, l) => sum + l.count, 0);
+      console.log(`OK: ${payload.lists.length} lists, ${cardCount} cards, updated_at=${payload.updated_at}`);
       return Response.json(payload);
     } catch (err) {
+      console.error(`Error: ${err.message}`);
       return new Response(err.message, { status: 500 });
     }
   }
