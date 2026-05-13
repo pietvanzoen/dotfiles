@@ -1,0 +1,20 @@
+name: Deploy TRMNL Trello Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/trmnl-trello-sync/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: cloudflare/trmnl-trello-sync
