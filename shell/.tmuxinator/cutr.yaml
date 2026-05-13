@@ -1,7 +1,7 @@
 name: cutr
 root: <%= ENV.fetch('CUTR_ROOT', '~/repos/github.com/cutr-dev/cutr-server') %>
 
-on_project_start: cd server && yarn
+on_project_start: cd server && yarn && yarn install:dotenv
 
 windows:
   - Cutr:
