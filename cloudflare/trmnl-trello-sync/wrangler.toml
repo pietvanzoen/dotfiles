@@ -2,6 +2,9 @@ name = "trmnl-trello-sync"
 main = "src/worker.js"
 compatibility_date = "2025-05-13"
 
+[observability]
+enabled = true
+
 [vars]
 TRELLO_MAX_CARDS = "6"
 TZ = "America/Los_Angeles"
