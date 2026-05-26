@@ -309,9 +309,6 @@ require("lazy").setup({
         pickers = {
           find_files = {
             hidden = true,
-            mappings = {
-              i = { ["<C-f>"] = require("telescope.actions").to_fuzzy_refine },
-            },
           },
           live_grep = {
             additional_args = { "--hidden" },
