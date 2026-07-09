@@ -1,19 +1,45 @@
 #!/bin/sh
 # Start the cutr tmuxinator session, optionally targeting a worktree path.
-# Usage: cutr-start [path]
-#   path  Optional path to a cutr-server worktree. Defaults to cwd if it
-#         looks like a cutr repo, otherwise uses the main repo.
+# Usage: cutr-start [-f] [path]
+#   -f, --force  Restart even if a session is already running for this directory
+#   path         Optional path to a cutr-server worktree. Defaults to cwd if it
+#                looks like a cutr repo, otherwise uses the main repo.
 
 set -eu
 
 DEFAULT_ROOT=~/repos/github.com/cutr-dev/cutr-server
+FORCE=0
 
-if [ -n "${1:-}" ]; then
-  CUTR_ROOT="$(cd "$1" && pwd)"
+for arg in "$@"; do
+  case "$arg" in
+    -f|--force) FORCE=1 ;;
+    -*) echo "Unknown flag: $arg" >&2; exit 1 ;;
+  esac
+done
+
+# Find first non-flag argument as path
+PATH_ARG=""
+for arg in "$@"; do
+  case "$arg" in
+    -*) ;;
+    *) PATH_ARG="$arg"; break ;;
+  esac
+done
+
+if [ -n "$PATH_ARG" ]; then
+  CUTR_ROOT="$(cd "$PATH_ARG" && pwd)"
 elif [ -f "./server/package.json" ]; then
   CUTR_ROOT="$(pwd)"
 else
   CUTR_ROOT="$(cd "$DEFAULT_ROOT" && pwd)"
+fi
+
+if [ "$FORCE" -eq 0 ] && tmux has-session -t cutr 2>/dev/null; then
+  RUNNING_ROOT="$(tmux showenv -t cutr CUTR_ROOT 2>/dev/null | sed 's/^CUTR_ROOT=//')"
+  if [ "$RUNNING_ROOT" = "$CUTR_ROOT" ]; then
+    echo "==> cutr is already running at $CUTR_ROOT (use -f to restart)"
+    exit 0
+  fi
 fi
 
 export CUTR_ROOT CUTR_DIR="$CUTR_ROOT"
