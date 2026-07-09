@@ -1,0 +1,9 @@
+{
+  "openIssue": {
+    "path": "/Users/piet/.local/bin/cutr-ticket",
+    "args": [
+      "--id", "{{issue.identifier}}",
+      "--branch", "{{issue.branchName}}"
+    ]
+  }
+}
