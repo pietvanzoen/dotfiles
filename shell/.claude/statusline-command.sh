@@ -28,6 +28,9 @@ pr_part=""
 
 if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
+  if [ ${#branch} -gt 25 ]; then
+    branch="${branch:0:24}…"
+  fi
 
   # Dirty / staged indicators
   dirty=""
@@ -123,9 +126,8 @@ fi
 #   fi
 # fi
 
-# Session cost & token usage
+# Session token/context usage & plan rate limits
 cost_part=""
-cost_usd=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 
 model=$(echo "$input" | jq -r '.model // ""')
 model_short=""
@@ -136,26 +138,26 @@ case "$model" in
 esac
 if [ -n "$model_short" ]; then
   case "$model_short" in
-    opus)   model_color=$(printf '\033[31m')  ;;  # red
-    sonnet) model_color="$C_YELLOW"           ;;  # yellow
-    haiku)  model_color="$C_GREEN"            ;;  # green
-    *)      model_color="$C_DIM"              ;;
+    opus)   model_color=$(printf '\033[31m')  ; model_sym="O" ;;  # red
+    sonnet) model_color="$C_YELLOW"           ; model_sym="S" ;;  # yellow
+    haiku)  model_color="$C_GREEN"            ; model_sym="H" ;;  # green
+    *)      model_color="$C_DIM"              ; model_sym="?" ;;
   esac
 
   effort=$(echo "$input" | jq -r '.session.effort_level // .effortLevel // .effort.level // .effort // ""')
   effort_part=""
   if [ -n "$effort" ] && [ "$effort" != "auto" ]; then
     case "$effort" in
-      low)    effort_color="$C_GREEN"              ;;  # green — cheap
-      medium) effort_color="$C_YELLOW"             ;;  # yellow — moderate
-      high)   effort_color=$(printf '\033[31m')    ;;  # red — thinking on
-      max)    effort_color=$(printf '\033[91m')    ;;  # bright red — max thinking
-      *)      effort_color="$C_DIM"               ;;
+      low)    effort_color="$C_GREEN"              ; effort_sym="○"  ;;  # green — cheap
+      medium) effort_color="$C_YELLOW"             ; effort_sym="◐"  ;;  # yellow — moderate
+      high)   effort_color=$(printf '\033[31m')    ; effort_sym="●"  ;;  # red — thinking on
+      max)    effort_color=$(printf '\033[91m')    ; effort_sym="⦿"  ;;  # bright red — max thinking
+      *)      effort_color="$C_DIM"                ; effort_sym="$effort" ;;
     esac
-    effort_part="${C_DIM}:${C_RESET}${effort_color}${effort}${C_RESET}"
+    effort_part="${C_DIM}:${C_RESET}${effort_color}${effort_sym}${C_RESET}"
   fi
 
-  model_part=" ${model_color}${model_short}${C_RESET}${effort_part}"
+  model_part=" ${model_color}${model_sym}${C_RESET}${effort_part}"
 fi
 
 format_tokens() {
@@ -169,15 +171,13 @@ format_tokens() {
   fi
 }
 
-if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; then
-  cost_fmt=$(printf '$%.2f' "$cost_usd")
-
+ctx_size_raw=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
+if [ "$ctx_size_raw" -gt 0 ]; then
   # Context window usage
   ctx_used_raw=$(echo "$input" | jq -r '[.context_window.current_usage.input_tokens // 0, .context_window.current_usage.cache_creation_input_tokens // 0, .context_window.current_usage.cache_read_input_tokens // 0] | add')
-  ctx_size_raw=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
   ctx_used=$(awk "BEGIN { printf \"%.0f\", $ctx_used_raw/1000 }")
   ctx_size=$(awk "BEGIN { printf \"%.0f\", $ctx_size_raw/1000 }")
-  ctx_pct=$(awk "BEGIN { printf \"%.0f\", ($ctx_used_raw / ($ctx_size_raw == 0 ? 1 : $ctx_size_raw)) * 100 }")
+  ctx_pct=$(awk "BEGIN { printf \"%.0f\", ($ctx_used_raw / $ctx_size_raw) * 100 }")
   # Auto-compact fires at ~70%; warn before that threshold
   if [ "$ctx_pct" -ge 65 ]; then
     ctx_color=$(printf '\033[91m')   # bright red — approaching auto-compact threshold
@@ -188,7 +188,36 @@ if [ -n "$cost_usd" ] && [ "$cost_usd" != "null" ] && [ "$cost_usd" != "0" ]; th
   else
     ctx_color="$C_DIM"               # dim — normal
   fi
-  cost_part=" ${C_DIM}${cost_fmt}${C_RESET} ${ctx_color}ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
+  cost_part=" ${ctx_color}ctx:${ctx_used}k/${ctx_size}k${C_RESET}"
 fi
 
-printf '%s%s%s%s%s%s%s' "$C_MAGENTA" "$dir_name" "$C_RESET" "$git_status" "$pr_part" "$model_part" "$cost_part"
+# Plan usage (5h/7d rate-limit windows), in place of $ cost for subscription plans
+usage_color() {
+  local pct=$1
+  if awk "BEGIN{exit !($pct >= 85)}"; then
+    printf '\033[91m'    # bright red — near limit
+  elif awk "BEGIN{exit !($pct >= 65)}"; then
+    printf '\033[31m'    # red
+  elif awk "BEGIN{exit !($pct >= 40)}"; then
+    printf '%s' "$C_YELLOW"
+  else
+    printf '%s' "$C_DIM"
+  fi
+}
+
+five_hour_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
+seven_day_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
+
+usage_part=""
+if [ -n "$five_hour_pct" ]; then
+  fh_fmt=$(awk "BEGIN { printf \"%.0f\", $five_hour_pct }")
+  fh_color=$(usage_color "$five_hour_pct")
+  usage_part="${usage_part} ${fh_color}5h:${fh_fmt}%${C_RESET}"
+fi
+if [ -n "$seven_day_pct" ]; then
+  sd_fmt=$(awk "BEGIN { printf \"%.0f\", $seven_day_pct }")
+  sd_color=$(usage_color "$seven_day_pct")
+  usage_part="${usage_part} ${sd_color}7d:${sd_fmt}%${C_RESET}"
+fi
+
+printf '%s%s%s%s%s%s%s%s' "$C_MAGENTA" "$dir_name" "$C_RESET" "$git_status" "$pr_part" "$model_part" "$usage_part" "$cost_part"
