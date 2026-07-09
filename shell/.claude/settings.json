@@ -85,7 +85,7 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opusplan",
+  "model": "sonnet",
   "availableModels": [
     "sonnet",
     "haiku",
@@ -158,7 +158,9 @@
     "commit-commands@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true
+    "lua-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "mcp-server-dev@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "ast-grep-marketplace": {
@@ -186,13 +188,15 @@
         "slack.com",
         "*.sentry.io",
         "oauth2.googleapis.com",
-        "storage.googleapis.com"
+        "storage.googleapis.com",
+        "logging.googleapis.com"
       ]
     },
     "filesystem": {
       "allowWrite": [
         "~/.cache/yarn",
-        "~/.local/state"
+        "~/.local/state",
+        "~/.config/gcloud"
       ],
       "denyRead": [
         "~/"
@@ -208,11 +212,14 @@
         "~/.config/git",
         "~/.yarnrc",
         "~/.config/yarn",
+        "~/.cache/node/corepack/v1/yarn",
         "~/.config/gh",
         "~/.npmrc",
         "~/.cache/yarn",
         "~/package.json",
-        "~/.local/state"
+        "~/.local/state",
+        "~/.local/lib/google-cloud-sdk",
+        "~/.config/gcloud"
       ]
     },
     "excludedCommands": [
@@ -227,5 +234,6 @@
   "tui": "fullscreen",
   "editorMode": "vim",
   "preferredNotifChannel": "ghostty",
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }

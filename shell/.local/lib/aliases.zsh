@@ -32,7 +32,7 @@ function cc() {
     done
   fi
 
-  local args=(--model=opusplan --effort=medium)
+  local args=(--model=sonnet --effort=medium)
   if [[ "$1" == "new" ]]; then
     shift
   else
