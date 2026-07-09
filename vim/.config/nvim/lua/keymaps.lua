@@ -26,7 +26,6 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
-
 vim.keymap.set("n", "<leader>h", ":let @/ = ''<CR>", { desc = "Disable search highlighting" })
 
 vim.keymap.set("n", "<leader>z", "1z=", { desc = "Replace bad spelling with first suggestion" })
@@ -40,14 +39,21 @@ local function yank_path(with_lines)
   if with_lines then
     local start_line = vim.fn.line("v")
     local end_line = vim.fn.line(".")
-    if start_line > end_line then start_line, end_line = end_line, start_line end
-    relative = start_line == end_line and (relative .. "#L" .. start_line) or (relative .. "#L" .. start_line .. "-" .. end_line)
+    if start_line > end_line then
+      start_line, end_line = end_line, start_line
+    end
+    relative = start_line == end_line and (relative .. "#L" .. start_line)
+      or (relative .. "#L" .. start_line .. "-" .. end_line)
   end
   vim.fn.setreg("+", relative)
   vim.notify("Copied: " .. relative)
 end
 
-vim.keymap.set("n", "<leader>yp", function() yank_path(false) end, { desc = "Copy file path relative to git root" })
-vim.keymap.set("v", "<leader>yp", function() yank_path(true) end, { desc = "Copy file path with line numbers relative to git root" })
+vim.keymap.set("n", "<leader>yp", function()
+  yank_path(false)
+end, { desc = "Copy file path relative to git root" })
+vim.keymap.set("v", "<leader>yp", function()
+  yank_path(true)
+end, { desc = "Copy file path with line numbers relative to git root" })
 
 -- vim: ts=2 sts=2 sw=2 et
