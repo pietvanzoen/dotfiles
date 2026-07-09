@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
@@ -71,32 +72,52 @@ for (let i = 1; i < apiArgs.length; i++) {
 }
 
 function slackGet(apiMethod, apiParams) {
-  return new Promise((resolve, reject) => {
-    const query = new URLSearchParams(apiParams).toString();
-    const reqPath = query
-      ? `/api/${apiMethod}?${query}`
-      : `/api/${apiMethod}`;
+  const query = new URLSearchParams(apiParams).toString();
+  const targetUrl = query
+    ? `https://slack.com/api/${apiMethod}?${query}`
+    : `https://slack.com/api/${apiMethod}`;
 
-    const req = https.request(
-      {
-        hostname: "slack.com",
-        path: reqPath,
+  return new Promise((resolve, reject) => {
+    const proxyEnv = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
+    let reqOptions, transport;
+
+    if (proxyEnv) {
+      // Send request to the proxy with an absolute URL (HTTP proxy protocol)
+      const proxy = new URL(proxyEnv);
+      transport = http;
+      reqOptions = {
+        hostname: proxy.hostname,
+        port: proxy.port,
+        method: "GET",
+        path: targetUrl,
+        headers: {
+          Host: "slack.com",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+    } else {
+      transport = https;
+      const u = new URL(targetUrl);
+      reqOptions = {
+        hostname: u.hostname,
+        path: u.pathname + u.search,
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
-      },
-      (res) => {
-        const chunks = [];
-        res.on("data", (chunk) => chunks.push(chunk));
-        res.on("end", () => {
-          const raw = Buffer.concat(chunks).toString();
-          try {
-            resolve(JSON.parse(raw));
-          } catch {
-            reject(new Error(`Failed to parse response as JSON:\n${raw}`));
-          }
-        });
-      }
-    );
+      };
+    }
+
+    const req = transport.request(reqOptions, (res) => {
+      const chunks = [];
+      res.on("data", (chunk) => chunks.push(chunk));
+      res.on("end", () => {
+        const raw = Buffer.concat(chunks).toString();
+        try {
+          resolve(JSON.parse(raw));
+        } catch {
+          reject(new Error(`Failed to parse response as JSON:\n${raw}`));
+        }
+      });
+    });
     req.on("error", reject);
     req.end();
   });
