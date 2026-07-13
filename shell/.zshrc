@@ -173,3 +173,6 @@ if [ -f '/Users/piet/.local/lib/google-cloud-sdk/completion.zsh.inc' ]; then . '
 export PATH="$PATH:/Users/piet/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+# Pi
+export PATH="/Users/piet/Library/Application Support/fnm/node-versions/v24.14.1/installation/bin:$PATH"
