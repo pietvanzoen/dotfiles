@@ -85,7 +85,7 @@
       "Write(./.env*)"
     ]
   },
-  "model": "sonnet",
+  "model": "opusplan",
   "availableModels": [
     "sonnet",
     "haiku",
@@ -229,7 +229,15 @@
       "gh *"
     ]
   },
-  "effortLevel": "medium",
+  "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "high"
+    },
+    "claude-sonnet-5": {
+      "effortLevel": "high"
+    }
+  },
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
   "editorMode": "vim",
