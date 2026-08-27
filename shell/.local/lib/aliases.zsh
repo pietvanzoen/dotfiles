@@ -1,6 +1,7 @@
 alias '\-'='cd -'
 alias '..'='cd ..'
 alias cl='clear'
+alias vpr='gh pr view --web'
 
 function help() {
   bash -c "help $*"
