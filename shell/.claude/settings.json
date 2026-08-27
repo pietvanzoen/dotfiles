@@ -160,13 +160,21 @@
     "playwright@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
-    "mcp-server-dev@claude-plugins-official": true
+    "mcp-server-dev@claude-plugins-official": true,
+    "ponytail@ponytail": true,
+    "notion@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "ast-grep-marketplace": {
       "source": {
         "source": "github",
         "repo": "ast-grep/agent-skill"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
       }
     }
   },
