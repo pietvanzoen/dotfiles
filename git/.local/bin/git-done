@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# git done — clean up a merged branch: remove worktree, delete branch, close tmux window
+# git done — clean up a merged branch: remove worktree, delete branch, cd to main worktree
 # Usage: git done [--force]
 
 set -e
@@ -30,12 +30,6 @@ fi
 wt_path=$(git rev-parse --show-toplevel)
 main_root=$(git worktree list --porcelain | awk '/^worktree / { print substr($0,10); exit }')
 
-# Capture tmux window before removing worktree
-current_window=""
-if [[ -n "${TMUX:-}" ]]; then
-  current_window=$(tmux display-message -p '#{window_id}' 2>/dev/null || echo "")
-fi
-
 echo "==> Removing worktree: $wt_path"
 git -C "$main_root" worktree remove --force "$wt_path"
 
@@ -45,8 +39,6 @@ git -C "$main_root" branch -D "$branch"
 echo "==> Pruning sessions"
 git -C "$main_root" prune-sessions 2>/dev/null || true
 
-# Close the tmux window last — script terminates as the window closes
-if [[ -n "$current_window" ]]; then
-  echo "==> Closing tmux window $current_window"
-  tmux kill-window -t "$current_window" 2>/dev/null || true
-fi
+# Signal the shell wrapper (see `git()` in aliases.zsh) to cd into the main worktree
+echo "==> cd to $main_root"
+echo "$main_root" > "${TMPDIR:-/tmp}/git-done-cd-target"

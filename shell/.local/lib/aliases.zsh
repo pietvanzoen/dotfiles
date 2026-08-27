@@ -47,6 +47,22 @@ function cc() {
   fi
 }
 
+function git() {
+  if [[ "$1" == "done" ]]; then
+    shift
+    local cd_target_file="${TMPDIR:-/tmp}/git-done-cd-target"
+    rm -f "$cd_target_file"
+    command git "done" "$@"
+    local exit_code=$?
+    if [[ -f "$cd_target_file" ]]; then
+      cd "$(cat "$cd_target_file")" || true
+      rm -f "$cd_target_file"
+    fi
+    return $exit_code
+  fi
+  command git "$@"
+}
+
 function gwo() {
   git rev-parse --is-inside-work-tree > /dev/null 2>&1 \
     || { echo "Error: not in a git repo" >&2; return 1; }
