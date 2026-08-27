@@ -53,25 +53,12 @@ Examples:
 
 ## Write the description
 
-Keep it short. The commit log is already part of the PR — don't repeat it.
-
-```markdown
-## Why
-
-<1–3 sentences: motivation or problem being solved. Omit entirely if the title and
-commits tell the story.>
-
-## Test plan
-
-- [ ] <manual step or automated test>
-- [ ] <edge case, if non-obvious>
-
-<Omit test plan entirely for trivial changes (docs, config, typos).>
-```
+Include a bulleted list describing the motivation or problem being solved. Use
+original ticket information as necessary.
 
 **Don'ts:**
-- No "Changes" or "What" section — that's what commits are for
-- No bullet list restating what files were modified
+- No "Changes" or "What" section.
+- No bullet list restating what files were modified.
 - No filler like "This PR introduces…"
 
 ## Push and create
