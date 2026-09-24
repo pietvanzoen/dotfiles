@@ -83,7 +83,7 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opusplan",
+  "model": "opus[1m]",
   "availableModels": [
     "sonnet",
     "haiku",
@@ -196,6 +196,9 @@
         "oauth2.googleapis.com",
         "storage.googleapis.com",
         "logging.googleapis.com"
+      ],
+      "allowUnixSockets": [
+        "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
       ]
     },
     "filesystem": {
