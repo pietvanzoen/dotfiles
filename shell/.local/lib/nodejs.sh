@@ -7,3 +7,5 @@ alias ni="npm install"
 
 export HUSKY=1
 export CUTR_AUTO_LINT=1
+mkcert_root="$(mkcert -CAROOT)"
+export NODE_EXTRA_CA_CERTS="${mkcert_root}/rootCA.pem"

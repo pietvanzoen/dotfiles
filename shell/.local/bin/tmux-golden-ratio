@@ -22,8 +22,8 @@ fi
 win_w="$(tmux display-message -p '#{window_width}')"
 win_h="$(tmux display-message -p '#{window_height}')"
 
-target_w=$(( win_w * 618 / 1000 ))
-target_h=$(( win_h * 618 / 1000 ))
+target_w=$(( win_w * 75 / 100 ))
+target_h=$(( win_h * 75 / 100 ))
 
 tmux resize-pane -x "${target_w}" 2>/dev/null || true
 tmux resize-pane -y "${target_h}" 2>/dev/null || true

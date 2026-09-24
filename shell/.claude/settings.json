@@ -3,7 +3,6 @@
   "env": {
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
     "USE_BUILTIN_RIPGREP": "0",
-    "FORCE_COLOR": "1",
     "ENABLE_PROMPT_CACHING_1H": "1",
     "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
   },
@@ -63,7 +62,6 @@
       "Read(*.md)",
       "Edit(~/.claude/plans/*.md)",
       "Write(~/.claude/plans/*.md)",
-      "Skill(commit-commands:commit)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(todo *)",
       "Bash(todo)"
@@ -150,19 +148,19 @@
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
+    "github@claude-plugins-official": false,
     "security-guidance@claude-plugins-official": true,
     "pr-review-toolkit@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": false,
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "mcp-server-dev@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": false,
+    "frontend-design@claude-plugins-official": false,
+    "mcp-server-dev@claude-plugins-official": false,
     "ponytail@ponytail": true,
-    "notion@claude-plugins-official": true
+    "notion@claude-plugins-official": false
   },
   "extraKnownMarketplaces": {
     "ast-grep-marketplace": {
@@ -243,11 +241,21 @@
       "effortLevel": "high"
     },
     "claude-sonnet-5": {
+      "effortLevel": "medium"
+    },
+    "claude-haiku-4-5-20251001": {
+      "effortLevel": "low"
+    },
+    "claude-opus-5-5": {
       "effortLevel": "high"
     }
   },
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
   "editorMode": "vim",
   "preferredNotifChannel": "ghostty",
   "agentPushNotifEnabled": true,
