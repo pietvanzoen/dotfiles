@@ -1,4 +1,8 @@
 # HOMEBREW PATHS
+if ! is_executable brew && [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 BREW_PREFIX="$(brew --prefix)"
 export BREW_PREFIX
 
