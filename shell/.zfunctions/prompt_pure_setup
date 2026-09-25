@@ -154,6 +154,10 @@ prompt_pure_preprompt_render() {
 	if [[ -n $prompt_pure_git_stash ]]; then
 		preprompt_parts+=('%F{$prompt_pure_colors[git:stash]}${PURE_GIT_STASH_SYMBOL:-≡}%f')
 	fi
+	# GitHub PR number (hyperlinked), state and CI status.
+	if [[ -n $prompt_pure_git_pr ]]; then
+		preprompt_parts+=('${prompt_pure_git_pr}')
+	fi
 
 	preprompt_parts+=('%F{$prompt_pure_colors[jobs]}%(1j.⚙%j.)%f')
 
@@ -371,6 +375,16 @@ prompt_pure_async_git_stash() {
 	git rev-list --walk-reflogs --count refs/stash
 }
 
+prompt_pure_async_git_pr() {
+	command gh pr view --json number,url,state,isDraft,statusCheckRollup --jq '
+		[.number, .url, (if .isDraft then "DRAFT" else .state end),
+		 ([.statusCheckRollup[] | (.conclusion // .state // "")] as $c
+		  | if ($c|length)==0 then ""
+		    elif any($c[]; test("FAILURE|ERROR|CANCELLED|TIMED_OUT|ACTION_REQUIRED")) then "✗"
+		    elif any($c[]; .=="" or .=="PENDING" or .=="EXPECTED") then "●"
+		    else "✓" end)] | @tsv' 2>/dev/null
+}
+
 # Try to lower the priority of the worker so that disk heavy operations
 # like `git status` has less impact on the system responsivity.
 prompt_pure_async_renice() {
@@ -418,6 +432,9 @@ prompt_pure_async_tasks() {
 		unset prompt_pure_git_arrows
 		unset prompt_pure_git_stash
 		unset prompt_pure_git_fetch_pattern
+		unset prompt_pure_git_pr
+		unset prompt_pure_git_pr_branch
+		unset prompt_pure_git_pr_timestamp
 		prompt_pure_vcs_info[branch]=
 		prompt_pure_vcs_info[top]=
 	fi
@@ -464,6 +481,18 @@ prompt_pure_async_refresh() {
 		async_job "prompt_pure" prompt_pure_async_git_stash
 	else
 		unset prompt_pure_git_stash
+	fi
+
+	# Look up the PR for the current branch via `gh`, if installed.
+	# Re-check on branch change or after a 60s TTL (CI status changes).
+	if (( $+commands[gh] )); then
+		integer time_since_last_pr_check=$(( EPOCHSECONDS - ${prompt_pure_git_pr_timestamp:-0} ))
+		if [[ $prompt_pure_vcs_info[branch] != ${prompt_pure_git_pr_branch:-} ]] \
+			|| (( time_since_last_pr_check > 60 )); then
+			typeset -g prompt_pure_git_pr_branch=$prompt_pure_vcs_info[branch]
+			typeset -g prompt_pure_git_pr_timestamp=$EPOCHSECONDS
+			async_job "prompt_pure" prompt_pure_async_git_pr
+		fi
 	fi
 }
 
@@ -601,6 +630,31 @@ prompt_pure_async_callback() {
 			local prev_stash=$prompt_pure_git_stash
 			typeset -g prompt_pure_git_stash=$output
 			[[ $prev_stash != $prompt_pure_git_stash ]] && do_render=1
+			;;
+		prompt_pure_async_git_pr)
+			local prev_pr=$prompt_pure_git_pr
+			if (( code != 0 )) || [[ -z $output ]]; then
+				# No PR for this branch, no remote, or `gh` failed (offline).
+				typeset -g prompt_pure_git_pr=
+			else
+				local number url state ci
+				IFS=$'\t' read -r number url state ci <<<"$output"
+				local number_color=$prompt_pure_colors[git:pr]
+				case $state in
+					DRAFT) number_color=242 ;;
+					MERGED) number_color=magenta ;;
+					CLOSED) number_color=red ;;
+				esac
+				local ci_part=""
+				case $ci in
+					✓) ci_part=" %F{green}✓%f" ;;
+					✗) ci_part=" %F{red}✗%f" ;;
+					●) ci_part=" %F{yellow}●%f" ;;
+				esac
+				local esc=$'\e'
+				typeset -g prompt_pure_git_pr="%F{$number_color}%{${esc}]8;;${url}${esc}\\%}#${number}%{${esc}]8;;${esc}\\%}%f${ci_part}"
+			fi
+			[[ $prev_pr != $prompt_pure_git_pr ]] && do_render=1
 			;;
 	esac
 
@@ -801,6 +855,7 @@ prompt_pure_setup() {
 		git:branch:cached    red
 		git:action           yellow
 		git:dirty            218
+		git:pr               blue
 		host                 242
 		path                 blue
 		prompt:error         red
