@@ -83,7 +83,7 @@
       "Write(./.env*)"
     ]
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "availableModels": [
     "sonnet",
     "haiku",
@@ -244,13 +244,13 @@
       "effortLevel": "high"
     },
     "claude-sonnet-5": {
-      "effortLevel": "medium"
+      "effortLevel": "high"
     },
     "claude-haiku-4-5-20251001": {
       "effortLevel": "low"
     },
     "claude-opus-5-5": {
-      "effortLevel": "high"
+      "effortLevel": "medium"
     }
   },
   "showClearContextOnPlanAccept": true,
