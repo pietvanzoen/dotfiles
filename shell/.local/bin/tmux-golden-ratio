@@ -22,8 +22,31 @@ fi
 win_w="$(tmux display-message -p '#{window_width}')"
 win_h="$(tmux display-message -p '#{window_height}')"
 
+min_w=20
+min_h=5
+
+# Count the other columns sharing the active pane's rows, and the other rows
+# sharing its columns, so the 75% target leaves each of them min_w/min_h
+# (+1 for the separator). tmux otherwise shrinks neighbours down to 1 cell.
+read -r other_cols other_rows < <(
+  tmux list-panes -F '#{pane_active} #{pane_left} #{pane_top} #{pane_right} #{pane_bottom}' |
+    awk '
+      { l[NR]=$2; t[NR]=$3; r[NR]=$4; b[NR]=$5; if ($1) a=NR }
+      END {
+        for (i = 1; i <= NR; i++) {
+          if (t[i] <= b[a] && b[i] >= t[a]) cols[l[i]]
+          if (l[i] <= r[a] && r[i] >= l[a]) rows[t[i]]
+        }
+        print length(cols) - 1, length(rows) - 1
+      }'
+)
+
 target_w=$(( win_w * 75 / 100 ))
 target_h=$(( win_h * 75 / 100 ))
+max_w=$(( win_w - other_cols * (min_w + 1) ))
+max_h=$(( win_h - other_rows * (min_h + 1) ))
+(( target_w > max_w )) && target_w=${max_w}
+(( target_h > max_h )) && target_h=${max_h}
 
 tmux resize-pane -x "${target_w}" 2>/dev/null || true
 tmux resize-pane -y "${target_h}" 2>/dev/null || true
