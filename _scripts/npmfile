@@ -1,1 +1,12 @@
-git+https://github.com/ramitos/jsctags.git
+prettier
+typescript
+typescript-language-server
+vscode-langservers-extracted
+eslint_d
+@vue/language-server
+@vue/typescript-plugin
+@github/copilot
+trello-cli
+@fission-ai/openspec
+@earendil-works/pi-coding-agent
+@stoplight/prism-cli

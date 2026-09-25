@@ -1,1 +1,12 @@
-LocalDictionary~
+.DS_Store
+.git
+.stow-local-ignore
+.gitignore
+.*.example
+^/@.*
+README.*
+.*\.swp
+.*\.swo
+.*\~
+_install
+.*\.scpt

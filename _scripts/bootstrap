@@ -12,11 +12,6 @@ attempt_script() {
   fi
 }
 
-if [[ -n "$SUDO_USER" ]]; then
-  export USER="$SUDO_USER"
-  export HOME="/home/$SUDO_USER"
-fi
-
 # shellcheck source=_helpers.sh
 source "$SCRIPTS_DIR/_helpers.sh"
 
@@ -31,10 +26,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   if _confirm "Run MacOS install scripts?"; then
     "$SCRIPTS_DIR/install-macos"
   fi
-fi
-
-if [[ ! -d "$HOME/.autojump" ]]; then
-  attempt_script "install-autojump"
 fi
 
 if [[ ! -d "$HOME/.zplug" ]]; then
@@ -53,9 +44,10 @@ if [[ ! -e "$HOME/.local/bin/secrets" ]]; then
   attempt_script "install-secrets"
 fi
 
-
-if _confirm "Install dotfiles dev dependencies?"; then
-  attempt_script "install-dev"
+if [[ ! -d "$HOME/.tmux/tmux-safekill" ]]; then
+  _info "Cloning tmux-safekill"
+  mkdir -vp "$HOME/.tmux"
+  git clone --depth 1 https://github.com/jlipps/tmux-safekill.git "$HOME/.tmux/tmux-safekill" || FAILED+=("tmux-safekill clone")
 fi
 
 if [[ -n "$(which zsh)" ]]; then
@@ -75,4 +67,8 @@ if [[ -n "${FAILED[*]}" ]]; then
   for fail in "${FAILED[@]}"; do
     _error "- $fail"
   done
+fi
+
+if _confirm "Run 'make install' now to stow dotfiles?"; then
+  (cd "$SCRIPTS_DIR/.." && make install)
 fi
