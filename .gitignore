@@ -7,6 +7,7 @@ CLAUDE.local.md
 .aider*
 **/.claude/settings.local.json
 **/.claude/worktrees/
+**/.claude/skills/synced/
 __pycache__/
 shell/.local/state/*
 !shell/.local/state/.gitkeep
