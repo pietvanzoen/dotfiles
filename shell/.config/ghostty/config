@@ -23,11 +23,17 @@ palette = 6=#2aa198
 palette = 7=#eee8d5
 palette = 8=#274351
 palette = 9=#cb4b16
+# bright green = base01
 palette = 10=#586e75
+# bright yellow = base00
 palette = 11=#657b83
-palette = 12=#839496
+# bright blue (kept custom; canonical is base0 #839496)
+palette = 12=#4aa8e8
+# bright magenta = violet
 palette = 13=#6c71c4
+# bright cyan = base1
 palette = 14=#93a1a1
+# bright white = base3
 palette = 15=#fdf6e3
 
 # ── Window ───────────────────────────────────────────────────────────
