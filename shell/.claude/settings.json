@@ -84,12 +84,7 @@
     ]
   },
   "model": "opus",
-  "availableModels": [
-    "sonnet",
-    "haiku",
-    "opus",
-    "opusplan"
-  ],
+  "availableModels": ["sonnet", "haiku", "opus", "opusplan"],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -202,14 +197,8 @@
       ]
     },
     "filesystem": {
-      "allowWrite": [
-        "~/.cache/yarn",
-        "~/.local/state",
-        "~/.config/gcloud"
-      ],
-      "denyRead": [
-        "~/"
-      ],
+      "allowWrite": ["~/.cache/yarn", "~/.local/state", "~/.config/gcloud"],
+      "denyRead": ["~/"],
       "allowRead": [
         "~/.local/bin",
         "~/.claude",
@@ -218,6 +207,8 @@
         "~/Library/Caches/fnm_multishells",
         "~/Library/Application Support/fnm",
         "~/.gitconfig",
+        "~/.gitconfig.local",
+        "~/.gitignore_global",
         "~/.config/git",
         "~/.yarnrc",
         "~/.config/yarn",
@@ -231,12 +222,7 @@
         "~/.config/gcloud"
       ]
     },
-    "excludedCommands": [
-      "git",
-      "git *",
-      "gh",
-      "gh *"
-    ]
+    "excludedCommands": ["git", "git *", "gh", "gh *"]
   },
   "effortLevel": "high",
   "modelSettings": {
@@ -250,7 +236,10 @@
       "effortLevel": "low"
     },
     "claude-opus-5-5": {
-      "effortLevel": "medium"
+      "effortLevel": "high"
+    },
+    "claude-sonnet-5-5": {
+      "effortLevel": "high"
     }
   },
   "showClearContextOnPlanAccept": true,
