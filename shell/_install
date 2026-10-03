@@ -1,6 +1,20 @@
 #!/bin/sh
 
-set -ex
+set -e
 
-ln -sf ~/Dropbox/Apps/karabiner ~/.config/karabiner
-ln -sf ~/Dropbox/Apps/rclone ~/.config/rclone
+link_dropbox_app() {
+  local src="$HOME/Dropbox/Apps/$1"
+  local dest="$HOME/.config/$1"
+  if [ ! -d "$src" ]; then
+    echo "--> Skipping ~/.config/$1: $src not found yet (wait for Dropbox to sync, then re-run this)"
+    return
+  fi
+  if [ -e "$dest" ] && [ ! -L "$dest" ]; then
+    echo "--> Skipping ~/.config/$1: $dest already exists and isn't a symlink"
+    return
+  fi
+  ln -sf "$src" "$dest"
+}
+
+link_dropbox_app karabiner
+link_dropbox_app rclone

@@ -11,7 +11,7 @@ GNU Stow-based: each top-level directory (except `_*` prefixes) is a stow packag
 - `git/` — global config, gitignore, custom commands in `.local/bin/git-*`
 - `shell/` — zsh, tmux, aliases, Ghostty config
 - `vim/` — Neovim (Lua, lazy.nvim)
-- `macos/` — OS-level settings
+- `macos/` — LaunchAgents and small utility scripts (dictionary sync, litra light control, Dropbox backup). Doesn't set any macOS defaults itself.
 - `_scripts/` — bootstrap/install (not stowed)
 - `_gnupg/` — GPG setup (not stowed)
 - `stow/` — always installed first by `_scripts/install`
@@ -60,9 +60,13 @@ When searching for structural code patterns (not simple text), prefer the ast-gr
 
 ## Install flow
 
-1. `_scripts/bootstrap` — installs dependencies
+1. `_scripts/bootstrap` — Xcode CLT, Rosetta, Homebrew, `_scripts/Brewfile` (core), Node via fnm, global npm packages
 2. `_scripts/install` — interactive package selection, copies `*.example` files, runs package-specific `_install` scripts, stows selected packages
 3. Selections recorded in `.installed_packages` (git-ignored)
+
+Personal/hobby apps live in `_scripts/Brewfile.extras`, run separately with `brew bundle --file=_scripts/Brewfile.extras`.
+
+Setting up a wiped/new Mac end to end: see `docs/new-mac.md`.
 
 ## Private dotfiles
 

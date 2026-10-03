@@ -9,7 +9,6 @@ claude() {
 }
 
 # GENERAL
-alias xn="exe-notify"
 alias date-iso="date -u +'%Y-%m-%dT%H:%M:%SZ'"
 field() {
   awk "{ print \$${1} }"

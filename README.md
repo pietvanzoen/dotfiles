@@ -3,7 +3,9 @@ Piet van Zoen's Dotfiles
 
 ## Install
 
-Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/`
+Clone the repository: `git clone https://github.com/pietvanzoen/dotfiles.git ~/dotfiles`
+
+Setting up a wiped/new Mac from scratch? See [docs/new-mac.md](docs/new-mac.md) for the full sequence.
 
 ### Dependencies
 Run `./_scripts/bootstrap` to install environment dependencies.

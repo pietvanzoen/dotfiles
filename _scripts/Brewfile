@@ -1,10 +1,21 @@
 # vim: set filetype=ruby
+
+# --- Taps ---
+tap 'samwho/spacer'
+tap '1password/tap'
+tap 'dopplerhq/cli'
+tap 'ngrok/ngrok'
+tap 'stripe/stripe-cli'
+tap 'anomalyco/tap'
+tap 'lokalise/cli-2'
+
+# --- CLI ---
+brew 'autojump'
 brew 'awscli'
 brew 'bash'
 brew 'bash-completion@2'
 brew 'bat'
 brew 'blueutil'
-brew 'ctags'
 brew 'curl'
 brew 'deno'
 brew 'direnv'
@@ -33,19 +44,20 @@ brew 'rsync'
 brew 'shellcheck'
 brew 'shfmt'
 brew 'speedtest-cli'
+brew 'spacer'
 brew 'stow'
 brew 'terminal-notifier'
+brew 'tig'
 brew 'tldr'
 brew 'tmux'
 brew 'tmuxinator'
 brew 'trash'
 brew 'tree'
+brew 'watch'
 brew 'yamllint'
-brew 'yarn'
-brew 'yarn-completion'
-tap 'samwho/spacer'
-brew 'spacer'
+brew 'yt-dlp'
 
+# GNU tools
 brew 'coreutils'
 brew 'diffutils'
 brew 'findutils'
@@ -59,33 +71,110 @@ brew 'gnutls'
 brew 'grep'
 brew 'moreutils'
 
+# Dev tooling
+brew 'ast-grep'
+brew 'actionlint'
+brew 'dive'
+brew 'flyctl'
+brew 'gh'
+brew 'httpstat'
+brew 'imagemagick'
+brew 'ffmpeg'
+brew 'exiftool'
+brew 'kubernetes-cli' # provides kubectl
+brew 'kubectx'
+brew 'lokalise/cli-2/lokalise2'
+brew 'mkcert'
+brew 'anomalyco/tap/opencode'
+brew 'pgcli'
+brew 'pipx'
+brew 'pnpm'
+brew 'sad'
+brew 'stripe/stripe-cli/stripe'
+brew 'stylua'
+brew 'terraform'
+brew 'tree-sitter'
+brew 'universal-ctags'
+brew 'vale'
+brew 'xq'
+brew 'gcalcli'
+brew 'reattach-to-user-namespace'
+brew 'cloud-sql-proxy'
+cask 'gcloud-cli'
+
+# Cutr local dev (see cutr-server/scripts/setup — opencascade is built there via
+# the cutr/local tap, not listed here)
+brew 'cmake'
+brew 'catch2'
+brew 'dopplerhq/cli/doppler'
+brew 'openjdk'
+brew 'postgresql@18'
+brew 'redis'
+
+# --- Casks ---
+cask_args appdir: '/Applications'
+
+cask '1password'
+cask '1password-cli'
+cask 'alfred'
+cask 'bartender'
+cask 'beekeeper-studio'
+cask 'brave-browser'
+cask 'claude-code'
+cask 'docker-desktop'
+cask 'figma'
+cask 'firefox'
 cask 'font-maple-mono-nf'
+cask 'ghostty'
+cask 'google-chrome'
+cask 'istat-menus'
+cask 'karabiner-elements'
+cask 'linear-linear'
+cask 'little-snitch'
+cask 'loom'
+cask 'moom'
+cask 'ngrok'
+cask 'notion'
+cask 'obsidian'
+cask 'qlmarkdown'
+cask 'shottr'
+cask 'tableplus'
+cask 'visual-studio-code'
+cask 'zed'
+cask 'fathom'
 
-cask_args appdir: "/Applications"
-# cask 'keybase'
-# cask 'slack'
-# cask 'veracrypt'
-# cask 'alfred'
-# cask 'bartender'
-# cask 'bitbar'
-# cask 'docker'
-# cask 'istat-menus'
-# cask 'karabiner-elements'
-# cask 'signal'
-# cask 'transmit'
-# cask 'visual-studio-code'
-# cask 'whatsapp'
+# --- Mac App Store (sign into the App Store first; `brew install mas`) ---
+# IDs read from Spotlight (kMDItemAppStoreAdamID) on 2026-09-24.
+mas '1Blocker', id: 1365531024
+mas '1Password for Safari', id: 1569813296
+mas 'Amphetamine', id: 937984704
+mas 'Bear', id: 1091189122
+mas 'Color Picker', id: 1545870783
+mas 'Instapaper', id: 288545208
+mas 'Keynote', id: 409183694
+mas 'MeetingBar', id: 1532419400
+mas 'NextDNS', id: 1464122853
+mas 'Numbers', id: 409203825
+mas 'Pages', id: 409201541
+mas 'Parcel', id: 375589283
+mas 'Pixelmator', id: 407963104
+mas 'Slack', id: 803453959
+mas 'Tailscale', id: 1475387142
+mas 'Things3', id: 904280696
+mas 'Trello', id: 1278508951
+mas 'WireGuard', id: 1451685025
+mas 'Xcode', id: 497799835
 
-# mas '1Blocker', id: 1107421413
-# mas 'Amphetamine', id: 937984704
-# mas 'Color Picker', id: 1545870783
-# mas 'Instapaper Save', id: 1481302432
-# mas 'MeetingBar', id: 1532419400
-# mas 'Moom', id: 419330170
-# mas 'NextDNS', id: 1464122853
-# mas 'Parcel', id: 639968404
-# mas 'Pixelmator', id: 407963104
-# mas 'Raindrop.io for Safari', id: 957810159
-# mas 'Ring', id: 1142753258
-# mas 'TranslateMe', id: 1448316680
-# mas 'Wallcat', id: 1000397973
+mas 'Byword', id: 420212497
+mas 'Clockology', id: 1456386228
+mas 'Flow', id: 1423210932
+mas 'GIPHY CAPTURE', id: 668208984
+mas 'Home Planner', id: 1451474641
+mas 'Itsyhome', id: 6758070650
+mas 'NetSpot', id: 514951692
+mas 'Open In Webmail', id: 1451552749
+mas 'Passepartout', id: 1433648537
+mas 'Privacy.com for Safari', id: 6449850851
+mas 'Secret Inbox', id: 6462335670
+mas 'The Camelizer', id: 1532579087
+# Not migrated: Omnivore and Save to Pocket (both services shut down).

@@ -1,0 +1,48 @@
+# vim: set filetype=ruby
+# Personal / hobby apps. Not run by default — see docs/new-mac.md.
+#   brew bundle --file=_scripts/Brewfile.extras
+
+cask_args appdir: '/Applications'
+
+# Games
+cask 'steam'
+cask 'minecraft'
+
+# Chat
+cask 'discord'
+cask 'whatsapp'
+
+# 3D printing / CAD
+cask 'bambu-studio'
+cask 'prusaslicer'
+cask 'freecad'
+cask 'raspberry-pi-imager'
+cask 'qmk-toolbox'
+
+# Media
+cask 'obs'
+cask 'audacity'
+cask 'vlc'
+cask 'calibre'
+cask 'elgato-camera-hub'
+
+# Network / hardware
+cask 'displaylink'
+cask 'qfinder-pro'
+cask 'wifiman'
+cask 'mullvad-vpn'
+cask 'tunnelblick'
+cask 'knockknock'
+cask 'blockblock'
+
+# Misc
+cask 'lm-studio'
+cask 'virtualbox'
+cask 'vagrant'
+cask 'transmit'
+cask 'cyberduck'
+cask 'keycastr'
+cask 'steermouse'
+
+mas 'GarageBand', id: 682658836
+mas 'iMovie', id: 408981434

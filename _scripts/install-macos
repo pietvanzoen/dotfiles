@@ -4,14 +4,40 @@ source "$(dirname "$0")/_helpers.sh"
 
 cd "$(dirname "$0")"
 
+if ! xcode-select -p >/dev/null 2>&1; then
+  _info "Installing Xcode Command Line Tools"
+  xcode-select --install
+  _info "Re-run this script once the Xcode Command Line Tools install finishes"
+  exit 1
+fi
+
+if [[ "$(uname -m)" == "arm64" ]] && ! /usr/bin/pgrep -q oahd; then
+  _info "Installing Rosetta (needed for the x86_64 git-stack/git-branch-stash binaries)"
+  softwareupdate --install-rosetta --agree-to-license
+fi
+
 if [[ -z "$(which brew)" ]]; then
   _info "Installing homebrew"
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 _info "Brew bundling"
-brew tap homebrew/bundle
 brew bundle -v
+
+if _confirm "Also install personal/hobby apps (Brewfile.extras)?"; then
+  brew bundle -v --file=Brewfile.extras
+fi
+
+_info "Installing Node via fnm"
+eval "$(fnm env)"
+fnm install 24
+fnm default 24
+eval "$(fnm env --use-on-cd)"
+corepack enable
+
+_info "Installing global npm packages"
+./install-npm-globals
 
 if [[ "$SHELL" == "/bin/bash" ]]; then
   _warn "Default shell is old bash. Be sure to change bash shell to modern version"

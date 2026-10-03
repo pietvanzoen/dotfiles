@@ -7,7 +7,7 @@ source "$(dirname "$0")/_helpers.sh"
 INSTALLED_INDEX_TMP="$(mktemp)"
 INSTALLED_INDEX="$DOTFILES_DIR/.installed_packages"
 
-stowable="$(find . -maxdepth 1 -type d ! -name '_*' ! -name 'stow' ! -name '.' | sed 's|^\./||')"
+stowable="$(find . -maxdepth 1 -type d ! -name '_*' ! -name '.*' ! -name 'stow' | sed 's|^\./||')"
 
 cd "$DOTFILES_DIR"
 
@@ -15,10 +15,9 @@ install_package() {
   local package=$1
   (
   cd "$package"
-  for example in ./*.example; do
-    [[ -e "$example" ]] || continue
+  while IFS= read -r -d '' example; do
     cp -vn "$example" "${example%.example}"
-  done
+  done < <(find . -name '*.example' -print0)
   )
   [[ -e "$package/_install" ]] && "$package/_install"
   stow --target="$HOME" --restow --verbose "$package"
@@ -31,13 +30,12 @@ mkdir -vp "$HOME/.local/lib"
 mkdir -vp "$HOME/.local/share"
 mkdir -vp "$HOME/.local/etc"
 mkdir -vp "$HOME/.gnupg"
+mkdir -vp "$HOME/.claude"
+mkdir -vp "$HOME/Library/LaunchAgents"
 
 _info "Initializing stow"
 echo "stow" >> "$INSTALLED_INDEX_TMP"
 stow --target="$HOME" --restow --verbose stow
-
-_info "Installing npm packages"
-npm install random-words
 
 for package in $stowable; do
   if _confirm "Install $package?"; then
