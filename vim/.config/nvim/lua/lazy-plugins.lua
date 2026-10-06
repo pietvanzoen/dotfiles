@@ -425,7 +425,7 @@ require("lazy").setup({
       },
     },
     config = function()
-      vim.lsp.set_log_level("ERROR")
+      vim.lsp.log.set_level("ERROR")
 
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
@@ -895,9 +895,13 @@ require("lazy").setup({
 
   { -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
     build = ":TSUpdate",
-    opts = {
-      ensure_installed = {
+    config = function()
+      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+      local ts = require("nvim-treesitter")
+      ts.install({
         "bash",
         "c",
         "diff",
@@ -905,32 +909,37 @@ require("lazy").setup({
         "lua",
         "luadoc",
         "markdown",
+        "markdown_inline",
         "vim",
         "vimdoc",
         "javascript",
         "jsdoc",
         "vue",
         "typescript",
+        "tsx",
         "css",
         "scss",
         "json",
-        "jsonc",
-      },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-      },
-      indent = { enable = true },
-    },
-    config = function(_, opts)
-      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+      })
 
-      -- Prefer git instead of curl in order to improve connectivity in some environments
-      require("nvim-treesitter.install").prefer_git = true
-      ---@diagnostic disable-next-line: missing-fields
-      require("nvim-treesitter.configs").setup(opts)
+      -- main branch has no highlight/indent/auto_install modules: start them per buffer,
+      -- installing the parser first if needed (install is a no-op when already present)
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("treesitter-start", { clear = true }),
+        callback = function(args)
+          local lang = vim.treesitter.language.get_lang(args.match)
+          if not lang or not vim.tbl_contains(ts.get_available(), lang) then
+            return
+          end
+          ts.install(lang):await(function()
+            if not vim.api.nvim_buf_is_valid(args.buf) then
+              return
+            end
+            vim.treesitter.start(args.buf, lang)
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end)
+        end,
+      })
 
       vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "Variable" })
       vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "Variable" })
@@ -945,7 +954,6 @@ require("lazy").setup({
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
       --
-      --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,

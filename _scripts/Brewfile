@@ -93,7 +93,7 @@ brew 'sad'
 brew 'stripe/stripe-cli/stripe'
 brew 'stylua'
 brew 'terraform'
-brew 'tree-sitter'
+brew 'tree-sitter-cli' # nvim-treesitter main branch builds parsers with it
 brew 'universal-ctags'
 brew 'vale'
 brew 'xq'
