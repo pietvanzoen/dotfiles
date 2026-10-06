@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+
+# .vale.ini points StylesPath here; vale_ls errors if it's missing
+mkdir -p "$HOME/.local/share/vale/styles"
