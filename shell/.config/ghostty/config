@@ -59,3 +59,4 @@ shell-integration = zsh
 keybind = ctrl+tab=text:\x1b[1;5I
 keybind = shift+ctrl+tab=text:\x1b[1;6Z
 keybind = opt+l=text:clear\n
+keybind = global:cmd+slash=toggle_visibility
