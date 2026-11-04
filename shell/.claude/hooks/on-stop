@@ -47,6 +47,3 @@ if last_text:
 PYEOF
   fi
 fi
-
-# Refresh notes (PR info, mtime) in the background
-(cd "$cwd" && claude-notes-update --refresh) >/dev/null 2>&1 &
