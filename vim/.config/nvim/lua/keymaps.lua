@@ -34,7 +34,9 @@ if vim.env.REX_SESSION and not vim.env.TMUX then
       local win = vim.api.nvim_get_current_win()
       vim.cmd("wincmd " .. key)
       if vim.api.nvim_get_current_win() == win then
-        vim.system({ "rex", "focus", dir })
+        vim.system({ "rex", "focus", dir }, {}, function()
+          vim.system({ "rex", "do", "golden_ratio" })
+        end)
       end
     end, { desc = "Navigate " .. dir .. " (split or Rex pane)" })
   end
