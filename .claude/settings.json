@@ -10,6 +10,7 @@
       "Read(./secrets/**)",
       "Read(**/.env)",
       "Read(**/.env.*)",
+      "Read(**/.envrc)",
       "Edit(./.env*)",
       "Write(./.env*)"
     ]
