@@ -1,6 +1,7 @@
 return {
   {
     "christoomey/vim-tmux-navigator",
+    cond = vim.env.TMUX ~= nil or vim.env.REX_SESSION == nil,
     cmd = {
       "TmuxNavigateLeft", "TmuxNavigateDown", "TmuxNavigateUp",
       "TmuxNavigateRight", "TmuxNavigatePrevious",

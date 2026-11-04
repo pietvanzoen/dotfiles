@@ -26,6 +26,20 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
+-- Rex pane navigation: move between splits, hand off to Rex at the edge.
+-- Inside tmux, vim-tmux-navigator (plugins/init.lua) handles these instead.
+if vim.env.REX_SESSION and not vim.env.TMUX then
+  for key, dir in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+    vim.keymap.set("n", "<C-" .. key .. ">", function()
+      local win = vim.api.nvim_get_current_win()
+      vim.cmd("wincmd " .. key)
+      if vim.api.nvim_get_current_win() == win then
+        vim.system({ "rex", "focus", dir })
+      end
+    end, { desc = "Navigate " .. dir .. " (split or Rex pane)" })
+  end
+end
+
 vim.keymap.set("n", "<leader>h", ":let @/ = ''<CR>", { desc = "Disable search highlighting" })
 
 vim.keymap.set("n", "<leader>z", "1z=", { desc = "Replace bad spelling with first suggestion" })
