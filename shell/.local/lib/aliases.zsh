@@ -14,7 +14,7 @@ function cc() {
   local lock_dir="$HOME/.claude/ide"
   if [[ -d "$lock_dir" ]]; then
     local cwd="$PWD"
-    for lock_file in "$lock_dir"/*.lock; do
+    for lock_file in "$lock_dir"/*.lock(N); do
       [[ -f "$lock_file" ]] || continue
       # Check if any workspaceFolder is a prefix of cwd
       local folders
