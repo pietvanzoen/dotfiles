@@ -5,9 +5,9 @@ tap 'samwho/spacer'
 tap '1password/tap'
 tap 'dopplerhq/cli'
 tap 'ngrok/ngrok'
-tap 'stripe/stripe-cli'
-tap 'anomalyco/tap'
-tap 'lokalise/cli-2'
+# tap 'stripe/stripe-cli'
+# tap 'anomalyco/tap'
+# tap 'lokalise/cli-2'
 
 # --- CLI ---
 brew 'autojump'
@@ -19,8 +19,8 @@ brew 'blueutil'
 brew 'curl'
 brew 'deno'
 brew 'direnv'
-brew 'docker'
-brew 'docker-compose-completion'
+# brew 'docker'
+# brew 'docker-compose-completion'
 brew 'eza'
 brew 'fd'
 brew 'fnm'
@@ -83,16 +83,16 @@ brew 'ffmpeg'
 brew 'exiftool'
 brew 'kubernetes-cli' # provides kubectl
 brew 'kubectx'
-brew 'lokalise/cli-2/lokalise2'
+# brew 'lokalise/cli-2/lokalise2'
 brew 'mkcert'
-brew 'anomalyco/tap/opencode'
+# brew 'anomalyco/tap/opencode'
 brew 'pgcli'
 brew 'pipx'
 brew 'pnpm'
 brew 'sad'
-brew 'stripe/stripe-cli/stripe'
+# brew 'stripe/stripe-cli/stripe'
 brew 'stylua'
-brew 'terraform'
+# brew 'terraform'
 brew 'tree-sitter-cli' # nvim-treesitter main branch builds parsers with it
 brew 'universal-ctags'
 brew 'vale'
@@ -106,75 +106,75 @@ cask 'gcloud-cli'
 # the cutr/local tap, not listed here)
 brew 'cmake'
 brew 'catch2'
-brew 'dopplerhq/cli/doppler'
+# brew 'dopplerhq/cli/doppler'
 brew 'openjdk'
 brew 'postgresql@18'
 brew 'redis'
 
 # --- Casks ---
-cask_args appdir: '/Applications'
-
-cask '1password'
-cask '1password-cli'
-cask 'alfred'
-cask 'bartender'
-cask 'beekeeper-studio'
-cask 'brave-browser'
-cask 'claude-code'
-cask 'docker-desktop'
-cask 'figma'
-cask 'firefox'
-cask 'font-maple-mono-nf'
-cask 'ghostty'
-cask 'google-chrome'
-cask 'istat-menus'
-cask 'karabiner-elements'
-cask 'linear-linear'
-cask 'little-snitch'
-cask 'loom'
-cask 'moom'
-cask 'ngrok'
-cask 'notion'
-cask 'obsidian'
-cask 'qlmarkdown'
-cask 'shottr'
-cask 'tableplus'
-cask 'visual-studio-code'
-cask 'zed'
-cask 'fathom'
-
-# --- Mac App Store (sign into the App Store first; `brew install mas`) ---
-# IDs read from Spotlight (kMDItemAppStoreAdamID) on 2026-09-24.
-mas '1Blocker', id: 1365531024
-mas '1Password for Safari', id: 1569813296
-mas 'Amphetamine', id: 937984704
-mas 'Bear', id: 1091189122
-mas 'Color Picker', id: 1545870783
-mas 'Instapaper', id: 288545208
-mas 'Keynote', id: 409183694
-mas 'MeetingBar', id: 1532419400
-mas 'NextDNS', id: 1464122853
-mas 'Numbers', id: 409203825
-mas 'Pages', id: 409201541
-mas 'Parcel', id: 375589283
-mas 'Pixelmator', id: 407963104
-mas 'Slack', id: 803453959
-mas 'Tailscale', id: 1475387142
-mas 'Things3', id: 904280696
-mas 'Trello', id: 1278508951
-mas 'WireGuard', id: 1451685025
-mas 'Xcode', id: 497799835
-
-mas 'Byword', id: 420212497
-mas 'Clockology', id: 1456386228
-mas 'Flow', id: 1423210932
-mas 'GIPHY CAPTURE', id: 668208984
-mas 'Home Planner', id: 1451474641
-mas 'Itsyhome', id: 6758070650
-mas 'NetSpot', id: 514951692
-mas 'Open In Webmail', id: 1451552749
-mas 'Passepartout', id: 1433648537
-mas 'Privacy.com for Safari', id: 6449850851
-mas 'Secret Inbox', id: 6462335670
-mas 'The Camelizer', id: 1532579087
-# Not migrated: Omnivore and Save to Pocket (both services shut down).
+# cask_args appdir: '/Applications'
+#
+# cask '1password'
+# cask '1password-cli'
+# cask 'alfred'
+# cask 'bartender'
+# cask 'beekeeper-studio'
+# cask 'brave-browser'
+# cask 'claude-code'
+# cask 'docker-desktop'
+# cask 'figma'
+# cask 'firefox'
+# cask 'font-maple-mono-nf'
+# cask 'ghostty'
+# cask 'google-chrome'
+# cask 'istat-menus'
+# cask 'karabiner-elements'
+# cask 'linear-linear'
+# cask 'little-snitch'
+# cask 'loom'
+# cask 'moom'
+# cask 'ngrok'
+# cask 'notion'
+# cask 'obsidian'
+# cask 'qlmarkdown'
+# cask 'shottr'
+# cask 'tableplus'
+# cask 'visual-studio-code'
+# cask 'zed'
+# cask 'fathom'
+#
+# # --- Mac App Store (sign into the App Store first; `brew install mas`) ---
+# # IDs read from Spotlight (kMDItemAppStoreAdamID) on 2026-09-24.
+# mas '1Blocker', id: 1365531024
+# mas '1Password for Safari', id: 1569813296
+# mas 'Amphetamine', id: 937984704
+# mas 'Bear', id: 1091189122
+# mas 'Color Picker', id: 1545870783
+# mas 'Instapaper', id: 288545208
+# mas 'Keynote', id: 409183694
+# mas 'MeetingBar', id: 1532419400
+# mas 'NextDNS', id: 1464122853
+# mas 'Numbers', id: 409203825
+# mas 'Pages', id: 409201541
+# mas 'Parcel', id: 375589283
+# mas 'Pixelmator', id: 407963104
+# mas 'Slack', id: 803453959
+# mas 'Tailscale', id: 1475387142
+# mas 'Things3', id: 904280696
+# mas 'Trello', id: 1278508951
+# mas 'WireGuard', id: 1451685025
+# mas 'Xcode', id: 497799835
+#
+# mas 'Byword', id: 420212497
+# mas 'Clockology', id: 1456386228
+# mas 'Flow', id: 1423210932
+# mas 'GIPHY CAPTURE', id: 668208984
+# mas 'Home Planner', id: 1451474641
+# mas 'Itsyhome', id: 6758070650
+# mas 'NetSpot', id: 514951692
+# mas 'Open In Webmail', id: 1451552749
+# mas 'Passepartout', id: 1433648537
+# mas 'Privacy.com for Safari', id: 6449850851
+# mas 'Secret Inbox', id: 6462335670
+# mas 'The Camelizer', id: 1532579087
+# # Not migrated: Omnivore and Save to Pocket (both services shut down).
