@@ -75,7 +75,12 @@
       "Bash(env)",
       "Read(**/.env)",
       "Read(**/.env.*)",
-      "Read(**/.envrc)"
+      "Read(**/.envrc)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Edit(./.env*)",
+      "Write(./.env*)"
     ]
   },
   "availableModels": [
@@ -184,7 +189,7 @@
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": false,
-    "allowUnsandboxedCommands": true,
+    "allowUnsandboxedCommands": false,
     "network": {
       "allowedDomains": [
         "localhost",
@@ -210,8 +215,7 @@
       "allowWrite": [
         "~/.cache/yarn",
         "~/.local/state",
-        "~/.config/gcloud",
-        "~/.ssh/known_hosts"
+        "~/.config/gcloud"
       ],
       "denyRead": [
         "~/"
@@ -237,8 +241,7 @@
         "~/.local/state",
         "~/.local/lib/google-cloud-sdk",
         "~/.config/gcloud",
-        "~/.ssh/known_hosts",
-        "~/.1password"
+        "~/.ssh/known_hosts"
       ]
     },
     "excludedCommands": [
