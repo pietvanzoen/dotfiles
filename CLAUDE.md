@@ -4,6 +4,10 @@
 
 **Public repository** — never commit secrets. Use `*.example` files for templates containing placeholders.
 
+## Git workflow
+
+Commit directly to `main`. Never create branches or open PRs unless explicitly asked.
+
 ## Structure
 
 GNU Stow-based: each top-level directory (except `_*` prefixes) is a stow package symlinked into `$HOME`.
