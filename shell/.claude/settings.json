@@ -80,12 +80,7 @@
       "Write(./.env*)"
     ]
   },
-  "availableModels": [
-    "sonnet",
-    "haiku",
-    "opus",
-    "opusplan"
-  ],
+  "availableModels": ["sonnet", "haiku", "opus", "opusplan"],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -126,6 +121,14 @@
             "command": "/bin/sh -c 'rex __internal session-start --agent claude 2>/dev/null || true'",
             "timeout": 5
           }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "~/.local/bin/claude-log-edit" }
         ]
       }
     ]
@@ -191,14 +194,8 @@
       ]
     },
     "filesystem": {
-      "allowWrite": [
-        "~/.cache/yarn",
-        "~/.local/state",
-        "~/.config/gcloud"
-      ],
-      "denyRead": [
-        "~/"
-      ],
+      "allowWrite": ["~/.cache/yarn", "~/.local/state", "~/.config/gcloud"],
+      "denyRead": ["~/"],
       "allowRead": [
         "~/.local/bin",
         "~/.claude",
@@ -223,12 +220,7 @@
         "~/.ssh/known_hosts"
       ]
     },
-    "excludedCommands": [
-      "git",
-      "git *",
-      "gh",
-      "gh *"
-    ]
+    "excludedCommands": ["git", "git *", "gh", "gh *"]
   },
   "maxProseWidth": 120,
   "effortLevel": "medium",

@@ -24,4 +24,57 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
+-- Live-reload buffers changed on disk (Claude in auto mode edits without a diff prompt).
+-- gitsigns/mini.diff then mark the changed lines.
+vim.o.autoread = true
+vim.fn.timer_start(1000, function()
+  if vim.fn.getcmdwintype() == "" then vim.cmd("silent! checktime") end
+end, { ["repeat"] = -1 })
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  callback = function(ev)
+    vim.notify("Reloaded " .. vim.fn.fnamemodify(ev.file, ":~:."), vim.log.levels.INFO)
+  end,
+})
+
+-- Auto-open files Claude edits. The claude-log-edit PostToolUse hook appends "path:line"
+-- to <project>/.claude/edits.log; open the file at that line if it isn't already loaded.
+-- Only in git repos, so nvim doesn't scatter .claude/ dirs everywhere.
+-- Toggle with :ClaudeFollowToggle / <leader>af (log is still consumed while off).
+vim.g.claude_follow = true
+vim.api.nvim_create_user_command("ClaudeFollowToggle", function()
+  vim.g.claude_follow = not vim.g.claude_follow
+  vim.notify("Claude follow " .. (vim.g.claude_follow and "on" or "off"))
+end, {})
+vim.keymap.set("n", "<leader>af", "<cmd>ClaudeFollowToggle<cr>", { desc = "Toggle Claude follow" })
+
+-- Log path must match claude-log-edit: ~/.cache/claude-edits/<cwd with / as ->.log
+-- (outside the project, so sandboxed commands can't swap it for a symlink).
+if vim.fn.isdirectory(".git") == 0 then return {} end
+local edits_dir = vim.fn.expand("~/.cache/claude-edits")
+local edits_log = edits_dir .. "/" .. vim.fn.getcwd():gsub("/", "-") .. ".log"
+vim.fn.mkdir(edits_dir, "p")
+-- Truncate on startup: entries written before nvim started are never acted on.
+vim.fn.writefile({}, edits_log)
+local offset = 0
+local watcher = vim.uv.new_fs_event()
+watcher:start(edits_log, {}, vim.schedule_wrap(function()
+  local size = vim.fn.getfsize(edits_log)
+  if size < offset then offset = 0 end -- log truncated
+  local fd = io.open(edits_log, "r")
+  if not fd then return end
+  fd:seek("set", offset)
+  local chunk = fd:read("*a")
+  fd:close()
+  offset = size
+  if not vim.g.claude_follow then return end
+  for entry in chunk:gmatch("[^\n]+") do
+    local path, line = entry:match("^(.*):(%d+)$")
+    if path and vim.fn.bufloaded(path) == 0 then
+      vim.cmd.drop(vim.fn.fnameescape(path))
+      pcall(vim.api.nvim_win_set_cursor, 0, { tonumber(line), 0 })
+      vim.cmd("normal! zz")
+    end
+  end
+end))
+
 return {}

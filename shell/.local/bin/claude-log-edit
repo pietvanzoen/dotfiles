@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Claude Code PostToolUse hook (Edit|Write|MultiEdit): append "path:line" of the first
+# changed line to ~/.cache/claude-edits/<project path with / as ->.log, which Neovim
+# watches to open the file.
+#
+# The log lives outside the project on purpose: this hook runs unsandboxed, so it must not
+# write into a tree that sandboxed commands can write to (they could swap the log for a
+# symlink/hardlink to e.g. ~/.zshrc). The sandbox can't write to ~/.cache/claude-edits.
+set -euo pipefail
+
+# Resolve symlinks so the name matches Neovim's getcwd().
+project="$(cd "${CLAUDE_PROJECT_DIR:-$PWD}" && pwd -P)"
+dir="$HOME/.cache/claude-edits"
+mkdir -p "$dir"
+log="$dir/${project//\//-}.log"
+
+# structuredPatch hunks start with up to 3 context lines; skip them to land on the change.
+jq -r '
+  .tool_input.file_path as $f
+  | select($f | test("[[:cntrl:]]") | not)
+  | (.tool_response.structuredPatch[0]? // null) as $h
+  | if $h == null then "\($f):1"
+    else "\($f):\($h.newStart + ([$h.lines | to_entries[] | select(.value | test("^[-+]")) | .key][0] // 0))"
+    end
+' >>"$log"
