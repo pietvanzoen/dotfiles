@@ -542,6 +542,8 @@ require("lazy").setup({
 
         emmet_ls = {},
 
+        vue_ls = {},
+
         eslint = {
           codeAction = {
             disableRuleComment = {
