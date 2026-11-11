@@ -42,7 +42,9 @@ If `working_tree_status` is empty, stop and inform the user there's nothing to c
 3. For new commits:
    a. Stage only the relevant files (prefer specific files over `git add -A`)
    b. Write a concise commit message that focuses on the "why" not the "what"
-   c. Create the commit using a HEREDOC for the message
+   c. Create the commit with one `-m` per paragraph (`git commit -m "<subject>" -m "<body>"`).
+      Never use a heredoc or `-F -`: a heredoc stops the command matching the sandbox's `git *`
+      exclusion, so it runs sandboxed, where git can't read the stowed `~/.gitconfig` symlink.
 4. Run `git status --short` to verify
 
 ## Rules

@@ -24,6 +24,8 @@ Before committing: always run the project's linter/formatter (if available) with
 ## Git commands
 Run git commands as separate tool calls, one at a time. Never chain with `&&` or `;`.
 Never use `git -C <path>` when cwd is already correct — triggers extra permission prompts.
+Never pass a commit message via heredoc or `-F -`; use one `-m` per paragraph. A heredoc stops the
+command matching the sandbox's `git *` exclusion, and sandboxed git can't read the stowed `~/.gitconfig`.
 
 ## Commit signing
 Commits are signed via 1Password, which requires interactive authentication and blocks when the user is away.
