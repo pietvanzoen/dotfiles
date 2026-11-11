@@ -34,6 +34,46 @@ else
   CUTR_ROOT="$(cd "$DEFAULT_ROOT" && pwd)"
 fi
 
+export CUTR_ROOT CUTR_DIR="$CUTR_ROOT"
+
+# Inside Rex (and not tmux): build the cutr.yaml layout as a Rex session.
+if [ -n "${REX_SESSION:-}" ] && [ -z "${TMUX:-}" ]; then
+  echo "==> Running on_project_start in $CUTR_ROOT"
+  (cd "$CUTR_ROOT" && yarn && yarn install:dotenv)
+
+  # Close existing cutr sessions, except the one we're running in.
+  rex ls --json | jq -r --arg self "$REX_SESSION" \
+    '(.sessions? // .)[] | select(.label == "cutr" and .session_id != $self) | .session_id' |
+    while read -r old; do
+      echo "--> Closing existing Rex session $old"
+      rex kill "$old"
+    done
+
+  echo "==> Creating Rex session cutr"
+  sid=$(rex new cutr -c "$CUTR_ROOT" --window Cutr --json | jq -er '.session_id')
+  server=$(rex session inspect "$sid" --json | jq -er '.windows[0].focused_block_id')
+  split() { # anchor direction ratio label
+    rex split -s "$sid" -b "$1" --split="$2" --ratio "$3" --label "$4" --focus=false \
+      -c "$CUTR_ROOT" --json | jq -er '.block_ids[0]'
+  }
+  # Left 69%: server / workers. Right 31%: ui (16%) / cutlist (14%) / dev (70%).
+  ui=$(split "$server" right 31 ui)
+  workers=$(split "$server" below 50 workers)
+  cutlist=$(split "$ui" below 84 cutlist)
+  dev=$(split "$cutlist" below 83 dev)
+
+  # Type into the shells like tmuxinator does, so ctrl+c leaves a usable prompt.
+  run() { rex send -s "$sid" -b "$1" "$2" && rex send-key -s "$sid" -b "$1" enter; }
+  run "$server" 'cd server && yarn dev | spacer'
+  run "$workers" 'cd server && yarn dev:worker | spacer'
+  run "$ui" 'cd ui && yarn dev'
+  run "$cutlist" 'cd cutlist && yarn dev'
+  run "$dev" "CUTR_DIR='$CUTR_ROOT' cutr-migrate"
+
+  rex "do" session.select session_id="$sid" || true
+  exit 0
+fi
+
 if [ "$FORCE" -eq 0 ] && tmux has-session -t cutr 2>/dev/null; then
   RUNNING_ROOT="$(tmux showenv -t cutr CUTR_ROOT 2>/dev/null | sed 's/^CUTR_ROOT=//')"
   if [ "$RUNNING_ROOT" = "$CUTR_ROOT" ]; then
@@ -41,8 +81,6 @@ if [ "$FORCE" -eq 0 ] && tmux has-session -t cutr 2>/dev/null; then
     exit 0
   fi
 fi
-
-export CUTR_ROOT CUTR_DIR="$CUTR_ROOT"
 
 echo "==> Starting cutr at $CUTR_ROOT"
 tmuxinator stop cutr 2>/dev/null || true

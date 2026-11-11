@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# cutr-ticket — open a Linear ticket as a git worktree + tmux window in the dev session.
+# cutr-ticket — open a Linear ticket in a Rex window running cutr-task.
 #
 # Invoked by Linear's "Work on issue → Custom script" feature, or directly from the CLI.
 #
@@ -11,8 +11,12 @@
 
 set -euo pipefail
 
-DEFAULT_ROOT="$HOME/repos/github.com/cutr-dev/cutr-server"
-TMUX_SESSION="dev"
+# Rex only puts its CLI on PATH inside Rex terminals; Linear launches us from outside.
+PATH="$HOME/Library/Application Support/com.superlogical.rex/RexServer/Versions/Current/Rex Server.app/Contents/MacOS:$PATH"
+
+REX_SESSION_NAME="cutr-dev"
+PROMPT="read ticket and plan"
+CWD="$HOME/repos/github.com/cutr-dev/cutr-server"
 
 usage() {
   echo "Usage: cutr-ticket [--id <IDENTIFIER>] [--branch <BRANCH_NAME>]" >&2
@@ -41,70 +45,29 @@ if [[ -z "$BRANCH" ]]; then
   usage
 fi
 
-# --- Resolve main repo ---
-MAIN_ROOT="$(cd "$DEFAULT_ROOT" && pwd)"
-REPO_NAME="$(basename "$MAIN_ROOT")"
-REPO_PARENT="$(dirname "$MAIN_ROOT")"
-
-# --- Derive window/session name from ticket id (or extract from branch) ---
+# --- Derive window name from ticket id (or extract from branch) ---
 if [[ -z "$TICKET_ID" ]]; then
   TICKET_ID="$(echo "$BRANCH" | grep -oE '^[a-zA-Z]+-[0-9]+')" || TICKET_ID="$BRANCH"
 fi
 WINDOW_NAME="$(echo "$TICKET_ID" | tr '[:upper:]' '[:lower:]')"
 
-# --- Build worktree dir name (mirrors gwo logic in aliases.zsh) ---
-dir_slug="${BRANCH//\//-}"
-if (( ${#dir_slug} > 40 )); then
-  dir_slug="${dir_slug:0:40}"
-  dir_slug="${dir_slug%-*}"
-fi
-WORKTREE_DIR="${REPO_PARENT}/${REPO_NAME}-${dir_slug}"
+# cutr-task is a zsh function (worktree + setup + Claude split), so run it in an interactive zsh.
+# Drop into a shell afterwards so the window survives cutr-task's editor exiting.
+# shellcheck disable=SC2016 # $1/$2 expand inside the zsh, not here
+CMD=(zsh -ic 'cutr-task "$1" "$2"; exec zsh' cutr-ticket "$BRANCH" "$PROMPT")
 
-# --- Resolve worktree ---
-# Check if branch already has an associated worktree registered with git
-existing_wt="$(git -C "$MAIN_ROOT" worktree list --porcelain 2>/dev/null \
-  | awk -v b="refs/heads/$BRANCH" '/^worktree/{wt=$2} $0=="branch "b{print wt; exit}')"
-
-if [[ -n "$existing_wt" ]]; then
-  echo "==> Using existing worktree: $existing_wt"
-  WORKTREE_DIR="$existing_wt"
-elif git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/$BRANCH"; then
-  echo "==> Creating worktree from local branch: $BRANCH"
-  git -C "$MAIN_ROOT" worktree add "$WORKTREE_DIR" "$BRANCH"
-elif git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
-  echo "==> Creating worktree tracking remote branch: origin/$BRANCH"
-  git -C "$MAIN_ROOT" worktree add --track -b "$BRANCH" "$WORKTREE_DIR" "origin/$BRANCH"
-else
-  echo "==> Fetching origin..."
-  git -C "$MAIN_ROOT" fetch origin
-  trunk="$(git -C "$MAIN_ROOT" trunk)"
-  echo "==> Creating new branch $BRANCH off origin/$trunk"
-  git -C "$MAIN_ROOT" worktree add -b "$BRANCH" "$WORKTREE_DIR" "origin/$trunk"
-fi
-
-echo "--> Worktree: $WORKTREE_DIR"
-
-# --- Ensure dev tmux session exists ---
-if ! tmux has-session -t "$TMUX_SESSION" 2>/dev/null; then
-  echo "==> Creating tmux session: $TMUX_SESSION"
-  tmux new-session -d -s "$TMUX_SESSION" -c "$MAIN_ROOT"
-fi
-
-# --- Create or select the ticket window ---
-existing_window="$(tmux list-windows -t "$TMUX_SESSION" -F '#{window_name}' 2>/dev/null \
-  | grep -Fx "$WINDOW_NAME" || true)"
-
-if [[ -n "$existing_window" ]]; then
-  echo "==> Selecting existing window: $WINDOW_NAME"
-  tmux select-window -t "${TMUX_SESSION}:${WINDOW_NAME}"
+if ! rex session inspect "$REX_SESSION_NAME" >/dev/null; then
+  echo "==> Creating Rex session: $REX_SESSION_NAME"
+  rex new "$REX_SESSION_NAME" --window "$WINDOW_NAME" -c "$CWD" --shell none -- "${CMD[@]}" >/dev/null
+elif rex window focus -s "$REX_SESSION_NAME" "$WINDOW_NAME" >/dev/null; then
+  echo "==> Selected existing window: $WINDOW_NAME"
 else
   echo "==> Opening new window: $WINDOW_NAME"
-  tmux new-window -t "$TMUX_SESSION" -n "$WINDOW_NAME" -c "$WORKTREE_DIR"
+  rex window new -s "$REX_SESSION_NAME" "$WINDOW_NAME" -c "$CWD" --shell none -- "${CMD[@]}" >/dev/null
 fi
 
-echo ""
 echo "==> Done."
 echo "    Branch:  $BRANCH"
-echo "    Window:  ${TMUX_SESSION}:${WINDOW_NAME}"
+echo "    Window:  ${REX_SESSION_NAME}:${WINDOW_NAME}"
 
-open -a Ghostty
+open -a "Rex Beta"
