@@ -2,7 +2,7 @@
 # Shared helpers for Claude Code hooks
 
 set_claude_state() {  # arg: thinking|needs_input|finished|idle
-  [ -n "$TMUX" ] && [ -n "$TMUX_PANE" ] || return
+  [ -n "$TMUX" ] && [ -n "$TMUX_PANE" ] || return 0
   tmux set-window-option -t "$TMUX_PANE" -u @claude-thinking 2>/dev/null || true
   tmux set-window-option -t "$TMUX_PANE" -u @claude-needs-input 2>/dev/null || true
   tmux set-window-option -t "$TMUX_PANE" -u @claude-done 2>/dev/null || true

@@ -4,9 +4,15 @@ When starting a new task, guide the user through these steps and proactively sug
 the next action:
 
 1. **Planning**
-   - Check the current branch name for a Linear ticket ID (e.g. `feat/ENG-123-some-description`)
+   - Check the current branch name for a Linear ticket ID (e.g. `ENG-123-some-description`)
    - If no ticket is apparent, ask: "Are there any tickets or bugs related to this task?"
    - Gather and reference ticket IDs and bug reports
+   - If running in Rex (`$REX_SESSION` set), rename the **tab** (not the session) as soon as the
+     plan is accepted. Tickets opened via `cutr-ticket` share one `cutr-dev` session, so a session
+     rename breaks it. Get this pane's window ID from `rex whoami --json`, then:
+     `rex window rename -s "$REX_SESSION" "<window_id>" "<ticket_id> <few word description>"`
+     (e.g. `"ENG-123 fix login redirect"`; omit the ticket ID if there is none). Rename again
+     if the scope changes
    - Present **three solution options** with tradeoffs:
      - **Option A — Pragmatic**: fastest path; acceptable shortcuts, known tradeoffs
      - **Option B — Balanced**: reasonable effort, good correctness
@@ -16,7 +22,7 @@ the next action:
      **> Recommended model for implementation: Sonnet (Opt+P)**
    - If a Linear ticket exists, update its description with the accepted plan: preserve any
      existing description, add a horizontal rule (`---`), and append the plan below it
-   - After plan is accepted, suggest switching to a lower model for implementation
+   - After plan is accepted, rename the Rex tab (see above), then suggest switching to a lower model for implementation
      (Sonnet for multi-file work, Haiku for simple edits)
    - Before switching, run `/compact` to compress the planning session — the implementation model
      starts with lean context rather than full planning history
@@ -43,9 +49,9 @@ the next action:
      - If checks fail, diagnose and fix
 
 4. **Human review**
-   - Mark the PR as ready for review: `gh pr ready`
-   - Request reviewers
-   - **Stop and wait** — do not merge without human approval
+   - **Stop and wait.** Only mark the PR ready (`gh pr ready`) and request reviewers when the
+     user explicitly says to
+   - **Never merge a PR.** The user merges
 
 5. **Cleanup**
    - After the PR is merged, suggest running `/revise-claude-md` to capture any
@@ -55,4 +61,5 @@ the next action:
 - Indicate the current step in the workflow
 - Complete the current step's actions
 - Explicitly suggest the next step
-- Only merge requires user confirmation — other steps proceed autonomously in auto-mode
+- Marking a PR ready requires explicit user instruction; merging is never done by Claude.
+  Other steps proceed autonomously in auto-mode

@@ -36,7 +36,6 @@
       "Bash(which:*)",
       "Bash(yarn:*)",
       "Bash(mkdir:*)",
-      "Bash(terminal-notifier:*)",
       "Bash(ntfy-notify:*)",
       "Bash(echo:*)",
       "Bash(jq:*)",
@@ -44,8 +43,6 @@
       "Bash(readlink:*)",
       "Bash(git config:*)",
       "WebSearch",
-      "mcp__linear-server__get_issue",
-      "mcp__linear-server__get_issue_status",
       "Bash(nvim-open:*)",
       "Bash(tmux send-keys:*)",
       "Bash(tmux list-panes:*)",
@@ -102,29 +99,11 @@
     ],
     "Notification": [
       {
-        "matcher": "permission_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ~/.claude/hooks/on-notification 'Needs permission' Purr"
-          }
-        ]
-      },
-      {
         "matcher": "elicitation_dialog",
         "hooks": [
           {
             "type": "command",
             "command": "bash ~/.claude/hooks/on-elicitation"
-          }
-        ]
-      },
-      {
-        "matcher": "idle_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ~/.claude/hooks/on-notification 'Waiting for your input' Purr"
           }
         ]
       }
@@ -144,7 +123,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/bin/sh -c 'rex __internal session-start --agent claude --feature-session-naming=false 2>/dev/null || true'",
+            "command": "/bin/sh -c 'rex __internal session-start --agent claude 2>/dev/null || true'",
             "timeout": 5
           }
         ]
@@ -251,22 +230,17 @@
       "gh *"
     ]
   },
-  "effortLevel": "high",
+  "maxProseWidth": 120,
+  "effortLevel": "medium",
   "modelSettings": {
-    "claude-opus-5": {
-      "effortLevel": "high"
-    },
-    "claude-sonnet-5": {
-      "effortLevel": "high"
-    },
-    "claude-haiku-4-5-20251001": {
-      "effortLevel": "low"
-    },
     "claude-opus-5-5": {
-      "effortLevel": "high"
+      "effortLevel": "medium"
     },
     "claude-sonnet-5-5": {
-      "effortLevel": "high"
+      "effortLevel": "medium"
+    },
+    "claude-haiku-5-5": {
+      "effortLevel": "low"
     }
   },
   "showClearContextOnPlanAccept": true,
@@ -278,5 +252,38 @@
   "theme": "dark",
   "editorMode": "vim",
   "preferredNotifChannel": "ghostty",
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: PUBLIC — github.com:pietvanzoen/dotfiles.git (repo path /Users/piet/dotfiles). Treat as a public destination: only this repo's own work belongs here, never secrets or content ported from elsewhere.",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: 1Password (used for commit signing via op-ssh-sign); CI secret `CLOUDFLARE_API_TOKEN` referenced in config",
+      "**Default / protected branches**: `main` is default and protected (ruleset: \"Copilot review for default branch\" active; classic protection also lists `main`). CLAUDE.md states: commit directly to main, never create branches or open PRs unless explicitly asked.",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine (macOS) with open internet. Sandbox notes from CLAUDE.md: `rm`, `curl`/`wget` blocked by the OS sandbox; Unix sockets blocked (use TCP); use `$TMPDIR` not `/tmp`.",
+      "**Source control**: The trusted repo and its remote (github.com:pietvanzoen/dotfiles.git) only — no additional orgs configured",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: `shell/.env.sh` and `_scripts/install-secrets` (sensitive-looking paths from filename scan); `.gitignore` carries a `!.env*` negation pattern (env files are un-ignored, so care is needed not to commit secrets into this public repo); share only with audiences cleared at the named+specifics bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: None configured — no `prod`/`production`-named namespace, host, or container found in evidence",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (personal dotfiles management — stow-based config repo)",
+      "**Trusted repo**: /Users/piet/dotfiles and its remote github.com:pietvanzoen/dotfiles.git (public — only this repo's own work belongs here; secrets are never cleared into it regardless of visibility)",
+      "**Org-specific CLIs**: None configured — frequent non-standard CLIs observed are personal/project tools: `rex` (62x, in-project), `cutr-task`/`cutr-migrate`/`claude-multiprofile` (shell history, routine under piet/ prefix)",
+      "**routine under piet/ prefix**: `rex` commands in /Users/piet/dotfiles; `cutr-task`, `cutr-migrate`, `claude-multiprofile`, `gwo`, `gg`, `bak`, `nono`, `tmux-run-pane`, `vm` from shell history are personal wrapper scripts, not org-managed CLIs"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Bash(rm:*) in /Users/piet/dotfiles — CLAUDE.md states rm is sandbox-blocked and the project's own guidance is to run it manually via `! rm <path>`, so an auto-mode carve-out should not re-enable it"
+    ]
+  }
 }

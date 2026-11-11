@@ -1,24 +1,9 @@
 #!/usr/bin/env bash
 # Hook: Notification (elicitation_dialog)
-# - Fires terminal-notifier asking for input
 # - Sets @claude-needs-input window option for tmux status indicator
 
-input=$(cat)
+cat >/dev/null
 
 # shellcheck source=lib.sh
 . "$(dirname "$0")/lib.sh"
 set_claude_state needs_input
-
-cwd=$(echo "$input" | jq -r '.cwd // ""')
-if [ -z "$cwd" ] || [ "$cwd" = "null" ]; then
-  cwd=$(pwd)
-fi
-
-dir_context=$(basename "$cwd")
-
-terminal-notifier \
-  -title "Claude Code - $dir_context" \
-  -message "Has a question for you" \
-  -sound Purr \
-  -contentImage "$HOME/.claude/icons/claude.png"
-
