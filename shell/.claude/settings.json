@@ -80,7 +80,13 @@
       "Write(./.env*)"
     ]
   },
-  "availableModels": ["sonnet", "haiku", "opus", "opusplan"],
+  "model": "opus",
+  "availableModels": [
+    "sonnet",
+    "haiku",
+    "opus",
+    "opusplan"
+  ],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -128,7 +134,10 @@
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
-          { "type": "command", "command": "~/.local/bin/claude-log-edit" }
+          {
+            "type": "command",
+            "command": "~/.local/bin/claude-log-edit"
+          }
         ]
       }
     ]
@@ -194,8 +203,14 @@
       ]
     },
     "filesystem": {
-      "allowWrite": ["~/.cache/yarn", "~/.local/state", "~/.config/gcloud"],
-      "denyRead": ["~/"],
+      "allowWrite": [
+        "~/.cache/yarn",
+        "~/.local/state",
+        "~/.config/gcloud"
+      ],
+      "denyRead": [
+        "~/"
+      ],
       "allowRead": [
         "~/.local/bin",
         "~/.claude",
@@ -220,7 +235,12 @@
         "~/.ssh/known_hosts"
       ]
     },
-    "excludedCommands": ["git", "git *", "gh", "gh *"]
+    "excludedCommands": [
+      "git",
+      "git *",
+      "gh",
+      "gh *"
+    ]
   },
   "maxProseWidth": 120,
   "effortLevel": "medium",
@@ -246,6 +266,10 @@
   "preferredNotifChannel": "ghostty",
   "agentPushNotifEnabled": true,
   "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(rm:*) in /Users/piet/dotfiles — CLAUDE.md states rm is sandbox-blocked and the project's own guidance is to run it manually via `! rm <path>`, so an auto-mode carve-out should not re-enable it"
+    ],
     "environment": [
       "### Org-wide",
       "**Organization**: None configured",
@@ -272,10 +296,6 @@
       "**Trusted repo**: /Users/piet/dotfiles and its remote github.com:pietvanzoen/dotfiles.git (public — only this repo's own work belongs here; secrets are never cleared into it regardless of visibility)",
       "**Org-specific CLIs**: None configured — frequent non-standard CLIs observed are personal/project tools: `rex` (62x, in-project), `cutr-task`/`cutr-migrate`/`claude-multiprofile` (shell history, routine under piet/ prefix)",
       "**routine under piet/ prefix**: `rex` commands in /Users/piet/dotfiles; `cutr-task`, `cutr-migrate`, `claude-multiprofile`, `gwo`, `gg`, `bak`, `nono`, `tmux-run-pane`, `vm` from shell history are personal wrapper scripts, not org-managed CLIs"
-    ],
-    "soft_deny": [
-      "$defaults",
-      "Bash(rm:*) in /Users/piet/dotfiles — CLAUDE.md states rm is sandbox-blocked and the project's own guidance is to run it manually via `! rm <path>`, so an auto-mode carve-out should not re-enable it"
     ]
   }
 }
