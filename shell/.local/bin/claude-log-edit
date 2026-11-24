@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 # Claude Code PostToolUse hook (Edit|Write|MultiEdit): append "path:line" of the first
-# changed line to ~/.cache/claude-edits/<project path with / as ->.log, which Neovim
-# watches to open the file.
+# changed line to <macOS user temp dir>/claude-edits/<project path with / as ->.log, which
+# Neovim watches to open the file.
 #
-# The log lives outside the project on purpose: this hook runs unsandboxed, so it must not
-# write into a tree that sandboxed commands can write to (they could swap the log for a
-# symlink/hardlink to e.g. ~/.zshrc). The sandbox can't write to ~/.cache/claude-edits.
+# This hook runs unsandboxed, so it must not write into a tree that sandboxed commands can
+# write to (they could swap the log for a symlink/hardlink to e.g. ~/.zshrc). The per-user
+# temp dir is 0700, not sandbox-writable, and macOS deletes files unused for 3 days. Use
+# getconf, not $TMPDIR: inside Claude's sandbox $TMPDIR points somewhere else.
 set -euo pipefail
 
 # Resolve symlinks so the name matches Neovim's getcwd().
 project="$(cd "${CLAUDE_PROJECT_DIR:-$PWD}" && pwd -P)"
-dir="$HOME/.cache/claude-edits"
+dir="$(getconf DARWIN_USER_TEMP_DIR)claude-edits"
 mkdir -p "$dir"
 log="$dir/${project//\//-}.log"
 

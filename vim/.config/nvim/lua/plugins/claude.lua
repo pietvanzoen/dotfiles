@@ -47,15 +47,15 @@ vim.api.nvim_create_user_command("ClaudeFollowToggle", function()
 end, {})
 vim.keymap.set("n", "<leader>af", "<cmd>ClaudeFollowToggle<cr>", { desc = "Toggle Claude follow" })
 
--- Log path must match claude-log-edit: ~/.cache/claude-edits/<cwd with / as ->.log
--- (outside the project, so sandboxed commands can't swap it for a symlink).
+-- Log path must match claude-log-edit: <macOS user temp dir>/claude-edits/<cwd with / as ->.log
+-- (not sandbox-writable, so sandboxed commands can't swap it for a symlink; macOS cleans it up).
 if vim.fn.isdirectory(".git") == 0 then return {} end
-local edits_dir = vim.fn.expand("~/.cache/claude-edits")
+local edits_dir = vim.trim(vim.fn.system({ "getconf", "DARWIN_USER_TEMP_DIR" })) .. "claude-edits"
 local edits_log = edits_dir .. "/" .. vim.fn.getcwd():gsub("/", "-") .. ".log"
 vim.fn.mkdir(edits_dir, "p")
--- Truncate on startup: entries written before nvim started are never acted on.
-vim.fn.writefile({}, edits_log)
-local offset = 0
+-- Create if missing (fs_event needs the file); start at the end so old entries are skipped.
+if vim.fn.filereadable(edits_log) == 0 then vim.fn.writefile({}, edits_log) end
+local offset = vim.fn.getfsize(edits_log)
 local watcher = vim.uv.new_fs_event()
 watcher:start(edits_log, {}, vim.schedule_wrap(function()
   local size = vim.fn.getfsize(edits_log)
