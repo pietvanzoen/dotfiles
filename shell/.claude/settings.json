@@ -60,7 +60,10 @@
       "Edit(~/.claude/plans/*.md)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(todo *)",
-      "Bash(todo)"
+      "Bash(todo)",
+      "Bash(rex session rename:*)",
+      "Bash(rex window rename:*)",
+      "Bash(rex whoami:*)"
     ],
     "deny": [
       "Bash(curl:*)",
@@ -81,12 +84,7 @@
     ]
   },
   "model": "opus",
-  "availableModels": [
-    "sonnet",
-    "haiku",
-    "opus",
-    "opusplan"
-  ],
+  "availableModels": ["sonnet", "haiku", "opus", "opusplan"],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -203,14 +201,8 @@
       ]
     },
     "filesystem": {
-      "allowWrite": [
-        "~/.cache/yarn",
-        "~/.local/state",
-        "~/.config/gcloud"
-      ],
-      "denyRead": [
-        "~/"
-      ],
+      "allowWrite": ["~/.cache/yarn", "~/.local/state", "~/.config/gcloud"],
+      "denyRead": ["~/"],
       "allowRead": [
         "~/.local/bin",
         "~/.claude",
@@ -239,7 +231,11 @@
       "git",
       "git *",
       "gh",
-      "gh *"
+      "gh *",
+      "rex session rename *",
+      "rex window rename *",
+      "rex whoami",
+      "rex whoami *"
     ]
   },
   "maxProseWidth": 120,
