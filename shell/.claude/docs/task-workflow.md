@@ -43,6 +43,8 @@ the next action:
      - Check: `gh api repos/{owner}/{repo}/pulls/{pr}/reviews` for a completed review
      - When review lands: assess comments, implement fixes, push
      - Reply to comments per CLAUDE.md format (prefixed with `> _Posted by Claude Code_`)
+     - In each reply, link the fix commit as `https://github.com/<owner>/<repo>/pull/<n>/commits/<sha>`
+       and include the relevant hunk in a ```` ```diff ```` block, so the change is visible in the thread
      - Do NOT resolve comments — the user resolves them in the GitHub UI
    - After fixes pushed, poll for CI checks:
      - Check: `gh pr view --json statusCheckRollup`
