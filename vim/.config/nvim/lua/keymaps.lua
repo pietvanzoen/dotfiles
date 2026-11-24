@@ -30,14 +30,16 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 -- Inside tmux, vim-tmux-navigator (plugins/init.lua) handles these instead.
 if vim.env.REX_SESSION and not vim.env.TMUX then
   for key, dir in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
-    vim.keymap.set("n", "<C-" .. key .. ">", function()
-      local win = vim.api.nvim_get_current_win()
-      vim.cmd("wincmd " .. key)
-      if vim.api.nvim_get_current_win() == win then
-        vim.system({ "rex", "focus", dir }, {}, function()
-          vim.system({ "rex", "do", "golden_ratio" })
-        end)
+    vim.keymap.set({ "n", "x" }, "<C-" .. key .. ">", function()
+      if vim.fn.winnr(key) == vim.fn.winnr() then
+        -- At the edge: keep any visual selection (claudecode.nvim reads it)
+        vim.system({ "rex", "focus", dir })
+        return
       end
+      if vim.fn.mode():match("^[vV\22]") then
+        vim.api.nvim_feedkeys(vim.keycode("<Esc>"), "nx", false)
+      end
+      vim.cmd("wincmd " .. key)
     end, { desc = "Navigate " .. dir .. " (split or Rex pane)" })
   end
 end
