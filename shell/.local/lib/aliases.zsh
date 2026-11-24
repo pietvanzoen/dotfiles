@@ -9,30 +9,6 @@ function help() {
 
 function cc() {
   clear
-  # Auto-detect claudecode.nvim IDE integration for the current workspace
-  local ide_port=""
-  local lock_dir="$HOME/.claude/ide"
-  if [[ -d "$lock_dir" ]]; then
-    local cwd="$PWD"
-    for lock_file in "$lock_dir"/*.lock(N); do
-      [[ -f "$lock_file" ]] || continue
-      # Check if any workspaceFolder is a prefix of cwd
-      local folders
-      folders=$(node -e "
-        try {
-          const d = JSON.parse(require('fs').readFileSync('$lock_file','utf8'));
-          (d.workspaceFolders||[]).forEach(f => console.log(f));
-        } catch(e) {}
-      " 2>/dev/null)
-      while IFS= read -r folder; do
-        if [[ "$cwd" == "$folder" || "$cwd" == "$folder/"* ]]; then
-          ide_port="${lock_file:t:r}"  # filename without .lock extension
-          break 2
-        fi
-      done <<< "$folders"
-    done
-  fi
-
   local args=(--model=sonnet --effort=medium --remote-control)
   if [[ "$1" == "new" ]]; then
     shift
@@ -40,11 +16,7 @@ function cc() {
     args+=(--resume)
   fi
 
-  if [[ -n "$ide_port" ]]; then
-    CLAUDE_CODE_SSE_PORT="$ide_port" ENABLE_IDE_INTEGRATION=true claude "${args[@]}" "$@"
-  else
-    claude "${args[@]}" "$@"
-  fi
+  claude "${args[@]}" "$@"
 }
 
 function git() {
