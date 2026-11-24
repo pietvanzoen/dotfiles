@@ -59,7 +59,7 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     # Check whether the cache file exists and is fresh
     cache_fresh=0
     if [ -f "$cache_file" ]; then
-      file_age=$(( $(date +%s) - $(stat -f %m "$cache_file" 2>/dev/null || echo 0) ))
+      file_age=$(( $(date +%s) - $(/usr/bin/stat -f %m "$cache_file" 2>/dev/null || echo 0) ))
       [ "$file_age" -lt "$cache_ttl" ] && cache_fresh=1
     fi
 
