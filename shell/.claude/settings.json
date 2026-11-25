@@ -84,7 +84,12 @@
     ]
   },
   "model": "opus",
-  "availableModels": ["sonnet", "haiku", "opus", "opusplan"],
+  "availableModels": [
+    "sonnet",
+    "haiku",
+    "opus",
+    "opusplan"
+  ],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -122,7 +127,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/bin/sh -c 'rex __internal session-start --agent claude 2>/dev/null || true'",
+            "command": "/bin/sh -c 'rex __internal session-start --agent claude --feature-session-naming=false 2>/dev/null || true'",
             "timeout": 5
           }
         ]
@@ -201,8 +206,14 @@
       ]
     },
     "filesystem": {
-      "allowWrite": ["~/.cache/yarn", "~/.local/state", "~/.config/gcloud"],
-      "denyRead": ["~/"],
+      "allowWrite": [
+        "~/.cache/yarn",
+        "~/.local/state",
+        "~/.config/gcloud"
+      ],
+      "denyRead": [
+        "~/"
+      ],
       "allowRead": [
         "~/.local/bin",
         "~/.claude",
@@ -293,5 +304,6 @@
       "**Org-specific CLIs**: None configured — frequent non-standard CLIs observed are personal/project tools: `rex` (62x, in-project), `cutr-task`/`cutr-migrate`/`claude-multiprofile` (shell history, routine under piet/ prefix)",
       "**routine under piet/ prefix**: `rex` commands in /Users/piet/dotfiles; `cutr-task`, `cutr-migrate`, `claude-multiprofile`, `gwo`, `gg`, `bak`, `nono`, `tmux-run-pane`, `vm` from shell history are personal wrapper scripts, not org-managed CLIs"
     ]
-  }
+  },
+  "voiceEnabled": true
 }
