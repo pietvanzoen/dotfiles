@@ -9,7 +9,7 @@ function help() {
 
 function cc() {
   clear
-  local args=(--model=sonnet --effort=medium --remote-control)
+  local args=(--model=opus --effort=medium --remote-control)
   if [[ "$1" == "new" ]]; then
     shift
   else
